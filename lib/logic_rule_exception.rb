@@ -1,0 +1,2 @@
+class LogicRuleException < RuntimeError
+end

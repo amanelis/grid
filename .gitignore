@@ -1,0 +1,12 @@
+log
+tmp
+*.sqlite3
+mkmf.log
+config/database.yml
+db/schema.rb
+.project
+.DS_Store
+*.pdf
+app/controllers/development_controller.rb
+app/views/development
+.idea/

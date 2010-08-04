@@ -1,0 +1,2 @@
+class BusinessRuleException < RuntimeError
+end
