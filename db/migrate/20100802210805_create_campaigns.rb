@@ -5,6 +5,7 @@ class CreateCampaigns < ActiveRecord::Migration
       t.references :campaign_style, :polymorphic => true, :null => false
       t.string :status
       t.string :name
+      t.string :zip_code
       t.timestamps
     end
   end
