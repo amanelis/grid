@@ -1,4 +1,4 @@
 class Website < ActiveRecord::Base
-  belongs_to :campaign
-  has_many :website_visits  
+  has_and_belongs_to_many :campaigns
+  has_many :website_visits
 end

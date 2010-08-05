@@ -3,7 +3,7 @@ class Campaign < ActiveRecord::Base
   belongs_to :campaign_style, :polymorphic => true
   has_many :phone_numbers
   has_many :contact_forms
-  has_many :websites
+  has_and_belongs_to_many :websites
   
   
   def self.pull_salesforce_campaigns()
@@ -82,5 +82,4 @@ class Campaign < ActiveRecord::Base
       end
     end
   end
-  
 end

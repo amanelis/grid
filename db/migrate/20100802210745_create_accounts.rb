@@ -17,6 +17,7 @@ class CreateAccounts < ActiveRecord::Migration
       t.string :website
       t.string :industry
       t.string :main_contact
+      t.string :salesforce_id
       t.timestamps
     end
   end

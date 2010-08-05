@@ -1,7 +1,6 @@
 class CreateWebsites < ActiveRecord::Migration
   def self.up
     create_table :websites do |t|
-      t.references :campaign, :null => false
       t.string :domain
       t.string :nickname
       t.string :mirrors
