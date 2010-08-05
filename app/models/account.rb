@@ -1,6 +1,11 @@
 class Account < ActiveRecord::Base
   has_many :campaigns
   
+  def self.pull_all_data_migrations()
+    Account.pull_salesforce_accounts
+    Campaign.pull_salesforce_campaigns
+    
+  end
   
   def self.pull_salesforce_accounts()
     accounts = Salesforce::Account.find(:all, :conditions => ['account_status__c = ? OR account_status__c = ?', "Active", "Paused"])
