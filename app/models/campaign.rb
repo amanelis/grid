@@ -12,8 +12,7 @@ class Campaign < ActiveRecord::Base
     campaigns.each do |campaign|
       account = Account.find_by_salesforce_id(campaign.account_id__c)
       if account.present?
-        account_campaigns = Campaign.find(:all, :conditions => ['account_id = ? && name = ?', account.id, campaign.name])
-        if account_campaigns.empty?
+        unless Campaign.exists?(:account_id => account.id, :name => campaign.name)
           if campaign.campaign_type__c.include? 'SEM'
             new_sem_campaign = SemCampaign.new
             new_sem_campaign.monthly_budget = campaign.monthly_budget__c
