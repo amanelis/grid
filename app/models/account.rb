@@ -8,6 +8,8 @@ class Account < ActiveRecord::Base
     Call.update_calls
     Website.add_websites
     WebsiteVisit.data_pull_websites_visits
+    Keyword.update_keywords_from_salesforce
+    
   end
 
   def self.pull_salesforce_accounts()
