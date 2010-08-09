@@ -4,7 +4,9 @@ class Account < ActiveRecord::Base
   def self.pull_all_data_migrations()
     Account.pull_salesforce_accounts
     Campaign.pull_salesforce_campaigns
-
+    PhoneNumber.get_salesforce_numbers
+    
+    Website.add_websites
   end
 
   def self.pull_salesforce_accounts()
