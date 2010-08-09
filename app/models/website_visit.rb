@@ -34,12 +34,12 @@ class WebsiteVisit < ActiveRecord::Base
         url_dates = pull_date.to_s
         mainurl = "http://stats.cityvoice.com.re.getclicky.com/api/stats/4?site_id=" + website.site_id + "&sitekey=" + website.sitekey + "&date=" + url_dates + "&type=" + type + "&output=json&limit=10000"
         response = HTTParty.get(mainurl).first
-        if response["error"] != nil && response["error"] == "Invalid sitekey."
+        if response["error"].present? && response["error"] == "Invalid sitekey."
           website.is_active = false
           website.save!
         end 
 
-        if response["dates"] != nil
+        if response["dates"].present?
           begin
             dates = response["dates"].first
             visits = dates["items"]
