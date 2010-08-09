@@ -43,7 +43,7 @@ class Campaign < ActiveRecord::Base
             new_seo_campaign = SeoCampaign.new
             new_seo_campaign.budget = campaign.monthly_budget__c
             new_seo_campaign.cities = ''
-            new_seo_campaign.keywords = campaign.keywords__c
+            #new_seo_campaign.keywords = campaign.keywords__c
             new_seo_campaign.dns_host = sf_account.dns_host__c
             new_seo_campaign.dns_login = sf_account.dns_login__c
             new_seo_campaign.dns_password = sf_account.dns_password__c
