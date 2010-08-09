@@ -24,11 +24,11 @@ class Website < ActiveRecord::Base
       website = Website.find_by_nickname(campaign.primary_website__c)
       if website != nil
         local_campaign = Campaign.find_by_name(campaign.name)
-        website << local_campaign
-        website.save
+        if local_campaign != nil
+          website.campaigns << local_campaign
+          website.save
+        end
       end
-      
-      
     end
   end
   
