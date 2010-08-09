@@ -9,7 +9,7 @@ class WebsiteVisit < ActiveRecord::Base
        if hard_update == false
          WebsiteVisit.update_website_visits(site.id, start_date, end_date)
        else
-         WebsiteVisit.hard_update_visits_individually(site.id, start_date, end_date)
+         WebsiteVisit.hard_update_website_visits(site.id, start_date, end_date)
        end
        puts "Updated visits for site: " + site.nickname
       rescue
@@ -21,7 +21,7 @@ class WebsiteVisit < ActiveRecord::Base
   
   def self.update_website_visits(website_id, start = Date.today - 8.days, fend = Date.today - 1.day)
     website = Website.find(website_id)
-    if website != nil
+    if website.present?
       type = 'visitors-list&visitor-details=time,time_pretty,time_total,ip_address,session_id,actions,web_browser,operating_system,screen_resolution,javascript,language,referrer_url,referrer_domain,referrer_search,geolocation,longitude,latitude,hostname,organization,campaign,custom,clicky_url,goals'
       
       time_begin = Time.utc(start.year, start.month, start.day, 0, 0, 0)

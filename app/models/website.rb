@@ -22,9 +22,9 @@ class Website < ActiveRecord::Base
     
     campaigns.each do |campaign|
       website = Website.find_by_nickname(campaign.primary_website__c)
-      if website != nil
+      if website.present?
         local_campaign = Campaign.find_by_name(campaign.name)
-        if local_campaign != nil
+        if local_campaign.present?
           website.campaigns << local_campaign
           website.save
         end

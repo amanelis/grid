@@ -24,10 +24,10 @@ class Call < ActiveRecord::Base
          sleep(10)
          call_results = server.call("call.search", result["acct"], search_term)
          puts 'Retrieving Call Results'
-         if call_results != nil
+         if call_results.present?
            call_results.each do |call_result|
              number = PhoneNumber.find_by_cmpid(call_result["cmpid"])
-             if number != nil
+             if number.present?
                call = Call.find_or_create_by_call_id(:call_id => call_result["call_id"], 
                                                      :assigned_to => call_result["assigned_to"], 
                                                      :call_end => call_result["call_end"].to_time(),
