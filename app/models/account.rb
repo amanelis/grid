@@ -5,8 +5,9 @@ class Account < ActiveRecord::Base
     Account.pull_salesforce_accounts
     Campaign.pull_salesforce_campaigns
     PhoneNumber.get_salesforce_numbers
-    
+    Call.update_calls
     Website.add_websites
+    WebsiteVisit.data_pull_websites_visits
   end
 
   def self.pull_salesforce_accounts()
