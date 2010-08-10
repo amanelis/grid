@@ -37,7 +37,7 @@ class Keyword < ActiveRecord::Base
       bing = 99999
       yahoo = 99999
       relevancy = 0
-      
+
       begin
         searchpositions = getsearchpositions
       rescue
@@ -62,13 +62,13 @@ class Keyword < ActiveRecord::Base
         cpc = getcpc
       rescue
       end
-    
-      keyword_analysis = KeywordAnalysis.create(:keyword_id => self.id, :google => google, :bing => bing, :yahoo => yahoo, :cpc => cpc, :relevancy => relevancy) 
-    
+
+      self.analyses.create(:google => google, :bing => bing, :yahoo => yahoo, :cpc => cpc, :relevancy => relevancy) 
+
     end
   end
-  
-  
+
+
   def get_search_positions
     # HACK: The rails belongs_to method seems to have a bug. self.url.url should give me the URL string, but it doesn't
     #Changed to Use Account instead of URL@url_obj = URL.find url_id
@@ -89,7 +89,7 @@ class Keyword < ActiveRecord::Base
     rescue
     end
   end
- 
+
   def get_cpc
     # HACK: The rails belongs_to method seems to have a bug. self.url.url should give me the URL string, but it doesn't
     begin
@@ -99,7 +99,7 @@ class Keyword < ActiveRecord::Base
     rescue
     end
   end
-  
+
   def build_pear_url(uri, parameters, api_key = "819f9b322610b816c898899ddad715a2e76fc3c5", api_secret = "2c312c9626b79d2fa47321753a18a2672e4d58aa")
   	parameters["signature"] = calculate_pear_signature(uri, parameters, api_secret)
   	parameters["api_key"] = api_key
@@ -108,7 +108,7 @@ class Keyword < ActiveRecord::Base
   		pieces << CGI.escape(key) + '=' + CGI.escape(value)
   	}
   	query_string = '?' + pieces.join('&')
-  	
+
   	return "http://juice.pearanalytics.com/api.php/" + uri + query_string
   end
 
@@ -119,8 +119,8 @@ class Keyword < ActiveRecord::Base
   		signature += key.to_s() + '=' + value.to_s() + ';'
   	}
   	hash = Digest::SHA1.hexdigest(signature)
-  
+
   	return hash
   end
-  
+
 end
