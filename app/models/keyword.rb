@@ -3,7 +3,7 @@ require 'cgi'
 
 class Keyword < ActiveRecord::Base
   belongs_to :seo_campaign
-  has_many :analyses, :class_name => "KeywordAnalysis"
+  has_many :keyword_rankings
 
 
   def self.update_keywords_from_salesforce
@@ -26,12 +26,12 @@ class Keyword < ActiveRecord::Base
   end
 
   def self.update_keyword_rankings
-    Keyword.all.each { |keyword| keyword.fetch_keyword_analysis }
+    Keyword.all.each { |keyword| keyword.fetch_keyword_rankings }
   end
 
-  
-  def fetch_keyword_analysis
-    freshness = KeywordAnalysis.find_all_by_keyword_id_and_created_at(self, 1.day.ago)
+
+  def fetch_keyword_rankings
+    freshness = KeywordRanking.find_all_by_keyword_id_and_created_at(self, 1.day.ago)
     if freshness.empty?
       google = 99999
       bing = 99999
@@ -63,7 +63,7 @@ class Keyword < ActiveRecord::Base
       rescue
       end
 
-      self.analyses.create(:google => google, :bing => bing, :yahoo => yahoo, :cpc => cpc, :relevancy => relevancy)
+      self.keyword_rankings.create(:google => google, :bing => bing, :yahoo => yahoo, :cpc => cpc, :relevancy => relevancy)
 
     end
   end

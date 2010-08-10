@@ -1,6 +1,6 @@
-class CreateKeywordAnalyses < ActiveRecord::Migration
+class CreateKeywordRankings < ActiveRecord::Migration
   def self.up
-    create_table :keyword_analyses do |t|
+    create_table :keyword_rankings do |t|
       t.references :keyword, :null => false
       t.integer :bing
       t.integer :yahoo
@@ -12,6 +12,6 @@ class CreateKeywordAnalyses < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :keyword_analyses
+    drop_table :keyword_rankings
   end
 end
