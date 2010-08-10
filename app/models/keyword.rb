@@ -14,7 +14,7 @@ class Keyword < ActiveRecord::Base
         keywords = campaign.keywords__c.split(',')
         keywords.each do |keyword|
           puts 'Started: ' + keyword
-          new_keyword = Keyword.find_or_create_by_seo_campaign_id_and_descriptor(:seo_campaign_id => local_campaign.id,
+          new_keyword = Keyword.find_or_create_by_seo_campaign_id_and_descriptor(:seo_campaign_id => local_campaign.campaign_style_id,
                                                                                  :descriptor => keyword,
                                                                                  :google_first_page => false,
                                                                                  :yahoo_first_page => false,
@@ -31,7 +31,7 @@ class Keyword < ActiveRecord::Base
   end
 
   def fetch_keyword_analysis
-    freshness = KeywordAnalysis.find(:all, :conditions => ['created_at > ?', 1.day.ago])
+    freshness = KeywordAnalysis.find_all_by_keyword_id_and_created_at(self, 1.day.ago)
     if freshness.size == 0
       google = 99999
       bing = 99999
@@ -39,27 +39,27 @@ class Keyword < ActiveRecord::Base
       relevancy = 0
 
       begin
-        searchpositions = getsearchpositions
+        search_positions = get_search_positions
       rescue
       end
       begin
-        google = searchpositions["google"]
+        google = search_positions["google"]
       rescue
       end
       begin
-        bing = searchpositions["bing"]
+        bing = search_positions["bing"]
       rescue
       end
       begin
-        yahoo = searchpositions["yahoo"]
+        yahoo = search_positions["yahoo"]
       rescue
       end
       begin
-        relevancy = getrelevancy
+        relevancy = get_relevancy
       rescue
       end
       begin
-        cpc = getcpc
+        cpc = get_cpc
       rescue
       end
 
@@ -83,7 +83,7 @@ class Keyword < ActiveRecord::Base
   def get_relevancy
     # HACK: The rails belongs_to method seems to have a bug. self.url.url should give me the URL string, but it doesn't
     begin
-      url = self.build_pear_url("keyword/getrelevancy", {"url" => self.seo_campaign.campaign.websites.first.nickname, "keyword" => self.descriptor, "format" => "json"})
+      url = self.build_pear_url("keyword/getrelevancy", {"url" => self.seo_campaign.websites.first.nickname, "keyword" => self.descriptor, "format" => "json"})
       response = HTTParty.get(url)
       response["relevancy"]
     rescue
