@@ -3,7 +3,7 @@ class Website < ActiveRecord::Base
   has_many :website_visits
 
 
-  def self.add_websites()
+  def self.add_websites
     #http://stats.cityvoice.com.re.getclicky.com/api/whitelabel/sites?auth=de8f1bae61c60eb0
     geturl = HTTParty.get("http://stats.cityvoice.com.re.getclicky.com/api/whitelabel/sites?auth=de8f1bae61c60eb0&output=json")
     response = geturl["response"]

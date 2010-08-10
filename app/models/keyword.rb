@@ -5,6 +5,7 @@ class Keyword < ActiveRecord::Base
   belongs_to :seo_campaign
   has_many :analyses, :class_name => "KeywordAnalysis"
 
+
   def self.update_keywords_from_salesforce
     sf_campaigns = Salesforce::Clientcampaign.find_all_by_campaign_type__c('SEO')
     sf_campaigns.each do |sf_campaign|
@@ -28,6 +29,7 @@ class Keyword < ActiveRecord::Base
     Keyword.all.each { |keyword| keyword.fetch_keyword_analysis }
   end
 
+  
   def fetch_keyword_analysis
     freshness = KeywordAnalysis.find_all_by_keyword_id_and_created_at(self, 1.day.ago)
     if freshness.empty?

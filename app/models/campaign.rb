@@ -6,7 +6,7 @@ class Campaign < ActiveRecord::Base
   has_and_belongs_to_many :websites
 
 
-  def self.pull_salesforce_campaigns()
+  def self.pull_salesforce_campaigns
     sf_campaigns = Salesforce::Clientcampaign.all
 
     sf_campaigns.each do |sf_campaign|
