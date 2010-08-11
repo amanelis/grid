@@ -19,7 +19,6 @@ class Website < ActiveRecord::Base
     end
 
     sf_campaigns = Salesforce::Clientcampaign.all
-
     sf_campaigns.each do |sf_campaign|
       website = Website.find_by_nickname(sf_campaign.primary_website__c)
       if website.present?
@@ -32,7 +31,5 @@ class Website < ActiveRecord::Base
     end
   end
 
- 
-    
 end
 
