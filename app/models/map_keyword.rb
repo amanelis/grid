@@ -38,6 +38,8 @@ class MapKeyword < ActiveRecord::Base
                                      :google_review_count => google_result['review_count'],
                                      :google_citation_count => google_result['citation_count'],
                                      :google_user_content_count => google_result['user_content_count'])
+         self.ranking_updated_on = Date.today
+         self.save
        end
      end
   
