@@ -19,6 +19,10 @@ class Account < ActiveRecord::Base
     Keyword.update_keywords_from_salesforce
     puts "Updating Keyword Rankings..."
     Keyword.update_keyword_rankings
+    puts "Updating Inbound Links"
+    SeoCampaign.update_inbound_links
+    puts "Cleaning Inbound Links"
+    SeoCampaign.clean_up_inbound_links
     puts "Done."
   end
 
