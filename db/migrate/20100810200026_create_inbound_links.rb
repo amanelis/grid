@@ -4,6 +4,7 @@ class CreateInboundLinks < ActiveRecord::Migration
       t.references :seo_campaign, :null => false
       t.string :link_url
       t.date :last_date_found
+      t.boolean :is_active
       t.timestamps
     end
   end

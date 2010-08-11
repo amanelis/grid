@@ -42,7 +42,6 @@ class Call < ActiveRecord::Base
                                              :phone_number_id => phone_number.id)
             else
               puts "Erroring finding Phone Number Campaign ID: " + call_result["cmpid"]
-              puts call_result
             end
           end
         end
