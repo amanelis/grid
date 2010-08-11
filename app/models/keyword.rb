@@ -31,7 +31,7 @@ class Keyword < ActiveRecord::Base
 
 
   def fetch_keyword_rankings
-    freshness = KeywordRanking.find_all_by_keyword_id_and_created_at(self, 1.day.ago)
+    freshness = KeywordRanking.find(:all, :conditions => ['created_at > ? && keyword_id = ?', 1.day.ago, self.id])
     if freshness.empty?
       google = 99999
       bing = 99999

@@ -23,6 +23,12 @@ class Account < ActiveRecord::Base
     SeoCampaign.update_inbound_links
     puts "Cleaning Inbound Links"
     SeoCampaign.clean_up_inbound_links
+    puts "Updating Website Analyses"
+    SeoCampaign.update_website_analyses
+    puts "Updating Map Keywords"
+    MapKeyword.update_keywords_from_salesforce
+    puts "Updating Map Keyword Rankings"
+    MapKeyword.update_map_rankings
     puts "Done."
   end
 

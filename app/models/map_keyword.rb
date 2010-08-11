@@ -2,7 +2,7 @@ class MapKeyword < ActiveRecord::Base
   belongs_to :maps_campaign
   has_many :map_rankings
   
-  def self.update_keywords_from_salesforce
+   def self.update_keywords_from_salesforce
      sf_campaigns = Salesforce::Clientcampaign.find_all_by_campaign_type__c('Local Maps')
      sf_campaigns.each do |sf_campaign|
        local_map_campaign = Campaign.find_by_name(sf_campaign.name).try(:campaign_style)
@@ -46,7 +46,7 @@ class MapKeyword < ActiveRecord::Base
    end
      
    #Returns result = { "result" => 1000, "company_name" => "NA", "address" => "NA", "phone" => "NA", "page" => "NA", "review_count" => 0, "coupon_count" => 0, "citation_count" => 0, "user_content_count" => 0 }
-   def get_google_ranking   
+   def get_google_ranking
      search_keyword = self.descriptor.gsub(" ", "+")
      startpage = "http://maps.google.com/maps?hl=en&um=1&ie=UTF-8&q=" + search_keyword + "&fb=1&gl=us&view=text&cd=2&sa=N"
      googleurl = "http://maps.google.com/maps?hl=en&um=1&ie=UTF-8&q=" + search_keyword + "&fb=1&gl=us&view=text&cd=2&sa=N"
@@ -222,4 +222,5 @@ class MapKeyword < ActiveRecord::Base
    def get_bing_ranking
      return 1000
    end
+   
 end
