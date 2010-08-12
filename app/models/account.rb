@@ -1,7 +1,8 @@
 class Account < ActiveRecord::Base
   has_many :campaigns
+  has_one :adwords_client
 
-  
+
   def self.pull_all_data_migrations
     puts "Pulling Salesforce Accounts..."
     Account.pull_salesforce_accounts
