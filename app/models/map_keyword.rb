@@ -64,8 +64,7 @@ class MapKeyword < ActiveRecord::Base
       pack_block = pack_block.gsub("<b>", "").gsub("</b>", "").gsub("&amp;", "&").gsub("&#39;", "'")
       if pack_block.include? company
         pack_items = pack_block.split('<tr>')
-        pack_items.delete_at(0)
-        pack_items.delete_at(0)
+        pack_items.slice!(0..1)
         pack_count = 1
         pack_items.each do |pack_item|
           pack_item_block = pack_item.gsub("<b>", "").gsub("</b>", "").gsub("&amp;", "&").gsub("&#39;", "'")
@@ -79,9 +78,8 @@ class MapKeyword < ActiveRecord::Base
             mapsid = block[cid..block.length]
             result['page'] = 'http://maps.google.com/maps/place?' + mapsid
             break
-          else
-            pack_count += 1
           end
+          pack_count += 1
         end
       end
 
@@ -103,7 +101,7 @@ class MapKeyword < ActiveRecord::Base
                 page_stop = result_item.index("&q")
                 if page_start.present? && page_stop.present?
                   page = result_item[page_start..page_stop]
-                  result['page'] = "http://maps.google.com" + page[5..page.length-2]
+                  result['page'] = "http://maps.google.com" + page[5..(page.length - 2)]
                   result['result'] = page_num + (whole_page.index(result_item) + 1)
                   break
                 end
@@ -156,7 +154,7 @@ class MapKeyword < ActiveRecord::Base
           review_block = company_block[review_start..company_block.length]
           review_stop = review_block.index(')')
           if review_stop.present?
-            final_block = review_block[14..(review_stop -1)]
+            final_block = review_block[14..(review_stop - 1)]
             review = 5 + final_block.to_i
           end
         else
@@ -233,7 +231,7 @@ class MapKeyword < ActiveRecord::Base
         result["user_content_count"] = user_content.to_i if user_content.present?
       end
     rescue Exception => e
-      puts "#{ e } (#{ e.class })!"
+      puts "#{ e } : #{ e.backtrace.first }"
       return result
     end
     return result

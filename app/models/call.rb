@@ -4,7 +4,7 @@ require 'xmlrpc/datetime'
 class Call < ActiveRecord::Base
   belongs_to :phone_number
 
-  
+
   def self.update_calls(start=(Time.now - 2.days), fend=(Time.now + 1.day))
     server = XMLRPC::Client.new("api.voicestar.com", "/api/xmlrpc/1", 80)
     # or http://api.voicestar.com/
@@ -19,7 +19,6 @@ class Call < ActiveRecord::Base
       begin
         searches = Struct.new(:start, :end)
         search_term = searches.new(start, fend)
-        sleep(10)
         call_results = server.call("call.search", result["acct"], search_term)
         if call_results.present?
           call_results.each do |call_result|
