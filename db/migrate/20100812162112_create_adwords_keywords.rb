@@ -1,6 +1,7 @@
 class CreateAdwordsKeywords < ActiveRecord::Migration
   def self.up
     create_table :adwords_keywords do |t|
+      t.references :adwords_ad_group, :null => false
       t.string :descriptor
       t.string :reference_id
       t.string :status
