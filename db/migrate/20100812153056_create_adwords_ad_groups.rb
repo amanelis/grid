@@ -1,7 +1,7 @@
 class CreateAdwordsAdGroups < ActiveRecord::Migration
   def self.up
     create_table :adwords_ad_groups do |t|
-      t.references :adwords_campaign, :null => false
+      t.references :google_sem_campaign, :null => false
       t.string :reference_id
       t.string :status
       t.timestamps

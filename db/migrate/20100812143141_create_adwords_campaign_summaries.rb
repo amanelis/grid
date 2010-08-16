@@ -1,7 +1,7 @@
 class CreateAdwordsCampaignSummaries < ActiveRecord::Migration
   def self.up
     create_table :adwords_campaign_summaries do |t|
-      t.references :adwords_campaign, :null => false
+      t.references :google_sem_campaign, :null => false
       t.integer :imps
       t.float :pos
       t.float :cpc

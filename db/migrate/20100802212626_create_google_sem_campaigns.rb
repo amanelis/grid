@@ -10,6 +10,11 @@ class CreateGoogleSemCampaigns < ActiveRecord::Migration
       t.string :email
       t.string :client_email
       t.string :environment
+      t.string :name
+      t.string :reference_id
+      t.string :status
+      t.integer :phone
+      t.string :campaign_type
       t.timestamps
     end
   end
