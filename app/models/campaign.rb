@@ -27,16 +27,18 @@ class Campaign < ActiveRecord::Base
             google_ids.each do |google_id|
               new_google_sem_campaign = new_sem_campaign.google_sem_campaigns.build
               new_google_sem_campaign.google_campaign_id = google_id
-              new_google_sem_campaign.developer_token = 'cTCRorA4_W1lVyATKfaPwA'
+              new_google_sem_campaign.developer_token = 'HC3GEwJ4LqgyVNeNTenIVw'
               new_google_sem_campaign.application_token = '-o8E21xqBmVx7CkQ5TfAag'
               new_google_sem_campaign.user_agent = 'Biz Search Local'
-              new_google_sem_campaign.password = 'boze4man!'
-              new_google_sem_campaign.email = 'jgwbizsearch@gmail.com'
-              new_google_sem_campaign.client_email = 'jgwbizsearch@gmail.com'
+              new_google_sem_campaign.password = 'brayden11'
+              new_google_sem_campaign.email = 'bizsearchlocal.jon@gmail.com'
+              new_google_sem_campaign.client_email = 'bizsearchlocal.jon@gmail.com'
               new_google_sem_campaign.environment = 'PRODUCTION'
             end
 
             new_sem_campaign.save!
+
+
 
           elsif sf_campaign.campaign_type__c.include? 'SEO'
             sf_account = Salesforce::Account.find(account.salesforce_id)
