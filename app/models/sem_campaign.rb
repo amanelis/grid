@@ -36,7 +36,7 @@ class SemCampaign < ActiveRecord::Base
   end
 
   def create_sem_campaign_report(date, report_type = 'Campaign')
-    campaign_array = self.google_sem_campaigns.collect { |google_sem_campaign| google_sem_campaign.adwords_campaign.reference_id }
+    campaign_array = self.google_sem_campaigns.collect { |google_sem_campaign| google_sem_campaign.reference_id }
     report_exists = SemCampaignReportStatus.first(:conditions => ['pulled_on = ? AND report_type= ? AND sem_campaign_id = ?', date.strftime('%m/%d/%Y'), report_type, self.id])
     job_id = 0
     new_report = SemCampaignReportStatus.new
@@ -57,7 +57,7 @@ class SemCampaign < ActiveRecord::Base
           job.selectedReportType = 'Campaign'
           job.aggregationTypes = 'Summary'
           job.name = report_name
-          job.selectedColumns = %w{  Campaign CampaignId AdWordsType AveragePosition CPC CPM CTR CampaignStatus Clicks Conversions Cost ExternalCustomerId CustomerName CustomerTimeZone DailyBudget Impressions exactMatchImpShare impShare lostImpShareBudget lostImpShareRank  }
+          job.selectedColumns = %w{   Campaign CampaignId AdWordsType AveragePosition CPC CPM CTR CampaignStatus Clicks Conversions Cost ExternalCustomerId CustomerName CustomerTimeZone DailyBudget Impressions exactMatchImpShare impShare lostImpShareBudget lostImpShareRank   }
           job.startDay = date.year.to_s + '-' + date.month.to_s + '-' + date.day.to_s
           job.endDay = date.year.to_s + '-' + date.month.to_s + '-' + date.day.to_s
           job.crossClient = true
@@ -84,11 +84,10 @@ class SemCampaign < ActiveRecord::Base
                 client.save
 
                 #Add or Update the Campaign
-                adwords_campaign = AdwordsCampaign.find_or_create_by_reference_id(:reference_id => row['campaignid'],
-                                                                                  :google_sem_campaign_id => self.google_sem_campaigns.select { |google_sem_campaign| google_sem_campaign.google_campaign_id == row['campaignid'] },
-                                                                                  :name => row['campaign'],
-                                                                                  :campStatus => row['campStatus'],
-                                                                                  :campaign_type => row['adwordsType'])
+                adwords_campaign = GoogleSemCampaign.find_by_reference_id(:reference_id => row['campaignid'],
+                                                                          :name => row['campaign'],
+                                                                          :campStatus => row['campStatus'],
+                                                                          :campaign_type => row['adwordsType'])
                 adwords_campaign.save
 
                 adword = AdwordsCampaignSummary.find_or_create_by_adwords_campaign_id_and_report_date(:adwords_campaign_id => adwords_campaign.id,
@@ -139,7 +138,7 @@ class SemCampaign < ActiveRecord::Base
             job.selectedReportType = 'Campaign'
             job.aggregationTypes = 'Summary'
             job.name = report_name
-            job.selectedColumns = %w{  Campaign CampaignId AdWordsType AveragePosition CPC CPM CTR CampaignStatus Clicks Conversions Cost ExternalCustomerId CustomerName CustomerTimeZone DailyBudget Impressions exactMatchImpShare impShare lostImpShareBudget lostImpShareRank  }
+            job.selectedColumns = %w{   Campaign CampaignId AdWordsType AveragePosition CPC CPM CTR CampaignStatus Clicks Conversions Cost ExternalCustomerId CustomerName CustomerTimeZone DailyBudget Impressions exactMatchImpShare impShare lostImpShareBudget lostImpShareRank   }
             job.startDay = date.year.to_s + '-' + date.month.to_s + '-' + date.day.to_s
             job.endDay = date.year.to_s + '-' + date.month.to_s + '-' + date.day.to_s
             job.crossClient = true
@@ -165,11 +164,10 @@ class SemCampaign < ActiveRecord::Base
                 client.save
 
                 #Add or Update the Campaign
-                adwords_campaign = AdwordsCampaign.find_or_create_by_reference_id(:reference_id => row['campaignid'],
-                                                                                  :google_sem_campaign_id => self.google_sem_campaigns.select { |google_sem_campaign| google_sem_campaign.google_campaign_id == row['campaignid'] },
-                                                                                  :name => row['campaign'],
-                                                                                  :campStatus => row['campStatus'],
-                                                                                  :campaign_type => row['adwordsType'])
+                adwords_campaign = GoogleSemCampaign.find_by_reference_id(:reference_id => row['campaignid'],
+                                                                          :name => row['campaign'],
+                                                                          :campStatus => row['campStatus'],
+                                                                          :campaign_type => row['adwordsType'])
                 adwords_campaign.save
 
                 adword = AdwordsCampaignSummary.find_or_create_by_adwords_campaign_id_and_report_date(:adwords_campaign_id => adwords_campaign.id,
@@ -217,6 +215,7 @@ class SemCampaign < ActiveRecord::Base
       new_report = SemCampaignReportStatus.new
 
       if report_exists == nil
+        new_report.sem_campaign_id = self.id
         new_report.pulled_on = date.strftime("%m/%d/%Y")
         new_report.result = "Started"
         new_report.report_type = "Ad"
@@ -230,7 +229,7 @@ class SemCampaign < ActiveRecord::Base
         job.selectedReportType = 'Creative'
         job.aggregationTypes = 'Summary'
         job.name = report_name
-        job.selectedColumns = %w{ AdWordsType SignupCount CostPerTransaction CostPerVideoPlayback ConversionRate CostPerConverstion CostPerVideoPlayback KeywordStatus KeywordTypeDisplay CreativeId AdGroup AdGroupId AdGroupMaxCpa AdGroupStatus AdStatus AverageConversionValue AveragePosition AvgPercentOfVideoPlayed BottomPosition BusinessAddress BusinessName CPC CPM CTR Campaign CampaignId CampaignStatus Clicks Conversions Cost DescriptionLine1 DescriptionLine2 DescriptionLine3 DestinationURL ExternalCustomerId KeywordMinCPC CreativeDestUrl CreativeType CustomerName CustomerTimeZone DailyBudget DefaultCount DefaultValue FirstPageCpc ImageAdName ImageHostingKey Impressions Keyword KeywordId KeywordDestUrlDisplay LeadCount LeadValue MaxContentCPC MaximumCPC MaximumCPM PageViewCount PageViewValue PhoneNo PreferredCPC PreferredCPM Preview QualityScore SalesCount SalesValue SignupValue TopPosition TotalConversionValue Transactions ValuePerClick ValuePerCost VideoPlaybackRate VideoPlaybacks VideoPlaybacksThrough100Percent VideoPlaybacksThrough75Percent VideoPlaybacksThrough50Percent VideoPlaybacksThrough25Percent VideoSkips VisibleUrl  }
+        job.selectedColumns = %w{  AdWordsType SignupCount CostPerTransaction CostPerVideoPlayback ConversionRate CostPerConverstion CostPerVideoPlayback KeywordStatus KeywordTypeDisplay CreativeId AdGroup AdGroupId AdGroupMaxCpa AdGroupStatus AdStatus AverageConversionValue AveragePosition AvgPercentOfVideoPlayed BottomPosition BusinessAddress BusinessName CPC CPM CTR Campaign CampaignId CampaignStatus Clicks Conversions Cost DescriptionLine1 DescriptionLine2 DescriptionLine3 DestinationURL ExternalCustomerId KeywordMinCPC CreativeDestUrl CreativeType CustomerName CustomerTimeZone DailyBudget DefaultCount DefaultValue FirstPageCpc ImageAdName ImageHostingKey Impressions Keyword KeywordId KeywordDestUrlDisplay LeadCount LeadValue MaxContentCPC MaximumCPC MaximumCPM PageViewCount PageViewValue PhoneNo PreferredCPC PreferredCPM Preview QualityScore SalesCount SalesValue SignupValue TopPosition TotalConversionValue Transactions ValuePerClick ValuePerCost VideoPlaybackRate VideoPlaybacks VideoPlaybacksThrough100Percent VideoPlaybacksThrough75Percent VideoPlaybacksThrough50Percent VideoPlaybacksThrough25Percent VideoSkips VisibleUrl   }
         job.startDay = date.year.to_s + "-" + date.month.to_s + "-" + date.day.to_s
         job.endDay = date.year.to_s + "-" + date.month.to_s + "-" + date.day.to_s
         job.crossClient = true
@@ -255,16 +254,15 @@ class SemCampaign < ActiveRecord::Base
                                                                                :reference_id => row["customerid"])
 
               #Add or Update the Campaign
-              adwords_campaign = AdwordsCampaign.find_or_create_by_reference_id(:reference_id => row['campaignid'],
-                                                                                :google_sem_campaign_id => self.google_sem_campaigns.select { |google_sem_campaign| google_sem_campaign.google_campaign_id == row['campaignid'] },
-                                                                                :name => row['campaign'],
-                                                                                :campStatus => row['campStatus'],
-                                                                                :campaign_type => row['adwordsType'])
+              adwords_campaign = GoogleSemCampaign.find_by_reference_id(:reference_id => row['campaignid'],
+                                                                        :name => row['campaign'],
+                                                                        :campStatus => row['campStatus'],
+                                                                        :campaign_type => row['adwordsType'])
               adwords_campaign.save
 
               #Add or Update the Ad Group
               adgroup = AdwordsAdGroup.find_or_create_by_reference_id(:reference_id => row["adgroupid"],
-                                                                      ########FIXXXX                                                     :adwords_campaign_id => self.id,
+                                                                      :google_sem_campaign_id => adwords_campaign.id,
                                                                       :status => row["agStatus"])
 
               #Add or Update the Keyword
@@ -367,7 +365,7 @@ class SemCampaign < ActiveRecord::Base
           job.selectedReportType = 'Creative'
           job.aggregationTypes = 'Summary'
           job.name = report_name
-          job.selectedColumns = %w{ AdWordsType SignupCount CostPerTransaction CostPerVideoPlayback ConversionRate CostPerConverstion CostPerVideoPlayback KeywordStatus KeywordTypeDisplay CreativeId AdGroup AdGroupId AdGroupMaxCpa AdGroupStatus AdStatus AverageConversionValue AveragePosition AvgPercentOfVideoPlayed BottomPosition BusinessAddress BusinessName CPC CPM CTR Campaign CampaignId CampaignStatus Clicks Conversions Cost DescriptionLine1 DescriptionLine2 DescriptionLine3 DestinationURL ExternalCustomerId KeywordMinCPC CreativeDestUrl CreativeType CustomerName CustomerTimeZone DailyBudget DefaultCount DefaultValue FirstPageCpc ImageAdName ImageHostingKey Impressions Keyword KeywordId KeywordDestUrlDisplay LeadCount LeadValue MaxContentCPC MaximumCPC MaximumCPM PageViewCount PageViewValue PhoneNo PreferredCPC PreferredCPM Preview QualityScore SalesCount SalesValue SignupValue TopPosition TotalConversionValue Transactions ValuePerClick ValuePerCost VideoPlaybackRate VideoPlaybacks VideoPlaybacksThrough100Percent VideoPlaybacksThrough75Percent VideoPlaybacksThrough50Percent VideoPlaybacksThrough25Percent VideoSkips VisibleUrl  }
+          job.selectedColumns = %w{  AdWordsType SignupCount CostPerTransaction CostPerVideoPlayback ConversionRate CostPerConverstion CostPerVideoPlayback KeywordStatus KeywordTypeDisplay CreativeId AdGroup AdGroupId AdGroupMaxCpa AdGroupStatus AdStatus AverageConversionValue AveragePosition AvgPercentOfVideoPlayed BottomPosition BusinessAddress BusinessName CPC CPM CTR Campaign CampaignId CampaignStatus Clicks Conversions Cost DescriptionLine1 DescriptionLine2 DescriptionLine3 DestinationURL ExternalCustomerId KeywordMinCPC CreativeDestUrl CreativeType CustomerName CustomerTimeZone DailyBudget DefaultCount DefaultValue FirstPageCpc ImageAdName ImageHostingKey Impressions Keyword KeywordId KeywordDestUrlDisplay LeadCount LeadValue MaxContentCPC MaximumCPC MaximumCPM PageViewCount PageViewValue PhoneNo PreferredCPC PreferredCPM Preview QualityScore SalesCount SalesValue SignupValue TopPosition TotalConversionValue Transactions ValuePerClick ValuePerCost VideoPlaybackRate VideoPlaybacks VideoPlaybacksThrough100Percent VideoPlaybacksThrough75Percent VideoPlaybacksThrough50Percent VideoPlaybacksThrough25Percent VideoSkips VisibleUrl   }
           job.startDay = date.year.to_s + "-" + date.month.to_s + "-" + date.day.to_s
           job.endDay = date.year.to_s + "-" + date.month.to_s + "-" + date.day.to_s
           job.crossClient = true
@@ -388,16 +386,15 @@ class SemCampaign < ActiveRecord::Base
                                                                                :reference_id => row["customerid"])
 
               #Add or Update the Campaign
-              adwords_campaign = AdwordsCampaign.find_or_create_by_reference_id(:reference_id => row['campaignid'],
-                                                                                :google_sem_campaign_id => self.google_sem_campaigns.select { |google_sem_campaign| google_sem_campaign.google_campaign_id == row['campaignid'] },
-                                                                                :name => row['campaign'],
-                                                                                :campStatus => row['campStatus'],
-                                                                                :campaign_type => row['adwordsType'])
+              adwords_campaign = GoogleSemCampaign.find_by_reference_id(:reference_id => row['campaignid'],
+                                                                        :name => row['campaign'],
+                                                                        :campStatus => row['campStatus'],
+                                                                        :campaign_type => row['adwordsType'])
               adwords_campaign.save
 
               #Add or Update the Ad Group
               adgroup = AdwordsAdGroup.find_or_create_by_reference_id(:reference_id => row["adgroupid"],
-                                                                      ########FIXXXX                                                     :adwords_campaign_id => self.id,
+                                                                      :google_sem_campaign_id => adwords_campaign.id,
                                                                       :status => row["agStatus"])
 
               #Add or Update the Keyword
@@ -484,7 +481,7 @@ class SemCampaign < ActiveRecord::Base
           new_report.save
         end
       elsif report_exists.result == "Started" && report_exists.created_at < (Date.today - 1.days)
-        AdwordsReportDate.delete(report_exists.id)
+        SemCampaignReportStatus.delete(report_exists.id)
       end
     end
   end

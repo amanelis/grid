@@ -58,28 +58,30 @@ class MapKeyword < ActiveRecord::Base
       #Check the 7 pack first
       pack_check_url = 'http://www.google.com/search?q=' + search_keyword
       pack_source = HTTParty.get(pack_check_url)
-      pack_start = pack_source.index("Local business results")
-      pack_stop = pack_source.index("More results near")
-      pack_block = pack_source[pack_start..pack_stop]
-      pack_block = pack_block.gsub("<b>", "").gsub("</b>", "").gsub("&amp;", "&").gsub("&#39;", "'")
-      if pack_block.include? company
-        pack_items = pack_block.split('<tr>')
-        pack_items.slice!(0..1)
-        pack_count = 1
-        pack_items.each do |pack_item|
-          pack_item_block = pack_item.gsub("<b>", "").gsub("</b>", "").gsub("&amp;", "&").gsub("&#39;", "'")
-          if pack_item_block.include? company
-            result['result'] = pack_count
-            place_start = pack_item.index('class=fl')
-            place_block = pack_item[place_start..(pack_item.length - 1)]
-            place_end = place_block.index("&ei")
-            block = place_block[16..(place_end - 1)]
-            cid = block.index('cid')
-            mapsid = block[cid..block.length]
-            result['page'] = 'http://maps.google.com/maps/place?' + mapsid
-            break
+      if pack_source.present?
+        pack_start = pack_source.index("Local business results")
+        pack_stop = pack_source.index("More results near")
+        pack_block = pack_source[pack_start..pack_stop]
+        pack_block = pack_block.gsub("<b>", "").gsub("</b>", "").gsub("&amp;", "&").gsub("&#39;", "'")
+        if pack_block.include? company
+          pack_items = pack_block.split('<tr>')
+          pack_items.slice!(0..1)
+          pack_count = 1
+          pack_items.each do |pack_item|
+            pack_item_block = pack_item.gsub("<b>", "").gsub("</b>", "").gsub("&amp;", "&").gsub("&#39;", "'")
+            if pack_item_block.include? company
+              result['result'] = pack_count
+              place_start = pack_item.index('class=fl')
+              place_block = pack_item[place_start..(pack_item.length - 1)]
+              place_end = place_block.index("&ei")
+              block = place_block[16..(place_end - 1)]
+              cid = block.index('cid')
+              mapsid = block[cid..block.length]
+              result['page'] = 'http://maps.google.com/maps/place?' + mapsid
+              break
+            end
+            pack_count += 1
           end
-          pack_count += 1
         end
       end
 
@@ -198,11 +200,13 @@ class MapKeyword < ActiveRecord::Base
           first_block = company_block[citation_start..company_block.length]
           citation_stop = first_block.index('class=pp-story-bar')
           citation_block = first_block[0..citation_stop] if citation_stop.present?
-          if citation_block.include? '>More'
-            count_start = citation_block.index('>More (')
-            count_stop = citation_block.index(') &raquo;')
-            if count_start.present? && count_stop.present?
-              citations = 5 + citation_block[(count_start + 7)..(count_stop - 1)].to_i
+          if citation_block.present?
+            if citation_block.include? '>More'
+              count_start = citation_block.index('>More (')
+              count_stop = citation_block.index(') &raquo;')
+              if count_start.present? && count_stop.present?
+                citations = 5 + citation_block[(count_start + 7)..(count_stop - 1)].to_i
+              end
             end
           else
             citation_count = citation_block.split('pp-attribution>')

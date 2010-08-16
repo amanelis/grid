@@ -26,7 +26,7 @@ class Campaign < ActiveRecord::Base
             google_ids = sf_campaign.google_campaign_id__c.present? ? sf_campaign.google_campaign_id__c.split(',') : ''
             google_ids.each do |google_id|
               new_google_sem_campaign = new_sem_campaign.google_sem_campaigns.build
-              new_google_sem_campaign.google_campaign_id = google_id
+              new_google_sem_campaign.reference_id = google_id.gsub(' ', '')
               new_google_sem_campaign.developer_token = 'HC3GEwJ4LqgyVNeNTenIVw'
               new_google_sem_campaign.application_token = '-o8E21xqBmVx7CkQ5TfAag'
               new_google_sem_campaign.user_agent = 'Biz Search Local'
@@ -35,7 +35,6 @@ class Campaign < ActiveRecord::Base
               new_google_sem_campaign.client_email = 'bizsearchlocal.jon@gmail.com'
               new_google_sem_campaign.environment = 'PRODUCTION'
             end
-
             new_sem_campaign.save!
 
 
