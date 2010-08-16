@@ -160,7 +160,7 @@ class MapKeyword < ActiveRecord::Base
         else
           review_start = company_block.index("pp-story-item")
           review_stop = company_block.index('Nearby places you might like')
-          if review_start.present? || review_stop.present?
+          if review_start.present? && review_stop.present?
             review_block = company_block[review_start..review_stop]
             reviews = review_block.split('pp-story-item')
             reviews.delete_at(0)
@@ -197,7 +197,7 @@ class MapKeyword < ActiveRecord::Base
         if citation_start.present?
           first_block = company_block[citation_start..company_block.length]
           citation_stop = first_block.index('class=pp-story-bar')
-          citation_block = first_block[0..citation_stop]
+          citation_block = first_block[0..citation_stop] if citation_stop.present?
           if citation_block.include? '>More'
             count_start = citation_block.index('>More (')
             count_stop = citation_block.index(') &raquo;')
