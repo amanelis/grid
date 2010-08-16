@@ -22,6 +22,7 @@ Rails::Initializer.run do |config|
   config.gem "johnreilly-activerecord-activesalesforce-adapter", :source => 'http://gems.github.com', :lib => 'activerecord-activesalesforce-adapter'
   config.gem 'httparty'
   config.gem 'nokogiri'
+  config.gem "authlogic"
 
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named

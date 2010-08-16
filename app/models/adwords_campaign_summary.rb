@@ -1,5 +1,3 @@
 class AdwordsCampaignSummary < ActiveRecord::Base
-  belongs_to :adwords_campaign
-
-  
+  belongs_to :google_sem_campaign
 end
