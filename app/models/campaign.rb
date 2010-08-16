@@ -17,7 +17,13 @@ class Campaign < ActiveRecord::Base
             new_sem_campaign = SemCampaign.new
             new_sem_campaign.monthly_budget = sf_campaign.monthly_budget__c
             new_sem_campaign.rake = sf_campaign.campaign_rake__c
-
+            new_sem_campaign.developer_token = 'HC3GEwJ4LqgyVNeNTenIVw'
+            new_sem_campaign.application_token = '-o8E21xqBmVx7CkQ5TfAag'
+            new_sem_campaign.user_agent = 'Biz Search Local'
+            new_sem_campaign.password = 'brayden11'
+            new_sem_campaign.email = 'bizsearchlocal.jon@gmail.com'
+            new_sem_campaign.client_email = 'bizsearchlocal.jon@gmail.com'
+            new_sem_campaign.environment = 'PRODUCTION'
             new_campaign = new_sem_campaign.build_campaign
             new_campaign.account_id = account.id
             new_campaign.status = sf_campaign.status__c
@@ -27,16 +33,8 @@ class Campaign < ActiveRecord::Base
             google_ids.each do |google_id|
               new_google_sem_campaign = new_sem_campaign.google_sem_campaigns.build
               new_google_sem_campaign.reference_id = google_id.gsub(' ', '')
-              new_google_sem_campaign.developer_token = 'HC3GEwJ4LqgyVNeNTenIVw'
-              new_google_sem_campaign.application_token = '-o8E21xqBmVx7CkQ5TfAag'
-              new_google_sem_campaign.user_agent = 'Biz Search Local'
-              new_google_sem_campaign.password = 'brayden11'
-              new_google_sem_campaign.email = 'bizsearchlocal.jon@gmail.com'
-              new_google_sem_campaign.client_email = 'bizsearchlocal.jon@gmail.com'
-              new_google_sem_campaign.environment = 'PRODUCTION'
             end
             new_sem_campaign.save!
-
 
 
           elsif sf_campaign.campaign_type__c.include? 'SEO'
