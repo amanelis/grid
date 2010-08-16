@@ -2,7 +2,8 @@ class CreateGoogleSemCampaigns < ActiveRecord::Migration
   def self.up
     create_table :google_sem_campaigns do |t|
       t.references :sem_campaign, :null => false
-      t.string :google_campaign_id
+      t.string :reference_id
+      t.string :status
       t.string :developer_token
       t.string :application_token
       t.string :user_agent
@@ -11,8 +12,6 @@ class CreateGoogleSemCampaigns < ActiveRecord::Migration
       t.string :client_email
       t.string :environment
       t.string :name
-      t.string :reference_id
-      t.string :status
       t.integer :phone
       t.string :campaign_type
       t.timestamps
