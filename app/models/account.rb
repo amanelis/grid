@@ -66,6 +66,10 @@ class Account < ActiveRecord::Base
     MapKeyword.update_keywords_from_salesforce
     puts "Updating Map Keyword Rankings"
     MapKeyword.update_map_rankings
+    puts 'Updating Adwords Campaign Level Reports'
+    SemCampaign.update_sem_campaign_reports_by_campaign
+    puts 'Updating Adwords Ad Level Reports'
+    SemCampaign.update_sem_campaign_reports_by_ad
     puts "Done."
   end
 
