@@ -2,6 +2,42 @@ class Account < ActiveRecord::Base
   has_many :campaigns
   has_one :adwords_client
 
+  def visit_count_by_date
+    @data = {}    
+    campaigns.each do |campaign|
+      campaign.websites.each do |website|
+        @raw_visits = website.website_visits.count(:all, :group => "date(time_of_visit)", :order =>"time_of_visit ASC")
+        @raw_visits.each_pair {|key, value| @data[key.to_date] = {website.domain.to_sym => value}}
+      end
+    end
+    return @data
+  end
+  
+  def self.visit_count_by_date
+    @raw_data = WebsiteVisit.count(:all, :group => "date(time_of_visit)", :order =>"time_of_visit ASC")
+    
+    @data = {}
+    @raw_data.each_pair {|key, value| @data[key.to_date] = {:web_visits => value}}
+    return @data
+  end
+  
+  def sorted_dates
+    rawdates = JSON.parse(self.daily_timeline.dates)
+    @data = []
+    rawdates.each do |date|
+      @data << DateTime.strptime( date.to_s, "%Y%m%d")
+    end
+    @data.sort
+  end
+  
+  def self.sorted_dates
+    rawdates = WebsiteVisit.find(:all, :select => "time_of_visit")
+    @data = []
+    rawdates.each do |date|
+      @data << DateTime.strptime( date.time_of_visit.to_s, "%Y-%m-%d")
+    end
+    @data.sort
+  end
 
   def self.pull_all_data_migrations
     puts "Pulling Salesforce Accounts..."

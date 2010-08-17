@@ -1,0 +1,9 @@
+# app_config.yml
+development:
+  host: "localhost:3000"
+
+test:
+  host: "localhost:3000"
+
+production:
+  host: "hive.cityvoice.com"

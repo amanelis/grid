@@ -10,17 +10,13 @@ class UsersController < ApplicationController
     @user = User.new(params[:user])
     if @user.save
       flash[:notice] = "Account registered!"
-      redirect_back_or_default person_url
+      redirect_back_or_default dashboard_url
     else
       render :action => :new
     end
   end
   
   def show
-    @user = @current_user
-  end
-
-  def edit
     @user = @current_user
   end
   
@@ -30,7 +26,7 @@ class UsersController < ApplicationController
       flash[:notice] = "Account updated!"
       redirect_to person_url
     else
-      render :action => :edit
+      render :action => :show
     end
   end
 end

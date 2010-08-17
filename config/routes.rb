@@ -37,10 +37,14 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :users
   end
   
+  map.with_options :controller => 'home' do |home|
+     home.dashboard 'dashboard', :action => 'dashboard'
+  end
+  
   map.resource :person, :controller => "users"
-  map.resources :users
+  map.resources :users, :password_resets
   map.resource :user_session
-  map.root :controller => "user_sessions", :action => "new" # optional, this just sets the root route
+  map.root :controller => "home", :action => "index" # optional, this just sets the root route
 
   # You can have the root of your site routed with map.root -- just remember to delete public/index.html.
   # map.root :controller => "welcome"

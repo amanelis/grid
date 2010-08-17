@@ -1,0 +1,19 @@
+#login
+  - if @current_user
+    =link_to "Dashboard", dashboard_url
+    =link_to "Admin", admin_url if @current_user.admin?
+    =link_to "Account", person_url
+    =link_to 'Logout', user_session_path, :method => :delete
+  - else
+    =link_to "Register", new_person_path
+    =link_to "Login", new_user_session_path
+#billboard
+  %h1 
+    = link_to "CityVoice Grid", "/", :class =>"dark"
+  %h2 
+    Marketing ROI Measurement, Served Fresh
+    %br
+    %span
+      Built by 
+      =link_to "CityVoice", "http://www.cityvoice.com"
+      with a whole lotta love.

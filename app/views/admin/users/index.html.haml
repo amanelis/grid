@@ -1,0 +1,18 @@
+%table{:class => "pretty"}
+  %thead
+    %tr
+      %th ID
+      %th Email
+      %th Created
+      %th Last Request
+      %th
+  %tbody
+    - @users.each do |user|
+      %tr{ :class => cycle('odd', 'even')}
+        %td= user.id
+        %td= user.email
+        %td= user.created_at.to_s(:long)
+        %td
+          = time_ago_in_words(user.last_request_at) 
+          ago
+        %td= link_to 'Edit', admin_user_path(user)

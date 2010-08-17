@@ -1,0 +1,14 @@
+%table{:class => "pretty"}
+  %thead
+    %tr
+      %th ID
+      %th Name
+      %th Account Type
+      %th
+  %tbody
+    - @accounts.each do |account|
+      %tr{ :class => cycle('odd', 'even')}
+        %td= account.id
+        %td= account.name
+        %td= account.account_type
+        %td= link_to 'Show', admin_account_path(account)
