@@ -3,7 +3,7 @@ class SemCampaign < ActiveRecord::Base
   has_many :google_sem_campaigns
   has_many :sem_campaign_report_statuses
 
-  def self.update_sem_campaign_reports_by_campaign(hard_update = false, date = Date.today)
+  def self.update_sem_campaign_reports_by_campaign(hard_update = false, date = Date.today - 1)
     sem_campaigns = SemCampaign.all
     sem_campaigns.each do |sem_campaign|
       span = 30
@@ -19,7 +19,7 @@ class SemCampaign < ActiveRecord::Base
     end
   end
 
-  def self.update_sem_campaign_reports_by_ad(hard_update = false, date = Date.today)
+  def self.update_sem_campaign_reports_by_ad(hard_update = false, date = Date.today - 1)
     sem_campaigns = SemCampaign.all
     sem_campaigns.each do |sem_campaign|
       span = 30
