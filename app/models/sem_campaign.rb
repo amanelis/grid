@@ -58,7 +58,7 @@ class SemCampaign < ActiveRecord::Base
           job.selectedReportType = 'Campaign'
           job.aggregationTypes = 'Summary'
           job.name = report_name
-          job.selectedColumns = %w{        Campaign CampaignId AdWordsType AveragePosition CPC CPM CTR CampaignStatus Clicks Conversions Cost ExternalCustomerId CustomerName CustomerTimeZone DailyBudget Impressions exactMatchImpShare impShare lostImpShareBudget lostImpShareRank        }
+          job.selectedColumns = %w{          Campaign CampaignId AdWordsType AveragePosition CPC CPM CTR CampaignStatus Clicks Conversions Cost ExternalCustomerId CustomerName CustomerTimeZone DailyBudget Impressions exactMatchImpShare impShare lostImpShareBudget lostImpShareRank          }
           job.startDay = date.year.to_s + '-' + date.month.to_s + '-' + date.day.to_s
           job.endDay = date.year.to_s + '-' + date.month.to_s + '-' + date.day.to_s
           job.crossClient = true
@@ -170,7 +170,7 @@ class SemCampaign < ActiveRecord::Base
             job.selectedReportType = 'Campaign'
             job.aggregationTypes = 'Summary'
             job.name = report_name
-            job.selectedColumns = %w{        Campaign CampaignId AdWordsType AveragePosition CPC CPM CTR CampaignStatus Clicks Conversions Cost ExternalCustomerId CustomerName CustomerTimeZone DailyBudget Impressions exactMatchImpShare impShare lostImpShareBudget lostImpShareRank        }
+            job.selectedColumns = %w{          Campaign CampaignId AdWordsType AveragePosition CPC CPM CTR CampaignStatus Clicks Conversions Cost ExternalCustomerId CustomerName CustomerTimeZone DailyBudget Impressions exactMatchImpShare impShare lostImpShareBudget lostImpShareRank          }
             job.startDay = date.year.to_s + '-' + date.month.to_s + '-' + date.day.to_s
             job.endDay = date.year.to_s + '-' + date.month.to_s + '-' + date.day.to_s
             job.crossClient = true
@@ -276,7 +276,7 @@ class SemCampaign < ActiveRecord::Base
       end
       #PULL THE AD REPORT
     elsif report_type == 'Ad'
-      report_exists = SemCampaignReportStatus.first(:conditions => ['pulled_on = ? AND report_type= ?', date.strftime("%m/%d/%Y"), report_type])
+      report_exists = SemCampaignReportStatus.first(:conditions => ['pulled_on = ? AND report_type= ? AND sem_campaign_id = ?', date.strftime('%m/%d/%Y'), report_type, self.id])
       job_id = 0
       new_report = SemCampaignReportStatus.new
 
@@ -289,25 +289,24 @@ class SemCampaign < ActiveRecord::Base
         new_report.save
         puts "Started Report for: " + date.strftime("%m/%d/%Y") + " at " + Time.now.to_s
 
-        adwords = AdWords::API.new(AdWords::AdWordsCredentials.new({'developerToken' => 'HC3GEwJ4LqgyVNeNTenIVw', 'applicationToken' => '-o8E21xqBmVx7CkQ5TfAag', 'useragent' => 'Biz Search Local', 'password' => 'brayden11', 'email' => 'bizsearchlocal.jon@gmail.com', 'clientEmail' => 'bizsearchlocal.jon@gmail.com', 'environment' => 'PRODUCTION', }))
+        adwords = AdWords::API.new(AdWords::AdWordsCredentials.new({'developerToken' => self.developer_token, 'applicationToken' => self.application_token, 'useragent' => self.user_agent, 'password' => self.password, 'email' => self.email, 'clientEmail' => self.client_email, 'environment' => 'PRODUCTION', }))
         report_name = "Ad- " + self.name + date.year.to_s + "-" + date.month.to_s + "-" + date.day.to_s
         report_srv = adwords.get_service('Report', 13)
         job = report_srv.module::DefinedReportJob.new
         job.selectedReportType = 'Creative'
         job.aggregationTypes = 'Summary'
         job.name = report_name
-        job.selectedColumns = %w{       AdWordsType SignupCount CostPerTransaction CostPerVideoPlayback ConversionRate CostPerConverstion CostPerVideoPlayback KeywordStatus KeywordTypeDisplay CreativeId AdGroup AdGroupId AdGroupMaxCpa AdGroupStatus AdStatus AverageConversionValue AveragePosition AvgPercentOfVideoPlayed BottomPosition BusinessAddress BusinessName CPC CPM CTR Campaign CampaignId CampaignStatus Clicks Conversions Cost DescriptionLine1 DescriptionLine2 DescriptionLine3 DestinationURL ExternalCustomerId KeywordMinCPC CreativeDestUrl CreativeType CustomerName CustomerTimeZone DailyBudget DefaultCount DefaultValue FirstPageCpc ImageAdName ImageHostingKey Impressions Keyword KeywordId KeywordDestUrlDisplay LeadCount LeadValue MaxContentCPC MaximumCPC MaximumCPM PageViewCount PageViewValue PhoneNo PreferredCPC PreferredCPM Preview QualityScore SalesCount SalesValue SignupValue TopPosition TotalConversionValue Transactions ValuePerClick ValuePerCost VideoPlaybackRate VideoPlaybacks VideoPlaybacksThrough100Percent VideoPlaybacksThrough75Percent VideoPlaybacksThrough50Percent VideoPlaybacksThrough25Percent VideoSkips VisibleUrl        }
+        job.selectedColumns = %w{         AdWordsType SignupCount CostPerTransaction CostPerVideoPlayback ConversionRate CostPerConverstion CostPerVideoPlayback KeywordStatus KeywordTypeDisplay CreativeId AdGroup AdGroupId AdGroupMaxCpa AdGroupStatus AdStatus AverageConversionValue AveragePosition AvgPercentOfVideoPlayed BottomPosition BusinessAddress BusinessName CPC CPM CTR Campaign CampaignId CampaignStatus Clicks Conversions Cost DescriptionLine1 DescriptionLine2 DescriptionLine3 DestinationURL ExternalCustomerId KeywordMinCPC CreativeDestUrl CreativeType CustomerName CustomerTimeZone DailyBudget DefaultCount DefaultValue FirstPageCpc ImageAdName ImageHostingKey Impressions Keyword KeywordId KeywordDestUrlDisplay LeadCount LeadValue MaxContentCPC MaximumCPC MaximumCPM PageViewCount PageViewValue PhoneNo PreferredCPC PreferredCPM Preview QualityScore SalesCount SalesValue SignupValue TopPosition TotalConversionValue Transactions ValuePerClick ValuePerCost VideoPlaybackRate VideoPlaybacks VideoPlaybacksThrough100Percent VideoPlaybacksThrough75Percent VideoPlaybacksThrough50Percent VideoPlaybacksThrough25Percent VideoSkips VisibleUrl          }
         job.startDay = date.year.to_s + "-" + date.month.to_s + "-" + date.day.to_s
         job.endDay = date.year.to_s + "-" + date.month.to_s + "-" + date.day.to_s
         job.crossClient = true
         job.campaigns = campaign_array
 
-        report_srv.validateReportJob(job)
-
-        job_id = report_srv.scheduleReportJob(job).scheduleReportJobReturn
-        #puts 'Scheduled report with id %d. Now sleeping %d seconds.' %[job_id, sleep_interval]
-        sleep(20)
         begin
+          report_srv.validateReportJob(job)
+          job_id = report_srv.scheduleReportJob(job).scheduleReportJobReturn
+          #puts 'Scheduled report with id %d. Now sleeping %d seconds.' %[job_id, sleep_interval]
+          #sleep(20)
           report = Nokogiri::XML(report_srv.downloadXmlReport(job_id))
           rows = report.xpath("//row")
           if rows.size < (job.campaigns.size + 5)
@@ -337,9 +336,6 @@ class SemCampaign < ActiveRecord::Base
                   sem_campaign.campaign_type = row['adwordsType']
                   sem_campaign.save
                 end
-
-                adword = AdwordsCampaignSummary.find_by_google_sem_campaign_id_and_report_date(sem_campaign.id, date)
-
 
                 #Add or Update the Ad Group
                 adgroup = AdwordsAdGroup.find_by_reference_id(row["adgroupid"])
@@ -376,7 +372,7 @@ class SemCampaign < ActiveRecord::Base
                 end
 
                 #Add or Update the Ad
-                ad = AdwordsAd.find_by_reference_id(:reference_id => row["creativeid"])
+                ad = AdwordsAd.find_by_reference_id(row["creativeid"])
                 if ad.present?
                   ad.adwords_ad_group_id = adgroup.id
                   ad.status = row["creativeStatus"]
@@ -405,10 +401,11 @@ class SemCampaign < ActiveRecord::Base
                   ad.hosting_key = row["hostingKey"]
                   ad.preview = row["preview"]
                   ad.vis_url = row["creativeVisUrl"]
+                  ad.save
                 end
 
                 #Add the Ad Summary
-                adword = AdwordsAdSummary.find_by_adwords_ad_id_and_adwords_keyword_id_and_summary_date(ad.id, keyword.id, date)
+                adword = AdwordsAdSummary.find_by_adwords_ad_id_and_summary_date(ad.id, date)
                 if adword.present?
                   adword.conv = row["conv"]
                   adword.cost = row["cost"]
@@ -505,9 +502,11 @@ class SemCampaign < ActiveRecord::Base
                   adword.clicks = row["clicks"]
                   adword.save
                 end
-              rescue
-                new_report.result = 'Error Occured'
-                next
+              rescue AdWords::Error::Error => e
+                puts 'Error Parsing report: %s' % e + " at " + Time.now.to_s
+                new_report.result = "Error Occured"
+                new_report.job_id = job_id
+                new_report.save
               end
             end
             new_report.pulled_on = date.strftime("%m/%d/%Y")
@@ -526,19 +525,18 @@ class SemCampaign < ActiveRecord::Base
         report_exists.result = "Started"
         report_exists.save
         puts "Started Report for: " + date.strftime("%m/%d/%Y") + " Again" + " at " + Time.now.to_s
-        adwords = AdWords::API.new(AdWords::AdWordsCredentials.new({'developerToken' => 'HC3GEwJ4LqgyVNeNTenIVw', 'applicationToken' => '-o8E21xqBmVx7CkQ5TfAag', 'useragent' => 'Biz Search Local', 'password' => 'brayden11', 'email' => 'bizsearchlocal.jon@gmail.com', 'clientEmail' => 'bizsearchlocal.jon@gmail.com', 'environment' => 'PRODUCTION', }))
+        adwords = AdWords::API.new(AdWords::AdWordsCredentials.new({'developerToken' => self.developer_token, 'applicationToken' => self.application_token, 'useragent' => self.user_agent, 'password' => self.password, 'email' => self.email, 'clientEmail' => self.client_email, 'environment' => 'PRODUCTION', }))
 
         report_srv = adwords.get_service('Report', 13)
         job_id = report_exists.job_id
         if job_id == nil
-          adwords = AdWords::API.new(AdWords::AdWordsCredentials.new({'developerToken' => 'HC3GEwJ4LqgyVNeNTenIVw', 'applicationToken' => '-o8E21xqBmVx7CkQ5TfAag', 'useragent' => 'Biz Search Local', 'password' => 'brayden11', 'email' => 'bizsearchlocal.jon@gmail.com', 'clientEmail' => 'bizsearchlocal.jon@gmail.com', 'environment' => 'PRODUCTION', }))
           report_name = "Ad- " + self.name + date.year.to_s + "-" + date.month.to_s + "-" + date.day.to_s
           report_srv = adwords.get_service('Report', 13)
           job = report_srv.module::DefinedReportJob.new
           job.selectedReportType = 'Creative'
           job.aggregationTypes = 'Summary'
           job.name = report_name
-          job.selectedColumns = %w{       AdWordsType SignupCount CostPerTransaction CostPerVideoPlayback ConversionRate CostPerConverstion CostPerVideoPlayback KeywordStatus KeywordTypeDisplay CreativeId AdGroup AdGroupId AdGroupMaxCpa AdGroupStatus AdStatus AverageConversionValue AveragePosition AvgPercentOfVideoPlayed BottomPosition BusinessAddress BusinessName CPC CPM CTR Campaign CampaignId CampaignStatus Clicks Conversions Cost DescriptionLine1 DescriptionLine2 DescriptionLine3 DestinationURL ExternalCustomerId KeywordMinCPC CreativeDestUrl CreativeType CustomerName CustomerTimeZone DailyBudget DefaultCount DefaultValue FirstPageCpc ImageAdName ImageHostingKey Impressions Keyword KeywordId KeywordDestUrlDisplay LeadCount LeadValue MaxContentCPC MaximumCPC MaximumCPM PageViewCount PageViewValue PhoneNo PreferredCPC PreferredCPM Preview QualityScore SalesCount SalesValue SignupValue TopPosition TotalConversionValue Transactions ValuePerClick ValuePerCost VideoPlaybackRate VideoPlaybacks VideoPlaybacksThrough100Percent VideoPlaybacksThrough75Percent VideoPlaybacksThrough50Percent VideoPlaybacksThrough25Percent VideoSkips VisibleUrl        }
+          job.selectedColumns = %w{         AdWordsType SignupCount CostPerTransaction CostPerVideoPlayback ConversionRate CostPerConverstion CostPerVideoPlayback KeywordStatus KeywordTypeDisplay CreativeId AdGroup AdGroupId AdGroupMaxCpa AdGroupStatus AdStatus AverageConversionValue AveragePosition AvgPercentOfVideoPlayed BottomPosition BusinessAddress BusinessName CPC CPM CTR Campaign CampaignId CampaignStatus Clicks Conversions Cost DescriptionLine1 DescriptionLine2 DescriptionLine3 DestinationURL ExternalCustomerId KeywordMinCPC CreativeDestUrl CreativeType CustomerName CustomerTimeZone DailyBudget DefaultCount DefaultValue FirstPageCpc ImageAdName ImageHostingKey Impressions Keyword KeywordId KeywordDestUrlDisplay LeadCount LeadValue MaxContentCPC MaximumCPC MaximumCPM PageViewCount PageViewValue PhoneNo PreferredCPC PreferredCPM Preview QualityScore SalesCount SalesValue SignupValue TopPosition TotalConversionValue Transactions ValuePerClick ValuePerCost VideoPlaybackRate VideoPlaybacks VideoPlaybacksThrough100Percent VideoPlaybacksThrough75Percent VideoPlaybacksThrough50Percent VideoPlaybacksThrough25Percent VideoSkips VisibleUrl          }
           job.startDay = date.year.to_s + "-" + date.month.to_s + "-" + date.day.to_s
           job.endDay = date.year.to_s + "-" + date.month.to_s + "-" + date.day.to_s
           job.crossClient = true
@@ -576,9 +574,6 @@ class SemCampaign < ActiveRecord::Base
                   sem_campaign.save
                 end
 
-                adword = AdwordsCampaignSummary.find_by_google_sem_campaign_id_and_report_date(sem_campaign.id, date)
-
-
                 #Add or Update the Ad Group
                 adgroup = AdwordsAdGroup.find_by_reference_id(row["adgroupid"])
                 if adgroup.present?
@@ -614,7 +609,7 @@ class SemCampaign < ActiveRecord::Base
                 end
 
                 #Add or Update the Ad
-                ad = AdwordsAd.find_by_reference_id(:reference_id => row["creativeid"])
+                ad = AdwordsAd.find_by_reference_id(row["creativeid"])
                 if ad.present?
                   ad.adwords_ad_group_id = adgroup.id
                   ad.status = row["creativeStatus"]
@@ -643,10 +638,11 @@ class SemCampaign < ActiveRecord::Base
                   ad.hosting_key = row["hostingKey"]
                   ad.preview = row["preview"]
                   ad.vis_url = row["creativeVisUrl"]
+                  ad.save
                 end
 
                 #Add the Ad Summary
-                adword = AdwordsAdSummary.find_by_adwords_ad_id_and_adwords_keyword_id_and_summary_date(ad.id, keyword.id, date)
+                adword = AdwordsAdSummary.find_by_adwords_ad_id_and_summary_date(ad.id, date)
                 if adword.present?
                   adword.conv = row["conv"]
                   adword.cost = row["cost"]
@@ -743,9 +739,11 @@ class SemCampaign < ActiveRecord::Base
                   adword.clicks = row["clicks"]
                   adword.save
                 end
-              rescue
-                new_report.result = 'Error Occured'
-                next
+              rescue AdWords::Error::Error => e
+                puts 'Error Parsing report: %s' % e + " at " + Time.now.to_s
+                new_report.result = "Error Occured"
+                new_report.job_id = job_id
+                new_report.save
               end
             end
 
