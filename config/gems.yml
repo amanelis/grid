@@ -2,6 +2,9 @@
 - :source: http://gems.github.com
   :name: johnreilly-activerecord-activesalesforce-adapter
 - :name: httparty
+- :name: nokogiri
 - :name: authlogic
+- :name: adwords4r
+- :name: formtastic
 - :version: 2.3.8
   :name: rails
