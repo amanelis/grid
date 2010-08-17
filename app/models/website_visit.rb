@@ -67,7 +67,8 @@ class WebsiteVisit < ActiveRecord::Base
                     :organization => visit["organization"],
                     :campaign => visit["campaign"],
                     :goals => visit["goals"],
-                    :custom => visit["custom"])
+                    :custom => visit["custom"],
+                    :time_of_visit => Time.at(visit["time"].to_i))
                   nurl.save
                 rescue 
                   puts 'Error in getting' + url_dates
