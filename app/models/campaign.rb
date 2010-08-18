@@ -6,6 +6,8 @@ class Campaign < ActiveRecord::Base
   has_and_belongs_to_many :websites
 
 
+  # CLASS BEHAVIOR
+
   def self.pull_salesforce_campaigns
     sf_campaigns = Salesforce::Clientcampaign.all
 
@@ -77,4 +79,21 @@ class Campaign < ActiveRecord::Base
       end
     end
   end
+
+
+  # INSTANCE BEHAVIOR
+
+  def number_of_total_leads_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    (self.phone_numbers.sum { |phone_number| phone_number.number_of_all_calls_between(start_date, end_date) }) + (self.contact_forms.sum { |contact_form| contact_form.number_of_submissions_between(start_date, end_date) })
+  end
+
+  def spend_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.campaign_style.spend_between(start_date, end_date)
+  end
+
+  def cost_per_lead_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    total_leads = self.number_of_total_leads_between(start_date, end_date)
+    total_leads > 0 ? self.spend_between(start_date, end_date) / total_leads : 0.0
+  end
+
 end

@@ -41,6 +41,7 @@ class PhoneNumber < ActiveRecord::Base
     end
   end
 
+
   # INSTANCE BEHAVIOR
 
   def number_of_answered_calls_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
@@ -57,6 +58,10 @@ class PhoneNumber < ActiveRecord::Base
 
   def number_of_other_calls_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
     self.calls.other.between(start_date, end_date).count
+  end
+
+  def number_of_all_calls_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.calls.between(start_date, end_date).count
   end
 
 end

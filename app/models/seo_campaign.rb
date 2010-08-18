@@ -5,6 +5,8 @@ class SeoCampaign < ActiveRecord::Base
   has_many :website_analyses, :class_name => "WebsiteAnalysis"
 
 
+  # CLASS BEHAVIOR
+
   def self.update_inbound_links
     seo_campaigns = SeoCampaign.all
     seo_campaigns.each do |seo_campaign|
@@ -54,6 +56,9 @@ class SeoCampaign < ActiveRecord::Base
       end
     end
   end
+
+
+  # INSTANCE BEHAVIOR
 
   def getpearscore(nickname)
     begin
@@ -123,6 +128,10 @@ class SeoCampaign < ActiveRecord::Base
     signature = uri.to_s() + ':' + api_secret.to_s() + '%'
     parameters.each { |key, value| signature += key.to_s() + '=' + value.to_s() + ';' }
     Digest::SHA1.hexdigest(signature)
+  end
+
+  def spend_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    (spend = self.budget).present? ? spend : 0.0
   end
 
 end
