@@ -4,6 +4,20 @@ require 'xmlrpc/datetime'
 class Call < ActiveRecord::Base
   belongs_to :phone_number
 
+  ANSWERED_CALL = "ANSWER"
+  CANCELED_CALL = "CANCEL"
+  VOICEMAIL_CALL = "VOICEMAIL"
+  OTHER_CALL = "OTHER"
+
+  named_scope :answered, :conditions => {:call_status => ANSWERED_CALL}
+  named_scope :canceled, :conditions => {:call_status => CANCELED_CALL}
+  named_scope :voicemail, :conditions => {:call_status => VOICEMAIL_CALL}
+  named_scope :other, :conditions => {:call_status => OTHER_CALL}
+
+  named_scope :between, lambda { |start_date, end_date| {:conditions => ['call_start between ? AND ?', start_date.to_time.utc.at_beginning_of_day, end_date.to_time.utc.end_of_day]} }
+
+
+  # CLASS BEHAVIOR
 
   def self.update_calls(start=(Time.now - 2.days), fend=(Time.now + 1.day))
     server = XMLRPC::Client.new("api.voicestar.com", "/api/xmlrpc/1", 80)
@@ -49,8 +63,7 @@ class Call < ActiveRecord::Base
         puts 'Error'
         #TODO: need to do something with this exception
       end
-
     end
   end
-end
 
+end

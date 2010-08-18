@@ -2,7 +2,9 @@ class PhoneNumber < ActiveRecord::Base
   belongs_to :campaign
   has_many :calls
 
-  
+
+  # CLASS BEHAVIOR
+
   def self.get_salesforce_numbers
     sf_campaigns = Salesforce::Clientcampaign.all
 
@@ -38,4 +40,23 @@ class PhoneNumber < ActiveRecord::Base
       end
     end
   end
+
+  # INSTANCE BEHAVIOR
+
+  def number_of_answered_calls_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.calls.answered.between(start_date, end_date).count
+  end
+
+  def number_of_canceled_calls_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.calls.canceled.between(start_date, end_date).count
+  end
+
+  def number_of_voicemail_calls_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.calls.voicemail.between(start_date, end_date).count
+  end
+
+  def number_of_other_calls_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.calls.other.between(start_date, end_date).count
+  end
+
 end
