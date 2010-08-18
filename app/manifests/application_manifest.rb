@@ -42,6 +42,21 @@ class ApplicationManifest < Moonshine::Manifest::Rails
 
     # some_rake_task = "/usr/bin/rake -f #{configuration[:deploy_to]}/current/Rakefile custom:task RAILS_ENV=#{ENV['RAILS_ENV']}"
     # cron 'custom:task', :command => some_rake_task, :user => configuration[:user], :minute => 0, :hour => 0
+    cron 'pull_salesforce_accounts', :command => "/home/deploy/hive/current/script/runner -e production Account.pull_salesforce_accounts", :user => configuration[:user], :minute => '1', :hour => '22'
+    cron 'pull_salesforce_campaigns', :command => "/home/deploy/hive/current/script/runner -e production Campaign.pull_salesforce_campaigns", :user => configuration[:user], :minute => '15', :hour => '22'
+    cron 'get_salesforce_numbers', :command => "/home/deploy/hive/current/script/runner -e production PhoneNumber.get_salesforce_numbers", :user => configuration[:user], :minute => '31', :hour => '22'
+    cron 'update_calls', :command => "/home/deploy/hive/current/script/runner -e production Call.update_calls", :user => configuration[:user], :minute => '5', :hour => '*/8'
+    cron 'add_websites', :command => "/home/deploy/hive/current/script/runner -e production Website.add_websites", :user => configuration[:user], :minute => '1', :hour => '23'
+    cron 'data_pull_websites_visits', :command => "/home/deploy/hive/current/script/runner -e production WebsiteVisit.data_pull_websites_visits", :user => configuration[:user], :minute => '45', :hour => '*/8'
+    cron 'update_keywords_from_salesforce', :command => "/home/deploy/hive/current/script/runner -e production Keyword.update_keywords_from_salesforce", :user => configuration[:user], :minute => '31', :hour => '23'
+    cron 'update_keyword_rankings', :command => "/home/deploy/hive/current/script/runner -e production Keyword.update_keyword_rankings", :user => configuration[:user], :minute => '1', :hour => '1'
+    cron 'update_inbound_links', :command => "/home/deploy/hive/current/script/runner -e production SeoCampaign.update_inbound_links", :user => configuration[:user], :minute => '1', :hour => '2'
+    cron 'clean_up_inbound_links', :command => "/home/deploy/hive/current/script/runner -e production SeoCampaign.clean_up_inbound_links", :user => configuration[:user], :minute => '31', :hour => '2'
+    cron 'update_website_analyses', :command => "/home/deploy/hive/current/script/runner -e production SeoCampaign.update_website_analyses", :user => configuration[:user], :minute => '1', :hour => '3'
+    cron 'update_keywords_from_salesforce', :command => "/home/deploy/hive/current/script/runner -e production MapKeyword.update_keywords_from_salesforce", :user => configuration[:user], :minute => '1', :hour => '4'
+    cron 'update_map_rankings', :command => "/home/deploy/hive/current/script/runner -e production MapKeyword.update_map_rankings", :user => configuration[:user], :minute => '1', :hour => '5'
+    cron 'update_sem_campaign_reports_by_campaign', :command => "/home/deploy/hive/current/script/runner -e production SemCampaign.update_sem_campaign_reports_by_campaign", :user => configuration[:user], :minute => '1', :hour => '9'
+    cron 'update_sem_campaign_reports_by_ad', :command => "/home/deploy/hive/current/script/runner -e production SemCampaign.update_sem_campaign_reports_by_ad", :user => configuration[:user], :minute => '1', :hour => '11'
 
     # %w( root rails ).each do |user|
     #   mailalias user, :recipient => 'you@domain.com', :notify => exec('newaliases')
