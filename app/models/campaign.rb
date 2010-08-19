@@ -92,8 +92,7 @@ class Campaign < ActiveRecord::Base
   end
 
   def cost_per_lead_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
-    total_leads = self.number_of_total_leads_between(start_date, end_date)
-    total_leads > 0 ? self.spend_between(start_date, end_date) / total_leads : 0.0
+    (total_leads = self.number_of_total_leads_between(start_date, end_date)) > 0 ? self.spend_between(start_date, end_date) / total_leads : 0.0
   end
 
 end

@@ -18,10 +18,20 @@ class GoogleSemCampaign < ActiveRecord::Base
     (rake = self.sem_campaign.rake).present? ? rake : 0.0
   end
 
-  def cost_per_lead_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
-    total_leads = self.campaign.number_of_total_leads_between(start_date, end_date)
-    total_leads > 0 ? self.spend_between(start_date, end_date) / total_leads : 0.0
+  def clicks_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.adwords_campaign_summaries.between(start_date, end_date).sum(:clicks)
   end
 
+  def impressions_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.adwords_campaign_summaries.between(start_date, end_date).sum(:imps)
+  end
 
+  def click_through_rate_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    (impressions = self.impressions_between(start_date, end_date)) > 0 ? self.clicks_between(start_date, end_date).to_f / impressions : 0.0
+  end
+
+  def average_position_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    (count = self.adwords_campaign_summaries.between(start_date, end_date).count) > 0 ? self.adwords_campaign_summaries.between(start_date, end_date).sum(:pos).to_f / count : 0.0
+  end
+  
 end
