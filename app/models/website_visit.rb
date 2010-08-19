@@ -2,6 +2,7 @@ class WebsiteVisit < ActiveRecord::Base
   belongs_to :website
 
   named_scope :bounce, :conditions => {:actions => '1'}
+  named_scope :referred, :conditions => ['referrer_search IS NOT NULL']
   named_scope :between, lambda { |start_date, end_date| {:conditions => ['time_of_visit between ? AND ?', start_date.to_time.utc.at_beginning_of_day, end_date.to_time.utc.end_of_day]} }
 
 
