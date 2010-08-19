@@ -114,4 +114,5 @@ class Keyword < ActiveRecord::Base
     Digest::SHA1.hexdigest(signature)
   end
 
+
 end

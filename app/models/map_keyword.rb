@@ -199,6 +199,7 @@ class MapKeyword < ActiveRecord::Base
         if citation_start.present?
           first_block = company_block[citation_start..company_block.length]
           citation_stop = first_block.index('class=pp-story-bar')
+          citation_stop = first_block.index('pp-footer') if !citation_stop.present?
           citation_block = first_block[0..citation_stop] if citation_stop.present?
           if citation_block.present?
             if citation_block.include? '>More'
@@ -207,10 +208,10 @@ class MapKeyword < ActiveRecord::Base
               if count_start.present? && count_stop.present?
                 citations = 5 + citation_block[(count_start + 7)..(count_stop - 1)].to_i
               end
-            end
-          else
+            else
             citation_count = citation_block.split('pp-attribution>')
             citations = citation_count.size - 1
+            end
           end
         end
         result["citation_count"] = citations.to_i if citations.present?
