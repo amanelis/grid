@@ -3,6 +3,8 @@ class MapKeyword < ActiveRecord::Base
   has_many :map_rankings
 
 
+  # CLASS BEHAVIOR
+
   def self.update_keywords_from_salesforce
     sf_campaigns = Salesforce::Clientcampaign.find_all_by_campaign_type__c('Local Maps')
     sf_campaigns.each do |sf_campaign|
@@ -23,6 +25,9 @@ class MapKeyword < ActiveRecord::Base
   def self.update_map_rankings
     MapKeyword.all.each { |map_keyword| map_keyword.fetch_map_rankings }
   end
+
+
+  # INSTANCE BEHAVIOR
 
   def fetch_map_rankings
     if self.ranking_updated_on.blank? || self.ranking_updated_on < Date.today - 6.days
@@ -209,8 +214,8 @@ class MapKeyword < ActiveRecord::Base
                 citations = 5 + citation_block[(count_start + 7)..(count_stop - 1)].to_i
               end
             else
-            citation_count = citation_block.split('pp-attribution>')
-            citations = citation_count.size - 1
+              citation_count = citation_block.split('pp-attribution>')
+              citations = citation_count.size - 1
             end
           end
         end
@@ -237,16 +242,18 @@ class MapKeyword < ActiveRecord::Base
       end
     rescue Exception => e
       puts "#{ e } : #{ e.backtrace.first }"
-      return result
+      result
     end
-    return result
+    result
   end
 
   def get_yahoo_ranking
-    return 1000
+    1000
   end
 
   def get_bing_ranking
-    return 1000
+    1000
   end
+
+  
 end
