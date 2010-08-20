@@ -6,6 +6,8 @@ class Keyword < ActiveRecord::Base
   has_many :keyword_rankings
 
 
+  # CLASS BEHAVIOR
+
   def self.update_keywords_from_salesforce
     sf_campaigns = Salesforce::Clientcampaign.find_all_by_campaign_type__c('SEO')
     sf_campaigns.each do |sf_campaign|
@@ -29,6 +31,8 @@ class Keyword < ActiveRecord::Base
     Keyword.all.each { |keyword| keyword.fetch_keyword_rankings }
   end
 
+
+  # INSTANCE BEHAVIOR
 
   def fetch_keyword_rankings
     freshness = KeywordRanking.find(:all, :conditions => ['created_at > ? && keyword_id = ?', 1.day.ago, self.id])
@@ -67,7 +71,6 @@ class Keyword < ActiveRecord::Base
 
     end
   end
-
 
   def get_search_positions
     # HACK: The rails belongs_to method seems to have a bug. self.url.url should give me the URL string, but it doesn't
@@ -114,5 +117,23 @@ class Keyword < ActiveRecord::Base
     Digest::SHA1.hexdigest(signature)
   end
 
+  def most_recent_google_ranking_between(start_date = Date.today - 30.day, end_date = Date.today - 1.day)
+    self.most_recent_ranking_between(start_date, end_date).google
+  end
+
+  def most_recent_yahoo_ranking_between(start_date = Date.today - 30.day, end_date = Date.today - 1.day)
+    self.most_recent_ranking_between(start_date, end_date).yahoo
+  end
+
+  def most_recent_bing_ranking_between(start_date = Date.today - 30.day, end_date = Date.today - 1.day)
+    self.most_recent_ranking_between(start_date, end_date).bing
+  end
+
+
+  protected
+
+  def most_recent_ranking_between(start_date, end_date)
+    self.keyword_rankings.between(start_date, end_date).last
+  end
 
 end
