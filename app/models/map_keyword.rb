@@ -31,13 +31,13 @@ class MapKeyword < ActiveRecord::Base
       bing_result = self.get_bing_ranking
       if google_result.present?
         self.map_rankings.create(:ranking_date => Date.today,
-                                 :google_rank => google_result['result'],
-                                 :yahoo_rank => yahoo_result,
+                                 :google_rank => google_result[0],
+                                 :yahoo_rank => yahoo_result[0],
                                  :bing_rank => bing_result,
-                                 :google_coupon_count => google_result['coupon_count'],
-                                 :google_review_count => google_result['review_count'],
-                                 :google_citation_count => google_result['citation_count'],
-                                 :google_user_content_count => google_result['user_content_count'])
+                                 :google_coupon_count => google_result[1],
+                                 :google_review_count => google_result[2],
+                                 :google_citation_count => google_result[3],
+                                 :google_user_content_count => google_result[4])
         self.ranking_updated_on = Date.today
         self.save!
       end
@@ -51,7 +51,15 @@ class MapKeyword < ActiveRecord::Base
       start_page = "http://maps.google.com/maps?hl=en&um=1&ie=UTF-8&q=" + search_keyword + "&fb=1&gl=us&view=text&cd=2&sa=N"
       google_url = "http://maps.google.com/maps?hl=en&um=1&ie=UTF-8&q=" + search_keyword + "&fb=1&gl=us&view=text&cd=2&sa=N"
       page_num = 0
-      result = {"result" => 1000, "company_name" => "NA", "address" => "NA", "phone" => "NA", "page" => "NA", "review_count" => 0, "coupon_count" => 0, "citation_count" => 0, "user_content_count" => 0}
+      result = 1000
+      company_name = 'NA'
+      address = 'NA'
+      phone = 'NA'
+      page = 'NA'
+      review_count = 0
+      coupon_count = 0
+      citation_count = 0
+      user_content_count = 0
       company = self.maps_campaign.company_name.present? ? self.maps_campaign.company_name : self.campaign.account.name
       place_url = 'NA'
 
@@ -70,14 +78,14 @@ class MapKeyword < ActiveRecord::Base
           pack_items.each do |pack_item|
             pack_item_block = pack_item.gsub("<b>", "").gsub("</b>", "").gsub("&amp;", "&").gsub("&#39;", "'")
             if pack_item_block.include? company
-              result['result'] = pack_count
+              result = pack_count
               place_start = pack_item.index('class=fl')
               place_block = pack_item[place_start..(pack_item.length - 1)]
               place_end = place_block.index("&ei")
               block = place_block[16..(place_end - 1)]
               cid = block.index('cid')
               mapsid = block[cid..block.length]
-              result['page'] = 'http://maps.google.com/maps/place?' + mapsid
+              page = 'http://maps.google.com/maps/place?' + mapsid
               break
             end
             pack_count += 1
@@ -86,7 +94,7 @@ class MapKeyword < ActiveRecord::Base
       end
 
       #If not in the 7 Pack....find the ranking!
-      if result["result"] == 1000
+      if result == 1000
         20.times do
           source = HTTParty.get(google_url)
           results_start = source.index("id=title")
@@ -103,8 +111,8 @@ class MapKeyword < ActiveRecord::Base
                 page_stop = result_item.index("&q")
                 if page_start.present? && page_stop.present?
                   page = result_item[page_start..page_stop]
-                  result['page'] = "http://maps.google.com" + page[5..(page.length - 2)]
-                  result['result'] = page_num + (whole_page.index(result_item) + 1)
+                  page = "http://maps.google.com" + page[5..(page.length - 2)]
+                  result = page_num + (whole_page.index(result_item) + 1)
                   break
                 end
               end
@@ -113,11 +121,11 @@ class MapKeyword < ActiveRecord::Base
             page_num += 10
             google_url = start_page + "&start=" + page_num.to_s()
           end
-          break if result['result'] != 1000
+          break if result != 1000
         end
       end
 
-      if result['page'] != 'NA'
+      if page != 'NA'
         page_source = HTTParty.get(result['page'])
         page_source = page_source.gsub("<b>", "").gsub("</b>", "").gsub("&amp;", "&").gsub("&#39;", "'")
         owner_start = page_source.index('From the owner')
@@ -127,7 +135,7 @@ class MapKeyword < ActiveRecord::Base
         company_start = page_source.index("place-title>")
         company_block = page_source[company_start..page_source.length]
         company_stop = company_block.index("</span>")
-        result["company_name"] = company_block[12..(company_stop - 1)]
+        company_name = company_block[12..(company_stop - 1)]
 
         #Get Address
         address = "None"
@@ -138,7 +146,7 @@ class MapKeyword < ActiveRecord::Base
           address_block = address_big_block[0..address_stop]
           address = address_block[9..(address_block.length - 2)]
         end
-        result["address"] = address
+        address = address
 
         #Get Phone
         phone = "NA"
@@ -147,7 +155,7 @@ class MapKeyword < ActiveRecord::Base
         if phone_start.present? || phone_stop.present?
           phone = company_block[(phone_start + 6)..(phone_stop - 1)]
         end
-        result["phone"] = phone
+        phone = phone
 
         #Get Number of reviews
         review = 0
@@ -169,7 +177,7 @@ class MapKeyword < ActiveRecord::Base
             review = reviews.size
           end
         end
-        result["review_count"] = review.to_i if review.present?
+        review_count = review.to_i if review.present?
 
         #Get Number of coupons
         coupons = 0
@@ -191,7 +199,7 @@ class MapKeyword < ActiveRecord::Base
             coupons = num_coupons.size
           end
         end
-        result["coupon_count"] = coupons.to_i if coupons.present?
+        coupon_count = coupons.to_i if coupons.present?
 
         #Get Citations
         citations = 0
@@ -209,12 +217,12 @@ class MapKeyword < ActiveRecord::Base
                 citations = 5 + citation_block[(count_start + 7)..(count_stop - 1)].to_i
               end
             else
-            citation_count = citation_block.split('pp-attribution>')
-            citations = citation_count.size - 1
+              citation_count = citation_block.split('pp-attribution>')
+              citations = citation_count.size - 1
             end
           end
         end
-        result["citation_count"] = citations.to_i if citations.present?
+        citation_count = citations.to_i if citations.present?
 
         #Get User Content
         user_content = 0
@@ -233,17 +241,67 @@ class MapKeyword < ActiveRecord::Base
             user_content = counts.size - 1
           end
         end
-        result["user_content_count"] = user_content.to_i if user_content.present?
+        user_content_count = user_content.to_i if user_content.present?
       end
     rescue Exception => e
       puts "#{ e } : #{ e.backtrace.first }"
-      return result
+      return [result, coupon_count, review_count, citation_count, user_content_count]
     end
-    return result
+    return [result, coupon_count, review_count, citation_count, user_content_count]
   end
 
-  def get_yahoo_ranking
-    return 1000
+  def get_yahoo_ranking(keyword = 'air conditioning', city = 'san antonio')
+    search_keyword = self.descriptor.gsub(" ", "+")
+    company = self.maps_campaign.company_name.present? ? self.maps_campaign.company_name : self.campaign.account.name
+    search_keyword = self.descriptor.gsub(" ", "+")
+    result = 1000
+    company_name = 'NA'
+    address = 'NA'
+    phone = 'NA'
+    map_url = 'NA'
+    review_count = 0
+    yahoo_id = 'NA'
+    categories = 'NA'
+    rating = 0
+    website_url = 'NA'
+    last_review_date = 'NA'
+    state = 'NA'
+    start_num = 1
+    url = 'http://local.yahooapis.com/LocalSearchService/V3/localSearch?appid=V.aHUKPV34F4PgtK3n9.LE_zy6gaNTOXc.g2J2Bd10mi8FtXI7CjzfbgwsZNDIMQp4Y4&query=' + keyword.gsub(' ', '+') + '&location=' + city.gsub(' ', '+') + '&output=json&results=20&start='
+    begin
+      while start_num < 232
+        response_url = url + start_num.to_s
+        response = HTTParty.get(response_url)['ResultSet']['Result']
+        index = response.find_index { |i| i['Title'] == company }
+        if index.present?
+          result = index + start_num
+          company_name = response[index]['Title']
+          address = response[index]['Address']
+          phone = response[index]['Phone']
+          map_url = response[index]['Url']
+          review_count = response[index]['Rating']['TotalReviews']
+          yahoo_id = response[index]['id']
+          cats_string = ''
+          cats = response[index]['Categories']['Category']
+          cats.each do |category|
+            cats_string = cats_string + (category['content'] + ', ')
+          end
+          cats_string = cats_string[0..cats_string.length - 3]
+          categories = cats_string
+          rating = response[index]['Rating']['AverageRating']
+          website_url = response[index]['BusinessUrl']
+          last_review_date = response[index]['LastReviewDate']
+          state = response[index]['State']
+          start_num = 250
+        else
+          start_num += 20
+        end
+       end
+    rescue
+      return [result, company_name, address, phone, map_url, review_count, yahoo_id, categories, rating, website_url, last_review_date, state]
+    end
+    return [result, company_name, address, phone, map_url, review_count, yahoo_id, categories, rating, website_url, last_review_date, state]
+
   end
 
   def get_bing_ranking

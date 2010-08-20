@@ -43,15 +43,15 @@ class Keyword < ActiveRecord::Base
       rescue
       end
       begin
-        google = search_positions["google"]
+        google = search_positions["Google"]
       rescue
       end
       begin
-        bing = search_positions["bing"]
+        bing = search_positions["Bing"]
       rescue
       end
       begin
-        yahoo = search_positions["yahoo"]
+        yahoo = search_positions["Yahoo"]
       rescue
       end
       begin
@@ -76,6 +76,17 @@ class Keyword < ActiveRecord::Base
       url = self.build_pear_url("keyword/getsearchposition", {"url" => self.seo_campaign.websites.first.nickname, "query" => self.descriptor, "format" => "json"})
       HTTParty.get(url)
     rescue
+    end
+  end
+
+  def get_new_search_positions(nickname)
+    begin
+      url = 'http://perl.pearanalytics.com/v2/keyword/position?keyword=' + self.descriptor.gsub(' ', '+') + '&url=' + nickname.gsub('www.', '')
+      response = HTTParty.get(url)
+      JSON.parse(response)['result'].to_a.first.second
+    rescue              
+      puts "Error in Account.get_new_html_validation"
+      return nil
     end
   end
 

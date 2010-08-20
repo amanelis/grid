@@ -15,9 +15,9 @@ class SeoCampaign < ActiveRecord::Base
         websites.each do |website|
           freshness = seo_campaign.inbound_links.find(:all, :conditions => ['created_at > ?', 1.day.ago])
           if freshness.empty? && website.nickname.present?
-            url = seo_campaign.build_pear_url("linkanalysis/getinboundlinks", {"url" => website.nickname, "format" => "json", "page_specific" => "0"})
+            url = 'http://perl.pearanalytics.com/v2/domain/get/links?url=http://' + website.nickname
             response = HTTParty.get(url)
-            links = response["inbound_links"]
+            links = JSON.parse(response)['result']
             if links.present?
               links.each { |link| InboundLink.find_or_create_by_link_url_and_seo_campaign_id(:link_url => link, :seo_campaign_id => seo_campaign.id, :last_date_found => Date.today, :is_active => true) }
             end
@@ -82,6 +82,17 @@ class SeoCampaign < ActiveRecord::Base
     end
   end
 
+  def get_new_google_page_rank(nickname)
+    begin
+      url = 'http://perl.pearanalytics.com/v2/page/rank/google?url=http://' + nickname.gsub('http://')
+      response = HTTParty.get(url)
+      JSON.parse(response)['result']
+    rescue
+      puts "Error in Account.getgooglepagerank"
+      return nil
+    end
+  end
+
   def getalexarank(nickname)
     begin
       url = build_pear_url("linkanalysis/getalexarank", {"url" => nickname, "format" => "json"})
@@ -89,6 +100,17 @@ class SeoCampaign < ActiveRecord::Base
       response["alexa_rank"]
     rescue
       puts "Error in Account.getalexarank"
+      return nil
+    end
+  end
+
+   def get_new_alexa_rank(nickname)
+    begin
+      url = 'http://perl.pearanalytics.com/v2/domain/rank/alexa?url=http://' + nickname.gsub('http://')
+      response = HTTParty.get(url)
+      JSON.parse(response)['result']
+    rescue
+      puts "Error in Account.get_new_alexa_rank"
       return nil
     end
   end
@@ -111,6 +133,72 @@ class SeoCampaign < ActiveRecord::Base
       response["inbound_link_count"]
     rescue
       puts "Error in Account.get_sitewide_inbound_link_count"
+      return nil
+    end
+  end
+
+  def get_new_sitewide_inbound_link_count(nickname)
+    begin
+      url = 'http://perl.pearanalytics.com/v2/page/get/links?url=http://' + nickname.gsub('http://')
+      response = HTTParty.get(url)
+      JSON.parse(response)['result']
+    rescue
+      puts "Error in Account.get_sitewide_inbound_link_count"
+      return nil
+    end
+  end
+
+  def get_new_html_validation_errors(nickname)
+    begin
+      url = 'http://perl.pearanalytics.com/v2/page/valid/html?url=http://' + nickname.gsub('http://')
+      response = HTTParty.get(url)
+      JSON.parse(response)['result']['errors']
+    rescue
+      puts "Error in Account.get_new_html_validation"
+      return nil
+    end
+  end
+
+  def get_new_load_time(nickname)
+    begin
+      url = 'http://perl.pearanalytics.com/v2/page/loadtime?url=http://' + nickname.gsub('http://')
+      response = HTTParty.get(url)
+      JSON.parse(response)['result']['time']
+    rescue
+      puts "Error in Account.get_new_html_validation"
+      return nil
+    end
+  end
+
+  def get_new_site_map_status(nickname)
+    begin
+      url = 'http://perl.pearanalytics.com/v2/domain/has/sitemap?url=http://' + nickname.gsub('http://')
+      response = HTTParty.get(url)
+      JSON.parse(response)['result']
+    rescue
+      puts "Error in Account.get_new_html_validation"
+      return nil
+    end
+  end
+
+  def get_new_robots_status(nickname)
+    begin
+      url = 'http://perl.pearanalytics.com/v2/domain/has/robots?url=http://' + nickname.gsub('http://')
+      response = HTTParty.get(url)
+      JSON.parse(response)['result']
+    rescue
+      puts "Error in Account.get_new_html_validation"
+      return nil
+    end
+  end
+
+  def get_new_404_response_status(nickname)
+    begin
+      url = 'http://perl.pearanalytics.com/v2/domain/has/404-response?url=http://' + nickname.gsub('http://')
+      response = HTTParty.get(url)
+      JSON.parse(response)['result']
+    rescue
+      puts "Error in Account.get_new_html_validation"
       return nil
     end
   end
