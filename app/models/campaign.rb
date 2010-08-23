@@ -85,15 +85,39 @@ class Campaign < ActiveRecord::Base
   # INSTANCE BEHAVIOR
 
   def number_of_total_leads_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
-    (self.phone_numbers.sum { |phone_number| phone_number.number_of_all_calls_between(start_date, end_date) }) + (self.contact_forms.sum { |contact_form| contact_form.number_of_submissions_between(start_date, end_date) })
+    self.number_of_all_calls_between(start_date, end_date) + self.number_of_submissions_between(start_date, end_date)
   end
 
   def spend_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
-    self.campaign_style.spend_between(start_date, end_date)
+    self.campaign_style.respond_to?(:spend_between) ? self.campaign_style.spend_between(start_date, end_date) : 0.0
   end
 
   def cost_per_lead_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
     (total_leads = self.number_of_total_leads_between(start_date, end_date)) > 0 ? self.spend_between(start_date, end_date) / total_leads : 0.0
+  end
+
+  def number_of_answered_calls_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.phone_numbers.to_a.sum { |phone_number| phone_number.number_of_answered_calls_between(start_date, end_date) }
+  end
+
+  def number_of_canceled_calls_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.phone_numbers.to_a.sum { |phone_number| phone_number.number_of_canceled_calls_between(start_date, end_date) }
+  end
+
+  def number_of_voicemail_calls_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.phone_numbers.to_a.sum { |phone_number| phone_number.number_of_voicemail_calls_between(start_date, end_date) }
+  end
+
+  def number_of_other_calls_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.phone_numbers.to_a.sum { |phone_number| phone_number.number_of_other_calls_between(start_date, end_date) }
+  end
+
+  def number_of_all_calls_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.phone_numbers.to_a.sum { |phone_number| phone_number.number_of_all_calls_between(start_date, end_date) }
+  end
+
+  def number_of_submissions_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.contact_forms.to_a.sum { |contact_form| contact_form.number_of_submissions_between(start_date, end_date) }
   end
 
 end

@@ -343,7 +343,7 @@ class SemCampaign < ActiveRecord::Base
   end
 
   def spend_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
-    self.google_sem_campaigns.sum { |google_sem_campaign| google_sem_campaign.spend_between(start_date, end_date) }
+    self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.spend_between(start_date, end_date) }
   end
 
 end
