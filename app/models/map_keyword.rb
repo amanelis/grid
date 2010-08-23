@@ -3,6 +3,8 @@ class MapKeyword < ActiveRecord::Base
   has_many :map_rankings
 
 
+  # CLASS BEHAVIOR
+
   def self.update_keywords_from_salesforce
     sf_campaigns = Salesforce::Clientcampaign.find_all_by_campaign_type__c('Local Maps')
     sf_campaigns.each do |sf_campaign|
@@ -23,6 +25,9 @@ class MapKeyword < ActiveRecord::Base
   def self.update_map_rankings
     MapKeyword.all.each { |map_keyword| map_keyword.fetch_map_rankings }
   end
+
+
+  # INSTANCE BEHAVIOR
 
   def fetch_map_rankings
     if self.ranking_updated_on.blank? || self.ranking_updated_on < Date.today - 6.days
@@ -253,7 +258,6 @@ class MapKeyword < ActiveRecord::Base
   def get_yahoo_ranking(keyword = 'air conditioning', city = 'san antonio')
     search_keyword = self.descriptor.gsub(" ", "+")
     company = self.maps_campaign.company_name.present? ? self.maps_campaign.company_name : self.campaign.account.name
-    search_keyword = self.descriptor.gsub(" ", "+")
     result = 1000
     company_name = 'NA'
     address = 'NA'
@@ -266,7 +270,7 @@ class MapKeyword < ActiveRecord::Base
     website_url = 'NA'
     last_review_date = 'NA'
     state = 'NA'
-    start_num = 1
+    start_num = 0
     url = 'http://local.yahooapis.com/LocalSearchService/V3/localSearch?appid=V.aHUKPV34F4PgtK3n9.LE_zy6gaNTOXc.g2J2Bd10mi8FtXI7CjzfbgwsZNDIMQp4Y4&query=' + keyword.gsub(' ', '+') + '&location=' + city.gsub(' ', '+') + '&output=json&results=20&start='
     begin
       while start_num < 232
@@ -296,15 +300,65 @@ class MapKeyword < ActiveRecord::Base
         else
           start_num += 20
         end
-       end
+      end
     rescue
       return [result, company_name, address, phone, map_url, review_count, yahoo_id, categories, rating, website_url, last_review_date, state]
     end
     return [result, company_name, address, phone, map_url, review_count, yahoo_id, categories, rating, website_url, last_review_date, state]
-
   end
 
-  def get_bing_ranking
-    return 1000
+
+  def get_bing_ranking(keyword = 'air conditioning san antonio')
+    search_keyword = self.descriptor.gsub(" ", "+")
+      company = self.maps_campaign.company_name.present? ? self.maps_campaign.company_name : self.campaign.account.name
+      result = 1000
+       map_url = 'NA'
+      review_count = 0
+      yahoo_id = 'NA'
+      categories = 'NA'
+      rating = 0
+      website_url = 'NA'
+      last_review_date = 'NA'
+      state = 'NA'
+      start_num = 0
+      url = 'http://www.bing.com/local/Default.aspx?q=' + keyword.gsub(' ', '+') + '&start='
+    begin
+      response_url = url + start_num.to_s
+      response = HTTParty.get(response_url)
+      if response.include? company
+        items = response.split('{Title:')
+
+        url_items = items[(items.size - 10)..(items.size - 1)]
+        index = url_items.find_index { |i| i.include? company }
+        result = index + start_num + 1
+        url_start = url_items[index].index('Url:') + 5
+        url_end = url_items[index].index('Logging') - 3
+        map_url = MapKeyword.decode_msn_bullshit(url_items[index][url_start..url_end].downcase)
+
+        if map_url.present?
+          site_response = HTTParty.get(map_url)
+          review_start = site_response.index('onReviewLinkClick')
+          review_block = site_response[review_start..site_response.length - 1]
+          if review_block.present?
+            review_block_start = review_block.index('Reviews (')
+            review_block_end = review_block.index('</a>')
+            if review_block_start.present? && review_block_end.present?
+              review_count = review_block[review_block_start + 9..review_block_end - 2].to_i
+            end
+          end
+
+        end
+      else
+
+      end
+
+    rescue
+
+    end
   end
+
+  def self.decode_msn_bullshit(url)
+    return url.gsub('\\x3a', ':').gsub('\\x2f', '/').gsub('\\x3f', '?').gsub('\\x3d', '=').gsub('\\x26', '&').gsub('\\x2520', '+')
+  end
+
 end

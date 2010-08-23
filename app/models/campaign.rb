@@ -4,6 +4,7 @@ class Campaign < ActiveRecord::Base
   has_many :phone_numbers
   has_many :contact_forms
   has_and_belongs_to_many :websites
+  has_and_belongs_to_many :industries
 
 
   # CLASS BEHAVIOR

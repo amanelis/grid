@@ -260,7 +260,7 @@ class SemCampaign < ActiveRecord::Base
 
                 #Add the Ad Summary
                 adword = AdwordsAdSummary.find_by_adwords_ad_id_and_summary_date(ad.id, date)
-                if adword.present?
+                if adword.blank?
                   adword = AdwordsAdSummary.new
                   adword.adwords_ad_id = ad.id
                   adword.summary_date = date
