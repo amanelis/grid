@@ -2,7 +2,9 @@ class Campaign < ActiveRecord::Base
   belongs_to :account
   belongs_to :campaign_style, :polymorphic => true
   has_many :phone_numbers
+  has_many :calls, :through => :phone_numbers
   has_many :contact_forms
+  has_many :submissions, :through => :contact_forms
   has_and_belongs_to_many :websites
   has_and_belongs_to_many :industries
 
@@ -97,27 +99,55 @@ class Campaign < ActiveRecord::Base
   end
 
   def number_of_answered_calls_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
-    self.phone_numbers.to_a.sum { |phone_number| phone_number.number_of_answered_calls_between(start_date, end_date) }
+    self.calls.answered.between(start_date, end_date).count
   end
 
   def number_of_canceled_calls_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
-    self.phone_numbers.to_a.sum { |phone_number| phone_number.number_of_canceled_calls_between(start_date, end_date) }
+    self.calls.canceled.between(start_date, end_date).count
   end
 
   def number_of_voicemail_calls_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
-    self.phone_numbers.to_a.sum { |phone_number| phone_number.number_of_voicemail_calls_between(start_date, end_date) }
+    self.calls.voicemail.between(start_date, end_date).count
   end
 
   def number_of_other_calls_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
-    self.phone_numbers.to_a.sum { |phone_number| phone_number.number_of_other_calls_between(start_date, end_date) }
+    self.calls.other.between(start_date, end_date).count
   end
 
   def number_of_all_calls_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
-    self.phone_numbers.to_a.sum { |phone_number| phone_number.number_of_all_calls_between(start_date, end_date) }
+    self.calls.between(start_date, end_date).count
   end
 
   def number_of_submissions_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
-    self.contact_forms.to_a.sum { |contact_form| contact_form.number_of_submissions_between(start_date, end_date) }
+    self.submissions.between(start_date, end_date).count
+  end
+
+  def number_of_answered_calls_by_date
+    self.number_by_date_of(self.calls.answered)
+  end
+
+  def number_of_canceled_calls_by_date
+    self.number_by_date_of(self.calls.canceled)
+  end
+
+  def number_of_voicemail_calls_by_date
+    self.number_by_date_of(self.calls.voicemail)
+  end
+
+  def number_of_other_calls_by_date
+    self.number_by_date_of(self.calls.other)
+  end
+
+  def number_of_all_calls_by_date
+    self.number_by_date_of(self.calls)
+  end
+
+  def number_by_date_of(specific_calls)
+    specific_calls.count(:group => "date(call_start)", :order =>"call_start ASC").inject({}) {|data, (key, value)| data[key.to_date] = {:calls => value} ; data}
+  end
+
+  def number_of_submissions_by_date
+    self.submissions.count(:group => "date(time_of_submission)", :order =>"time_of_submission ASC").inject({}) {|data, (key, value)| data[key.to_date] = {:submission => value} ; data}
   end
 
 end
