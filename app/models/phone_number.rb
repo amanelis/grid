@@ -64,4 +64,28 @@ class PhoneNumber < ActiveRecord::Base
     self.calls.between(start_date, end_date).count
   end
 
+  def number_of_answered_calls_by_date
+    self.number_by_date_of(self.calls.answered)
+  end
+
+  def number_of_canceled_calls_by_date
+    self.number_by_date_of(self.calls.canceled)
+  end
+
+  def number_of_voicemail_calls_by_date
+    self.number_by_date_of(self.calls.voicemail)
+  end
+
+  def number_of_other_calls_by_date
+    self.number_by_date_of(self.calls.other)
+  end
+
+  def number_of_all_calls_by_date
+    self.number_by_date_of(self.calls)
+  end
+
+  def number_by_date_of(specific_calls)
+    specific_calls.count(:group => "date(call_start)", :order =>"call_start ASC").inject({}) {|data, (key, value)| data[key.to_date] = {:calls => value} ; data}
+  end
+
 end

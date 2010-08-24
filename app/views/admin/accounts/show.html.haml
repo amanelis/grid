@@ -1,4 +1,4 @@
-%h1 
+%h1
   Summary for #{@account.name}
 %p
   Last 24 hours... (eventually, a date picker goes here)
@@ -25,9 +25,14 @@
         %td
           = campaign.name
         %td
+          = campaign.number_of_all_calls_between(Date.today - 1.week, Date.today).to_s
         %td
+          = campaign.number_of_submissions_between(Date.today - 1.week, Date.today).to_s
         %td
+          = campaign.number_of_total_leads_between(Date.today - 1.week, Date.today).to_s
         %td
+          = ActionController::Base.helpers.number_to_currency(campaign.spend_between(Date.today - 1.week, Date.today))
         %td
+          = ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(Date.today - 1.week, Date.today))
         %td
           = link_to "Details", ""

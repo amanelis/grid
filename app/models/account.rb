@@ -3,41 +3,35 @@ class Account < ActiveRecord::Base
   has_one :adwords_client
 
   def visit_count_by_date
-    @data = {}    
+    data = {}
     campaigns.each do |campaign|
       campaign.websites.each do |website|
-        @raw_visits = website.website_visits.count(:all, :group => "date(time_of_visit)", :order =>"time_of_visit ASC")
-        @raw_visits.each_pair {|key, value| @data[key.to_date] = {website.domain.to_sym => value}}
+        raw_visits = website.website_visits.count(:all, :group => "date(time_of_visit)", :order =>"time_of_visit ASC")
+        raw_visits.each_pair {|key, value| data[key.to_date] = {website.domain.to_sym => value}}
       end
     end
-    return @data
+    data
   end
-  
+
   def self.visit_count_by_date
-    @raw_data = WebsiteVisit.count(:all, :group => "date(time_of_visit)", :order =>"time_of_visit ASC")
-    
-    @data = {}
-    @raw_data.each_pair {|key, value| @data[key.to_date] = {:web_visits => value}}
-    return @data
+    WebsiteVisit.count(:group => "date(time_of_visit)", :order =>"time_of_visit ASC").inject({}) {|data, (key, value)| data[key.to_date] = {:web_visits => value} ; data}
   end
-  
+
   def sorted_dates
     rawdates = JSON.parse(self.daily_timeline.dates)
-    @data = []
+    data = []
     rawdates.each do |date|
-      @data << DateTime.strptime( date.to_s, "%Y%m%d")
+      data << DateTime.strptime( date.to_s, "%Y%m%d")
     end
-    @data.sort
+    data.sort
   end
-  
+
   def self.sorted_dates
-    rawdates = WebsiteVisit.find(:all, :select => "time_of_visit")
-    @data = []
-    rawdates.each do |date|
-      @data << DateTime.strptime( date.time_of_visit.to_s, "%Y-%m-%d")
-    end
-    @data.sort
-  end
+    WebsiteVisit.find(:all, :select => "time_of_visit").inject([]) { |data, date| data << DateTime.strptime(date.time_of_visit.to_s, "%Y-%m-%d") }.sort
+   end
+
+
+  # CLASS BEHAVIOR
 
   def self.pull_all_data_migrations
     puts "Pulling Salesforce Accounts..."
@@ -99,5 +93,45 @@ class Account < ActiveRecord::Base
     end
   end
 
+
+  # INSTANCE BEHAVIOR
+
+  # NOTE...these methods don't really make sense at this level in the hierarchy.
+
+  def number_of_total_leads_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.campaigns.to_a.sum { |campaign| campaign.number_of_total_leads_between(start_date, end_date) }
+  end
+
+  def spend_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.campaigns.to_a.sum { |campaign| campaign.spend_between(start_date, end_date) }
+  end
+
+  def cost_per_lead_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    (total_leads = self.number_of_total_leads_between(start_date, end_date)) > 0 ? self.spend_between(start_date, end_date) / total_leads : 0.0
+  end
+
+  def number_of_answered_calls_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.campaigns.to_a.sum { |campaign| campaign.number_of_answered_calls_between(start_date, end_date) }
+  end
+
+  def number_of_canceled_calls_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.campaigns.to_a.sum { |campaign| campaign.number_of_canceled_calls_between(start_date, end_date) }
+  end
+
+  def number_of_voicemail_calls_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.campaigns.to_a.sum { |campaign| campaign.number_of_voicemail_calls_between(start_date, end_date) }
+  end
+
+  def number_of_other_calls_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.campaigns.to_a.sum { |campaign| campaign.number_of_other_calls_between(start_date, end_date) }
+  end
+
+  def number_of_all_calls_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.campaigns.to_a.sum { |campaign| campaign.number_of_all_calls_between(start_date, end_date) }
+  end
+
+  def number_of_submissions_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.campaigns.to_a.sum { |campaign| campaign.number_of_submissions_between(start_date, end_date) }
+  end
 
 end
