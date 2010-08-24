@@ -83,7 +83,16 @@ class Campaign < ActiveRecord::Base
     end
   end
 
-
+  def self.fix_target_cities
+    campaigns = Campaign.all
+    campaigns.each do |campaign|
+      if campaign.target_cities.blank?
+        campaign.target_cities = campaign.account.city.downcase if campaign.account.city.present?
+        campaign.save
+      end
+    end
+  end
+  
   # INSTANCE BEHAVIOR
 
   def number_of_total_leads_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)

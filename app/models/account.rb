@@ -64,6 +64,8 @@ class Account < ActiveRecord::Base
     SemCampaign.update_sem_campaign_reports_by_campaign
     puts 'Updating Adwords Ad Level Reports'
     SemCampaign.update_sem_campaign_reports_by_ad
+    puts 'Updating Campaign.target_cities'
+    Campaign.fix_target_cities
     puts "Done."
   end
 
