@@ -10,7 +10,8 @@ class MapKeyword < ActiveRecord::Base
     sf_campaigns.each do |sf_campaign|
       local_map_campaign = Campaign.find_by_name(sf_campaign.name).try(:campaign_style)
       if sf_campaign.keywords__c.present? && local_map_campaign.present?
-        keywords = sf_campaign.keywords__c.split(',')
+        keywords = sf_campaign.keywords__c.gsub(', ', ',')
+        keywords = keywords.split(',')
         keywords.each do |keyword|
           puts 'Started: ' + keyword
           MapKeyword.find_or_create_by_maps_campaign_id_and_descriptor(:maps_campaign_id => local_map_campaign.id,
@@ -34,18 +35,44 @@ class MapKeyword < ActiveRecord::Base
       google_result = self.get_google_ranking
       yahoo_result = self.get_yahoo_ranking
       bing_result = self.get_bing_ranking
-      if google_result.present?
-        self.map_rankings.create(:ranking_date => Date.today,
+      self.map_rankings.create(:ranking_date => Date.today,
                                  :google_rank => google_result[0],
                                  :yahoo_rank => yahoo_result[0],
-                                 :bing_rank => bing_result,
+                                 :bing_rank => bing_result[0],
                                  :google_coupon_count => google_result[1],
                                  :google_review_count => google_result[2],
                                  :google_citation_count => google_result[3],
-                                 :google_user_content_count => google_result[4])
-        self.ranking_updated_on = Date.today
-        self.save!
+                                 :google_user_content_count => google_result[4],
+                                 :bing_review_count => bing_result[2],
+                                 :yahoo_review_count => yahoo_result[5],
+                                 :yahoo_review_rating => yahoo_result[8],
+                                 :yahoo_last_review_date => yahoo_result[10])
+      google_campaign = self.maps_campaign.google_maps_campaigns.first
+      if google_campaign.present?
+        #Update Data here
+      else
+        self.maps_campaign.google_maps_campaigns.build()
       end
+      yahoo_campaign = self.maps_campaign.yahoo_maps_campaigns.first
+      if yahoo_campaign.present?
+        yahoo_campaign.maps_url = yahoo_result[4]
+        yahoo_campaign.reference_id = yahoo_result[6]
+        yahoo_campaign.save
+      else
+        self.maps_campaign.yahoo_maps_campaigns.build(:maps_url => yahoo_result[4],
+                                                      :reference_id => yahoo_result[6])
+      end
+      bing_campaign = self.maps_campaign.bing_maps_campaigns.first
+      if bing_campaign.present?
+        bing_campaign.reference_id = bing_result[3]
+        bing_campaign.maps_url = bing_result[1]
+        bing_campaign.save
+      else
+        self.maps_campaign.bing_maps_campaigns.build(:maps_url => bing_result[1],
+                                                     :reference_id => bing_result[3])
+      end
+      self.ranking_updated_on = Date.today
+      self.save!
     end
   end
 
@@ -131,7 +158,7 @@ class MapKeyword < ActiveRecord::Base
       end
 
       if page != 'NA'
-        page_source = HTTParty.get(result['page'])
+        page_source = HTTParty.get(page)
         page_source = page_source.gsub("<b>", "").gsub("</b>", "").gsub("&amp;", "&").gsub("&#39;", "'")
         owner_start = page_source.index('From the owner')
         page_source = page_source[owner_start..page_source.length]
@@ -255,8 +282,18 @@ class MapKeyword < ActiveRecord::Base
     return [result, coupon_count, review_count, citation_count, user_content_count]
   end
 
-  def get_yahoo_ranking(keyword = 'air conditioning', city = 'san antonio')
-    search_keyword = self.descriptor.gsub(" ", "+")
+  def get_yahoo_ranking
+    search_keyword = self.descriptor
+    search_city = ''
+    cities_string = self.maps_campaign.campaign.target_cities.gsub(', ', ',') if self.maps_campaign.campaign.target_cities.present?
+    cities = cities_string.split(',') if cities_string.present?
+    cities.each do |city|
+      if search_keyword.include? city
+        search_city = city
+        search_keyword.gsub(city, '')
+      end
+    end
+    search_keyword = search_keyword.gsub('+', '')
     company = self.maps_campaign.company_name.present? ? self.maps_campaign.company_name : self.campaign.account.name
     result = 1000
     company_name = 'NA'
@@ -271,7 +308,7 @@ class MapKeyword < ActiveRecord::Base
     last_review_date = 'NA'
     state = 'NA'
     start_num = 0
-    url = 'http://local.yahooapis.com/LocalSearchService/V3/localSearch?appid=V.aHUKPV34F4PgtK3n9.LE_zy6gaNTOXc.g2J2Bd10mi8FtXI7CjzfbgwsZNDIMQp4Y4&query=' + keyword.gsub(' ', '+') + '&location=' + city.gsub(' ', '+') + '&output=json&results=20&start='
+    url = 'http://local.yahooapis.com/LocalSearchService/V3/localSearch?appid=V.aHUKPV34F4PgtK3n9.LE_zy6gaNTOXc.g2J2Bd10mi8FtXI7CjzfbgwsZNDIMQp4Y4&query=' + search_keyword.gsub(' ', '+') + '&location=' + search_city.gsub(' ', '+') + '&output=json&results=20&start='
     begin
       while start_num < 232
         response_url = url + start_num.to_s
@@ -308,52 +345,52 @@ class MapKeyword < ActiveRecord::Base
   end
 
 
-  def get_bing_ranking(keyword = 'air conditioning san antonio')
+  def get_bing_ranking
     search_keyword = self.descriptor.gsub(" ", "+")
-      company = self.maps_campaign.company_name.present? ? self.maps_campaign.company_name : self.campaign.account.name
-      result = 1000
-       map_url = 'NA'
-      review_count = 0
-      yahoo_id = 'NA'
-      categories = 'NA'
-      rating = 0
-      website_url = 'NA'
-      last_review_date = 'NA'
-      state = 'NA'
-      start_num = 0
-      url = 'http://www.bing.com/local/Default.aspx?q=' + keyword.gsub(' ', '+') + '&start='
+    company = self.maps_campaign.company_name.present? ? self.maps_campaign.company_name : self.campaign.account.name
+    result = 1000
+    map_url = 'NA'
+    review_count = 0
+    bing_id = 'NA'
+    start_num = 0
+    url = 'http://www.bing.com/local/Default.aspx?q=' + search_keyword.gsub(' ', '+') + '&start='
     begin
-      response_url = url + start_num.to_s
-      response = HTTParty.get(response_url)
-      if response.include? company
-        items = response.split('{Title:')
+      while start_num < 250
+        response_url = url + start_num.to_s
+        response = HTTParty.get(response_url)
+        if response.include? company
+          items = response.split('{Title:')
 
-        url_items = items[(items.size - 10)..(items.size - 1)]
-        index = url_items.find_index { |i| i.include? company }
-        result = index + start_num + 1
-        url_start = url_items[index].index('Url:') + 5
-        url_end = url_items[index].index('Logging') - 3
-        map_url = MapKeyword.decode_msn_bullshit(url_items[index][url_start..url_end].downcase)
+          url_items = items[(items.size - 10)..(items.size - 1)]
+          index = url_items.find_index { |i| i.include? company }
+          result = index + start_num + 1
+          url_start = url_items[index].index('Url:') + 5
+          url_end = url_items[index].index('Logging') - 3
+          map_url = MapKeyword.decode_msn_bullshit(url_items[index][url_start..url_end].downcase)
 
-        if map_url.present?
-          site_response = HTTParty.get(map_url)
-          review_start = site_response.index('onReviewLinkClick')
-          review_block = site_response[review_start..site_response.length - 1]
-          if review_block.present?
-            review_block_start = review_block.index('Reviews (')
-            review_block_end = review_block.index('</a>')
-            if review_block_start.present? && review_block_end.present?
-              review_count = review_block[review_block_start + 9..review_block_end - 2].to_i
+          if map_url.present?
+            id_start = map_url.index('lid=') + 4
+            id_stop = map_url.index('&q=') - 1
+            bing_id = map_url[id_start..id_stop]
+            site_response = HTTParty.get(map_url)
+            review_start = site_response.index('onReviewLinkClick')
+            review_block = site_response[review_start..site_response.length - 1]
+            if review_block.present?
+              review_block_start = review_block.index('Reviews (')
+              review_block_end = review_block.index('</a>')
+              if review_block_start.present? && review_block_end.present?
+                review_count = review_block[review_block_start + 9..review_block_end - 2].to_i
+              end
             end
           end
-
+          start_num = 250
+        else
+          start_num += 10
         end
-      else
-
       end
-
+      return [result, map_url, review_count, bing_id]
     rescue
-
+      return [result, map_url, review_count, bing_id]
     end
   end
 
