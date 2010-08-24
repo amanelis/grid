@@ -17,7 +17,7 @@ ActionController::Routing::Routes.draw do |map|
 
   # Sample resource route with sub-resources:
   #   map.resources :products, :has_many => [ :comments, :sales ], :has_one => :seller
-  
+
   # Sample resource route with more complex sub-resources
   #   map.resources :products do |products|
   #     products.resources :comments
@@ -29,18 +29,19 @@ ActionController::Routing::Routes.draw do |map|
   #     # Directs /admin/products/* to Admin::ProductsController (app/controllers/admin/products_controller.rb)
   #     admin.resources :products
   #   end
-  
+
   # Administration
   map.admin "/admin", :controller => 'admin_area', :action => 'index'
   map.namespace :admin do |admin|
     admin.resources :accounts
     admin.resources :users
+    admin.resources :campaigns
   end
-  
+
   map.with_options :controller => 'home' do |home|
      home.dashboard 'dashboard', :action => 'dashboard'
   end
-  
+
   map.resource :person, :controller => "users"
   map.resources :users, :password_resets
   map.resource :user_session

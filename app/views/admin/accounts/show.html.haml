@@ -35,4 +35,4 @@
         %td
           = ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(Date.today - 1.week, Date.today))
         %td
-          = link_to "Details", ""
+          = link_to "Details", admin_campaign_path(campaign)
