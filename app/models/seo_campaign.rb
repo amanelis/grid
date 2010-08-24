@@ -15,11 +15,19 @@ class SeoCampaign < ActiveRecord::Base
         websites.each do |website|
           freshness = seo_campaign.inbound_links.find(:all, :conditions => ['created_at > ?', 1.day.ago])
           if freshness.empty? && website.nickname.present?
-            url = 'http://perl.pearanalytics.com/v2/domain/get/links?url=http://' + website.nickname
+            url = 'http://perl.pearanalytics.com/v2/domain/get/linklist?url=http://' + website.nickname.gsub('http://', '')
             response = HTTParty.get(url)
             links = JSON.parse(response)['result']
             if links.present?
-              links.each { |link| InboundLink.find_or_create_by_link_url_and_seo_campaign_id(:link_url => link, :seo_campaign_id => seo_campaign.id, :last_date_found => Date.today, :is_active => true) }
+              links.each do |link|
+                existing_link = InboundLink.find_by_link_url_and_seo_campaign_id(link, seo_campaign.id)
+                if existing_link.present?
+                  existing_link.last_date_found = Date.today
+                  existing_link.save
+                else
+                  InboundLink.create(:link_url => link, :seo_campaign_id => seo_campaign.id, :last_date_found => Date.today, :is_active => true)
+                end
+              end
             end
           end
         end
@@ -84,7 +92,7 @@ class SeoCampaign < ActiveRecord::Base
 
   def get_new_google_page_rank(nickname)
     begin
-      url = 'http://perl.pearanalytics.com/v2/page/rank/google?url=http://' + nickname.gsub('http://')
+      url = 'http://perl.pearanalytics.com/v2/page/rank/google?url=http://' + nickname.gsub('http://', '')
       response = HTTParty.get(url)
       JSON.parse(response)['result']
     rescue
@@ -106,7 +114,7 @@ class SeoCampaign < ActiveRecord::Base
 
    def get_new_alexa_rank(nickname)
     begin
-      url = 'http://perl.pearanalytics.com/v2/domain/rank/alexa?url=http://' + nickname.gsub('http://')
+      url = 'http://perl.pearanalytics.com/v2/domain/rank/alexa?url=http://' + nickname.gsub('http://', '')
       response = HTTParty.get(url)
       JSON.parse(response)['result']
     rescue
@@ -139,7 +147,7 @@ class SeoCampaign < ActiveRecord::Base
 
   def get_new_sitewide_inbound_link_count(nickname)
     begin
-      url = 'http://perl.pearanalytics.com/v2/page/get/links?url=http://' + nickname.gsub('http://')
+      url = 'http://perl.pearanalytics.com/v2/page/get/links?url=http://' + nickname.gsub('http://', '')
       response = HTTParty.get(url)
       JSON.parse(response)['result']
     rescue
@@ -150,7 +158,7 @@ class SeoCampaign < ActiveRecord::Base
 
   def get_new_html_validation_errors(nickname)
     begin
-      url = 'http://perl.pearanalytics.com/v2/page/valid/html?url=http://' + nickname.gsub('http://')
+      url = 'http://perl.pearanalytics.com/v2/page/valid/html?url=http://' + nickname.gsub('http://', '')
       response = HTTParty.get(url)
       JSON.parse(response)['result']['errors']
     rescue
@@ -161,7 +169,7 @@ class SeoCampaign < ActiveRecord::Base
 
   def get_new_load_time(nickname)
     begin
-      url = 'http://perl.pearanalytics.com/v2/page/loadtime?url=http://' + nickname.gsub('http://')
+      url = 'http://perl.pearanalytics.com/v2/page/loadtime?url=http://' + nickname.gsub('http://', '')
       response = HTTParty.get(url)
       JSON.parse(response)['result']['time']
     rescue
@@ -172,7 +180,7 @@ class SeoCampaign < ActiveRecord::Base
 
   def get_new_site_map_status(nickname)
     begin
-      url = 'http://perl.pearanalytics.com/v2/domain/has/sitemap?url=http://' + nickname.gsub('http://')
+      url = 'http://perl.pearanalytics.com/v2/domain/has/sitemap?url=http://' + nickname.gsub('http://', '')
       response = HTTParty.get(url)
       JSON.parse(response)['result']
     rescue
@@ -183,7 +191,7 @@ class SeoCampaign < ActiveRecord::Base
 
   def get_new_robots_status(nickname)
     begin
-      url = 'http://perl.pearanalytics.com/v2/domain/has/robots?url=http://' + nickname.gsub('http://')
+      url = 'http://perl.pearanalytics.com/v2/domain/has/robots?url=http://' + nickname.gsub('http://', '')
       response = HTTParty.get(url)
       JSON.parse(response)['result']
     rescue
@@ -194,7 +202,7 @@ class SeoCampaign < ActiveRecord::Base
 
   def get_new_404_response_status(nickname)
     begin
-      url = 'http://perl.pearanalytics.com/v2/domain/has/404-response?url=http://' + nickname.gsub('http://')
+      url = 'http://perl.pearanalytics.com/v2/domain/has/404-response?url=http://' + nickname.gsub('http://', '')
       response = HTTParty.get(url)
       JSON.parse(response)['result']
     rescue
