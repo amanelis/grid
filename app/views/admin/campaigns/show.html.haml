@@ -1,0 +1,31 @@
+%h1
+  Summary for #{@campaign.name}
+%p
+  Last 24 hours... (eventually, a date picker goes here)
+
+%table{:class => "pretty"}
+  %thead
+    %tr
+      %th
+        Calls
+      %th
+        Forms
+      %th
+        Total Leads
+      %th
+        Spend
+      %th
+        Cost Per Lead
+  %tbody
+    %tr
+      %td
+        = @campaign.number_of_all_calls_between(Date.today - 1.week, Date.today).to_s
+      %td
+        = @campaign.number_of_submissions_between(Date.today - 1.week, Date.today).to_s
+      %td
+        = @campaign.number_of_total_leads_between(Date.today - 1.week, Date.today).to_s
+      %td
+        = ActionController::Base.helpers.number_to_currency(@campaign.spend_between(Date.today - 1.week, Date.today))
+      %td
+        = ActionController::Base.helpers.number_to_currency(@campaign.cost_per_lead_between(Date.today - 1.week, Date.today))
+
