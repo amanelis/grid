@@ -77,35 +77,25 @@ describe Moonshine::Manifest::Rails do
     end
   end
 
-  specify "#security_update" do
-    @manifest.configure(:unattended_upgrade => { :package_blacklist => ['foo', 'bar', 'widget']})
-    @manifest.configure(:user => 'rails')
-
-    @manifest.security_updates
-
-    @manifest.should have_package("unattended-upgrades")
-    @manifest.should have_file("/etc/apt/apt.conf.d/10periodic").with_content(
-      /APT::Periodic::Unattended-Upgrade "1"/
-    )
-    @manifest.should have_file("/etc/apt/apt.conf.d/50unattended-upgrades").with_content(
-      /Unattended-Upgrade::Mail "rails@localhost";/
-    )
-    @manifest.should have_file("/etc/apt/apt.conf.d/50unattended-upgrades").with_content(
-      /"foo";/
-    )
-  end
-
   describe "#rails_gems" do
+    it "configures gem options" do
+      @manifest.rails_gems
+
+      @manifest.should have_file('/etc/gemrc').with_content(
+        /--no-rdoc/
+      )
+    end
+    
     it "configures gem sources" do
       @manifest.rails_gems
 
       @manifest.should have_file('/etc/gemrc').with_content(
-        /gems.github.com/
+        /rubygems.org/
       )
     end
 
     it "loads gems from config" do
-      @manifest.configure(:gems => [ { :name => 'jnewland-pulse', :source => 'http://gems.github.com' } ])
+      @manifest.configure(:gems => [ { :name => 'jnewland-pulse', :source => 'http://rubygems.org' } ])
       @manifest.rails_gems
 
       Moonshine::Manifest::Rails.configuration[:gems].should_not be_nil
@@ -113,25 +103,25 @@ describe Moonshine::Manifest::Rails do
       Moonshine::Manifest::Rails.configuration[:gems].each do |gem|
         @manifest.should have_package(gem[:name]).from_provider(:gem)
       end
-      @manifest.packages['jnewland-pulse'].source.should be_nil
+#      @manifest.packages['jnewland-pulse'].source.should be_nil
     end
 
     it "magically loads gem dependencies" do
       @manifest.configure(:gems => [
         { :name => 'webrat' },
-        { :name => 'thoughtbot-paperclip', :source => 'http://gems.github.com' }
+        { :name => 'paperclip' }
       ])
 
       @manifest.rails_gems
 
       @manifest.should have_package('webrat')
-      @manifest.should have_package('thoughtbot-paperclip')
+      @manifest.should have_package('paperclip')
       @manifest.should have_package('libxml2-dev')
     end
 
   end
 
-  it "cretes directories" do
+  it "creates directories" do
     config = {
       :application => 'foo',
       :user => 'foo',

@@ -91,13 +91,12 @@ module Moonshine::Manifest::Rails::Rails
       :gem => '--no-ri --no-rdoc',
       :update_sources => true,
       :sources => [
-        'http://gemcutter.org',
-        'http://gems.rubyforge.org',
+        'http://rubygems.org',
         'http://gems.github.com'
       ]
-    }
-    gemrc.merge!(configuration[:rubygems]) if configuration[:rubygems]
-    file '/etc/gemrc',
+     }
+     gemrc.merge!(configuration[:rubygems]) if configuration[:rubygems]
+     file '/etc/gemrc',
       :ensure   => :present,
       :mode     => '744',
       :owner    => 'root',
@@ -108,42 +107,44 @@ module Moonshine::Manifest::Rails::Rails
     exec 'rails_gems', :command => 'true'
 
     gemfile_path = rails_root.join('Gemfile')
-    gemfile_lock_path = rails_root.join('Gemfile.lock')
     if gemfile_path.exist?
-      gem 'bundler', :before => exec('bundle install')
-      #require 'bundler'
-      # FIXME waiting on a bugfix in rubygems 1.3.6 which lets
-      # prerelease gems depend on non-prerelease gems, enabling
-      # rails 3 beta to be installed
-      #ENV['BUNDLE_GEMFILE'] = gemfile_path.to_s
-      #Bundler.load.dependencies_for(:default, rails_env).each do |dependency|
-      #  gem dependency.name,
-      #      :version => dependency.version_requirements,
-      #      :before => exec("bundle install")
-      #end
+      # Bundler is initially installed by deploy:setup in the ruby:install_moonshine_deps task
+      configure(:bundler => {})
 
-      # this mkdir is a workaround for http://github.com/carlhuda/bundler/issues/issue/77
-      exec "mkdir #{rails_root.join('.bundle')}",
-        :before => exec("bundle install"),
-        :creates => rails_root.join('.bundle').to_s,
-        :user => configuration[:user]
+      package 'bundler',
+        :ensure => (configuration[:bundler][:version] || :latest),
+        :provider => :gem,
+        :before => exec("bundle install")
+      sandbox_environment do
+        require 'bundler'
+        ENV['BUNDLE_GEMFILE'] = gemfile_path.to_s
+        Bundler.load
+        # FIXME this method doesn't take into account dependencies's dependencies
+        Bundler.runtime.dependencies_for(:default, rails_env.to_sym).each do |dependency|
+          system_dependencies = configuration[:apt_gems][dependency.name.to_sym] || []
+          system_dependencies.each do |system_dependency|
+            package system_dependency,
+              :ensure => :installed,
+              :before => exec('bundle install')
+          end
+        end
+      end     
+      
+      # TODO investigate why this is necessary for bundle install to run sucessfully on each deploy
+      exec "remove_bundle_cache",
+        :command => "rm -rf /home/#{configuration[:user]}/.bundle/ruby/1.8/cache/",
+        :before => exec("bundle install")
+      
       exec 'bundle install',
-        :command => 'bundle install',
+        :command => "bundle install",
         :cwd => rails_root,
-        :before => [exec('rails_gems'), exec('bundle lock')],
+        :before => exec('rails_gems'),
         :require => file('/etc/gemrc'),
         :user => configuration[:user]
-      # this is a hack for getting passenger to load the bundler load path
-      # http://groups.google.com/group/phusion-passenger/browse_thread/thread/6642823360242cab/b75495c82b565fb1?#b75495c82b565fb1
-      exec 'bundle lock',
-        :command => 'bundle lock',
-        :cwd => rails_root,
-        :creates => gemfile_lock_path.to_s,
-        :user => configuration[:user]
+
     else
       return unless configuration[:gems]
       configuration[:gems].each do |gem|
-        gem.delete(:source) if gem[:source] && gemrc[:sources].include?(gem[:source])
         gem(gem[:name], {
           :version => gem[:version],
           :source => gem[:source]
@@ -277,5 +278,13 @@ private
     }.merge(options)
   )
   end
-
+  
+  # Creates a sandbox environment so that ENV changes are reverted afterwards
+  OLDENV = {}
+  def sandbox_environment
+    OLDENV.replace(ENV)
+    ENV.replace({})
+    yield
+    ENV.replace(OLDENV)
+  end
 end
