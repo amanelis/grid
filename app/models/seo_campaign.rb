@@ -14,21 +14,24 @@ class SeoCampaign < ActiveRecord::Base
       if websites.present?
         websites.each do |website|
           freshness = seo_campaign.inbound_links.find(:all, :conditions => ['created_at > ?', 1.day.ago])
-          if freshness.empty? && website.nickname.present?
-            url = 'http://perl.pearanalytics.com/v2/domain/get/linklist?url=http://' + website.nickname.gsub('http://', '')
-            response = HTTParty.get(url)
-            links = JSON.parse(response)['result']
-            if links.present?
-              links.each do |link|
-                existing_link = InboundLink.find_by_link_url_and_seo_campaign_id(link, seo_campaign.id)
-                if existing_link.present?
-                  existing_link.last_date_found = Date.today
-                  existing_link.save
-                else
-                  InboundLink.create(:link_url => link, :seo_campaign_id => seo_campaign.id, :last_date_found => Date.today, :is_active => true)
+          begin
+            if freshness.empty? && website.nickname.present?
+              url = 'http://perl.pearanalytics.com/v2/domain/get/linklist?url=http://' + website.nickname.gsub('http://', '')
+              response = HTTParty.get(url)
+              links = JSON.parse(response)['result']
+              if links.present?
+                links.each do |link|
+                  existing_link = InboundLink.find_by_link_url_and_seo_campaign_id(link, seo_campaign.id)
+                  if existing_link.present?
+                    existing_link.last_date_found = Date.today
+                    existing_link.save
+                  else
+                    InboundLink.create(:link_url => link, :seo_campaign_id => seo_campaign.id, :last_date_found => Date.today, :is_active => true)
+                  end
                 end
               end
             end
+          rescue
           end
         end
       end
@@ -112,7 +115,7 @@ class SeoCampaign < ActiveRecord::Base
     end
   end
 
-   def get_new_alexa_rank(nickname)
+  def get_new_alexa_rank(nickname)
     begin
       url = 'http://perl.pearanalytics.com/v2/domain/rank/alexa?url=http://' + nickname.gsub('http://', '')
       response = HTTParty.get(url)
