@@ -129,6 +129,7 @@ class MapKeyword < ActiveRecord::Base
       if result == 1000
         20.times do
           source = HTTParty.get(google_url)
+          begin
           results_start = source.index("id=title")
           results_stop = source.index("pw res")
           results = source[results_start..results_stop]
@@ -152,6 +153,8 @@ class MapKeyword < ActiveRecord::Base
           else
             page_num += 10
             google_url = start_page + "&start=" + page_num.to_s()
+          end
+          rescue
           end
           break if result != 1000
         end
@@ -260,7 +263,7 @@ class MapKeyword < ActiveRecord::Base
         user_content = 0
         content_start = company_block.index("User Content")
         content_stop = company_block.index('pp-footer>')
-        if content_start.present? || content_stop.present?
+        if content_start.present? && content_stop.present?
           first_block = company_block[content_start, content_stop]
           if first_block.include? 'More user content ('
             count_start = first_block.index('More user content (')
@@ -276,7 +279,7 @@ class MapKeyword < ActiveRecord::Base
         user_content_count = user_content.to_i if user_content.present?
       end
     rescue Exception => e
-      puts "#{ e } : #{ e.backtrace.first }"
+      puts "#{ e } : #{ e.backtrace }"
       return [result, coupon_count, review_count, citation_count, user_content_count]
     end
     return [result, coupon_count, review_count, citation_count, user_content_count]
@@ -286,6 +289,7 @@ class MapKeyword < ActiveRecord::Base
     search_keyword = self.descriptor
     search_city = ''
     cities_string = self.maps_campaign.campaign.target_cities.gsub(', ', ',') if self.maps_campaign.campaign.target_cities.present?
+    cities = ''
     cities = cities_string.split(',') if cities_string.present?
     cities.each do |city|
       if search_keyword.include? city

@@ -26,7 +26,7 @@ class Website < ActiveRecord::Base
       if website.present?
         local_campaign = Campaign.find_by_name(sf_campaign.name)
         if local_campaign.present?
-          website.campaigns << local_campaign
+          website.campaigns << local_campaign  unless website.campaign.include?(local_campaign)
           website.save
         end
       end
