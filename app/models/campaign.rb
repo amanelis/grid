@@ -5,7 +5,7 @@ class Campaign < ActiveRecord::Base
   has_many :calls, :through => :phone_numbers
   has_many :contact_forms
   has_many :submissions, :through => :contact_forms
-  has_and_belongs_to_many :websites
+  has_and_belongs_to_many :websites, :uniq => true
   has_and_belongs_to_many :industries
 
 
@@ -166,11 +166,15 @@ class Campaign < ActiveRecord::Base
   def number_of_leads_by_date
     calls_as_leads = self.number_of_specific_calls_labeled_by_date(self.calls.lead, :lead)
     submissions_as_leads = self.number_of_specific_submissions_labeled_by_date(self.submissions, :lead)
-    [calls_as_leads, submissions_as_leads].inject({}) { |data, a_hash| data.merge!(a_hash) { |key, v1, v2| {:lead => v1[:lead] + v2[:lead]} } }
+    Utilities.merge_and_sum_timeline_data([calls_as_leads, submissions_as_leads], :lead)
   end
 
   def call_timeline_data
     Utilities.merge_timeline_data(self.number_of_answered_calls_by_date, self.number_of_canceled_calls_by_date, self.number_of_voicemail_calls_by_date, self.number_of_other_calls_by_date)
+  end
+
+  def number_of_visits_by_date
+    Utilities.merge_and_sum_timeline_data(self.websites.collect { |website| website.number_of_visits_by_date }, :visit)
   end
 
   def combined_timeline_data

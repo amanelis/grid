@@ -1,5 +1,5 @@
 class Website < ActiveRecord::Base
-  has_and_belongs_to_many :campaigns
+  has_and_belongs_to_many :campaigns, :uniq => true
   has_many :website_visits
 
 
@@ -26,7 +26,7 @@ class Website < ActiveRecord::Base
       if website.present?
         local_campaign = Campaign.find_by_name(sf_campaign.name)
         if local_campaign.present?
-          website.campaigns << local_campaign  unless website.campaign.include?(local_campaign)
+          website.campaigns << local_campaign  unless website.campaigns.include?(local_campaign)
           website.save
         end
       end
@@ -80,6 +80,10 @@ class Website < ActiveRecord::Base
       visit_locations[location] = (visit_locations.has_key? location) ? visit_locations[location] + 1 : 1
     end
     visit_locations.sort { |x, y| y[1]<=>x[1] }
+  end
+
+  def number_of_visits_by_date
+    self.website_visits.count(:group => "date(time_of_visit)", :order =>"time_of_visit ASC").inject({}) {|data, (key, value)| data[key.to_date] = {:visit => value} ; data}
   end
 
 end
