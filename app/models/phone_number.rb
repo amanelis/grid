@@ -65,27 +65,27 @@ class PhoneNumber < ActiveRecord::Base
   end
 
   def number_of_answered_calls_by_date
-    self.number_by_date_of(self.calls.answered)
+    self.number_of_specific_calls_labeled_by_date(self.calls.answered, :answered)
   end
 
   def number_of_canceled_calls_by_date
-    self.number_by_date_of(self.calls.canceled)
+    self.number_of_specific_calls_labeled_by_date(self.calls.canceled, :canceled)
   end
 
   def number_of_voicemail_calls_by_date
-    self.number_by_date_of(self.calls.voicemail)
+    self.number_of_specific_calls_labeled_by_date(self.calls.voicemail, :voicemail)
   end
 
   def number_of_other_calls_by_date
-    self.number_by_date_of(self.calls.other)
+    self.number_of_specific_calls_labeled_by_date(self.calls.other, :other)
   end
 
-  def number_of_all_calls_by_date
-    self.number_by_date_of(self.calls)
+  def number_of_specific_calls_labeled_by_date(specific_calls, label)
+    specific_calls.count(:group => "date(call_start)", :order =>"call_start ASC").inject({}) {|data, (key, value)| data[key.to_date] = {label => value} ; data}
   end
 
-  def number_by_date_of(specific_calls)
-    specific_calls.count(:group => "date(call_start)", :order =>"call_start ASC").inject({}) {|data, (key, value)| data[key.to_date] = {:calls => value} ; data}
+  def call_timeline_data
+    Utilities.merge_timeline_data(self.number_of_answered_calls_by_date, self.number_of_canceled_calls_by_date, self.number_of_voicemail_calls_by_date, self.number_of_other_calls_by_date)
   end
 
 end

@@ -92,11 +92,11 @@ class Campaign < ActiveRecord::Base
       end
     end
   end
-  
+
   # INSTANCE BEHAVIOR
 
   def number_of_total_leads_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
-    self.number_of_all_calls_between(start_date, end_date) + self.number_of_submissions_between(start_date, end_date)
+    self.number_of_lead_calls_between(start_date, end_date) + self.number_of_submissions_between(start_date, end_date)
   end
 
   def spend_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
@@ -123,6 +123,10 @@ class Campaign < ActiveRecord::Base
     self.calls.other.between(start_date, end_date).count
   end
 
+  def number_of_lead_calls_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.calls.lead.between(start_date, end_date).count
+  end
+
   def number_of_all_calls_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
     self.calls.between(start_date, end_date).count
   end
@@ -132,31 +136,45 @@ class Campaign < ActiveRecord::Base
   end
 
   def number_of_answered_calls_by_date
-    self.number_by_date_of(self.calls.answered)
+    self.number_of_specific_calls_labeled_by_date(self.calls.answered, :answered)
   end
 
   def number_of_canceled_calls_by_date
-    self.number_by_date_of(self.calls.canceled)
+    self.number_of_specific_calls_labeled_by_date(self.calls.canceled, :canceled)
   end
 
   def number_of_voicemail_calls_by_date
-    self.number_by_date_of(self.calls.voicemail)
+    self.number_of_specific_calls_labeled_by_date(self.calls.voicemail, :voicemail)
   end
 
   def number_of_other_calls_by_date
-    self.number_by_date_of(self.calls.other)
+    self.number_of_specific_calls_labeled_by_date(self.calls.other, :other)
   end
 
-  def number_of_all_calls_by_date
-    self.number_by_date_of(self.calls)
-  end
-
-  def number_by_date_of(specific_calls)
-    specific_calls.count(:group => "date(call_start)", :order =>"call_start ASC").inject({}) {|data, (key, value)| data[key.to_date] = {:calls => value} ; data}
+  def number_of_specific_calls_labeled_by_date(specific_calls, label)
+    specific_calls.count(:group => "date(call_start)", :order =>"call_start ASC").inject({}) { |data, (key, value)| data[key.to_date] = {label => value}; data }
   end
 
   def number_of_submissions_by_date
-    self.submissions.count(:group => "date(time_of_submission)", :order =>"time_of_submission ASC").inject({}) {|data, (key, value)| data[key.to_date] = {:submission => value} ; data}
+    self.number_of_specific_submissions_labeled_by_date(self.submissions, :submission)
+  end
+
+  def number_of_specific_submissions_labeled_by_date(specific_submissions, label)
+    specific_submissions.count(:group => "date(time_of_submission)", :order =>"time_of_submission ASC").inject({}) { |data, (key, value)| data[key.to_date] = {label => value}; data }
+  end
+
+  def number_of_leads_by_date
+    calls_as_leads = self.number_of_specific_calls_labeled_by_date(self.calls.lead, :lead)
+    submissions_as_leads = self.number_of_specific_submissions_labeled_by_date(self.submissions, :lead)
+    [calls_as_leads, submissions_as_leads].inject({}) { |data, a_hash| data.merge!(a_hash) { |key, v1, v2| {:lead => v1[:lead] + v2[:lead]} } }
+  end
+
+  def call_timeline_data
+    Utilities.merge_timeline_data(self.number_of_answered_calls_by_date, self.number_of_canceled_calls_by_date, self.number_of_voicemail_calls_by_date, self.number_of_other_calls_by_date)
+  end
+
+  def combined_timeline_data
+    Utilities.merge_timeline_data(self.call_timeline_data, self.number_of_submissions_by_date, self.number_of_leads_by_date)
   end
 
 end
