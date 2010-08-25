@@ -156,7 +156,7 @@ class Campaign < ActiveRecord::Base
   end
 
   def number_of_submissions_by_date
-    self.number_of_specific_submissions_labeled_by_date(self.submissions, :submission)
+    self.number_of_specific_submissions_labeled_by_date(self.submissions, :submissions)
   end
 
   def number_of_specific_submissions_labeled_by_date(specific_submissions, label)
@@ -164,9 +164,9 @@ class Campaign < ActiveRecord::Base
   end
 
   def number_of_leads_by_date
-    calls_as_leads = self.number_of_specific_calls_labeled_by_date(self.calls.lead, :lead)
-    submissions_as_leads = self.number_of_specific_submissions_labeled_by_date(self.submissions, :lead)
-    Utilities.merge_and_sum_timeline_data([calls_as_leads, submissions_as_leads], :lead)
+    calls_as_leads = self.number_of_specific_calls_labeled_by_date(self.calls.lead, :leads)
+    submissions_as_leads = self.number_of_specific_submissions_labeled_by_date(self.submissions, :leads)
+    Utilities.merge_and_sum_timeline_data([calls_as_leads, submissions_as_leads], :leads)
   end
 
   def call_timeline_data
@@ -174,11 +174,11 @@ class Campaign < ActiveRecord::Base
   end
 
   def number_of_visits_by_date
-    Utilities.merge_and_sum_timeline_data(self.websites.collect { |website| website.number_of_visits_by_date }, :visit)
+    Utilities.merge_and_sum_timeline_data(self.websites.collect { |website| website.number_of_visits_by_date }, :visits)
   end
 
   def number_of_map_visits_by_date
-    Utilities.merge_and_sum_timeline_data(self.websites.collect { |website| website.number_of_map_visits_by_date }, :visit)
+    Utilities.merge_and_sum_timeline_data(self.websites.collect { |website| website.number_of_map_visits_by_date }, :visits)
   end
 
 end
