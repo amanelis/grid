@@ -177,8 +177,8 @@ class Campaign < ActiveRecord::Base
     Utilities.merge_and_sum_timeline_data(self.websites.collect { |website| website.number_of_visits_by_date }, :visit)
   end
 
-  def combined_timeline_data
-    Utilities.merge_timeline_data(self.call_timeline_data, self.number_of_submissions_by_date, self.number_of_leads_by_date, self.number_of_visits_by_date)
+  def number_of_map_visits_by_date
+    Utilities.merge_and_sum_timeline_data(self.websites.collect { |website| website.number_of_map_visits_by_date }, :visit)
   end
 
 end

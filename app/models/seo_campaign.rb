@@ -233,4 +233,8 @@ class SeoCampaign < ActiveRecord::Base
     (spend = self.budget).present? ? spend : 0.0
   end
 
+  def combined_timeline_data
+    Utilities.merge_timeline_data(self.campaign.number_of_visits_by_date, self.campaign.number_of_leads_by_date)
+  end
+
 end

@@ -33,5 +33,13 @@ class GoogleSemCampaign < ActiveRecord::Base
   def average_position_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
     (count = self.adwords_campaign_summaries.between(start_date, end_date).count) > 0 ? self.adwords_campaign_summaries.between(start_date, end_date).sum(:pos).to_f / count : 0.0
   end
-  
+
+  def number_of_clicks_by_date
+    self.adwords_campaign_summaries.sum(:clicks, :group => "date(report_date)", :order =>"report_date ASC").inject({}) {|data, (key, value)| data[key.to_date] = {:clicks => value} ; data}
+  end
+
+  def number_of_impressions_by_date
+    self.adwords_campaign_summaries.sum(:imps, :group => "date(report_date)", :order =>"report_date ASC").inject({}) {|data, (key, value)| data[key.to_date] = {:impressions => value} ; data}
+  end
+
 end
