@@ -5,6 +5,10 @@
 - :name: nokogiri
 - :name: authlogic
 - :name: adwords4r
+- :name: haml
 - :name: formtastic
+- :source: http://gemcutter.org
+  :version: ~> 2.3.11
+  :name: will_paginate
 - :version: 2.3.8
   :name: rails
