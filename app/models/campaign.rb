@@ -178,7 +178,7 @@ class Campaign < ActiveRecord::Base
   end
 
   def combined_timeline_data
-    Utilities.merge_timeline_data(self.call_timeline_data, self.number_of_submissions_by_date, self.number_of_leads_by_date)
+    Utilities.merge_timeline_data(self.call_timeline_data, self.number_of_submissions_by_date, self.number_of_leads_by_date, self.number_of_visits_by_date)
   end
 
 end
