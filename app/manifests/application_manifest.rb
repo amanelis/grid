@@ -17,6 +17,10 @@ class ApplicationManifest < Moonshine::Manifest::Rails
   #   :custom => { :random => random  }
   # })
   
+  recipe :mysql_gem, :apache_server, :passenger_gem, :passenger_configure_gem_path, :passenger_apache_module, :passenger_site,
+    :rails_rake_environment, :rails_gems, :rails_directories, :rails_logrotate,
+    :ntp, :time_zone, :postfix, :cron_packages, :motd, :security_updates
+  
   configure(:iptables => { :rules => [
      '-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT',
      '-A INPUT -p icmp -j ACCEPT',
@@ -29,10 +33,13 @@ class ApplicationManifest < Moonshine::Manifest::Rails
   # The default_stack recipe install Rails, Apache, Passenger, the database from
   # database.yml, Postfix, Cron, logrotate and NTP. See lib/moonshine/manifest/rails.rb
   # for details. To customize, remove this recipe and specify the components you want.
-  recipe :default_stack
+  # recipe :default_stack
   
   plugin :iptables
+  plugin :ssh
+  
   recipe :iptables
+  recipe :ssh
 
   # Add your application's custom requirements here
   def application_packages
