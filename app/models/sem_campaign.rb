@@ -355,7 +355,8 @@ class SemCampaign < ActiveRecord::Base
   end
 
   def combined_timeline_data
-    Utilities.merge_timeline_data(self.number_of_clicks_by_date, self.number_of_impressions_by_date, self.campaign.number_of_leads_by_date)
+    raw_data = Utilities.merge_timeline_data(self.number_of_clicks_by_date, self.number_of_impressions_by_date, self.campaign.number_of_leads_by_date)
+    Utilities.massage_timeline(raw_data, [:clicks, :impressions, :leads])
   end
 
 end
