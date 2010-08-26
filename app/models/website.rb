@@ -88,7 +88,11 @@ class Website < ActiveRecord::Base
   end
 
   def number_of_visits_by_date
-    self.website_visits.count(:group => "date(time_of_visit)", :order =>"time_of_visit ASC").inject({}) {|data, (key, value)| data[key.to_date] = {:visit => value} ; data}
+    self.website_visits.count(:group => "date(time_of_visit)", :order =>"time_of_visit ASC").inject({}) {|data, (key, value)| data[key.to_date] = {:visits => value} ; data}
+  end
+
+  def number_of_map_visits_by_date
+    self.website_visits.from_maps.count(:group => "date(time_of_visit)", :order =>"time_of_visit ASC").inject({}) {|data, (key, value)| data[key.to_date] = {:visits => value} ; data}
   end
 
 end

@@ -1,7 +1,6 @@
 class SemCampaign < ActiveRecord::Base
   include CampaignStyleMixin
   has_many :google_sem_campaigns
-  has_many :adwords_campaign_summaries, :through => :google_sem_campaigns
   has_many :sem_campaign_report_statuses
 
   CAMPAIGN_REPORT_TYPE = "Campaign"
@@ -345,6 +344,19 @@ class SemCampaign < ActiveRecord::Base
 
   def spend_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
     self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.spend_between(start_date, end_date) }
+  end
+
+  def number_of_clicks_by_date
+    Utilities.merge_and_sum_timeline_data(self.google_sem_campaigns.collect { |google_sem_campaign| google_sem_campaign.number_of_clicks_by_date }, :clicks)
+  end
+
+  def number_of_impressions_by_date
+    Utilities.merge_and_sum_timeline_data(self.google_sem_campaigns.collect { |google_sem_campaign| google_sem_campaign.number_of_impressions_by_date }, :impressions)
+  end
+
+  def combined_timeline_data
+    raw_data = Utilities.merge_timeline_data(self.number_of_clicks_by_date, self.number_of_impressions_by_date, self.campaign.number_of_leads_by_date)
+    Utilities.massage_timeline(raw_data, [:clicks, :impressions, :leads])
   end
 
 end

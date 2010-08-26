@@ -3,7 +3,7 @@ class Admin::CampaignsController < ApplicationController
 
   def show
     @campaign = Campaign.find(params[:id])
-    @timeline = @campaign.combined_timeline_data
+    @timeline = @campaign.campaign_style.combined_timeline_data
     @sorted_dates = @timeline.keys.sort
   end
 

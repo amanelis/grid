@@ -4,6 +4,9 @@ class WebsiteVisit < ActiveRecord::Base
   named_scope :bounce, :conditions => {:actions => '1'}
   named_scope :referred, :conditions => ['referrer_search IS NOT NULL']
   named_scope :from_google_maps, :conditions => ['referrer_url like ?', '%maps.google.com%']
+  named_scope :from_yahoo_maps, :conditions => ['referrer_url like ?', '%local.yahoo.com%']
+  named_scope :from_bing_maps, :conditions => ['referrer_url like ?', '%bing.com/local%']
+  named_scope :from_maps, :conditions => ['referrer_url like ? OR referrer_url like ? OR referrer_url like ?', '%maps.google.com%', '%local.yahoo.com%', '%bing.com/local%']
   named_scope :between, lambda { |start_date, end_date| {:conditions => ['time_of_visit between ? AND ?', start_date.to_time.utc.at_beginning_of_day, end_date.to_time.utc.end_of_day]} }
 
 

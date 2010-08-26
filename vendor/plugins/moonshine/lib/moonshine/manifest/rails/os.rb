@@ -71,7 +71,7 @@ from installing any gems, packages, or dependencies directly on the server.
   # packages from these upgrades, create an array of packages on
   # <tt>configuration[:unattended_upgrade][:package_blacklist]</tt>
   def security_updates
-    configure(:unattended_upgrade => {})
+    configure(:unattended_upgrade => {:allowed_origins => [distro_unattended_security_origin].compact})
     unattended_config = <<-CONFIG
 APT::Periodic::Update-Package-Lists "#{configuration[:unattended_upgrade][:package_lists]||1}";
 APT::Periodic::Unattended-Upgrade "#{configuration[:unattended_upgrade][:interval]||1}";
@@ -89,6 +89,17 @@ CONFIG
   end
 
 private
+
+  def ubuntu_lucid?
+    Facter.lsbdistid == 'Ubuntu' && Facter.lsbdistrelease.to_f == 10.04
+  end
+
+  def distro_unattended_security_origin
+    case Facter.lsbdistrelease.to_f
+    when 8.10 then 'Ubuntu intrepid-security'
+    when 10.04 then 'Ubuntu lucid-security'
+    end
+  end
 
   #Provides a helper for creating logrotate config for various parts of your
   #stack. For example:
