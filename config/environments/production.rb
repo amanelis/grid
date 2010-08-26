@@ -27,4 +27,14 @@ config.action_view.cache_template_loading            = true
 # Enable threaded mode
 # config.threadsafe!
 # Use postfix for mail delivery 
-ActionMailer::Base.delivery_method = :sendmail 
+#ActionMailer::Base.delivery_method = :sendmail 
+
+ActionMailer::Base.smtp_settings = {
+  :address => 'smtp.sendgrid.net',
+  :port => 25,
+  :domain => 'cityvoice.com',
+  :authentication => :plain,
+  :user_name => 'paul.singh@cityvoice.com',
+  :password => 'c1tyvo1ce'
+
+}
