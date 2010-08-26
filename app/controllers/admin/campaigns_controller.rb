@@ -5,6 +5,7 @@ class Admin::CampaignsController < ApplicationController
     @campaign = Campaign.find(params[:id])
     @timeline = @campaign.campaign_style.combined_timeline_data
     @sorted_dates = @timeline.keys.sort
+    @title = @campaign.account.name
   end
 
 end
