@@ -11,13 +11,18 @@ class Website < ActiveRecord::Base
     response = geturl["response"]
     urls = response["site"]
     urls.each do |url|
-      Website.find_or_create_by_site_id(:site_id => url["site_id"],
-                                        :domain => url["hostname"].downcase,
-                                        :nickname => url["nickname"].downcase,
-                                        :sitekey => url["sitekey"],
-                                        :database_server => url["server"],
-                                        :admin_sitekey => url["sitekey_admin"],
-                                        :is_active => true)
+      existing_website = Website.find_by_site_id(url['site_id'])
+      if existing_website.blank?
+        existing_website = Website.new
+        existing_website.site_id = url['site_id']
+      end
+      existing_website.domain = url["hostname"].downcase
+      existing_website.nickname = url["nickname"].downcase
+      existing_website.sitekey = url["sitekey"]
+      existing_website.database_server = url["server"]
+      existing_website.admin_sitekey = url["sitekey_admin"]
+      existing_website.is_active = true
+      existing_website.save
     end
 
     sf_campaigns = Salesforce::Clientcampaign.all
