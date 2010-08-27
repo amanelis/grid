@@ -1,1 +1,4 @@
-= inline_annotated_timeline @timeline, 620, 280, 'div_id_to_create', {:zoomEndTime => @sorted_dates[-1], :zoomStartTime  => @sorted_dates[-30] }
+-if @timeline.empty?
+  No Data
+-else
+  = inline_annotated_timeline @timeline, 620, 280, 'div_id_to_create', {:zoomEndTime => @sorted_dates[-1], :zoomStartTime  => @sorted_dates[-30] }
