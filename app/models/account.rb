@@ -2,42 +2,8 @@ class Account < ActiveRecord::Base
   has_many :campaigns
   has_one :adwords_client
 
-  def visit_count_by_date
-    data = {}
-    campaigns.each do |campaign|
-      campaign.websites.each do |website|
-        raw_visits = website.website_visits.count(:all, :group => "date(time_of_visit)", :order =>"time_of_visit ASC")
-        raw_visits.each_pair { |key, value| data[key.to_date] = {website.domain.to_sym => value} }
-      end
-    end
-    data
-  end
-
-  def self.visit_count_by_date
-    WebsiteVisit.count(:group => "date(time_of_visit)", :order =>"time_of_visit ASC").inject({}) { |data, (key, value)| data[key.to_date] = {:web_visits => value}; data }
-  end
-
-  def sorted_dates
-    rawdates = JSON.parse(self.daily_timeline.dates)
-    data = []
-    rawdates.each do |date|
-      data << DateTime.strptime(date.to_s, "%Y%m%d")
-    end
-    data.sort
-  end
-
-  def self.sorted_dates
-    WebsiteVisit.find(:all, :select => "time_of_visit").inject([]) { |data, date| data << DateTime.strptime(date.time_of_visit.to_s, "%Y-%m-%d") }.sort
-  end
-
 
   # CLASS BEHAVIOR
-
-  def self.combined_timeline_data
-    raw_data = Utilities.merge_and_sum_timeline_data(Account.all.collect { |account| account.number_of_visits_by_date }, :visits)
-    Utilities.massage_timeline(raw_data, [:visits])
-  end
-
 
   def self.pull_all_data_migrations
     puts "Pulling Salesforce Accounts..."
@@ -97,6 +63,11 @@ class Account < ActiveRecord::Base
                                               :industry => sf_account.industry,
                                               :main_contact => sf_account.main_contact__c)
     end
+  end
+
+  def self.combined_timeline_data
+    raw_data = Utilities.merge_and_sum_timeline_data(Account.all.collect { |account| account.number_of_visits_by_date }, :visits)
+    Utilities.massage_timeline(raw_data, [:visits])
   end
 
 
