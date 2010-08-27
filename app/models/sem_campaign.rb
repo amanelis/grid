@@ -359,4 +359,15 @@ class SemCampaign < ActiveRecord::Base
     Utilities.massage_timeline(raw_data, [:clicks, :impressions, :leads])
   end
 
+  def calls_per_visit_on(date)
+    data = {}
+    visits = self.campaign.websites.first.website_visits.for_date(date)
+    visits.each do |visit|
+      data[visit] = self.campaign.calls.snapshot(visit.time_of_visit, 60)
+    end
+    data
+  end
+
+
+
 end

@@ -7,28 +7,28 @@ class Account < ActiveRecord::Base
     campaigns.each do |campaign|
       campaign.websites.each do |website|
         raw_visits = website.website_visits.count(:all, :group => "date(time_of_visit)", :order =>"time_of_visit ASC")
-        raw_visits.each_pair {|key, value| data[key.to_date] = {website.domain.to_sym => value}}
+        raw_visits.each_pair { |key, value| data[key.to_date] = {website.domain.to_sym => value} }
       end
     end
     data
   end
 
   def self.visit_count_by_date
-    WebsiteVisit.count(:group => "date(time_of_visit)", :order =>"time_of_visit ASC").inject({}) {|data, (key, value)| data[key.to_date] = {:web_visits => value} ; data}
+    WebsiteVisit.count(:group => "date(time_of_visit)", :order =>"time_of_visit ASC").inject({}) { |data, (key, value)| data[key.to_date] = {:web_visits => value}; data }
   end
 
   def sorted_dates
     rawdates = JSON.parse(self.daily_timeline.dates)
     data = []
     rawdates.each do |date|
-      data << DateTime.strptime( date.to_s, "%Y%m%d")
+      data << DateTime.strptime(date.to_s, "%Y%m%d")
     end
     data.sort
   end
 
   def self.sorted_dates
     WebsiteVisit.find(:all, :select => "time_of_visit").inject([]) { |data, date| data << DateTime.strptime(date.time_of_visit.to_s, "%Y-%m-%d") }.sort
-   end
+  end
 
 
   # CLASS BEHAVIOR
@@ -95,6 +95,12 @@ class Account < ActiveRecord::Base
 
 
   # INSTANCE BEHAVIOR
+
+  def combined_timeline_data
+    raw_data = Utilities.merge_timeline_data(self.campaigns.collect { |campaign| campaign.number_of_visits_by_date })
+    Utilities.massage_timeline(raw_data, [:visits])
+  end
+
 
   # NOTE...these methods don't really make sense at this level in the hierarchy.
 
