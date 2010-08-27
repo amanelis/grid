@@ -97,7 +97,7 @@ class Account < ActiveRecord::Base
   # INSTANCE BEHAVIOR
 
   def combined_timeline_data
-    raw_data = Utilities.merge_timeline_data(self.campaigns.collect { |campaign| campaign.number_of_visits_by_date })
+    raw_data = Utilities.merge_timeline_data(self.campaigns.collect { |campaign| campaign.campaign_style.number_of_visits_by_date })
     Utilities.massage_timeline(raw_data, [:visits])
   end
 
