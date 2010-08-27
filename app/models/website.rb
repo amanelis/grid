@@ -38,7 +38,6 @@ class Website < ActiveRecord::Base
     end
   end
 
-
   # INSTANCE BEHAVIOR
 
   def visits_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)

@@ -36,17 +36,17 @@ class MapKeyword < ActiveRecord::Base
       yahoo_result = self.get_yahoo_ranking
       bing_result = self.get_bing_ranking
       self.map_rankings.create(:ranking_date => Date.today,
-                                 :google_rank => google_result[0],
-                                 :yahoo_rank => yahoo_result[0],
-                                 :bing_rank => bing_result[0],
-                                 :google_coupon_count => google_result[1],
-                                 :google_review_count => google_result[2],
-                                 :google_citation_count => google_result[3],
-                                 :google_user_content_count => google_result[4],
-                                 :bing_review_count => bing_result[2],
-                                 :yahoo_review_count => yahoo_result[5],
-                                 :yahoo_review_rating => yahoo_result[8],
-                                 :yahoo_last_review_date => yahoo_result[10])
+                               :google_rank => google_result[0],
+                               :yahoo_rank => yahoo_result[0],
+                               :bing_rank => bing_result[0],
+                               :google_coupon_count => google_result[1],
+                               :google_review_count => google_result[2],
+                               :google_citation_count => google_result[3],
+                               :google_user_content_count => google_result[4],
+                               :bing_review_count => bing_result[2],
+                               :yahoo_review_count => yahoo_result[5],
+                               :yahoo_review_rating => yahoo_result[8],
+                               :yahoo_last_review_date => yahoo_result[10])
       google_campaign = self.maps_campaign.google_maps_campaigns.first
       if google_campaign.present?
         #Update Data here
@@ -101,26 +101,28 @@ class MapKeyword < ActiveRecord::Base
       if pack_source.present?
         pack_start = pack_source.index("Local business results")
         pack_stop = pack_source.index("More results near")
-        pack_block = pack_source[pack_start..pack_stop]
-        pack_block = pack_block.gsub("<b>", "").gsub("</b>", "").gsub("&amp;", "&").gsub("&#39;", "'")
-        if pack_block.include? company
-          pack_items = pack_block.split('<tr>')
-          pack_items.slice!(0..1)
-          pack_count = 1
-          pack_items.each do |pack_item|
-            pack_item_block = pack_item.gsub("<b>", "").gsub("</b>", "").gsub("&amp;", "&").gsub("&#39;", "'")
-            if pack_item_block.include? company
-              result = pack_count
-              place_start = pack_item.index('class=fl')
-              place_block = pack_item[place_start..(pack_item.length - 1)]
-              place_end = place_block.index("&ei")
-              block = place_block[16..(place_end - 1)]
-              cid = block.index('cid')
-              mapsid = block[cid..block.length]
-              page = 'http://maps.google.com/maps/place?' + mapsid
-              break
+        if pack_start.present? and pack_stop.present?
+          pack_block = pack_source[pack_start..pack_stop]
+          pack_block = pack_block.gsub("<b>", "").gsub("</b>", "").gsub("&amp;", "&").gsub("&#39;", "'")
+          if pack_block.include? company
+            pack_items = pack_block.split('<tr>')
+            pack_items.slice!(0..1)
+            pack_count = 1
+            pack_items.each do |pack_item|
+              pack_item_block = pack_item.gsub("<b>", "").gsub("</b>", "").gsub("&amp;", "&").gsub("&#39;", "'")
+              if pack_item_block.include? company
+                result = pack_count
+                place_start = pack_item.index('class=fl')
+                place_block = pack_item[place_start..(pack_item.length - 1)]
+                place_end = place_block.index("&ei")
+                block = place_block[16..(place_end - 1)]
+                cid = block.index('cid')
+                mapsid = block[cid..block.length]
+                page = 'http://maps.google.com/maps/place?' + mapsid
+                break
+              end
+              pack_count += 1
             end
-            pack_count += 1
           end
         end
       end
@@ -130,30 +132,30 @@ class MapKeyword < ActiveRecord::Base
         20.times do
           source = HTTParty.get(google_url)
           begin
-          results_start = source.index("id=title")
-          results_stop = source.index("pw res")
-          results = source[results_start..results_stop]
-          results = results.gsub("<b>", "").gsub("</b>", "").gsub("&amp;", "&").gsub("&#39;", "'")
-          if results.include? company
-            whole_page = results.split("id=title")
-            whole_page.delete_at(0)
-            whole_page.each do |result_item|
-              result_item_block = result_item.gsub("<b>", "").gsub("</b>", "").gsub("&amp;", "&").gsub("&#39;", "'")
-              if result_item_block.include? company
-                page_start = result_item.index("href=/maps")
-                page_stop = result_item.index("&q")
-                if page_start.present? && page_stop.present?
-                  page = result_item[page_start..page_stop]
-                  page = "http://maps.google.com" + page[5..(page.length - 2)]
-                  result = page_num + (whole_page.index(result_item) + 1)
-                  break
+            results_start = source.index("id=title")
+            results_stop = source.index("pw res")
+            results = source[results_start..results_stop]
+            results = results.gsub("<b>", "").gsub("</b>", "").gsub("&amp;", "&").gsub("&#39;", "'")
+            if results.include? company
+              whole_page = results.split("id=title")
+              whole_page.delete_at(0)
+              whole_page.each do |result_item|
+                result_item_block = result_item.gsub("<b>", "").gsub("</b>", "").gsub("&amp;", "&").gsub("&#39;", "'")
+                if result_item_block.include? company
+                  page_start = result_item.index("href=/maps")
+                  page_stop = result_item.index("&q")
+                  if page_start.present? && page_stop.present?
+                    page = result_item[page_start..page_stop]
+                    page = "http://maps.google.com" + page[5..(page.length - 2)]
+                    result = page_num + (whole_page.index(result_item) + 1)
+                    break
+                  end
                 end
               end
+            else
+              page_num += 10
+              google_url = start_page + "&start=" + page_num.to_s()
             end
-          else
-            page_num += 10
-            google_url = start_page + "&start=" + page_num.to_s()
-          end
           rescue
           end
           break if result != 1000
@@ -164,119 +166,121 @@ class MapKeyword < ActiveRecord::Base
         page_source = HTTParty.get(page)
         page_source = page_source.gsub("<b>", "").gsub("</b>", "").gsub("&amp;", "&").gsub("&#39;", "'")
         owner_start = page_source.index('From the owner')
-        page_source = page_source[owner_start..page_source.length]
+        if page_source.present? and owner_start.present?
+          page_source = page_source[owner_start..page_source.length]
 
-        #Get Company Name
-        company_start = page_source.index("place-title>")
-        company_block = page_source[company_start..page_source.length]
-        company_stop = company_block.index("</span>")
-        company_name = company_block[12..(company_stop - 1)]
+          #Get Company Name
+          company_start = page_source.index("place-title>")
+          company_block = page_source[company_start..page_source.length]
+          company_stop = company_block.index("</span>")
+          company_name = company_block[12..(company_stop - 1)]
 
-        #Get Address
-        address = "None"
-        address_start = company_block.index("address")
-        address_big_block = company_block[address_start..company_block.length]
-        address_stop = address_big_block.index("</span>")
-        if address_start.present? && address_stop.present?
-          address_block = address_big_block[0..address_stop]
-          address = address_block[9..(address_block.length - 2)]
-        end
-        address = address
-
-        #Get Phone
-        phone = "NA"
-        phone_start = company_block.index("<nobr>")
-        phone_stop = company_block.index("</nobr>")
-        if phone_start.present? || phone_stop.present?
-          phone = company_block[(phone_start + 6)..(phone_stop - 1)]
-        end
-        phone = phone
-
-        #Get Number of reviews
-        review = 0
-        if company_block.include? 'More reviews'
-          review_start = company_block.index('More reviews')
-          review_block = company_block[review_start..company_block.length]
-          review_stop = review_block.index(')')
-          if review_stop.present?
-            final_block = review_block[14..(review_stop - 1)]
-            review = 5 + final_block.to_i
+          #Get Address
+          address = "None"
+          address_start = company_block.index("address")
+          address_big_block = company_block[address_start..company_block.length]
+          address_stop = address_big_block.index("</span>")
+          if address_start.present? && address_stop.present?
+            address_block = address_big_block[0..address_stop]
+            address = address_block[9..(address_block.length - 2)]
           end
-        else
-          review_start = company_block.index("pp-story-item")
-          review_stop = company_block.index('Nearby places you might like')
-          if review_start.present? && review_stop.present?
-            review_block = company_block[review_start..review_stop]
-            reviews = review_block.split('pp-story-item')
-            reviews.delete_at(0)
-            review = reviews.size
-          end
-        end
-        review_count = review.to_i if review.present?
+          address = address
 
-        #Get Number of coupons
-        coupons = 0
-        if company_block.include? 'More coupons'
-          coupon_start = company_block.index('More coupons')
-          coupon_block = company_block[coupon_start..company_block.length]
-          coupon_stop = coupon_block.index(')')
-          if coupon_stop.present?
-            final_block = coupon_block[14..(coupon_stop - 1)]
-            coupons = 3 + final_block.to_i
+          #Get Phone
+          phone = "NA"
+          phone_start = company_block.index("<nobr>")
+          phone_stop = company_block.index("</nobr>")
+          if phone_start.present? || phone_stop.present?
+            phone = company_block[(phone_start + 6)..(phone_stop - 1)]
           end
-        else
-          coupon_start = company_block.index("pp-coupons-img>")
-          coupon_stop = company_block.index('>Reviews<')
-          if coupon_start.present? || coupon_stop.present?
-            coupon_block = company_block[coupon_start..coupon_stop]
-            num_coupons = coupon_block.split('pp-coupons-img>')
-            num_coupons.delete_at(0)
-            coupons = num_coupons.size
-          end
-        end
-        coupon_count = coupons.to_i if coupons.present?
+          phone = phone
 
-        #Get Citations
-        citations = 0
-        citation_start = company_block.index("More about this place")
-        if citation_start.present?
-          first_block = company_block[citation_start..company_block.length]
-          citation_stop = first_block.index('class=pp-story-bar')
-          citation_stop = first_block.index('pp-footer') if !citation_stop.present?
-          citation_block = first_block[0..citation_stop] if citation_stop.present?
-          if citation_block.present?
-            if citation_block.include? '>More'
-              count_start = citation_block.index('>More (')
-              count_stop = citation_block.index(') &raquo;')
-              if count_start.present? && count_stop.present?
-                citations = 5 + citation_block[(count_start + 7)..(count_stop - 1)].to_i
-              end
-            else
-              citation_count = citation_block.split('pp-attribution>')
-              citations = citation_count.size - 1
+          #Get Number of reviews
+          review = 0
+          if company_block.include? 'More reviews'
+            review_start = company_block.index('More reviews')
+            review_block = company_block[review_start..company_block.length]
+            review_stop = review_block.index(')')
+            if review_stop.present?
+              final_block = review_block[14..(review_stop - 1)]
+              review = 5 + final_block.to_i
+            end
+          else
+            review_start = company_block.index("pp-story-item")
+            review_stop = company_block.index('Nearby places you might like')
+            if review_start.present? && review_stop.present?
+              review_block = company_block[review_start..review_stop]
+              reviews = review_block.split('pp-story-item')
+              reviews.delete_at(0)
+              review = reviews.size
             end
           end
-        end
-        citation_count = citations.to_i if citations.present?
+          review_count = review.to_i if review.present?
 
-        #Get User Content
-        user_content = 0
-        content_start = company_block.index("User Content")
-        content_stop = company_block.index('pp-footer>')
-        if content_start.present? && content_stop.present?
-          first_block = company_block[content_start, content_stop]
-          if first_block.include? 'More user content ('
-            count_start = first_block.index('More user content (')
-            count_block = first_block[count_start..first_block.length]
-            count_end = count_block.index('&raquo;<')
-            content_count_block = count_block[0..count_end]
-            user_content = 4 + content_count_block[19..(content_count_block.length - 4)].to_i
+          #Get Number of coupons
+          coupons = 0
+          if company_block.include? 'More coupons'
+            coupon_start = company_block.index('More coupons')
+            coupon_block = company_block[coupon_start..company_block.length]
+            coupon_stop = coupon_block.index(')')
+            if coupon_stop.present?
+              final_block = coupon_block[14..(coupon_stop - 1)]
+              coupons = 3 + final_block.to_i
+            end
           else
-            counts = first_block.split('pp-story-item')
-            user_content = counts.size - 1
+            coupon_start = company_block.index("pp-coupons-img>")
+            coupon_stop = company_block.index('>Reviews<')
+            if coupon_start.present? || coupon_stop.present?
+              coupon_block = company_block[coupon_start..coupon_stop]
+              num_coupons = coupon_block.split('pp-coupons-img>')
+              num_coupons.delete_at(0)
+              coupons = num_coupons.size
+            end
           end
+          coupon_count = coupons.to_i if coupons.present?
+
+          #Get Citations
+          citations = 0
+          citation_start = company_block.index("More about this place")
+          if citation_start.present?
+            first_block = company_block[citation_start..company_block.length]
+            citation_stop = first_block.index('class=pp-story-bar')
+            citation_stop = first_block.index('pp-footer') if !citation_stop.present?
+            citation_block = first_block[0..citation_stop] if citation_stop.present?
+            if citation_block.present?
+              if citation_block.include? '>More'
+                count_start = citation_block.index('>More (')
+                count_stop = citation_block.index(') &raquo;')
+                if count_start.present? && count_stop.present?
+                  citations = 5 + citation_block[(count_start + 7)..(count_stop - 1)].to_i
+                end
+              else
+                citation_count = citation_block.split('pp-attribution>')
+                citations = citation_count.size - 1
+              end
+            end
+          end
+          citation_count = citations.to_i if citations.present?
+
+          #Get User Content
+          user_content = 0
+          content_start = company_block.index("User Content")
+          content_stop = company_block.index('pp-footer>')
+          if content_start.present? && content_stop.present?
+            first_block = company_block[content_start, content_stop]
+            if first_block.include? 'More user content ('
+              count_start = first_block.index('More user content (')
+              count_block = first_block[count_start..first_block.length]
+              count_end = count_block.index('&raquo;<')
+              content_count_block = count_block[0..count_end]
+              user_content = 4 + content_count_block[19..(content_count_block.length - 4)].to_i
+            else
+              counts = first_block.split('pp-story-item')
+              user_content = counts.size - 1
+            end
+          end
+          user_content_count = user_content.to_i if user_content.present?
         end
-        user_content_count = user_content.to_i if user_content.present?
       end
     rescue Exception => e
       puts "#{ e } : #{ e.backtrace }"
