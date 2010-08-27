@@ -10,9 +10,11 @@ class Utilities
 
   def self.massage_timeline(timeline_hash, labels)
     dates = timeline_hash.keys.sort
-    (dates.first..dates.last).each do |date|
-      timeline_hash[date] = {} unless timeline_hash.has_key?(date)
-      labels.each { |label| timeline_hash[date][label] = 0 unless timeline_hash[date].has_key?(label) }
+    if dates.present?
+      (dates.first..dates.last).each do |date|
+        timeline_hash[date] = {} unless timeline_hash.has_key?(date)
+        labels.each { |label| timeline_hash[date][label] = 0 unless timeline_hash[date].has_key?(label) }
+      end
     end
     timeline_hash
   end

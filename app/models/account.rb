@@ -33,6 +33,12 @@ class Account < ActiveRecord::Base
 
   # CLASS BEHAVIOR
 
+  def self.combined_timeline_data
+    raw_data = Utilities.merge_and_sum_timeline_data(Account.all.collect { |account| account.number_of_visits_by_date }, :visits)
+    Utilities.massage_timeline(raw_data, [:visits])
+  end
+
+
   def self.pull_all_data_migrations
     puts "Pulling Salesforce Accounts..."
     Account.pull_salesforce_accounts
@@ -96,8 +102,12 @@ class Account < ActiveRecord::Base
 
   # INSTANCE BEHAVIOR
 
+  def number_of_visits_by_date
+     Utilities.merge_and_sum_timeline_data(self.campaigns.collect { |campaign| campaign.campaign_style.number_of_visits_by_date }, :visits)
+  end
+
   def combined_timeline_data
-    raw_data = Utilities.merge_timeline_data(self.campaigns.collect { |campaign| campaign.campaign_style.number_of_visits_by_date })
+    raw_data = self.number_of_visits_by_date
     Utilities.massage_timeline(raw_data, [:visits])
   end
 
