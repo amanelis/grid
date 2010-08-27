@@ -1,8 +1,16 @@
 %h1
   Summary for #{@account.name}
+
+.section#first-section
+  .left#timeline_chart
+    %h3 Account Performance
+    /= render :partial => "shared/timeline"
+  .right
+    = render :partial => "shared/news_results"
+  .clear
+
 %p
   Last week... (eventually, a date picker goes here)
-
 %table{:class => "pretty"}
   %thead
     %tr
