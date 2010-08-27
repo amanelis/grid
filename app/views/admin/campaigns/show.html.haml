@@ -1,7 +1,5 @@
 %h1
   Summary for #{@campaign.name}
-%p
-  Last 24 hours... (eventually, a date picker goes here)
 
 .section#first-section
   .left#timeline_chart
@@ -10,6 +8,9 @@
   .right
     = render :partial => "shared/news_results"
   .clear
+
+%p
+  Last week... (eventually, a date picker goes here)
 
 %table{:class => "pretty"}
   %thead
