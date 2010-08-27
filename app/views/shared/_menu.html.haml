@@ -1,8 +1,10 @@
 #login
   - if @current_user
-    =link_to "Dashboard", dashboard_url
-    =link_to "Admin", admin_url if @current_user.admin?
-    =link_to "Account", person_url
+    -if @current_user.admin?
+      =link_to "Admin", admin_url 
+    -else
+      =link_to "Dashboard", dashboard_url
+    =link_to "My Account", person_url
     =link_to 'Logout', user_session_path, :method => :delete
   - else
     =link_to "Register", new_person_path
