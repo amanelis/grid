@@ -16,6 +16,7 @@ class Admin::AccountsController < ApplicationController
   # GET /accounts/1.xml
   def show
     @account = Account.find(params[:id])
+    @title = @account.name
 
     respond_to do |format|
       format.html # show.html.erb
