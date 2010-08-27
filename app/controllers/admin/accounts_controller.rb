@@ -16,6 +16,8 @@ class Admin::AccountsController < ApplicationController
   # GET /accounts/1.xml
   def show
     @account = Account.find(params[:id])
+    @timeline = @account.combined_timeline_data
+    @sorted_dates = @timeline.keys.sort
     @title = @account.name
 
     respond_to do |format|
