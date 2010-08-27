@@ -40,23 +40,32 @@ class Call < ActiveRecord::Base
           call_results.each do |call_result|
             phone_number = PhoneNumber.find_by_cmpid(call_result["cmpid"])
             if phone_number.present?
-              Call.find_or_create_by_call_id(:call_id => call_result["call_id"],
-                                             :assigned_to => call_result["assigned_to"],
-                                             :call_end => call_result["call_end"].to_time(),
-                                             :call_start => call_result["call_start"].to_time(),
-                                             :call_status => call_result["call_status"],
-                                             :caller_name => call_result["caller_name"],
-                                             :caller_number => call_result["caller_number"],
-                                             :disposition => call_result["disposition"],
-                                             :forwardno => call_result["forwardno"],
-                                             :inbound_ext => call_result["inbound_ext"],
-                                             :inboundno => call_result["inboundno"],
-                                             :rating => call_result["rating"],
-                                             :revenue => call_result["revenue"],
-                                             :recorded => call_result["recorded"],
-                                             :phone_number_id => phone_number.id)
+              existing_call = Call.find_by_call_id(call_result["call_id"])
+              if existing_call.blank?
+                 existing_call = Call.new
+                 existing_call.call_id = call_result["call_id"]
+                 existing_call.call_end = call_result["call_end"].to_time()
+                 existing_call.call_start = call_result["call_start"].to_time()
+                 existing_call.call_status = call_result["call_status"]
+                 existing_call.caller_name = call_result["caller_name"]
+                 existing_call.caller_number = call_result["caller_number"]
+                 existing_call.forwardno = call_result["forwardno"]
+                 existing_call.inbound_ext = call_result["inbound_ext"]
+                 existing_call.inboundno = call_result["inboundno"]
+                 existing_call.recorded = call_result["recorded"]
+                 existing_call.phone_number_id = phone_number.id
+              end
+              existing_call.assigned_to = call_result["assigned_to"]
+              existing_call.disposition = call_result["disposition"]
+              existing_call.rating = call_result["rating"]
+              existing_call.revenue = call_result["revenue"]
+              existing_call.save
             else
-              puts "Erroring finding Phone Number Campaign ID: " + call_result["cmpid"]
+              number = PhoneNumber.new
+              number.cmpid = call_result["cmpid"]
+              number.inboundno = call_result['inboundno']
+              number.save
+              puts "Couldn't Find Phone Number: " + call_result['inboundno'] + '.....created Phone Number Object'
             end
           end
         end

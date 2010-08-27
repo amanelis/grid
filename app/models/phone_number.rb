@@ -13,29 +13,43 @@ class PhoneNumber < ActiveRecord::Base
       if local_campaign.present?
         if sf_campaign.primary_tracking_number__c.present?
           number = sf_campaign.primary_tracking_number__c.gsub('(', '').gsub(')', '').gsub('-', '').gsub(' ', '')
-          PhoneNumber.find_or_create_by_cmpid_and_inboundno(:cmpid => sf_campaign.primary_marchex_id__c,
-                                                            :inboundno => number,
-                                                            :name => sf_campaign.name,
-                                                            :campaign_id => local_campaign.id,
-                                                            :descript => sf_campaign.name)
+          existing_number = PhoneNumber.find_by_cmpid_and_inboundno(sf_campaign.primary_marchex_id__c, number)
+          if existing_number.blank?
+             existing_number = PhoneNumber.new
+             existing_number.cmpid = sf_campaign.primary_marchex_id__c
+             existing_number.inboundno = number
+          end
+          existing_number.name = sf_campaign.name,
+          existing_number.campaign_id = local_campaign.id
+          existing_number.descript = sf_campaign.name
+          existing_number.save
         end
-
         if sf_campaign.secondary_tracking_number__c.present?
           number = sf_campaign.secondary_tracking_number__c.gsub('(', '').gsub(')', '').gsub('-', '').gsub(' ', '')
-          PhoneNumber.find_or_create_by_cmpid_and_inboundno(:cmpid => sf_campaign.secondary_marchex_id__c,
-                                                            :inboundno => number,
-                                                            :name => sf_campaign.name,
-                                                            :campaign_id => local_campaign.id,
-                                                            :descript => sf_campaign.name)
+          existing_number = PhoneNumber.find_by_cmpid_and_inboundno(sf_campaign.secondary_marchex_id__c, number)
+          if existing_number.blank?
+             existing_number = PhoneNumber.new
+             existing_number.cmpid = sf_campaign.secondary_marchex_id__c
+             existing_number.inboundno = number
+          end
+          existing_number.name = sf_campaign.name,
+          existing_number.campaign_id = local_campaign.id
+          existing_number.descript = sf_campaign.name
+          existing_number.save
         end
 
         if sf_campaign.third_tracking_number__c.present?
           number = sf_campaign.third_tracking_number__c.gsub('(', '').gsub(')', '').gsub('-', '').gsub(' ', '')
-          PhoneNumber.find_or_create_by_cmpid_and_inboundno(:cmpid => sf_campaign.third_marchex_id__c,
-                                                            :inboundno => number,
-                                                            :name => sf_campaign.name,
-                                                            :campaign_id => local_campaign.id,
-                                                            :descript => sf_campaign.name)
+          existing_number = PhoneNumber.find_by_cmpid_and_inboundno(sf_campaign.third_marchex_id__c, number)
+          if existing_number.blank?
+             existing_number = PhoneNumber.new
+             existing_number.cmpid = sf_campaign.third_marchex_id__c
+             existing_number.inboundno = number
+          end
+          existing_number.name = sf_campaign.name,
+          existing_number.campaign_id = local_campaign.id
+          existing_number.descript = sf_campaign.name
+          existing_number.save
         end
       end
     end

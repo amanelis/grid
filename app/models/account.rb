@@ -45,23 +45,28 @@ class Account < ActiveRecord::Base
     sf_accounts = Salesforce::Account.find(:all, :conditions => ['account_status__c = ? OR account_status__c = ?', "Active", "Paused"])
 
     sf_accounts.each do |sf_account|
-      Account.find_or_create_by_salesforce_id(:salesforce_id => sf_account.id,
-                                              :account_type => sf_account.account_type__c,
-                                              :status => sf_account.account_status__c,
-                                              :name => sf_account.name,
-                                              :street => sf_account.billing_street,
-                                              :city => sf_account.billing_city,
-                                              :county => sf_account.county__c,
-                                              :state => sf_account.billing_state,
-                                              :postal_code => sf_account.billing_postal_code,
-                                              :country => sf_account.billing_country,
-                                              :phone => sf_account.phone,
-                                              :other_phone => sf_account.other_phone_number__c,
-                                              :fax => sf_account.fax,
-                                              :metro_area => sf_account.metro_area__c,
-                                              :website => sf_account.website,
-                                              :industry => sf_account.industry,
-                                              :main_contact => sf_account.main_contact__c)
+      existing_account = Account.find_by_salesforce_id(sf_account.id)
+      if existing_account.blank?
+        existing_account = Account.new
+        existing_account.salesforce_id = sf_account.id
+      end
+      existing_account.account_type = sf_account.account_type__c
+      existing_account.status = sf_account.account_status__c
+      existing_account.name = sf_account.name
+      existing_account.street = sf_account.billing_street
+      existing_account.city = sf_account.billing_city
+      existing_account.county = sf_account.county__c
+      existing_account.state = sf_account.billing_state
+      existing_account.postal_code = sf_account.billing_postal_code
+      existing_account.country = sf_account.billing_country
+      existing_account.phone = sf_account.phone
+      existing_account.other_phone = sf_account.other_phone_number__c
+      existing_account.fax = sf_account.fax
+      existing_account.metro_area = sf_account.metro_area__c
+      existing_account.website = sf_account.website
+      existing_account.industry = sf_account.industry
+      existing_account.main_contact = sf_account.main_contact__c
+      existing_account.save
     end
   end
 
