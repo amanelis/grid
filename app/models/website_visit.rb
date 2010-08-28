@@ -13,12 +13,12 @@ class WebsiteVisit < ActiveRecord::Base
 
   # CLASS BEHAVIOR
 
-  def self.data_pull_websites_visits(hard_update = false, start_date = (Date.today - 3.days), end_date = Date.today - 1.day)
+  def self.data_pull_websites_visits(hard_update = false, start_date = (Date.today - 3.days), end_date = Date.today - 1.day, verbose = false)
     sites = Website.find(:all, :conditions => ['is_active = ? OR is_active is null', 1])
     sites.each do |site|
       begin
         if hard_update == false
-          WebsiteVisit.update_website_visits(site.id, start_date, end_date)
+          WebsiteVisit.update_website_visits(site.id, start_date, end_date, verbose)
         else
           WebsiteVisit.hard_update_website_visits(site.id, start_date, end_date)
         end
@@ -30,7 +30,7 @@ class WebsiteVisit < ActiveRecord::Base
     end
   end
 
-  def self.update_website_visits(website_id, start = Date.today - 3.days, fend = Date.today - 1.day)
+  def self.update_website_visits(website_id, start = Date.today - 3.days, fend = Date.today - 1.day, verbose = false)
     website = Website.find(website_id)
     if website.present?
       type = 'visitors-list&visitor-details=time,time_pretty,time_total,ip_address,session_id,actions,web_browser,operating_system,screen_resolution,javascript,language,referrer_url,referrer_domain,referrer_search,geolocation,longitude,latitude,hostname,organization,campaign,custom,clicky_url,goals'
@@ -81,6 +81,7 @@ class WebsiteVisit < ActiveRecord::Base
                                                                                 :custom => visit["custom"],
                                                                                 :time_of_visit => Time.at(visit["time"].to_i))
                 nurl.save
+                puts "Saved visit from #{nurl.geolocation}" if verbose
               rescue
                 puts 'Error in getting' + url_dates
                 next
