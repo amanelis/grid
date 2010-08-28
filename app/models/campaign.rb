@@ -17,9 +17,23 @@ class Campaign < ActiveRecord::Base
     sf_campaigns.each do |sf_campaign|
       account = Account.find_by_salesforce_id(sf_campaign.account_id__c)
       if account.present?
-        unless Campaign.exists?(:account_id => account.id, :name => sf_campaign.name)
-          if sf_campaign.campaign_type__c.include? 'SEM'
+        existing_campaign = Campaign.find_by_account_id_and_name(account.id, name)
+        if sf_campaign.campaign_type__c.include? 'SEM'
+          if existing_campaign.blank?
             new_sem_campaign = SemCampaign.new
+            existing_campaign = new_sem_campaign.build_campaign
+            existing_campaign.account_id = account.id
+            google_ids = sf_campaign.google_campaign_id__c.present? ? sf_campaign.google_campaign_id__c.split(',') : ''
+            google_ids.each do |google_id|
+              new_google_sem_campaign = new_sem_campaign.google_sem_campaigns.build
+              new_google_sem_campaign.reference_id = google_id.gsub(' ', '')
+            end
+          else
+            new_sem_campaign = existing_campaign.campaign_style
+          end
+
+            existing_campaign.status = sf_campaign.status__c
+            existing_campaign.name = sf_campaign.name
             new_sem_campaign.monthly_budget = sf_campaign.monthly_budget__c
             new_sem_campaign.rake = sf_campaign.campaign_rake__c
             new_sem_campaign.developer_token = 'HC3GEwJ4LqgyVNeNTenIVw'
@@ -29,23 +43,17 @@ class Campaign < ActiveRecord::Base
             new_sem_campaign.email = 'bizsearchlocal.jon@gmail.com'
             new_sem_campaign.client_email = 'bizsearchlocal.jon@gmail.com'
             new_sem_campaign.environment = 'PRODUCTION'
-            new_campaign = new_sem_campaign.build_campaign
-            new_campaign.account_id = account.id
-            new_campaign.status = sf_campaign.status__c
-            new_campaign.name = sf_campaign.name
-
-            google_ids = sf_campaign.google_campaign_id__c.present? ? sf_campaign.google_campaign_id__c.split(',') : ''
-            google_ids.each do |google_id|
-              new_google_sem_campaign = new_sem_campaign.google_sem_campaigns.build
-              new_google_sem_campaign.reference_id = google_id.gsub(' ', '')
-            end
-            new_sem_campaign.save!
-
-
-          elsif sf_campaign.campaign_type__c.include? 'SEO'
+          new_sem_campaign.save!
+      elsif sf_campaign.campaign_type__c.include? 'SEO'
             sf_account = Salesforce::Account.find(account.salesforce_id)
-            new_seo_campaign = SeoCampaign.new
-            new_seo_campaign.budget = sf_campaign.monthly_budget__c
+           if existing_campaign.blank?
+              new_seo_campaign = SeoCampaign.new
+              existing_campaign = new_seo_campaign.build_campaign
+              existing_campaign.account_id = account.id
+           else
+              new_seo_campaign = existing_campaign.campaign_style
+             end
+              new_seo_campaign.budget = sf_campaign.monthly_budget__c
             new_seo_campaign.cities = ''
             #new_seo_campaign.keywords = campaign.keywords__c
             new_seo_campaign.dns_host = sf_account.dns_host__c
@@ -54,23 +62,24 @@ class Campaign < ActiveRecord::Base
             new_seo_campaign.hosting_site = sf_account.hosting_site__c
             new_seo_campaign.hosting_username = sf_account.hosting_username__c
             new_seo_campaign.hosting_password = sf_account.hosting_password__c
-
-            new_campaign = new_seo_campaign.build_campaign
-            new_campaign.account_id = account.id
-            new_campaign.status = sf_campaign.status__c
-            new_campaign.name = sf_campaign.name
-
-            new_seo_campaign.save!
+existing_campaign.status = sf_campaign.status__c
+            existing_campaign.name = sf_campaign.name
+new_seo_campaign.save!
 
           elsif sf_campaign.campaign_type__c.include? 'Maps'
-            new_maps_campaign = MapsCampaign.new
+            if existing_campaign.blank?
+              new_maps_campaign = MapsCampaign.new
+              existing_campaign = new_maps_campaign.build_campaign
+              existing_campaign.account_id = account.id
+            else
+             new_maps_campaign = existing_campaign.campaign_style
+              end
             new_maps_campaign.keywords = sf_campaign.keywords__c
             new_maps_campaign.company_name = sf_campaign.maps_company_name__c
 
-            new_campaign = new_maps_campaign.build_campaign
-            new_campaign.account_id = account.id
-            new_campaign.status = sf_campaign.status__c
-            new_campaign.name = sf_campaign.name
+
+            existing_campaign.status = sf_campaign.status__c
+            existing_campaign.name = sf_campaign.name
 
             new_google_maps_campaign = new_maps_campaign.google_maps_campaigns.build
             new_google_maps_campaign.login = sf_campaign.maps_login__c
@@ -80,7 +89,7 @@ class Campaign < ActiveRecord::Base
           end
         end
       end
-    end
+ 
   end
 
   def self.fix_target_cities
