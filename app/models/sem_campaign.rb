@@ -346,6 +346,22 @@ class SemCampaign < ActiveRecord::Base
     self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.spend_between(start_date, end_date) }
   end
 
+  def clicks_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.clicks_between(start_date, end_date) }
+  end
+
+  def impressions_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.impressions_between(start_date, end_date) }
+  end
+
+  def click_through_rate_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    (count = self.google_sem_campaigns.count) > 0 ? self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.click_through_rate_between(start_date, end_date) } / count : 0.0
+  end
+
+  def average_position_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    (count = self.google_sem_campaigns.count) > 0 ? self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.average_position_between(start_date, end_date) } / count : 0.0
+  end
+
   def number_of_visits_by_date
     self.campaign.number_of_visits_by_date
   end
