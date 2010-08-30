@@ -8,6 +8,10 @@ class Campaign < ActiveRecord::Base
   has_and_belongs_to_many :websites, :uniq => true
   has_and_belongs_to_many :industries
 
+  named_scope :seo, :conditions => {:campaign_style_type => SeoCampaign.name}
+  named_scope :sem, :conditions => {:campaign_style_type => SemCampaign.name}
+  named_scope :maps, :conditions => {:campaign_style_type => MapsCampaign.name}
+
 
   # CLASS BEHAVIOR
 
@@ -89,7 +93,7 @@ new_seo_campaign.save!
           end
         end
       end
- 
+
   end
 
   def self.fix_target_cities
