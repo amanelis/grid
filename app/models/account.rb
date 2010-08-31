@@ -100,11 +100,11 @@ class Account < ActiveRecord::Base
   end
 
   def sem_click_through_rate_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
-    (count = self.campaigns.sem.count) > 0 ? self.campaigns.sem.to_a.sum { |sem_campaign| sem_campaign.click_through_rate_between(start_date, end_date) } / count : 0.0
+    (count = self.campaigns.sem.count) > 0 ? self.campaigns.sem.to_a.sum { |campaign| campaign.campaign_style.click_through_rate_between(start_date, end_date) } / count : 0.0
   end
 
   def sem_average_position_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
-    (count = self.campaigns.sem.count) > 0 ? self.campaigns.sem.to_a.sum { |sem_campaign| sem_campaign.average_position_between(start_date, end_date) } / count : 0.0
+    (count = self.campaigns.sem.count) > 0 ? self.campaigns.sem.to_a.sum { |campaign| campaign.campaign_style.average_position_between(start_date, end_date) } / count : 0.0
   end
 
   def sem_spend_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
