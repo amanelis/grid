@@ -195,11 +195,11 @@ class Campaign < ActiveRecord::Base
   end
 
   def number_of_visits_by_date
-    self.website.number_of_visits_by_date
+    self.website.try(:number_of_visits_by_date) || 0
   end
 
   def number_of_map_visits_by_date
-    self.website.number_of_map_visits_by_date
+    self.website.try(:number_of_map_visits_by_date) || 0
   end
 
 end
