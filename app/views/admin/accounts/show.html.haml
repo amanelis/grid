@@ -186,11 +186,11 @@
                 %td
                   = campaign.number_of_total_leads_between(Date.today - 1.month, Date.today).to_s
                 %td
-                  = campaign.campaign_style.number_of_visits_between(Date.today - 1.month, Date.today).to_s
+                  = campaign.number_of_visits_between(Date.today - 1.month, Date.today).to_s
                 %td
-                  = campaign.campaign_style.number_of_actions_between(Date.today - 1.month, Date.today).to_s
+                  = campaign.number_of_actions_between(Date.today - 1.month, Date.today).to_s
                 %td
-                  = campaign.campaign_style.number_of_average_actions_between(Date.today - 1.month, Date.today).to_s
+                  = campaign.number_of_average_actions_between(Date.today - 1.month, Date.today).to_s
                 %td
                   Total Time Spent
                 %td
@@ -238,7 +238,7 @@
                 %td
                   = campaign.name
                 %td
-                  = campaign.campaign_style.number_of_map_visits_between(Date.today - 1.month, Date.today).to_s
+                  = campaign.number_of_map_visits_between(Date.today - 1.month, Date.today).to_s
           %tfoot
             %th
               Totals
