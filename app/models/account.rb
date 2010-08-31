@@ -131,6 +131,18 @@ class Account < ActiveRecord::Base
     self.campaigns.seo.to_a.sum { |campaign| campaign.number_of_visits_between(start_date, end_date) }
   end
 
+  def seo_total_time_spent_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.campaigns.seo.to_a.sum { |campaign| campaign.total_time_spent_between(start_date, end_date) }
+  end
+
+  def seo_average_total_time_spent_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.campaigns.seo.to_a.sum { |campaign| campaign.average_total_time_spent_between(start_date, end_date) }
+  end
+
+  def seo_bounce_rate_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.campaigns.seo.to_a.sum { |campaign| campaign.bounce_rate_between(start_date, end_date) }
+  end
+
   def maps_number_of_visits_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
     self.campaigns.maps.to_a.sum { |campaign| campaign.number_of_map_visits_between(start_date, end_date) }
   end

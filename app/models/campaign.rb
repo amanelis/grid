@@ -168,6 +168,18 @@ class Campaign < ActiveRecord::Base
     self.website.try(:average_actions_between, start_date, end_date) || 0.0
   end
 
+  def total_time_spent_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.website.try(:total_time_spent_between, start_date, end_date) || 0
+  end
+
+  def average_total_time_spent_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.website.try(:average_total_time_spent_between, start_date, end_date) || 0.0
+  end
+
+  def bounce_rate_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.website.try(:bounce_rate_between, start_date, end_date) || 0.0
+  end
+
   def number_of_answered_calls_by_date
     self.number_of_specific_calls_labeled_by_date(self.calls.answered, :answered)
   end
