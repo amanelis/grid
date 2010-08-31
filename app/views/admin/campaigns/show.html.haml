@@ -36,5 +36,50 @@
         = ActionController::Base.helpers.number_to_currency(@campaign.spend_between(Date.today - 1.week, Date.today))
       %td
         = ActionController::Base.helpers.number_to_currency(@campaign.cost_per_lead_between(Date.today - 1.week, Date.today))
+%h3
+  Call Log
+%table{:class => "pretty"}
+  %thead
+    %tr
+      %th
+        Caller
+      %th
+        Caller #
+      %th
+        Inbound #
+      %th
+        Time of Call
+      %th
+        Duration
+      %th
+        Result
+      %th
+        Disposition
+      %th
+        Rating
+      %th
+        Revenue
+  %tbody
+    -@campaign.calls.find(:all, :conditions => ['call_start between ? AND ?', Date.today - 1.week, Date.today]).each do |call|
+      %tr{ :class => cycle('odd', 'even')}
+        %td
+          = call.caller_name
+        %td
+          = call.caller_number
+        %td
+          = call.inboundno
+        %td
+          = call.call_start.to_s
+        %td
+          = call.duration
+        %td
+          = call.call_status
+        %td
+          = call.disposition
+        %td
+          = call.rating
+        %td
+          = call.revenue
+
 
 

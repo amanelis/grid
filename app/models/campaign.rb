@@ -2,7 +2,7 @@ class Campaign < ActiveRecord::Base
   belongs_to :account
   belongs_to :campaign_style, :polymorphic => true
   has_many :phone_numbers
-  has_many :calls, :through => :phone_numbers
+  has_many :calls, :through => :phone_numbers, :order => "call_start DESC"
   has_many :contact_forms
   has_many :submissions, :through => :contact_forms
   has_and_belongs_to_many :websites, :uniq => true
