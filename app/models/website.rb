@@ -44,6 +44,10 @@ class Website < ActiveRecord::Base
     self.website_visits.between(start_date, end_date).count
   end
 
+  def map_visits_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.website_visits.from_maps.between(start_date, end_date).count
+  end
+
   def actions_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
     self.website_visits.between(start_date, end_date).sum(:actions).to_i
   end

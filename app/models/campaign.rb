@@ -36,63 +36,63 @@ class Campaign < ActiveRecord::Base
             new_sem_campaign = existing_campaign.campaign_style
           end
 
-            existing_campaign.status = sf_campaign.status__c
-            existing_campaign.name = sf_campaign.name
-            new_sem_campaign.monthly_budget = sf_campaign.monthly_budget__c
-            new_sem_campaign.rake = sf_campaign.campaign_rake__c
-            new_sem_campaign.developer_token = 'HC3GEwJ4LqgyVNeNTenIVw'
-            new_sem_campaign.application_token = '-o8E21xqBmVx7CkQ5TfAag'
-            new_sem_campaign.user_agent = 'Biz Search Local'
-            new_sem_campaign.password = 'brayden11'
-            new_sem_campaign.email = 'bizsearchlocal.jon@gmail.com'
-            new_sem_campaign.client_email = 'bizsearchlocal.jon@gmail.com'
-            new_sem_campaign.environment = 'PRODUCTION'
+          existing_campaign.status = sf_campaign.status__c
+          existing_campaign.name = sf_campaign.name
+          new_sem_campaign.monthly_budget = sf_campaign.monthly_budget__c
+          new_sem_campaign.rake = sf_campaign.campaign_rake__c
+          new_sem_campaign.developer_token = 'HC3GEwJ4LqgyVNeNTenIVw'
+          new_sem_campaign.application_token = '-o8E21xqBmVx7CkQ5TfAag'
+          new_sem_campaign.user_agent = 'Biz Search Local'
+          new_sem_campaign.password = 'brayden11'
+          new_sem_campaign.email = 'bizsearchlocal.jon@gmail.com'
+          new_sem_campaign.client_email = 'bizsearchlocal.jon@gmail.com'
+          new_sem_campaign.environment = 'PRODUCTION'
           new_sem_campaign.save!
-      elsif sf_campaign.campaign_type__c.include? 'SEO'
-            sf_account = Salesforce::Account.find(account.salesforce_id)
-           if existing_campaign.blank?
-              new_seo_campaign = SeoCampaign.new
-              existing_campaign = new_seo_campaign.build_campaign
-              existing_campaign.account_id = account.id
-           else
-              new_seo_campaign = existing_campaign.campaign_style
-             end
-              new_seo_campaign.budget = sf_campaign.monthly_budget__c
-            new_seo_campaign.cities = ''
-            #new_seo_campaign.keywords = campaign.keywords__c
-            new_seo_campaign.dns_host = sf_account.dns_host__c
-            new_seo_campaign.dns_login = sf_account.dns_login__c
-            new_seo_campaign.dns_password = sf_account.dns_password__c
-            new_seo_campaign.hosting_site = sf_account.hosting_site__c
-            new_seo_campaign.hosting_username = sf_account.hosting_username__c
-            new_seo_campaign.hosting_password = sf_account.hosting_password__c
-existing_campaign.status = sf_campaign.status__c
-            existing_campaign.name = sf_campaign.name
-new_seo_campaign.save!
-
-          elsif sf_campaign.campaign_type__c.include? 'Maps'
-            if existing_campaign.blank?
-              new_maps_campaign = MapsCampaign.new
-              existing_campaign = new_maps_campaign.build_campaign
-              existing_campaign.account_id = account.id
-            else
-             new_maps_campaign = existing_campaign.campaign_style
-              end
-            new_maps_campaign.keywords = sf_campaign.keywords__c
-            new_maps_campaign.company_name = sf_campaign.maps_company_name__c
-
-
-            existing_campaign.status = sf_campaign.status__c
-            existing_campaign.name = sf_campaign.name
-
-            new_google_maps_campaign = new_maps_campaign.google_maps_campaigns.build
-            new_google_maps_campaign.login = sf_campaign.maps_login__c
-            new_google_maps_campaign.password = sf_campaign.maps_password__c
-
-            new_maps_campaign.save!
+        elsif sf_campaign.campaign_type__c.include? 'SEO'
+          sf_account = Salesforce::Account.find(account.salesforce_id)
+          if existing_campaign.blank?
+            new_seo_campaign = SeoCampaign.new
+            existing_campaign = new_seo_campaign.build_campaign
+            existing_campaign.account_id = account.id
+          else
+            new_seo_campaign = existing_campaign.campaign_style
           end
+          new_seo_campaign.budget = sf_campaign.monthly_budget__c
+          new_seo_campaign.cities = ''
+          #new_seo_campaign.keywords = campaign.keywords__c
+          new_seo_campaign.dns_host = sf_account.dns_host__c
+          new_seo_campaign.dns_login = sf_account.dns_login__c
+          new_seo_campaign.dns_password = sf_account.dns_password__c
+          new_seo_campaign.hosting_site = sf_account.hosting_site__c
+          new_seo_campaign.hosting_username = sf_account.hosting_username__c
+          new_seo_campaign.hosting_password = sf_account.hosting_password__c
+          existing_campaign.status = sf_campaign.status__c
+          existing_campaign.name = sf_campaign.name
+          new_seo_campaign.save!
+
+        elsif sf_campaign.campaign_type__c.include? 'Maps'
+          if existing_campaign.blank?
+            new_maps_campaign = MapsCampaign.new
+            existing_campaign = new_maps_campaign.build_campaign
+            existing_campaign.account_id = account.id
+          else
+            new_maps_campaign = existing_campaign.campaign_style
+          end
+          new_maps_campaign.keywords = sf_campaign.keywords__c
+          new_maps_campaign.company_name = sf_campaign.maps_company_name__c
+
+
+          existing_campaign.status = sf_campaign.status__c
+          existing_campaign.name = sf_campaign.name
+
+          new_google_maps_campaign = new_maps_campaign.google_maps_campaigns.build
+          new_google_maps_campaign.login = sf_campaign.maps_login__c
+          new_google_maps_campaign.password = sf_campaign.maps_password__c
+
+          new_maps_campaign.save!
         end
       end
+    end
 
   end
 
@@ -107,6 +107,10 @@ new_seo_campaign.save!
   end
 
   # INSTANCE BEHAVIOR
+
+  def website
+    self.websites.first
+  end
 
   def number_of_total_leads_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
     self.number_of_lead_calls_between(start_date, end_date) + self.number_of_submissions_between(start_date, end_date)
@@ -148,6 +152,10 @@ new_seo_campaign.save!
     self.submissions.between(start_date, end_date).count
   end
 
+  def number_of_map_visits_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.website.map_visits_between(start_date, end_date).count
+  end
+
   def number_of_answered_calls_by_date
     self.number_of_specific_calls_labeled_by_date(self.calls.answered, :answered)
   end
@@ -187,11 +195,11 @@ new_seo_campaign.save!
   end
 
   def number_of_visits_by_date
-    Utilities.merge_and_sum_timeline_data(self.websites.collect { |website| website.number_of_visits_by_date }, :visits)
+    self.website.number_of_visits_by_date
   end
 
   def number_of_map_visits_by_date
-    Utilities.merge_and_sum_timeline_data(self.websites.collect { |website| website.number_of_map_visits_by_date }, :visits)
+    self.website.number_of_map_visits_by_date
   end
 
 end

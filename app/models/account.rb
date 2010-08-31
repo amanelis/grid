@@ -79,12 +79,40 @@ class Account < ActiveRecord::Base
   # INSTANCE BEHAVIOR
 
   def number_of_visits_by_date
-     Utilities.merge_and_sum_timeline_data(self.campaigns.collect { |campaign| campaign.campaign_style.number_of_visits_by_date }, :visits)
+    Utilities.merge_and_sum_timeline_data(self.campaigns.collect { |campaign| campaign.campaign_style.number_of_visits_by_date }, :visits)
   end
 
   def combined_timeline_data
     raw_data = self.number_of_visits_by_date
     Utilities.massage_timeline(raw_data, [:visits])
+  end
+
+  def sem_number_of_total_leads_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.campaigns.sem.sum { |campaign| campaign.number_of_total_leads_between(start_date, end_date) }
+  end
+
+  def sem_clicks_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.campaigns.sem.sum { |campaign| campaign.campaign_style.clicks_between(start_date, end_date) }
+  end
+
+  def sem_impressions_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.campaigns.sem.sum { |campaign| campaign.campaign_style.impressions_between(start_date, end_date) }
+  end
+
+  def sem_click_through_rate_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    (count = self.campaigns.sem.count) > 0 ? self.campaigns.sem.to_a.sum { |sem_campaign| sem_campaign.click_through_rate_between(start_date, end_date) } / count : 0.0
+  end
+
+  def sem_average_position_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    (count = self.campaigns.sem.count) > 0 ? self.campaigns.sem.to_a.sum { |sem_campaign| sem_campaign.average_position_between(start_date, end_date) } / count : 0.0
+  end
+
+  def sem_spend_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.campaigns.sem.sum { |campaign| campaign.spend_between(start_date, end_date) }
+  end
+
+  def maps_number_of_visits_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.campaigns.maps.sum { |campaign| campaign.number_of_map_visits_between(start_date, end_date) }
   end
 
 
