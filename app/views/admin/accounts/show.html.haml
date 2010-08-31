@@ -46,7 +46,7 @@
           = link_to "Details", admin_campaign_path(campaign)
 
 %h3
-  Last Month Report
+  = 'Last Month Report (' + (Date.today - 1.month).to_s + ' to ' + Date.today.to_s + ')'
 %table{:class => "pretty"}
   %thead
     %th
@@ -131,9 +131,9 @@
                 %td
                   = campaign.campaign_style.impressions_between(Date.today - 1.month, Date.today).to_s
                 %td
-                  = campaign.campaign_style.click_through_rate_between(Date.today - 1.month, Date.today).to_s
+                  = (sprintf("%.3f", (campaign.campaign_style.click_through_rate_between(Date.today - 1.month, Date.today) * 100)) + '%')
                 %td
-                  = campaign.campaign_style.average_position_between(Date.today - 1.month, Date.today).to_s
+                  = '%.2f' % campaign.campaign_style.average_position_between(Date.today - 1.month, Date.today).to_s
                 %td
                   = ActionController::Base.helpers.number_to_currency(campaign.spend_between(Date.today - 1.month, Date.today))
           %tfoot
@@ -146,12 +146,13 @@
             %th
               = @account.sem_impressions_between(Date.today - 1.month, Date.today)
             %th
-              = @account.sem_click_through_rate_between(Date.today - 1.month, Date.today)
+              = (sprintf("%.3f", (@account.sem_click_through_rate_between(Date.today - 1.month, Date.today) * 100)) + '%')
             %th
-              = @account.sem_average_position_between(Date.today - 1.month, Date.today)
+              = '%.2f' % @account.sem_average_position_between(Date.today - 1.month, Date.today).to_s
             %th
               = ActionController::Base.helpers.number_to_currency(@account.sem_spend_between(Date.today - 1.month, Date.today))
-              %table{:class => "pretty"}
+              
+%table{:class => "pretty"}
   %thead
     %th
       Organic Campaigns Summary
@@ -190,13 +191,13 @@
                 %td
                   = campaign.number_of_actions_between(Date.today - 1.month, Date.today).to_s
                 %td
-                  = campaign.number_of_average_actions_between(Date.today - 1.month, Date.today).to_s
+                  = '%.2f' % campaign.number_of_average_actions_between(Date.today - 1.month, Date.today).to_s
                 %td
-                  Total Time Spent
+                  = [(campaign.total_time_spent_between(Date.today - 1.month, Date.today)/3600).to_s + 'h', (campaign.total_time_spent_between(Date.today - 1.month, Date.today)/60 % 60).to_s + 'm', (campaign.total_time_spent_between(Date.today - 1.month, Date.today) % 60).to_s + 's'].map{|t| t.to_s.rjust(2,'0')}.join(':')
                 %td
-                  Avg Time Spent
+                  = [((campaign.average_total_time_spent_between(Date.today - 1.month, Date.today).to_i)/3600).to_s + 'h', ((campaign.average_total_time_spent_between(Date.today - 1.month, Date.today).to_i)/60 % 60).to_s + 'm', ((campaign.average_total_time_spent_between(Date.today - 1.month, Date.today).to_i) % 60).to_s + 's'].map{|t| t.to_s.rjust(2,'0')}.join(':')
                 %td
-                  Bounce Rate
+                  = (sprintf("%.2f", (campaign.bounce_rate_between(Date.today - 1.month, Date.today) * 100)) + '%')
                 %td
                   = ActionController::Base.helpers.number_to_currency(campaign.spend_between(Date.today - 1.month, Date.today))
           %tfoot
@@ -209,13 +210,13 @@
             %th
               = @account.seo_number_of_actions_between(Date.today - 1.month, Date.today)
             %th
-              = @account.seo_number_of_average_actions_between(Date.today - 1.month, Date.today)
+              = '%.2f' % @account.seo_number_of_average_actions_between(Date.today - 1.month, Date.today)
             %th
-              Total Time Spent
+              = [(@account.seo_total_time_spent_between(Date.today - 1.month, Date.today)/3600).to_s + 'h', (@account.seo_total_time_spent_between(Date.today - 1.month, Date.today)/60 % 60).to_s + 'm', (@account.seo_total_time_spent_between(Date.today - 1.month, Date.today) % 60).to_s + 's'].map{|t| t.to_s.rjust(2,'0')}.join(':')
             %th
-              Avg Time Spent
+              = [((@account.seo_average_total_time_spent_between(Date.today - 1.month, Date.today).to_i)/3600).to_s + 'h', ((@account.seo_average_total_time_spent_between(Date.today - 1.month, Date.today).to_i)/60 % 60).to_s + 'm', ((@account.seo_average_total_time_spent_between(Date.today - 1.month, Date.today).to_i) % 60).to_s + 's'].map{|t| t.to_s.rjust(2,'0')}.join(':')
             %th
-              Bounce Rate
+              = (sprintf("%.2f", (@account.seo_bounce_rate_between(Date.today - 1.month, Date.today) * 100)) + '%')
             %th
               = ActionController::Base.helpers.number_to_currency(@account.seo_spend_between(Date.today - 1.month, Date.today))
 
@@ -233,7 +234,7 @@
             %th
               Web Visits
           %tbody
-            -@account.campaigns.map.each do |campaign|
+            -@account.campaigns.maps.each do |campaign|
               %tr{ :class => cycle('odd', 'even')}
                 %td
                   = campaign.name
