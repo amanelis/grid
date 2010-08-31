@@ -42,18 +42,18 @@ class Call < ActiveRecord::Base
             if phone_number.present?
               existing_call = Call.find_by_call_id(call_result["call_id"])
               if existing_call.blank?
-                 existing_call = Call.new
-                 existing_call.call_id = call_result["call_id"]
-                 existing_call.call_end = call_result["call_end"].to_time()
-                 existing_call.call_start = call_result["call_start"].to_time()
-                 existing_call.call_status = call_result["call_status"]
-                 existing_call.caller_name = call_result["caller_name"]
-                 existing_call.caller_number = call_result["caller_number"]
-                 existing_call.forwardno = call_result["forwardno"]
-                 existing_call.inbound_ext = call_result["inbound_ext"]
-                 existing_call.inboundno = call_result["inboundno"]
-                 existing_call.recorded = call_result["recorded"]
-                 existing_call.phone_number_id = phone_number.id
+                existing_call = Call.new
+                existing_call.call_id = call_result["call_id"]
+                existing_call.call_end = call_result["call_end"].to_time()
+                existing_call.call_start = call_result["call_start"].to_time()
+                existing_call.call_status = call_result["call_status"]
+                existing_call.caller_name = call_result["caller_name"]
+                existing_call.caller_number = call_result["caller_number"]
+                existing_call.forwardno = call_result["forwardno"]
+                existing_call.inbound_ext = call_result["inbound_ext"]
+                existing_call.inboundno = call_result["inboundno"]
+                existing_call.recorded = call_result["recorded"]
+                existing_call.phone_number_id = phone_number.id
               end
               existing_call.assigned_to = call_result["assigned_to"]
               existing_call.disposition = call_result["disposition"]
@@ -75,6 +75,16 @@ class Call < ActiveRecord::Base
         #TODO: need to do something with this exception
       end
     end
+  end
+
+
+  # INSTANCE BEHAVIOR
+
+  def duration
+    span = self.call_end - self.call_start
+    min = (span / 60).floor
+    secs = span.modulo(60).ceil
+    min.to_s + (secs < 10 ? ":0" : ":") + secs.to_s
   end
 
 end
