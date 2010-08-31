@@ -111,6 +111,10 @@ class Account < ActiveRecord::Base
     self.campaigns.sem.to_a.sum { |campaign| campaign.spend_between(start_date, end_date) }
   end
 
+  def seo_spend_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.campaigns.seo.to_a.sum { |campaign| campaign.spend_between(start_date, end_date) }
+  end
+
   def seo_number_of_total_leads_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
     self.campaigns.seo.to_a.sum { |campaign| campaign.number_of_total_leads_between(start_date, end_date) }
   end
