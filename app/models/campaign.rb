@@ -152,8 +152,20 @@ class Campaign < ActiveRecord::Base
     self.submissions.between(start_date, end_date).count
   end
 
+  def number_of_visits_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.website.try(:visits_between, start_date, end_date) || 0
+  end
+
   def number_of_map_visits_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
-    self.website.map_visits_between(start_date, end_date).count
+    self.website.try(:map_visits_between, start_date, end_date) || 0
+  end
+
+  def number_of_actions_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.website.try(:actions_between, start_date, end_date) || 0
+  end
+
+  def number_of_average_actions_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+    self.website.try(:average_actions_between, start_date, end_date) || 0.0
   end
 
   def number_of_answered_calls_by_date
