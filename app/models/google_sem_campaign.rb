@@ -6,11 +6,11 @@ class GoogleSemCampaign < ActiveRecord::Base
 
   # INSTANCE BEHAVIOR
 
-  def spend_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+  def spend_between(start_date = Date.yesterday, end_date = Date.yesterday)
     (self.cost_between(start_date, end_date) * 100.0) / (100.0 - self.rake)
   end
 
-  def cost_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+  def cost_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.adwords_campaign_summaries.between(start_date, end_date).sum(:cost) / 1000000.0
   end
 
@@ -18,19 +18,19 @@ class GoogleSemCampaign < ActiveRecord::Base
     (rake = self.sem_campaign.rake).present? ? rake : 0.0
   end
 
-  def clicks_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+  def clicks_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.adwords_campaign_summaries.between(start_date, end_date).sum(:clicks)
   end
 
-  def impressions_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+  def impressions_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.adwords_campaign_summaries.between(start_date, end_date).sum(:imps)
   end
 
-  def click_through_rate_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+  def click_through_rate_between(start_date = Date.yesterday, end_date = Date.yesterday)
     (impressions = self.impressions_between(start_date, end_date)) > 0 ? self.clicks_between(start_date, end_date).to_f / impressions : 0.0
   end
 
-  def average_position_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+  def average_position_between(start_date = Date.yesterday, end_date = Date.yesterday)
     (count = self.adwords_campaign_summaries.between(start_date, end_date).count) > 0 ? self.adwords_campaign_summaries.between(start_date, end_date).sum(:pos).to_f / count : 0.0
   end
 

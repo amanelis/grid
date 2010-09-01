@@ -10,35 +10,49 @@ class SemCampaign < ActiveRecord::Base
   # CLASS BEHAVIOR
 
   def self.update_sem_campaign_reports_by_campaign(hard_update = false, date = Date.today - 1)
-    sem_campaigns = SemCampaign.all
-    sem_campaigns.each do |sem_campaign|
-      span = 30
-      if hard_update == false
-        span = 7
+    job_status = JobStatus.create(:name => "SemCampaign.update_sem_campaign_reports_by_campaign")
+    begin
+      sem_campaigns = SemCampaign.all
+      sem_campaigns.each do |sem_campaign|
+        span = 30
+        if hard_update == false
+          span = 7
+        end
+        #pull the days report and save each
+        while span != 0
+          pull_date = date - span.days
+          sem_campaign.create_campaign_level_sem_campaign_report_for_google(pull_date)
+          span -= 1
+        end
       end
-      #pull the days report and save each
-      while span != 0
-        pull_date = date - span.days
-        sem_campaign.create_campaign_level_sem_campaign_report_for_google(pull_date)
-        span -= 1
-      end
+    rescue Exception => ex
+      job_status.finish_with_errors(ex)
+      raise
     end
+    job_status.finish_with_no_errors
   end
 
   def self.update_sem_campaign_reports_by_ad(hard_update = false, date = Date.today - 1)
-    sem_campaigns = SemCampaign.all
-    sem_campaigns.each do |sem_campaign|
-      span = 30
-      if hard_update == false
-        span = 7
+    job_status = JobStatus.create(:name => "SemCampaign.update_sem_campaign_reports_by_ad")
+    begin
+      sem_campaigns = SemCampaign.all
+      sem_campaigns.each do |sem_campaign|
+        span = 30
+        if hard_update == false
+          span = 7
+        end
+        #pull the days report and save each
+        while span != 0
+          pull_date = date - span.days
+          sem_campaign.create_ad_level_sem_campaign_report_for_google(pull_date)
+          span -= 1
+        end
       end
-      #pull the days report and save each
-      while span != 0
-        pull_date = date - span.days
-        sem_campaign.create_ad_level_sem_campaign_report_for_google(pull_date)
-        span -= 1
-      end
+    rescue Exception => ex
+      job_status.finish_with_errors(ex)
+      raise
     end
+    job_status.finish_with_no_errors
   end
 
 
@@ -152,7 +166,7 @@ class SemCampaign < ActiveRecord::Base
       else
         puts 'No campaign-level report found for: ' + self.name + ' for the date ' + date.strftime('%m/%d/%Y') + ' at ' + Time.now.to_s
       end
-    elsif report_exists.result == 'Started' && report_exists.created_at < (Date.today - 1.days)
+    elsif report_exists.result == 'Started' && report_exists.created_at < (Date.yesterdays)
       SemCampaignReportStatus.delete(report_exists.id)
     end
   end
@@ -337,28 +351,28 @@ class SemCampaign < ActiveRecord::Base
       else
         puts 'No ad-level report found for: ' + self.name + ' for the date ' + date.strftime('%m/%d/%Y') + ' at ' + Time.now.to_s
       end
-    elsif report_exists.result == "Started" && report_exists.created_at < (Date.today - 1.days)
+    elsif report_exists.result == "Started" && report_exists.created_at < (Date.yesterdays)
       SemCampaignReportStatus.delete(report_exists.id)
     end
   end
 
-  def spend_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+  def spend_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.spend_between(start_date, end_date) }
   end
 
-  def clicks_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+  def clicks_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.clicks_between(start_date, end_date) }
   end
 
-  def impressions_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+  def impressions_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.impressions_between(start_date, end_date) }
   end
 
-  def click_through_rate_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+  def click_through_rate_between(start_date = Date.yesterday, end_date = Date.yesterday)
     (count = self.google_sem_campaigns.count) > 0 ? self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.click_through_rate_between(start_date, end_date) } / count : 0.0
   end
 
-  def average_position_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+  def average_position_between(start_date = Date.yesterday, end_date = Date.yesterday)
     (count = self.google_sem_campaigns.count) > 0 ? self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.average_position_between(start_date, end_date) } / count : 0.0
   end
 
@@ -391,7 +405,6 @@ class SemCampaign < ActiveRecord::Base
     end
     data
   end
-
 
 
 end

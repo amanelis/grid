@@ -9,26 +9,40 @@ class Keyword < ActiveRecord::Base
   # CLASS BEHAVIOR
 
   def self.update_keywords_from_salesforce
-    sf_campaigns = Salesforce::Clientcampaign.find_all_by_campaign_type__c('SEO')
-    sf_campaigns.each do |sf_campaign|
-      local_seo_campaign = Campaign.find_by_name(sf_campaign.name).try(:campaign_style)
-      if sf_campaign.keywords__c.present? && local_seo_campaign.present?
-        keywords = sf_campaign.keywords__c.split(',')
-        keywords.each do |keyword|
-          puts 'Started: ' + keyword
-          Keyword.find_or_create_by_seo_campaign_id_and_descriptor(:seo_campaign_id => local_seo_campaign.id,
-                                                                   :descriptor => keyword,
-                                                                   :google_first_page => false,
-                                                                   :yahoo_first_page => false,
-                                                                   :bing_first_page => false)
-          puts 'Completed: ' + keyword
+    job_status = JobStatus.create(:name => "Keyword.update_keywords_from_salesforce")
+    begin
+      sf_campaigns = Salesforce::Clientcampaign.find_all_by_campaign_type__c('SEO')
+      sf_campaigns.each do |sf_campaign|
+        local_seo_campaign = Campaign.find_by_name(sf_campaign.name).try(:campaign_style)
+        if sf_campaign.keywords__c.present? && local_seo_campaign.present?
+          keywords = sf_campaign.keywords__c.split(',')
+          keywords.each do |keyword|
+            puts 'Started: ' + keyword
+            Keyword.find_or_create_by_seo_campaign_id_and_descriptor(:seo_campaign_id => local_seo_campaign.id,
+                                                                     :descriptor => keyword,
+                                                                     :google_first_page => false,
+                                                                     :yahoo_first_page => false,
+                                                                     :bing_first_page => false)
+            puts 'Completed: ' + keyword
+          end
         end
       end
+    rescue Exception => ex
+      job_status.finish_with_errors(ex)
+      raise
     end
+    job_status.finish_with_no_errors
   end
 
   def self.update_keyword_rankings
-    Keyword.all.each { |keyword| keyword.fetch_keyword_rankings }
+    job_status = JobStatus.create(:name => "Keyword.update_keyword_rankings")
+    begin
+      Keyword.all.each { |keyword| keyword.fetch_keyword_rankings }
+    rescue Exception => ex
+      job_status.finish_with_errors(ex)
+      raise
+    end
+    job_status.finish_with_no_errors
   end
 
 
@@ -87,7 +101,7 @@ class Keyword < ActiveRecord::Base
       url = 'http://perl.pearanalytics.com/v2/keyword/position?keyword=' + self.descriptor.gsub(' ', '+') + '&url=' + nickname.gsub('www.', '')
       response = HTTParty.get(url)
       JSON.parse(response)['result'].to_a.first.second
-    rescue              
+    rescue
       puts "Error in Account.get_new_html_validation"
       return nil
     end
@@ -128,15 +142,15 @@ class Keyword < ActiveRecord::Base
     Digest::SHA1.hexdigest(signature)
   end
 
-  def most_recent_google_ranking_between(start_date = Date.today - 30.day, end_date = Date.today - 1.day)
+  def most_recent_google_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
     self.most_recent_ranking_between(start_date, end_date).google
   end
 
-  def most_recent_yahoo_ranking_between(start_date = Date.today - 30.day, end_date = Date.today - 1.day)
+  def most_recent_yahoo_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
     self.most_recent_ranking_between(start_date, end_date).yahoo
   end
 
-  def most_recent_bing_ranking_between(start_date = Date.today - 30.day, end_date = Date.today - 1.day)
+  def most_recent_bing_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
     self.most_recent_ranking_between(start_date, end_date).bing
   end
 

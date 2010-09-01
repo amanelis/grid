@@ -5,7 +5,7 @@ class ContactForm < ActiveRecord::Base
 
   # INSTANCE BEHAVIOR
 
-  def number_of_submissions_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+  def number_of_submissions_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.submissions.between(start_date, end_date).count
   end
 

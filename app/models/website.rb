@@ -6,73 +6,81 @@ class Website < ActiveRecord::Base
   # CLASS BEHAVIOR
 
   def self.add_websites
+    job_status = JobStatus.create(:name => "Website.add_websites")
     #http://stats.cityvoice.com.re.getclicky.com/api/whitelabel/sites?auth=de8f1bae61c60eb0
-    geturl = HTTParty.get("http://stats.cityvoice.com.re.getclicky.com/api/whitelabel/sites?auth=de8f1bae61c60eb0&output=json")
-    response = geturl["response"]
-    urls = response["site"]
-    urls.each do |url|
-      existing_website = Website.find_by_site_id(url['site_id'])
-      if existing_website.blank?
-        existing_website = Website.new
-        existing_website.site_id = url['site_id']
+    begin
+      geturl = HTTParty.get("http://stats.cityvoice.com.re.getclicky.com/api/whitelabel/sites?auth=de8f1bae61c60eb0&output=json")
+      response = geturl["response"]
+      urls = response["site"]
+      urls.each do |url|
+        existing_website = Website.find_by_site_id(url['site_id'])
+        if existing_website.blank?
+          existing_website = Website.new
+          existing_website.site_id = url['site_id']
+        end
+        existing_website.domain = url["hostname"].downcase
+        existing_website.nickname = url["nickname"].downcase
+        existing_website.sitekey = url["sitekey"]
+        existing_website.database_server = url["server"]
+        existing_website.admin_sitekey = url["sitekey_admin"]
+        existing_website.is_active = true
+        existing_website.save
       end
-      existing_website.domain = url["hostname"].downcase
-      existing_website.nickname = url["nickname"].downcase
-      existing_website.sitekey = url["sitekey"]
-      existing_website.database_server = url["server"]
-      existing_website.admin_sitekey = url["sitekey_admin"]
-      existing_website.is_active = true
-      existing_website.save
-    end
 
-    sf_campaigns = Salesforce::Clientcampaign.all
-    sf_campaigns.each do |sf_campaign|
-      website = Website.find_by_nickname(sf_campaign.primary_website__c)
-      if website.present?
-        local_campaign = Campaign.find_by_name(sf_campaign.name)
-        if local_campaign.present?
-          website.campaigns << local_campaign  unless website.campaigns.include?(local_campaign)
-          website.save
+      sf_campaigns = Salesforce::Clientcampaign.all
+      sf_campaigns.each do |sf_campaign|
+        website = Website.find_by_nickname(sf_campaign.primary_website__c)
+        if website.present?
+          local_campaign = Campaign.find_by_name(sf_campaign.name)
+          if local_campaign.present?
+            website.campaigns << local_campaign unless website.campaigns.include?(local_campaign)
+            website.save
+          end
         end
       end
+    rescue Exception => ex
+      job_status.finish_with_errors(ex)
+      raise
     end
+    job_status.finish_with_no_errors
   end
+
 
   # INSTANCE BEHAVIOR
 
-  def visits_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+  def visits_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.website_visits.between(start_date, end_date).count
   end
 
-  def map_visits_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+  def map_visits_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.website_visits.from_maps.between(start_date, end_date).count
   end
 
-  def actions_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+  def actions_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.website_visits.between(start_date, end_date).sum(:actions).to_i
   end
 
-  def average_actions_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+  def average_actions_between(start_date = Date.yesterday, end_date = Date.yesterday)
     (visits = self.visits_between(start_date, end_date)) > 0 ? self.actions_between(start_date, end_date).to_f / visits : 0.0
   end
 
-  def total_time_spent_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+  def total_time_spent_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.website_visits.between(start_date, end_date).sum(:time_total).to_i
   end
 
-  def average_total_time_spent_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+  def average_total_time_spent_between(start_date = Date.yesterday, end_date = Date.yesterday)
     (visits = self.visits_between(start_date, end_date)) > 0 ? self.total_time_spent_between(start_date, end_date).to_f / visits : 0.0
   end
 
-  def bounces_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+  def bounces_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.website_visits.between(start_date, end_date).bounce.count
   end
 
-  def bounce_rate_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+  def bounce_rate_between(start_date = Date.yesterday, end_date = Date.yesterday)
     (visits = self.visits_between(start_date, end_date)) > 0 ? self.bounces_between(start_date, end_date).to_f / visits : 0.0
   end
 
-  def keywords_searched_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+  def keywords_searched_between(start_date = Date.yesterday, end_date = Date.yesterday)
     search_keywords = Hash.new
     self.website_visits.between(start_date, end_date).referred.each do |visit|
       keywords = visit.referrer_search.downcase.split.join(' ')
@@ -81,7 +89,7 @@ class Website < ActiveRecord::Base
     search_keywords.sort { |x, y| y[1]<=>x[1] }
   end
 
-  def visit_locations_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+  def visit_locations_between(start_date = Date.yesterday, end_date = Date.yesterday)
     visit_locations = Hash.new
     self.website_visits.between(start_date, end_date).each do |visit|
       location = visit.latitude + ' ' + visit.longitude
@@ -91,11 +99,11 @@ class Website < ActiveRecord::Base
   end
 
   def number_of_visits_by_date
-    self.website_visits.count(:group => "date(time_of_visit)", :order =>"time_of_visit ASC").inject({}) {|data, (key, value)| data[key.to_date] = {:visits => value} ; data}
+    self.website_visits.count(:group => "date(time_of_visit)", :order =>"time_of_visit ASC").inject({}) { |data, (key, value)| data[key.to_date] = {:visits => value}; data }
   end
 
   def number_of_map_visits_by_date
-    self.website_visits.from_maps.count(:group => "date(time_of_visit)", :order =>"time_of_visit ASC").inject({}) {|data, (key, value)| data[key.to_date] = {:visits => value} ; data}
+    self.website_visits.from_maps.count(:group => "date(time_of_visit)", :order =>"time_of_visit ASC").inject({}) { |data, (key, value)| data[key.to_date] = {:visits => value}; data }
   end
 
 end
