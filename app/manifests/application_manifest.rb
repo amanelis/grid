@@ -51,7 +51,7 @@ class ApplicationManifest < Moonshine::Manifest::Rails
     # cron 'custom:task', :command => some_rake_task, :user => configuration[:user], :minute => 0, :hour => 0
     cron 'pull_salesforce_accounts', :command => "/home/deploy/grid/current/script/runner -e production Account.pull_salesforce_accounts", :user => configuration[:user], :minute => 1, :hour => 22
     cron 'get_salesforce_numbers', :command => "/home/deploy/grid/current/script/runner -e production PhoneNumber.get_salesforce_numbers", :user => configuration[:user], :minute => 31, :hour => 22
-    #cron 'pull_salesforce_campaigns', :command => "/home/deploy/grid/current/script/runner -e production Campaign.pull_salesforce_campaigns", :user => configuration[:user], :minute => 45, :hour => 22
+    cron 'pull_salesforce_campaigns', :command => "/home/deploy/grid/current/script/runner -e production Campaign.pull_salesforce_campaigns", :user => configuration[:user], :minute => 45, :hour => 22
     cron 'update_calls', :command => "/home/deploy/grid/current/script/runner -e production Call.update_calls", :user => configuration[:user], :minute => 5, :hour => '*/8'
     cron 'add_websites', :command => "/home/deploy/grid/current/script/runner -e production Website.add_websites", :user => configuration[:user], :minute => 1, :hour => 23
     cron 'data_pull_websites_visits', :command => "/home/deploy/grid/current/script/runner -e production WebsiteVisit.data_pull_websites_visits", :user => configuration[:user], :minute => 45, :hour => '*/8'
