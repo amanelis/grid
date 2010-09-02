@@ -1,0 +1,261 @@
+%h1
+  Monthly Report for #{@account.name}
+
+  .section#first-section
+    .left#timeline_chart
+      %h3 Account Performance
+      = render :partial => "shared/timeline"
+    .right
+      = render :partial => "shared/news_results"
+    .clear
+
+  %h3
+    Last Week
+  %table{:class => "pretty"}
+    %thead
+      %tr
+        %th
+          Campaign Name
+        %th
+          Calls
+        %th
+          Forms
+        %th
+          Total Leads
+        %th
+          Spend
+        %th
+          Cost Per Lead
+    %tbody
+      -@account.campaigns.each do |campaign|
+        %tr{ :class => cycle('odd', 'even')}
+          %td
+            = campaign.name
+          %td
+            = campaign.number_of_all_calls_between(Date.today - 1.week, Date.today).to_s
+          %td
+            = campaign.number_of_submissions_between(Date.today - 1.week, Date.today).to_s
+          %td
+            = campaign.number_of_total_leads_between(Date.today - 1.week, Date.today).to_s
+          %td
+            = ActionController::Base.helpers.number_to_currency(campaign.spend_between(Date.today - 1.week, Date.today))
+          %td
+            = ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(Date.today - 1.week, Date.today))
+          %td
+            = link_to "Details", admin_campaign_path(campaign)
+
+  %h3
+    = 'Last Month Report (' + (Date.today - 1.month).to_s + ' to ' + Date.today.to_s + ')'
+  %table{:class => "pretty"}
+    %thead
+      %th
+        Cost Per Lead Summary
+    %tbody
+      %tr{ :class => cycle('odd', 'even')}
+        %td
+          %table{:class => "pretty"}
+            %thead
+              %th
+                Campaign Name
+              %th
+                Calls
+              %th
+                Forms
+              %th
+                Total Leads
+              %th
+                Spend
+              %th
+                Cost Per Lead
+            %tbody
+              -@account.campaigns.each do |campaign|
+                %tr{ :class => cycle('odd', 'even')}
+                  %td
+                    = campaign.name
+                  %td
+                    = campaign.number_of_all_calls_between(Date.today - 1.month, Date.today).to_s
+                  %td
+                    = campaign.number_of_submissions_between(Date.today - 1.month, Date.today).to_s
+                  %td
+                    = campaign.number_of_total_leads_between(Date.today - 1.month, Date.today).to_s
+                  %td
+                    = ActionController::Base.helpers.number_to_currency(campaign.spend_between(Date.today - 1.month, Date.today))
+                  %td
+                    = ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(Date.today - 1.month, Date.today))
+            %tfoot
+              %th
+                Totals
+              %th
+                = @account.number_of_all_calls_between(Date.today - 1.month, Date.today)
+              %th
+                = @account.number_of_submissions_between(Date.today - 1.month, Date.today)
+              %th
+                = @account.number_of_total_leads_between(Date.today - 1.month, Date.today)
+              %th
+                = ActionController::Base.helpers.number_to_currency(@account.spend_between(Date.today - 1.month, Date.today))
+              %th
+                = ActionController::Base.helpers.number_to_currency(@account.cost_per_lead_between(Date.today - 1.month, Date.today))
+  %table{:class => "pretty"}
+    %thead
+      %th
+        Pay Per Click Campaigns Summary
+    %tbody
+      %tr{ :class => cycle('odd', 'even')}
+        %td
+          %table{:class => "pretty"}
+            %thead
+              %th
+                Campaign Name
+              %th
+                Leads
+              %th
+                Clicks
+              %th
+                Impressions
+              %th
+                CTR
+              %th
+                Avg Position
+              %th
+                Spend
+            %tbody
+              -@account.campaigns.sem.each do |campaign|
+                %tr{ :class => cycle('odd', 'even')}
+                  %td
+                    = campaign.name
+                  %td
+                    = campaign.number_of_total_leads_between(Date.today - 1.month, Date.today).to_s
+                  %td
+                    = campaign.campaign_style.clicks_between(Date.today - 1.month, Date.today).to_s
+                  %td
+                    = campaign.campaign_style.impressions_between(Date.today - 1.month, Date.today).to_s
+                  %td
+                    = (sprintf("%.3f", (campaign.campaign_style.click_through_rate_between(Date.today - 1.month, Date.today) * 100)) + '%')
+                  %td
+                    = '%.2f' % campaign.campaign_style.average_position_between(Date.today - 1.month, Date.today).to_s
+                  %td
+                    = ActionController::Base.helpers.number_to_currency(campaign.spend_between(Date.today - 1.month, Date.today))
+            %tfoot
+              %th
+                Totals
+              %th
+                = @account.sem_number_of_total_leads_between(Date.today - 1.month, Date.today)
+              %th
+                = @account.sem_clicks_between(Date.today - 1.month, Date.today)
+              %th
+                = @account.sem_impressions_between(Date.today - 1.month, Date.today)
+              %th
+                = (sprintf("%.3f", (@account.sem_click_through_rate_between(Date.today - 1.month, Date.today) * 100)) + '%')
+              %th
+                = '%.2f' % @account.sem_average_position_between(Date.today - 1.month, Date.today).to_s
+              %th
+                = ActionController::Base.helpers.number_to_currency(@account.sem_spend_between(Date.today - 1.month, Date.today))
+
+  %table{:class => "pretty"}
+    %thead
+      %th
+        Organic Campaigns Summary
+    %tbody
+      %tr{ :class => cycle('odd', 'even')}
+        %td
+          %table{:class => "pretty"}
+            %thead
+              %th
+                Campaign Name
+              %th
+                Leads
+              %th
+                Visits
+              %th
+                Actions
+              %th
+                Avg Actions/Visit
+              %th
+                Total Time Spent
+              %th
+                Avg Time Spent
+              %th
+                Bounce Rate
+              %th
+                Spend
+            %tbody
+              -@account.campaigns.seo.each do |campaign|
+                %tr{ :class => cycle('odd', 'even')}
+                  %td
+                    = campaign.name
+                  %td
+                    = campaign.number_of_total_leads_between(Date.today - 1.month, Date.today).to_s
+                  %td
+                    = campaign.number_of_visits_between(Date.today - 1.month, Date.today).to_s
+                  %td
+                    = campaign.number_of_actions_between(Date.today - 1.month, Date.today).to_s
+                  %td
+                    = '%.2f' % campaign.number_of_average_actions_between(Date.today - 1.month, Date.today).to_s
+                  %td
+                    = [(campaign.total_time_spent_between(Date.today - 1.month, Date.today)/3600).to_s + 'h', (campaign.total_time_spent_between(Date.today - 1.month, Date.today)/60 % 60).to_s + 'm', (campaign.total_time_spent_between(Date.today - 1.month, Date.today) % 60).to_s + 's'].map{|t| t.to_s.rjust(2,'0')}.join(':')
+                  %td
+                    = [((campaign.average_total_time_spent_between(Date.today - 1.month, Date.today).to_i)/3600).to_s + 'h', ((campaign.average_total_time_spent_between(Date.today - 1.month, Date.today).to_i)/60 % 60).to_s + 'm', ((campaign.average_total_time_spent_between(Date.today - 1.month, Date.today).to_i) % 60).to_s + 's'].map{|t| t.to_s.rjust(2,'0')}.join(':')
+                  %td
+                    = (sprintf("%.2f", (campaign.bounce_rate_between(Date.today - 1.month, Date.today) * 100)) + '%')
+                  %td
+                    = ActionController::Base.helpers.number_to_currency(campaign.spend_between(Date.today - 1.month, Date.today))
+            %tfoot
+              %th
+                Totals
+              %th
+                = @account.seo_number_of_total_leads_between(Date.today - 1.month, Date.today)
+              %th
+                = @account.seo_number_of_visits_between(Date.today - 1.month, Date.today)
+              %th
+                = @account.seo_number_of_actions_between(Date.today - 1.month, Date.today)
+              %th
+                = '%.2f' % @account.seo_number_of_average_actions_between(Date.today - 1.month, Date.today)
+              %th
+                = [(@account.seo_total_time_spent_between(Date.today - 1.month, Date.today)/3600).to_s + 'h', (@account.seo_total_time_spent_between(Date.today - 1.month, Date.today)/60 % 60).to_s + 'm', (@account.seo_total_time_spent_between(Date.today - 1.month, Date.today) % 60).to_s + 's'].map{|t| t.to_s.rjust(2,'0')}.join(':')
+              %th
+                = [((@account.seo_average_total_time_spent_between(Date.today - 1.month, Date.today).to_i)/3600).to_s + 'h', ((@account.seo_average_total_time_spent_between(Date.today - 1.month, Date.today).to_i)/60 % 60).to_s + 'm', ((@account.seo_average_total_time_spent_between(Date.today - 1.month, Date.today).to_i) % 60).to_s + 's'].map{|t| t.to_s.rjust(2,'0')}.join(':')
+              %th
+                = (sprintf("%.2f", (@account.seo_bounce_rate_between(Date.today - 1.month, Date.today) * 100)) + '%')
+              %th
+                = ActionController::Base.helpers.number_to_currency(@account.seo_spend_between(Date.today - 1.month, Date.today))
+
+  %table{:class => "pretty"}
+    %thead
+      %th
+        Maps Campaigns Summary
+    %tbody
+      %tr{ :class => cycle('odd', 'even')}
+        %td
+          %table{:class => "pretty"}
+            %thead
+              %th
+                Campaign Name
+              %th
+                Web Visits
+            %tbody
+              -@account.campaigns.maps.each do |campaign|
+                %tr{ :class => cycle('odd', 'even')}
+                  %td
+                    = campaign.name
+                  %td
+                    = campaign.number_of_map_visits_between(Date.today - 1.month, Date.today).to_s
+            %tfoot
+              %th
+                Totals
+              %th
+                = @account.maps_number_of_visits_between(Date.today - 1.month, Date.today)
+  %h3
+    Detailed SEM Reports
+
+
+
+
+  %h3
+    Detailed SEO Reports
+
+
+  %h3
+    Detailed Maps Reports
+
+
+

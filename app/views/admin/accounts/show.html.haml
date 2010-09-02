@@ -247,15 +247,23 @@
 %h3
   Detailed SEM Reports
 
-
-
-
 %h3
   Detailed SEO Reports
 
-
-%h3
-  Detailed Maps Reports
-
-                 
-
+%table{:class => "pretty"}
+  %thead
+    %th
+      Detailed Map Reports
+  %tbody
+    -@account.campaigns.maps.each do |campaign|
+      %tr
+        %td
+          %table{:class => "pretty"}
+            %thead
+              %th
+                = campaign.name
+            %tbody
+              %tr
+                %td
+                  %a{:hover => campaign.campaign_style.google_keyword_rankings_graph(300, 1000)}
+                    = link_to image_tag(campaign.campaign_style.google_keyword_rankings_graph, :alt => 'Click to View'), campaign.campaign_style.google_keyword_rankings_graph(300, 1000)
