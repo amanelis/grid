@@ -22,12 +22,17 @@ class SeoCampaign < ActiveRecord::Base
               links = JSON.parse(response)['result']
               if links.present?
                 links.each do |link|
+                  begin
                   existing_link = InboundLink.find_by_link_url_and_seo_campaign_id(link, seo_campaign.id)
                   if existing_link.present?
                     existing_link.last_date_found = Date.today
                     existing_link.save
                   else
                     InboundLink.create(:link_url => link, :seo_campaign_id => seo_campaign.id, :last_date_found => Date.today, :is_active => true)
+                  end
+                  rescue
+                    puts 'Error on Link'
+                    next
                   end
                 end
               end
