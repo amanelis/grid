@@ -23,12 +23,13 @@ class Campaign < ActiveRecord::Base
       sf_campaigns.each do |sf_campaign|
         account = Account.find_by_salesforce_id(sf_campaign.account_id__c)
         if account.present?
-          existing_campaign = Campaign.find_by_account_id_and_name(account.id, name)
+          existing_campaign = Campaign.find_by_salesforce_id(sf_campaign.id)
           if sf_campaign.campaign_type__c.include? 'SEM'
             if existing_campaign.blank?
               new_sem_campaign = SemCampaign.new
               existing_campaign = new_sem_campaign.build_campaign
               existing_campaign.account_id = account.id
+              existing_campaign.salesforce_id = sf_campaign.id
               google_ids = sf_campaign.google_campaign_id__c.present? ? sf_campaign.google_campaign_id__c.split(',') : ''
               google_ids.each do |google_id|
                 new_google_sem_campaign = new_sem_campaign.google_sem_campaigns.build
@@ -49,13 +50,14 @@ class Campaign < ActiveRecord::Base
             new_sem_campaign.client_email = 'bizsearchlocal.jon@gmail.com'
             new_sem_campaign.environment = 'PRODUCTION'
             new_sem_campaign.save!
-            
+
           elsif sf_campaign.campaign_type__c.include? 'SEO'
             sf_account = Salesforce::Account.find(account.salesforce_id)
             if existing_campaign.blank?
               new_seo_campaign = SeoCampaign.new
               existing_campaign = new_seo_campaign.build_campaign
               existing_campaign.account_id = account.id
+              existing_campaign.salesforce_id = sf_campaign.id
             else
               new_seo_campaign = existing_campaign.campaign_style
             end
@@ -77,6 +79,7 @@ class Campaign < ActiveRecord::Base
               new_maps_campaign = MapsCampaign.new
               existing_campaign = new_maps_campaign.build_campaign
               existing_campaign.account_id = account.id
+              existing_campaign.salesforce_id = sf_campaign.id
             else
               new_maps_campaign = existing_campaign.campaign_style
             end
@@ -98,7 +101,7 @@ class Campaign < ActiveRecord::Base
     rescue Exception =>ex
       job_status.finish_with_errors(ex)
       raise
-    end   
+    end
     job_status.finish_with_no_errors
   end
 
@@ -108,6 +111,20 @@ class Campaign < ActiveRecord::Base
       if campaign.target_cities.blank?
         campaign.target_cities = campaign.account.city.downcase if campaign.account.city.present?
         campaign.save
+      end
+    end
+  end
+
+  def self.fix_sf_campaign_ids
+    sf_campaigns = Salesforce::Clientcampaign.all
+    sf_campaigns.each do |sf_campaign|
+      account = Account.find_by_salesforce_id(sf_campaign.account_id__c)
+      if account.present?
+        existing_campaign = Campaign.find_by_account_id_and_name(account.id, sf_campaign.name)
+        if existing_campaign.present?
+          existing_campaign.salesforce_id = sf_campaign.id
+          existing_campaign.save
+        end
       end
     end
   end
