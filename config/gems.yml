@@ -12,5 +12,7 @@
   :name: will_paginate
 - :source: http://gemcutter.org
   :name: sendgrid
+- :source: http://gemcutter.org
+  :name: gchartrb
 - :version: 2.3.8
   :name: rails

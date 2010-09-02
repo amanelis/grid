@@ -6,25 +6,39 @@ class MapKeyword < ActiveRecord::Base
   # CLASS BEHAVIOR
 
   def self.update_keywords_from_salesforce
-    sf_campaigns = Salesforce::Clientcampaign.find_all_by_campaign_type__c('Local Maps')
-    sf_campaigns.each do |sf_campaign|
-      local_map_campaign = Campaign.find_by_name(sf_campaign.name).try(:campaign_style)
-      if sf_campaign.keywords__c.present? && local_map_campaign.present?
-        keywords = sf_campaign.keywords__c.gsub(', ', ',')
-        keywords = keywords.split(',')
-        keywords.each do |keyword|
-          puts 'Started: ' + keyword
-          MapKeyword.find_or_create_by_maps_campaign_id_and_descriptor(:maps_campaign_id => local_map_campaign.id,
-                                                                       :descriptor => keyword,
-                                                                       :ranking_updated_on => nil)
-          puts 'Completed: ' + keyword
+    job_status = JobStatus.create(:name => "MapKeyword.update_keywords_from_salesforce")
+    begin
+      sf_campaigns = Salesforce::Clientcampaign.find_all_by_campaign_type__c('Local Maps')
+      sf_campaigns.each do |sf_campaign|
+        local_map_campaign = Campaign.find_by_name(sf_campaign.name).try(:campaign_style)
+        if sf_campaign.keywords__c.present? && local_map_campaign.present?
+          keywords = sf_campaign.keywords__c.gsub(', ', ',')
+          keywords = keywords.split(',')
+          keywords.each do |keyword|
+            puts 'Started: ' + keyword
+            MapKeyword.find_or_create_by_maps_campaign_id_and_descriptor(:maps_campaign_id => local_map_campaign.id,
+                                                                         :descriptor => keyword,
+                                                                         :ranking_updated_on => nil)
+            puts 'Completed: ' + keyword
+          end
         end
       end
+    rescue Exception => ex
+      job_status.finish_with_errors(ex)
+      raise
     end
+    job_status.finish_with_no_errors
   end
 
   def self.update_map_rankings
-    MapKeyword.all.each { |map_keyword| map_keyword.fetch_map_rankings }
+    job_status = JobStatus.create(:name => "MapKeyword.update_map_rankings")
+    begin
+      MapKeyword.all.each { |map_keyword| map_keyword.fetch_map_rankings }
+    rescue Exception => ex
+      job_status.finish_with_errors(ex)
+      raise
+    end
+    job_status.finish_with_no_errors
   end
 
 

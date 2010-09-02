@@ -8,13 +8,14 @@ class SeoCampaign < ActiveRecord::Base
   # CLASS BEHAVIOR
 
   def self.update_inbound_links
-    seo_campaigns = SeoCampaign.all
-    seo_campaigns.each do |seo_campaign|
-      websites = seo_campaign.websites
-      if websites.present?
-        websites.each do |website|
-          freshness = seo_campaign.inbound_links.find(:all, :conditions => ['created_at > ?', 1.day.ago])
-          begin
+    job_status = JobStatus.create(:name => "SeoCampaign.update_inbound_links")
+    begin
+      seo_campaigns = SeoCampaign.all
+      seo_campaigns.each do |seo_campaign|
+        websites = seo_campaign.websites
+        if websites.present?
+          websites.each do |website|
+            freshness = seo_campaign.inbound_links.find(:all, :conditions => ['created_at > ?', 1.day.ago])
             if freshness.empty? && website.nickname.present?
               url = 'http://perl.pearanalytics.com/v2/domain/get/linklist?url=http://' + website.nickname.gsub('http://', '')
               response = HTTParty.get(url)
@@ -31,41 +32,58 @@ class SeoCampaign < ActiveRecord::Base
                 end
               end
             end
-          rescue
           end
         end
       end
+    rescue Exception => ex
+      job_status.finish_with_errors(ex)
+      raise
     end
+    job_status.finish_with_no_errors
   end
 
   def self.clean_up_inbound_links
-    links = InboundLink.all
-    links.each do |link|
-      if link.last_date_found < (Date.today - 60.days)
-        link.is_active = false
-        link.save!
+    job_status = JobStatus.create(:name => "SeoCampaign.clean_up_inbound_links")
+    begin
+      links = InboundLink.all
+      links.each do |link|
+        if link.last_date_found < (Date.today - 60.days)
+          link.is_active = false
+          link.save!
+        end
       end
+    rescue Exception => ex
+      job_status.finish_with_errors(ex)
+      raise
     end
+    job_status.finish_with_no_errors
   end
 
   def self.update_website_analyses
-    seo_campaigns = SeoCampaign.all
-    seo_campaigns.each do |seo_campaign|
-      websites = seo_campaign.websites
-      if websites.present?
-        websites.each do |website|
-          freshness = seo_campaign.website_analyses.find(:all, :conditions => ['created_at > ?', 1.day.ago])
-          if freshness.empty? && website.nickname.present?
-            pearscore = seo_campaign.getpearscore(website.nickname)
-            google_pagerank = seo_campaign.getgooglepagerank(website.nickname)
-            alexa_rank = seo_campaign.getalexarank(website.nickname)
-            sitewide_inbound_link_count = seo_campaign.get_sitewide_inbound_link_count(website.nickname)
-            page_specific_inbound_link_count = seo_campaign.get_page_specific_inbound_link_count(website.nickname)
-            WebsiteAnalysis.create(:seo_campaign_id => seo_campaign.id, :pear_score => pearscore, :google_pagerank => google_pagerank, :alexa_rank => alexa_rank, :sitewide_inbound_link_count => sitewide_inbound_link_count, :page_specific_inbound_link_count => page_specific_inbound_link_count)
+    job_status = JobStatus.create(:name => "SeoCampaign.update_website_analyses")
+    begin
+      seo_campaigns = SeoCampaign.all
+      seo_campaigns.each do |seo_campaign|
+        websites = seo_campaign.websites
+        if websites.present?
+          websites.each do |website|
+            freshness = seo_campaign.website_analyses.find(:all, :conditions => ['created_at > ?', 1.day.ago])
+            if freshness.empty? && website.nickname.present?
+              pearscore = seo_campaign.getpearscore(website.nickname)
+              google_pagerank = seo_campaign.getgooglepagerank(website.nickname)
+              alexa_rank = seo_campaign.getalexarank(website.nickname)
+              sitewide_inbound_link_count = seo_campaign.get_sitewide_inbound_link_count(website.nickname)
+              page_specific_inbound_link_count = seo_campaign.get_page_specific_inbound_link_count(website.nickname)
+              WebsiteAnalysis.create(:seo_campaign_id => seo_campaign.id, :pear_score => pearscore, :google_pagerank => google_pagerank, :alexa_rank => alexa_rank, :sitewide_inbound_link_count => sitewide_inbound_link_count, :page_specific_inbound_link_count => page_specific_inbound_link_count)
+            end
           end
         end
       end
+    rescue Exception => ex
+      job_status.finish_with_errors(ex)
+      raise
     end
+    job_status.finish_with_no_errors
   end
 
 
@@ -229,7 +247,7 @@ class SeoCampaign < ActiveRecord::Base
     Digest::SHA1.hexdigest(signature)
   end
 
-  def spend_between(start_date = Date.today - 1.day, end_date = Date.today - 1.day)
+  def spend_between(start_date = Date.yesterday, end_date = Date.yesterday)
     (spend = self.budget).present? ? spend : 0.0
   end
 

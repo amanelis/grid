@@ -13,30 +13,35 @@ class WebsiteVisit < ActiveRecord::Base
 
   # CLASS BEHAVIOR
 
-  def self.data_pull_websites_visits(hard_update = false, start_date = (Date.today - 3.days), end_date = Date.today - 1.day, verbose = false)
+  def self.data_pull_websites_visits(hard_update = false, start_date = (Date.today - 3.days), end_date = Date.yesterday, verbose = false)
+    job_status = JobStatus.create(:name => "WebsiteVisit.data_pull_websites_visits")
+    exception = nil
     sites = Website.find(:all, :conditions => ['is_active = ? OR is_active is null', 1])
     sites.each do |site|
       begin
         if hard_update == false
-          WebsiteVisit.update_website_visits(site.id, start_date, end_date, verbose)
+          exception = WebsiteVisit.update_website_visits(site.id, start_date, end_date, verbose)
         else
-          WebsiteVisit.hard_update_website_visits(site.id, start_date, end_date)
+          exception = WebsiteVisit.hard_update_website_visits(site.id, start_date, end_date)
         end
         puts "Updated visits for site: " + site.nickname
-      rescue
+      rescue Exception => ex
         puts "Error in updating site: " + site.nickname
+        exception = ex
         next
       end
     end
+    exception.present? ? job_status.finish_with_errors(exception) : job_status.finish_with_no_errors
   end
 
-  def self.update_website_visits(website_id, start = Date.today - 3.days, fend = Date.today - 1.day, verbose = false)
+  def self.update_website_visits(website_id, start = Date.today - 3.days, fend = Date.yesterday, verbose = false)
+    exception = nil
     website = Website.find(website_id)
     if website.present?
       type = 'visitors-list&visitor-details=time,time_pretty,time_total,ip_address,session_id,actions,web_browser,operating_system,screen_resolution,javascript,language,referrer_url,referrer_domain,referrer_search,geolocation,longitude,latitude,hostname,organization,campaign,custom,clicky_url,goals'
 
-      time_begin = Time.utc(start.year, start.month, start.day, 0, 0, 0)
-      time_end = Time.utc(fend.year, fend.month, fend.day, 23, 59, 59)
+      time_begin = start.to_time.utc.at_beginning_of_day
+      time_end = fend.to_time.utc.end_of_day
       count = ((time_end - time_begin).round)/86400
 
       pull_date = start
@@ -48,10 +53,8 @@ class WebsiteVisit < ActiveRecord::Base
         if response["error"].present? && response["error"] == "Invalid sitekey."
           website.is_active = false
           website.save!
-        end
-
-        if response["dates"].present?
-          begin
+        else
+          if response["dates"].present?
             dates = response["dates"].first
             visits = dates["items"]
             visits.each do |visit|
@@ -80,29 +83,22 @@ class WebsiteVisit < ActiveRecord::Base
                                                                                 :goals => visit["goals"],
                                                                                 :custom => visit["custom"],
                                                                                 :time_of_visit => Time.at(visit["time"].to_i))
-                nurl.save
                 puts "Saved visit from #{nurl.geolocation}" if verbose
-              rescue
-                puts 'Error in getting' + url_dates
+              rescue Exception => ex
+                exception = ex
                 next
               end
             end
-          rescue
-            puts 'No Visits to Record'
           end
-          site = Website.find_or_create_by_id(:id => website.id, :is_active => true, :updated_at => Time.now)
-          site.save
-        else
-          site = Website.find_or_create_by_id(:id => website.id, :is_active => false)
-          site.save
         end
-        pull_date = pull_date + 1.day
+        pull_date += 1.day
         count -= 1
       end
     end
+    exception
   end
 
-  def self.hard_update_website_visits(website_id, start = Date.today - 3.days, fend = Date.today - 1.day)
+  def self.hard_update_website_visits(website_id, start = Date.today - 3.days, fend = Date.yesterday)
     #Eventually make a difference between the two....hard will overwrite data or something
   end
 
