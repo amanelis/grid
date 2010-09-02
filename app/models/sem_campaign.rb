@@ -166,7 +166,7 @@ class SemCampaign < ActiveRecord::Base
       else
         puts 'No campaign-level report found for: ' + self.name + ' for the date ' + date.strftime('%m/%d/%Y') + ' at ' + Time.now.to_s
       end
-    elsif report_exists.result == 'Started' && report_exists.created_at < (Date.yesterdays)
+    elsif report_exists.result == 'Started' && report_exists.created_at < (Date.yesterday)
       SemCampaignReportStatus.delete(report_exists.id)
     end
   end
@@ -351,7 +351,7 @@ class SemCampaign < ActiveRecord::Base
       else
         puts 'No ad-level report found for: ' + self.name + ' for the date ' + date.strftime('%m/%d/%Y') + ' at ' + Time.now.to_s
       end
-    elsif report_exists.result == "Started" && report_exists.created_at < (Date.yesterdays)
+    elsif report_exists.result == "Started" && report_exists.created_at < (Date.yesterday)
       SemCampaignReportStatus.delete(report_exists.id)
     end
   end

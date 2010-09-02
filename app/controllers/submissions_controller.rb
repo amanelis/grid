@@ -5,6 +5,7 @@ class SubmissionsController < ApplicationController
     @submission.user_agent = request.user_agent
     if @submission.save
       # HTTP 200 OK
+      Notifier.deliver_form_submission(@submission)
       head :ok
     else
        # Let's not give the (likely) bot too much info on why this failed.
