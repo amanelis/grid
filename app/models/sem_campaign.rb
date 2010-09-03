@@ -5,6 +5,8 @@ class SemCampaign < ActiveRecord::Base
 
   CAMPAIGN_REPORT_TYPE = "Campaign"
   AD_REPORT_TYPE = "Ad"
+  GOOGLE_MAPS_API_KEY = 'ABQIAAAAU2DhWAoQ76ku3zRokt1DnRQX-pfkEHFxdgQJJn1KX_braIcbexTk-gFyApGHhSC0zwacV0-kZeHAzg'
+  CHART_COLORS = ["66ccff", "669966", "666666", "cc3366", "ff6633", "ffff33", "000000"]
 
 
   # CLASS BEHAVIOR
