@@ -1,19 +1,8 @@
-<script language="javascript">
-var ip = '<!--#echo var="REMOTE_ADDR"-->'
-var user_agent = '<!--#echo var="HTTP_USER_AGENT"-->'
-function ipval() {
-document.Form1.ip_address.value=ip;
-document.Form1.user_agent.value=user_agent;
-}
-window.onload=ipval
-</script>
 
-<form action="http://grid.cityvoice.com/submission?encoding=UTF-8" method="POST" name="Form1"
+<form action="http://grid.cityvoice.com/submission" method="POST" name="Form1"
       onsubmit="return Form1_Validator(this)">
 
     <input type=hidden id="contact_form_id" name="contact_form_id" value="1">
-    <input type=hidden id="ip_address" name="ip_address">
-     <input type=hidden id="user_agent" name="user_agent">
     <input type=hidden name="retURL" value="http://www.cityvoice.com/contact/confirm.asp">
     
     <table border="0" width="100%">

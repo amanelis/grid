@@ -304,7 +304,10 @@
                   %td
                     %a{:hover => @account.campaigns.seo[index].campaign_style.website_traffic_sources_graph(300, 1000)}
                       = link_to image_tag(@account.campaigns.seo[index].campaign_style.website_traffic_sources_graph, :alt => 'Click to View'), @account.campaigns.seo[index].campaign_style.website_traffic_sources_graph(300, 1000)
-
+                %tr
+                  %td
+                    %a{:hover => @account.campaigns.seo[index].campaign_style.seo_keyword_rankings_graph(300, 1000)}
+                      = link_to image_tag(@account.campaigns.seo[index].campaign_style.seo_keyword_rankings_graph, :alt => 'Click to View'), @account.campaigns.seo[index].campaign_style.seo_keyword_rankings_graph(300, 1000)
 
 
 /Begin of Map Detailed Reports

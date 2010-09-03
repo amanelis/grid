@@ -34,13 +34,8 @@ class SeoCampaign < ActiveRecord::Base
                     else
                       InboundLink.create(:link_url => link, :seo_campaign_id => seo_campaign.id, :last_date_found => Date.today, :is_active => true)
                     end
-<<<<<<< HEAD
-                  rescue
-                    puts 'Error on Link'
-=======
                   rescue Exception => ex
                     exception = ex
->>>>>>> 1f33ebff8c54970211917de3255de561fb719c82
                     next
                   end
                 end
@@ -278,7 +273,7 @@ class SeoCampaign < ActiveRecord::Base
     Utilities.massage_timeline(raw_data, [:visits, :leads])
   end
 
-  def website_traffic_sources_graph(start_date = Date.today - 30.days, end_date = Date.today,  height = 250, width = 750)
+  def website_traffic_sources_graph(start_date = Date.today - 30.days, end_date = Date.today, height = 250, width = 750)
     width = 1000 if width > 1000
     height = 300 if height > 300
     website = self.websites.first
@@ -312,4 +307,59 @@ class SeoCampaign < ActiveRecord::Base
     end
     return source_url
   end
+
+  def seo_keyword_rankings_graph(height = 250, width = 1000)
+    width = 1000 if width > 1000
+    height = 300 if height > 300
+    days_url = ''
+    google_array = Array.new
+    yahoo_array = Array.new
+    bing_array = Array.new
+    keyword_array = Array.new
+    keyword_labels = Array.new
+    keywords = self.keywords
+    count = 11
+    while count >= 0
+      data_date = Date.today - count.months
+      data_time_start = Date.new(data_date.year, data_date.month, 1)
+      data_time_end = Date.new(data_date.year, data_date.month, data_date::class.civil(data_date.year, data_date.month, -1).day)
+      google_count = 0
+      bing_count = 0
+      yahoo_count = 0
+      keywords.each do |keyword|
+        ranking = keyword.keyword_rankings.last(:conditions => ['created_at between ? AND ?', data_time_start, data_time_end])
+        if ranking.present?
+          google_count += 1 if ranking.google.present? && ranking.google < 11
+          yahoo_count += 1 if ranking.yahoo.present? && ranking.yahoo < 11
+          bing_count += 1 if ranking.bing.present? && ranking.bing < 11
+        end
+      end
+      google_array.push(google_count)
+      yahoo_array.push(yahoo_count)
+      bing_array.push(bing_count)
+      keyword_array.push(keywords.count)
+      keyword_labels.push((data_date.month.to_s + '/' + data_date.year.to_s[2..3]))
+
+      count -= 1
+    end
+    
+    if keywords.count != 0
+      chart_name = "1st Page Spots out of " + keywords.count.to_s + " Keywords"
+      chart_size = width.to_s + 'x' + height.to_s
+      GoogleChart::LineChart.new(chart_size, chart_name, false) do |bc|
+        bc.data "", keyword_array, '65432100'
+        bc.data "Google", google_array, CHART_COLORS[0]
+        bc.data "Yahoo", yahoo_array, CHART_COLORS[1]
+        bc.data "Bing", bing_array, CHART_COLORS[2]
+        bc.axis :x, :labels => keyword_labels, :font_size => 10
+        bc.axis :y, :range => [0, keywords.count], :font_size => 10
+        bc.fill(:background, :solid, {:color => '65432100'})
+        bc.fill(:chart, :solid, {:color => '65432100'})
+        bc.show_legend = true
+        days_url = bc.to_escaped_url
+      end
+    end
+    return days_url
+  end
+
 end
