@@ -12,6 +12,7 @@ class SeoCampaign < ActiveRecord::Base
 
   def self.update_inbound_links
     job_status = JobStatus.create(:name => "SeoCampaign.update_inbound_links")
+    exception = nil
     begin
       seo_campaigns = SeoCampaign.all
       seo_campaigns.each do |seo_campaign|
@@ -33,8 +34,13 @@ class SeoCampaign < ActiveRecord::Base
                     else
                       InboundLink.create(:link_url => link, :seo_campaign_id => seo_campaign.id, :last_date_found => Date.today, :is_active => true)
                     end
+<<<<<<< HEAD
                   rescue
                     puts 'Error on Link'
+=======
+                  rescue Exception => ex
+                    exception = ex
+>>>>>>> 1f33ebff8c54970211917de3255de561fb719c82
                     next
                   end
                 end
@@ -47,7 +53,7 @@ class SeoCampaign < ActiveRecord::Base
       job_status.finish_with_errors(ex)
       raise
     end
-    job_status.finish_with_no_errors
+    exception.present? ? job_status.finish_with_errors(exception) : job_status.finish_with_no_errors
   end
 
   def self.clean_up_inbound_links

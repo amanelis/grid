@@ -10,7 +10,7 @@ config.action_controller.perform_caching             = true
 config.action_view.cache_template_loading            = true
 
 # See everything in the log (default is :info)
-# config.log_level = :debug
+config.log_level = :debug
 
 # Use a different logger for distributed setups
 # config.logger = SyslogLogger.new
@@ -36,5 +36,4 @@ ActionMailer::Base.smtp_settings = {
   :authentication => :plain,
   :user_name => 'paul.singh@cityvoice.com',
   :password => 'c1tyvo1ce'
-
 }

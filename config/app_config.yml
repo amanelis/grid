@@ -7,5 +7,5 @@ test:
   host: "localhost:3000"
 
 production:
-  host: "hive.cityvoice.com"
+  host: "grid.cityvoice.com"
   valid_source: %w(173.203.241.73 208.109.181.114 174.37.88.92 173.203.209.51)
