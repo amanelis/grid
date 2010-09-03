@@ -1,6 +1,6 @@
 class SubmissionsController < ApplicationController
   def create    
-    @submission = Submission.new(params[:submission])
+    @submission = Submission.new(params)
     @submission.ip_address = request.remote_ip
     @submission.user_agent = request.user_agent
     logger.debug "referer : #{request.referer}"
