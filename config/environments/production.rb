@@ -29,6 +29,8 @@ config.action_view.cache_template_loading            = true
 # Use postfix for mail delivery 
 #ActionMailer::Base.delivery_method = :sendmail 
 
+ActiveRecord::Base.logger.level = 0
+
 ActionMailer::Base.smtp_settings = {
   :address => 'smtp.sendgrid.net',
   :port => 25,
