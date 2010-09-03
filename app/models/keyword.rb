@@ -54,31 +54,21 @@ class Keyword < ActiveRecord::Base
       google = 99999
       bing = 99999
       yahoo = 99999
-      relevancy = 0
+      relevancy = 0.0
+      cpc = 0.0
 
       begin
-        search_positions = get_search_positions
+        nickname = self.seo_campaign.websites.first.nickname
+        if nickname.present?
+          search_positions = get_new_search_positions(nickname)
+          google = search_positions["Google"] if search_positions["Google"].present?
+          bing = search_positions["Bing"] if search_positions["Bing"].present?
+          yahoo = search_positions["Yahoo"] if search_positions["Yahoo"].present?
+          relevancy = get_relevancy if get_relevancy.present?
+          cpc = get_cpc if get_cpc.present?
+        end
       rescue
-      end
-      begin
-        google = search_positions["Google"]
-      rescue
-      end
-      begin
-        bing = search_positions["Bing"]
-      rescue
-      end
-      begin
-        yahoo = search_positions["Yahoo"]
-      rescue
-      end
-      begin
-        relevancy = get_relevancy
-      rescue
-      end
-      begin
-        cpc = get_cpc
-      rescue
+        
       end
 
       self.keyword_rankings.create(:google => google, :bing => bing, :yahoo => yahoo, :cpc => cpc, :relevancy => relevancy)
@@ -100,10 +90,9 @@ class Keyword < ActiveRecord::Base
     begin
       url = 'http://perl.pearanalytics.com/v2/keyword/position?keyword=' + self.descriptor.gsub(' ', '+') + '&url=' + nickname.gsub('www.', '')
       response = HTTParty.get(url)
-      JSON.parse(response)['result'].to_a.first.second
+      JSON.parse(response)['result'].to_a.first.second if JSON.parse(response)['result'].to_a.present?
     rescue
-      puts "Error in Account.get_new_html_validation"
-      return nil
+      puts "Error in Keyword.get_new_search_positions"
     end
   end
 
@@ -112,7 +101,7 @@ class Keyword < ActiveRecord::Base
     begin
       url = self.build_pear_url("keyword/getrelevancy", {"url" => self.seo_campaign.websites.first.nickname, "keyword" => self.descriptor, "format" => "json"})
       response = HTTParty.get(url)
-      response["relevancy"]
+      response["relevancy"].to_f
     rescue
     end
   end
@@ -122,7 +111,7 @@ class Keyword < ActiveRecord::Base
     begin
       url = self.build_pear_url("keyword/getcpc", {"keyword" => self.descriptor, "format" => "json"})
       response = HTTParty.get(url)
-      response["cpc"]
+      response["cpc"].to_f
     rescue
     end
   end
