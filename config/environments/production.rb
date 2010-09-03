@@ -36,5 +36,4 @@ ActionMailer::Base.smtp_settings = {
   :authentication => :plain,
   :user_name => 'paul.singh@cityvoice.com',
   :password => 'c1tyvo1ce'
-
 }
