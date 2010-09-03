@@ -4,6 +4,9 @@ class SeoCampaign < ActiveRecord::Base
   has_many :inbound_links
   has_many :website_analyses, :class_name => "WebsiteAnalysis"
 
+  GOOGLE_MAPS_API_KEY = 'ABQIAAAAU2DhWAoQ76ku3zRokt1DnRQX-pfkEHFxdgQJJn1KX_braIcbexTk-gFyApGHhSC0zwacV0-kZeHAzg'
+  CHART_COLORS = ["66ccff", "669966", "666666", "cc3366", "ff6633", "ffff33", "000000"]
+
 
   # CLASS BEHAVIOR
 
@@ -31,8 +34,13 @@ class SeoCampaign < ActiveRecord::Base
                     else
                       InboundLink.create(:link_url => link, :seo_campaign_id => seo_campaign.id, :last_date_found => Date.today, :is_active => true)
                     end
+<<<<<<< HEAD
+                  rescue
+                    puts 'Error on Link'
+=======
                   rescue Exception => ex
                     exception = ex
+>>>>>>> 1f33ebff8c54970211917de3255de561fb719c82
                     next
                   end
                 end
@@ -270,4 +278,38 @@ class SeoCampaign < ActiveRecord::Base
     Utilities.massage_timeline(raw_data, [:visits, :leads])
   end
 
+  def website_traffic_sources_graph(start_date = Date.today - 30.days, end_date = Date.today,  height = 250, width = 750)
+    width = 1000 if width > 1000
+    height = 300 if height > 300
+    website = self.websites.first
+    source_url = ''
+    if website != nil
+      items = website.get_traffic_sources(start_date, end_date)
+      if items != nil
+        titles = Array.new()
+        values = Array.new()
+        labels = Array.new()
+        items.each do |item|
+          titles.push(item["title"])
+          values.push(item["value"].to_i)
+          labels.push(item["value_percent"] + "% (" + item["value"] + ")")
+        end
+        chart_size = width.to_s + 'x' + height.to_s
+        GoogleChart::PieChart.new(chart_size, "Web Traffic Sources", true) do |pc|
+          i = 0
+          (0..(titles.size - 1)).each do |t|
+            pc.data titles[i], values[i], CHART_COLORS[i]
+            i += 1
+          end
+          pc.show_legend = true
+          pc.show_labels = false
+          pc.axis :x, :labels => labels, :font_size => 10
+          pc.fill(:background, :solid, {:color => '65432100'})
+          pc.fill(:chart, :solid, {:color => '65432100'})
+          source_url = pc.to_escaped_url
+        end
+      end
+    end
+    return source_url
+  end
 end

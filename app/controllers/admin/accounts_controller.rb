@@ -19,6 +19,9 @@ class Admin::AccountsController < ApplicationController
     @timeline = @account.combined_timeline_data
     @sorted_dates = @timeline.keys.sort
     @title = @account.name
+    @seo_campaign_timelines = @account.campaign_seo_combined_timeline_data
+    @sem_campaign_timelines = @account.campaign_sem_combined_timeline_data
+    @map_campaign_timelines = @account.campaign_map_combined_timeline_data
 
     respond_to do |format|
       format.html # show.html.erb

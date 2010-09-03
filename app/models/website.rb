@@ -106,5 +106,19 @@ class Website < ActiveRecord::Base
     self.website_visits.from_maps.count(:group => "date(time_of_visit)", :order =>"time_of_visit ASC").inject({}) { |data, (key, value)| data[key.to_date] = {:visits => value}; data }
   end
 
+  def get_traffic_sources(start_date = (Date.today - 30), end_date = Date.today)
+    begin
+      type = 'traffic-sources'
+      #mainurl = "http://stats.cityvoice.com.re.getclicky.com/api/stats/4?site_id=185568&sitekey=27ca05a49f331f13&type=visitors-list&visitor-details=time,time_pretty,time_total,ip_address,session_id,actions,web_browser,operating_system,screen_resolution,javascript,language,referrer_url,referrer_domain,referrer_search,geolocation,longitude,latitude,hostname,organization,campaign,custom,clicky_url,goals&date=2010-04-01,2010-04-30&source=advertising&domain=google.com"
+      mainurl = "http://stats.cityvoice.com.re.getclicky.com/api/stats/4?site_id=" + self.site_id + "&sitekey=" + self.sitekey + "&type=" + type + "&date=" + start_date.to_s + "," + end_date.to_s + "&output=json&limit=10000"
+      response = HTTParty.get(mainurl).first
+      dateblock = response["dates"]
+      itemblock = dateblock.first
+      items = itemblock["items"]
+      return items
+    rescue
+      return nil
+    end
+  end
 end
 

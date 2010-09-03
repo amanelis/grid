@@ -81,7 +81,6 @@ class Account < ActiveRecord::Base
     Utilities.massage_timeline(raw_data, [:visits])
   end
 
-
   # INSTANCE BEHAVIOR
 
   def number_of_visits_by_date
@@ -91,6 +90,18 @@ class Account < ActiveRecord::Base
   def combined_timeline_data
     raw_data = self.number_of_visits_by_date
     Utilities.massage_timeline(raw_data, [:visits])
+  end
+
+  def campaign_seo_combined_timeline_data
+    self.campaigns.seo.collect {|campaign| campaign.campaign_style.combined_timeline_data}
+  end
+
+  def campaign_sem_combined_timeline_data
+    self.campaigns.sem.collect {|campaign| campaign.campaign_style.combined_timeline_data}
+  end
+
+  def campaign_map_combined_timeline_data
+    self.campaigns.map.collect {|campaign| campaign.campaign_style.combined_timeline_data}
   end
 
   def sem_number_of_total_leads_between(start_date = Date.yesterday, end_date = Date.yesterday)
