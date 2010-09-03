@@ -1,7 +1,7 @@
 class Submission < ActiveRecord::Base
   belongs_to :contact_form
   
-  attr_accessible :from_email, :ip_address, :name, :home_address, :work_category, :work_description, :other_information, :custom1_value, :custom2_value, :custom3_value, :custom4_value, :date_requested, :time_requested, :phone_number, :created_at, :updated_at, :time_of_submission, :user_agent
+  attr_accessible :contact_form_id, :from_email, :ip_address, :name, :home_address, :work_category, :work_description, :other_information, :custom1_value, :custom2_value, :custom3_value, :custom4_value, :date_requested, :time_requested, :phone_number, :created_at, :updated_at, :time_of_submission, :user_agent
   
   validates_presence_of :contact_form_id
 
