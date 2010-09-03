@@ -3,6 +3,7 @@ class SubmissionsController < ApplicationController
     @submission = Submission.new(params[:submission])
     @submission.ip_address = request.remote_ip
     @submission.user_agent = request.user_agent
+    logger.debug "Submission attributes hash: #{@submission.attributes.inspect}" 
     if @submission.save
       # HTTP 200 OK
       Notifier.deliver_form_submission(@submission)
