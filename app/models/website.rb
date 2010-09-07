@@ -33,7 +33,7 @@ class Website < ActiveRecord::Base
       sf_campaigns.each do |sf_campaign|
         website = Website.find_by_nickname(sf_campaign.primary_website__c)
         if website.present?
-          local_campaign = Campaign.find_by_name(sf_campaign.name)
+          local_campaign = Campaign.find_by_salesforce_id(sf_campaign.id)
           if local_campaign.present?
             website.campaigns << local_campaign unless website.campaigns.include?(local_campaign)
             website.save
