@@ -133,7 +133,7 @@ class Campaign < ActiveRecord::Base
   end
 
   def self.fix_duplicates
-    after_date = Date.new(2010, 9, 3)
+    after_date = Date.new(2010, 9, 1)
     campaigns = Campaign.find(:all, :conditions => ['created_at > ?', after_date])
     styles = campaigns.collect {|campaign| campaign.campaign_style}
     styles.each do |style|
