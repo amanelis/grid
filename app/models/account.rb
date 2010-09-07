@@ -164,6 +164,10 @@ class Account < ActiveRecord::Base
     self.campaigns.maps.to_a.sum { |campaign| campaign.number_of_map_visits_between(start_date, end_date) }
   end
 
+  def number_of_lead_calls_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.to_a.sum { |campaign| campaign.number_of_lead_calls_between(start_date, end_date) }
+  end
+
 
   # NOTE...these methods don't really make sense at this level in the hierarchy.
 
