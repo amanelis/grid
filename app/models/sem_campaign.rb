@@ -118,9 +118,15 @@ class SemCampaign < ActiveRecord::Base
           time8 = Time.now
           puts 'Time to run: ' + (time8 - time7)
 
-          puts 'Started rows = report.xpath(/'//row/')'
+          puts 'Started rows = report.xpath'
           time9 = Time.now
           rows = report.xpath('//row')
+          puts 'Ended rows = report.xpath'
+          time10 = Time.now
+          puts 'Time to run: ' + (time10 - time9)
+
+          puts 'Started Loop of Rows'
+          time11 = Time.now
           if rows.size < (job.campaigns.size + 5)
             rows.each do |row|
               begin
@@ -174,9 +180,10 @@ class SemCampaign < ActiveRecord::Base
               end
             end
           end
-          puts 'Ended rows = report.xpath(/'//row/')'
-          time10 = Time.now
-          puts 'Time to run: ' + (time10 - time9)
+          puts 'Ended Loop of Rows'
+          time12 = Time.now
+          puts 'Time to run: ' + (time12 - time11)
+
 
         rescue AdWords::Error::Error => e
           new_report.result = 'Error Occured'
