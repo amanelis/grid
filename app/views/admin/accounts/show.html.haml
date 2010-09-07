@@ -308,7 +308,14 @@
                   %td
                     %a{:hover => @account.campaigns.seo[index].campaign_style.seo_keyword_rankings_graph(300, 1000)}
                       = link_to image_tag(@account.campaigns.seo[index].campaign_style.seo_keyword_rankings_graph, :alt => 'Click to View'), @account.campaigns.seo[index].campaign_style.seo_keyword_rankings_graph(300, 1000)
-
+                %tr
+                  %td
+                    .center
+                      Visitors by Location
+                      %br
+                      %a{:hover => @account.campaigns.seo[index].websites.first.visitors_by_location_graph(Date.today - 1.month, Date.today, 300, 1000, 7)}
+                        = link_to image_tag(@account.campaigns.seo[index].websites.first.visitors_by_location_graph, :alt => 'Click to View'), @account.campaigns.seo[index].websites.first.visitors_by_location_graph(Date.today - 1.month, Date.today, 300, 1000, 13)
+                                                        
 
 /Begin of Map Detailed Reports
 -if @account.campaigns.maps.present?

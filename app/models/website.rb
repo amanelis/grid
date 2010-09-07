@@ -2,6 +2,8 @@ class Website < ActiveRecord::Base
   has_and_belongs_to_many :campaigns, :uniq => true
   has_many :website_visits
 
+  GOOGLE_MAPS_API_KEY = 'ABQIAAAAU2DhWAoQ76ku3zRokt1DnRQX-pfkEHFxdgQJJn1KX_braIcbexTk-gFyApGHhSC0zwacV0-kZeHAzg'
+
 
   # CLASS BEHAVIOR
 
@@ -119,6 +121,38 @@ class Website < ActiveRecord::Base
     rescue
       return nil
     end
+  end
+
+  def visitors_by_location_graph(start_date = Date.today - 30.days, end_date = Date.today, height = 300, width = 500, zoom = 8)
+    start_date_time = start_date.beginning_of_day
+    end_date_time = end_date.end_of_day
+    map_url = ''
+    visits = self.website_visits.find(:all, :conditions => ['time_of_visit between ? AND ?', start_date_time, end_date_time])
+    if self.campaigns.first.zip_code.present? && visits.present?
+      markers = Array.new()
+      visits.each do |visit|
+        check = markers.detect { |x| x[0] == visit.latitude.to_f and x[1] == visit.longitude.to_f }
+        if check == nil
+          markers.push(Hash["lat" => visit.latitude.to_f, "long" => visit.longitude.to_f, "count" => 1])
+        else
+          check["count"] += 1
+        end
+      end
+      if markers.size != 0
+        #Get Geocode from Zip Code
+        url = 'http://local.yahooapis.com/MapsService/V1/geocode?appid=YD-9G7bey8_JXxQP6rxl.fBFGgCdNjoDMACQA--&zip=' + self.campaigns.first.zip_code.to_s
+        response = HTTParty.get(url)
+        long = sprintf("%.3f", response['ResultSet']['Result']['Longitude'].to_f).to_f
+        lat = sprintf("%.3f", response['ResultSet']['Result']['Latitude'].to_f).to_f
+        map = StaticGmaps::Map.new :center => [lat, long], :zoom => zoom, :size => [width, height], :map_type => :roadmap, :key => GOOGLE_MAPS_API_KEY
+        map.markers.clear
+        markers[0..49].each do |marker|
+          map.markers << StaticGmaps::Marker.new(:latitude => sprintf("%.3f", marker["lat"]).to_f, :longitude => sprintf("%.3f", marker["long"]).to_f, :color => :blue)
+        end
+        map_url = URI.escape(map.url + "&format=png")
+      end
+    end
+    return map_url
   end
 end
 

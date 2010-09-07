@@ -203,4 +203,5 @@ class Account < ActiveRecord::Base
     self.campaigns.to_a.sum { |campaign| campaign.number_of_submissions_between(start_date, end_date) }
   end
 
+  
 end

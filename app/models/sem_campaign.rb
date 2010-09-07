@@ -89,12 +89,37 @@ class SemCampaign < ActiveRecord::Base
           job.endDay = date.year.to_s + '-' + date.month.to_s + '-' + date.day.to_s
           job.crossClient = true
           job.campaigns = campaign_array
-
+          puts 'Started report_srv.validateReportJob(job)'
+          time1 = Time.now
           report_srv.validateReportJob(job)
+          puts 'Ended report_srv.validateReportJob(job)'
+          time2 = Time.now
+          puts 'Time to run: ' + (time2 - time1)
 
+          puts 'Started job_id = report_srv.scheduleReportJob(job).scheduleReportJobReturn'
+          time3 = Time.now
           job_id = report_srv.scheduleReportJob(job).scheduleReportJobReturn
+          puts 'Ended job_id = report_srv.scheduleReportJob(job).scheduleReportJobReturn'
+          time4 = Time.now
+          puts 'Time to run: ' + (time4 - time3)
+
           #puts 'Scheduled report with id %d. Now sleeping %d seconds.' %[job_id, sleep_interval]
-          report = Nokogiri::XML(report_srv.downloadXmlReport(job_id))
+          puts 'Started report_data = report_srv.downloadXmlReport(job_id)'
+          time5 = Time.now
+          report_data = report_srv.downloadXmlReport(job_id)
+          puts 'Ended report_data = report_srv.downloadXmlReport(job_id)'
+          time6 = Time.now
+          puts 'Time to run: ' + (time6 - time5)
+
+          puts 'Started report = Nokogiri::XML(report_data)'
+          time7 = Time.now
+          report = Nokogiri::XML(report_data)
+          puts 'Ended report = Nokogiri::XML(report_data)'
+          time8 = Time.now
+          puts 'Time to run: ' + (time8 - time7)
+
+          puts 'Started rows = report.xpath(/'//row/')'
+          time9 = Time.now
           rows = report.xpath('//row')
           if rows.size < (job.campaigns.size + 5)
             rows.each do |row|
@@ -149,6 +174,10 @@ class SemCampaign < ActiveRecord::Base
               end
             end
           end
+          puts 'Ended rows = report.xpath(/'//row/')'
+          time10 = Time.now
+          puts 'Time to run: ' + (time10 - time9)
+
         rescue AdWords::Error::Error => e
           new_report.result = 'Error Occured'
           new_report.save

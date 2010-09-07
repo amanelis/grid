@@ -40,6 +40,7 @@ class Campaign < ActiveRecord::Base
             end
             existing_campaign.status = sf_campaign.status__c
             existing_campaign.name = sf_campaign.name
+            existing_campaign.zip_code = sf_campaign.zip_code__c
             new_sem_campaign.monthly_budget = sf_campaign.monthly_budget__c
             new_sem_campaign.rake = sf_campaign.campaign_rake__c
             new_sem_campaign.developer_token = 'HC3GEwJ4LqgyVNeNTenIVw'
@@ -49,6 +50,7 @@ class Campaign < ActiveRecord::Base
             new_sem_campaign.email = 'bizsearchlocal.jon@gmail.com'
             new_sem_campaign.client_email = 'bizsearchlocal.jon@gmail.com'
             new_sem_campaign.environment = 'PRODUCTION'
+            existing_campaign.save
             new_sem_campaign.save!
 
           elsif sf_campaign.campaign_type__c.include? 'SEO'
@@ -72,6 +74,8 @@ class Campaign < ActiveRecord::Base
             new_seo_campaign.hosting_password = sf_account.hosting_password__c
             existing_campaign.status = sf_campaign.status__c
             existing_campaign.name = sf_campaign.name
+            existing_campaign.zip_code = sf_campaign.zip_code__c
+            existing_campaign.save
             new_seo_campaign.save!
 
           elsif sf_campaign.campaign_type__c.include? 'Maps'
@@ -85,15 +89,13 @@ class Campaign < ActiveRecord::Base
             end
             new_maps_campaign.keywords = sf_campaign.keywords__c
             new_maps_campaign.company_name = sf_campaign.maps_company_name__c
-
-
+            existing_campaign.zip_code = sf_campaign.zip_code__c
             existing_campaign.status = sf_campaign.status__c
             existing_campaign.name = sf_campaign.name
-
             new_google_maps_campaign = new_maps_campaign.google_maps_campaigns.build
             new_google_maps_campaign.login = sf_campaign.maps_login__c
             new_google_maps_campaign.password = sf_campaign.maps_password__c
-
+            existing_campaign.save
             new_maps_campaign.save!
           end
         end
