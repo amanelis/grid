@@ -278,6 +278,7 @@
                     /  = render inline_annotated_timeline(@sem_campaign_timelines[index], 620, 280, 'div_id_to_create', {:zoomEndTime => @sem_campaign_timelines[index].keys.sort[-1], :zoomStartTime  => @sem_campaign_timelines[index].keys.sort[-30] })
 
 
+
 /Begin of SEO Detailed Reports
 -if @account.campaigns.seo.present?
   %table{:class => "pretty"}
@@ -312,7 +313,7 @@
                   /%tr
                   /%td
                   /  .center
-                  /   Visitors by Location
+                  /    Visitors by Location
                   /    %br
                   /    %a{:hover => @account.campaigns.seo[index].websites.first.visitors_by_location_graph(Date.today - 1.month, Date.today, 300, 1000, 7)}
                   /      = link_to image_tag(@account.campaigns.seo[index].websites.first.visitors_by_location_graph, :alt => 'Click to View'), @account.campaigns.seo[index].websites.first.visitors_by_location_graph(Date.today - 1.month, Date.today, 300, 1000, 13)

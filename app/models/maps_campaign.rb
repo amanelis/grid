@@ -162,9 +162,8 @@ class MapsCampaign < ActiveRecord::Base
       data_date = month_date - m.months
       data_time_start = Date.new(data_date.year, data_date.month, 1)
       data_time_end = Date.new(data_date.year, data_date.month, data_date::class.civil(data_date.year, data_date.month, -1).day)
-      visits = self.websites.first.map_visits_between(data_time_start, data_time_end)
 
-      if visits != nil
+      if visits = self.websites.first.try(:map_visits_between, data_time_start, data_time_end)
         searches.push(visits)
         search_max = visits if visits > search_max
       else
