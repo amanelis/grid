@@ -1,6 +1,6 @@
 class MapKeyword < ActiveRecord::Base
   belongs_to :maps_campaign
-  has_many :map_rankings
+  has_many :map_rankings, :dependent => :destroy
 
 
   # CLASS BEHAVIOR

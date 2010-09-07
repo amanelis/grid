@@ -3,7 +3,7 @@ require 'cgi'
 
 class Keyword < ActiveRecord::Base
   belongs_to :seo_campaign
-  has_many :keyword_rankings
+  has_many :keyword_rankings, :dependent => :destroy
 
 
   # CLASS BEHAVIOR

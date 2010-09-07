@@ -1,9 +1,9 @@
 class Campaign < ActiveRecord::Base
   belongs_to :account
   belongs_to :campaign_style, :polymorphic => true
-  has_many :phone_numbers
+  has_many :phone_numbers, :dependent => :destroy
   has_many :calls, :through => :phone_numbers, :order => "call_start DESC"
-  has_many :contact_forms
+  has_many :contact_forms, :dependent => :destroy
   has_many :submissions, :through => :contact_forms
   has_and_belongs_to_many :websites, :uniq => true
   has_and_belongs_to_many :industries
@@ -12,6 +12,7 @@ class Campaign < ActiveRecord::Base
   named_scope :sem, :conditions => {:campaign_style_type => SemCampaign.name}
   named_scope :maps, :conditions => {:campaign_style_type => MapsCampaign.name}
 
+  before_destroy :remove_from_many_to_many_relationships
 
   # CLASS BEHAVIOR
 
@@ -258,6 +259,11 @@ class Campaign < ActiveRecord::Base
 
   def number_of_map_visits_by_date
     self.website.try(:number_of_map_visits_by_date) || {}
+  end
+
+  def remove_from_many_to_many_relationships
+    self.websites.each { |website| website.campaigns.delete(self) }
+    self.industries.each { |industry| industry.campaigns.delete(self) }
   end
 
 end

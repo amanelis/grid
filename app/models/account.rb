@@ -1,6 +1,6 @@
 class Account < ActiveRecord::Base
-  has_many :campaigns
-  has_one :adwords_client
+  has_many :campaigns, :dependent => :destroy
+  has_one :adwords_client, :dependent => :destroy
 
 
   # CLASS BEHAVIOR

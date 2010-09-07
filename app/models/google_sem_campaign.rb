@@ -1,7 +1,7 @@
 class GoogleSemCampaign < ActiveRecord::Base
   belongs_to :sem_campaign
-  has_many :adwords_campaign_summaries
-  has_many :adwords_ad_groups
+  has_many :adwords_campaign_summaries, :dependent => :destroy
+  has_many :adwords_ad_groups, :dependent => :destroy
 
 
   # INSTANCE BEHAVIOR
