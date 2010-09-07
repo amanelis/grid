@@ -1,6 +1,6 @@
 class ContactForm < ActiveRecord::Base
   belongs_to :campaign
-  has_many :submissions
+  has_many :submissions, :dependent => :destroy
 
 
   # INSTANCE BEHAVIOR

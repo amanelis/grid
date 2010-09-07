@@ -1,8 +1,8 @@
 class SeoCampaign < ActiveRecord::Base
   include CampaignStyleMixin
-  has_many :keywords
-  has_many :inbound_links
-  has_many :website_analyses, :class_name => "WebsiteAnalysis"
+  has_many :keywords, :dependent => :destroy
+  has_many :inbound_links, :dependent => :destroy
+  has_many :website_analyses, :class_name => "WebsiteAnalysis", :dependent => :destroy
 
   GOOGLE_MAPS_API_KEY = 'ABQIAAAAU2DhWAoQ76ku3zRokt1DnRQX-pfkEHFxdgQJJn1KX_braIcbexTk-gFyApGHhSC0zwacV0-kZeHAzg'
   CHART_COLORS = ["66ccff", "669966", "666666", "cc3366", "ff6633", "ffff33", "000000"]

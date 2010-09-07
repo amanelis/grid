@@ -1,7 +1,7 @@
 class SemCampaign < ActiveRecord::Base
   include CampaignStyleMixin
-  has_many :google_sem_campaigns
-  has_many :sem_campaign_report_statuses
+  has_many :google_sem_campaigns, :dependent => :destroy
+  has_many :sem_campaign_report_statuses, :dependent => :destroy
 
   CAMPAIGN_REPORT_TYPE = "Campaign"
   AD_REPORT_TYPE = "Ad"
@@ -11,22 +11,11 @@ class SemCampaign < ActiveRecord::Base
 
   # CLASS BEHAVIOR
 
-  def self.update_sem_campaign_reports_by_campaign(hard_update = false, date = Date.today - 1)
+  def self.update_sem_campaign_reports_by_campaign(hard_update = false, date = Date.yesterday)
     job_status = JobStatus.create(:name => "SemCampaign.update_sem_campaign_reports_by_campaign")
     begin
-      sem_campaigns = SemCampaign.all
-      sem_campaigns.each do |sem_campaign|
-        span = 30
-        if hard_update == false
-          span = 7
-        end
-        #pull the days report and save each
-        while span != 0
-          pull_date = date - span.days
-          sem_campaign.create_campaign_level_sem_campaign_report_for_google(pull_date)
-          span -= 1
-        end
-      end
+      #pull the days report and save each
+      SemCampaign.all.each { |sem_campaign| (hard_update ? 30 : 7).downto(1) { |days| sem_campaign.create_campaign_level_sem_campaign_report_for_google(date - days) } }
     rescue Exception => ex
       job_status.finish_with_errors(ex)
       raise
@@ -34,22 +23,11 @@ class SemCampaign < ActiveRecord::Base
     job_status.finish_with_no_errors
   end
 
-  def self.update_sem_campaign_reports_by_ad(hard_update = false, date = Date.today - 1)
+  def self.update_sem_campaign_reports_by_ad(hard_update = false, date = Date.yesterday)
     job_status = JobStatus.create(:name => "SemCampaign.update_sem_campaign_reports_by_ad")
     begin
-      sem_campaigns = SemCampaign.all
-      sem_campaigns.each do |sem_campaign|
-        span = 30
-        if hard_update == false
-          span = 7
-        end
-        #pull the days report and save each
-        while span != 0
-          pull_date = date - span.days
-          sem_campaign.create_ad_level_sem_campaign_report_for_google(pull_date)
-          span -= 1
-        end
-      end
+      #pull the days report and save each
+      SemCampaign.all.each { |sem_campaign| (hard_update ? 30 : 7).downto(1) { |days| sem_campaign.create_ad_level_sem_campaign_report_for_google(date - days) } }
     rescue Exception => ex
       job_status.finish_with_errors(ex)
       raise
@@ -94,14 +72,14 @@ class SemCampaign < ActiveRecord::Base
           report_srv.validateReportJob(job)
           puts 'Ended report_srv.validateReportJob(job)'
           time2 = Time.now
-          puts 'Time to run: ' + (time2 - time1)
+          puts "Time to run: #{time2 - time1} seconds"
 
           puts 'Started job_id = report_srv.scheduleReportJob(job).scheduleReportJobReturn'
           time3 = Time.now
           job_id = report_srv.scheduleReportJob(job).scheduleReportJobReturn
           puts 'Ended job_id = report_srv.scheduleReportJob(job).scheduleReportJobReturn'
           time4 = Time.now
-          puts 'Time to run: ' + (time4 - time3)
+          puts "Time to run: #{time4 - time3} seconds"
 
           #puts 'Scheduled report with id %d. Now sleeping %d seconds.' %[job_id, sleep_interval]
           puts 'Started report_data = report_srv.downloadXmlReport(job_id)'
@@ -109,21 +87,21 @@ class SemCampaign < ActiveRecord::Base
           report_data = report_srv.downloadXmlReport(job_id)
           puts 'Ended report_data = report_srv.downloadXmlReport(job_id)'
           time6 = Time.now
-          puts 'Time to run: ' + (time6 - time5)
+          puts "Time to run: #{time6 - time5} seconds"
 
           puts 'Started report = Nokogiri::XML(report_data)'
           time7 = Time.now
           report = Nokogiri::XML(report_data)
           puts 'Ended report = Nokogiri::XML(report_data)'
           time8 = Time.now
-          puts 'Time to run: ' + (time8 - time7)
+          puts "Time to run: #{time8 - time7} seconds"
 
           puts 'Started rows = report.xpath'
           time9 = Time.now
           rows = report.xpath('//row')
           puts 'Ended rows = report.xpath'
           time10 = Time.now
-          puts 'Time to run: ' + (time10 - time9)
+          puts "Time to run: #{time10 - time9} seconds"
 
           puts 'Started Loop of Rows'
           time11 = Time.now
@@ -173,7 +151,7 @@ class SemCampaign < ActiveRecord::Base
                 adwords_campaign_summary.save
 
               rescue => e
-                new_report.result = 'Error Occured'
+                new_report.result = 'Error Occurred'
                 new_report.save
                 puts "Error updating ad-level report: #{ e }"
                 next
@@ -182,11 +160,11 @@ class SemCampaign < ActiveRecord::Base
           end
           puts 'Ended Loop of Rows'
           time12 = Time.now
-          puts 'Time to run: ' + (time12 - time11)
+          puts "Time to run: #{time12 - time11} seconds"
 
 
         rescue AdWords::Error::Error => e
-          new_report.result = 'Error Occured'
+          new_report.result = 'Error Occurred'
           new_report.save
           puts "Error updating ad-level report: #{ e }"
         end
@@ -364,7 +342,7 @@ class SemCampaign < ActiveRecord::Base
                 adword.save
 
               rescue => e
-                new_report.result = "Error Occured"
+                new_report.result = "Error Occurred"
                 new_report.save
                 puts "Error updating ad-level report: #{ e }"
                 next
@@ -372,7 +350,7 @@ class SemCampaign < ActiveRecord::Base
             end
           end
         rescue AdWords::Error::Error => e
-          new_report.result = "Error Occured"
+          new_report.result = "Error Occurred"
           new_report.save
           puts "Error updating ad-level report: #{ e }"
         end
@@ -443,6 +421,5 @@ class SemCampaign < ActiveRecord::Base
     end
     data
   end
-
 
 end

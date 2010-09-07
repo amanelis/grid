@@ -1,9 +1,9 @@
 class MapsCampaign < ActiveRecord::Base
   include CampaignStyleMixin
-  has_many :google_maps_campaigns
-  has_many :yahoo_maps_campaigns
-  has_many :bing_maps_campaigns
-  has_many :map_keywords
+  has_many :google_maps_campaigns, :dependent => :destroy
+  has_many :yahoo_maps_campaigns, :dependent => :destroy
+  has_many :bing_maps_campaigns, :dependent => :destroy
+  has_many :map_keywords, :dependent => :destroy
 
   GOOGLE_MAPS_API_KEY = 'ABQIAAAAU2DhWAoQ76ku3zRokt1DnRQX-pfkEHFxdgQJJn1KX_braIcbexTk-gFyApGHhSC0zwacV0-kZeHAzg'
   CHART_COLORS = ["66ccff", "669966", "666666", "cc3366", "ff6633", "ffff33", "000000"]
