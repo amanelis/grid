@@ -276,6 +276,34 @@
                     /  No Data
                     /-else
                     /  = render inline_annotated_timeline(@sem_campaign_timelines[index], 620, 280, 'div_id_to_create', {:zoomEndTime => @sem_campaign_timelines[index].keys.sort[-1], :zoomStartTime  => @sem_campaign_timelines[index].keys.sort[-30] })
+                %tr
+                  %td
+                    %table
+                      %thead
+                        %th
+                          Keyword
+                        %th
+                          Count
+                        %th
+                          '    '
+                        %th
+                          Keyword
+                        %th
+                          Count
+                      %tbody
+                        - i = 0
+                        - keywords = @account.campaigns.sem[index].websites.first.keywords_searched_between(Date.today - 1.month, Date.today)
+                        - while i < 11
+                          %tr
+                            %td
+                              = keywords[i][0]
+                            %td
+                              = keywords[i][1]
+                            %td
+                            %td
+                              = keywords[i + 1][0]
+                            %td
+                              = keywords[i + 1][1]
 
 
 /Begin of SEO Detailed Reports

@@ -444,5 +444,4 @@ class SemCampaign < ActiveRecord::Base
     data
   end
 
-
 end

@@ -123,7 +123,7 @@ class Website < ActiveRecord::Base
     end
   end
 
-  def visitors_by_location_graph(start_date = Date.today - 30.days, end_date = Date.today, height = 300, width = 500, zoom = 8)
+  def visitors_by_location_graph(start_date = Date.today - 30.days, end_date = Date.yesterday, height = 300, width = 500, zoom = 8)
     start_date_time = start_date.beginning_of_day
     end_date_time = end_date.end_of_day
     map_url = ''
@@ -154,5 +154,8 @@ class Website < ActiveRecord::Base
     end
     return map_url
   end
+
+
+  
 end
 
