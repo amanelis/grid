@@ -50,9 +50,8 @@ class Campaign < ActiveRecord::Base
             new_sem_campaign.email = 'bizsearchlocal.jon@gmail.com'
             new_sem_campaign.client_email = 'bizsearchlocal.jon@gmail.com'
             new_sem_campaign.environment = 'PRODUCTION'
-            existing_campaign.save
             new_sem_campaign.save!
-
+            existing_campaign.save
           elsif sf_campaign.campaign_type__c.include? 'SEO'
             sf_account = Salesforce::Account.find(account.salesforce_id)
             if existing_campaign.blank?
@@ -75,8 +74,8 @@ class Campaign < ActiveRecord::Base
             existing_campaign.status = sf_campaign.status__c
             existing_campaign.name = sf_campaign.name
             existing_campaign.zip_code = sf_campaign.zip_code__c
-            existing_campaign.save
             new_seo_campaign.save!
+            existing_campaign.save
 
           elsif sf_campaign.campaign_type__c.include? 'Maps'
             if existing_campaign.blank?
@@ -95,8 +94,9 @@ class Campaign < ActiveRecord::Base
             new_google_maps_campaign = new_maps_campaign.google_maps_campaigns.build
             new_google_maps_campaign.login = sf_campaign.maps_login__c
             new_google_maps_campaign.password = sf_campaign.maps_password__c
-            existing_campaign.save
             new_maps_campaign.save!
+            existing_campaign.save
+                        
           end
         end
       end
@@ -132,7 +132,7 @@ class Campaign < ActiveRecord::Base
   end
 
   def self.fix_duplicates
-    after_date = Date.new(2010, 9, 1)
+    after_date = Date.new(2010, 9, 3)
     campaigns = Campaign.find(:all, :conditions => ['created_at > ?', after_date])
     styles = campaigns.collect {|campaign| campaign.campaign_style}
     styles.each do |style|
