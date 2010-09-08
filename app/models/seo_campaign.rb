@@ -4,7 +4,8 @@ class SeoCampaign < ActiveRecord::Base
   has_many :inbound_links, :dependent => :destroy
   has_many :website_analyses, :class_name => "WebsiteAnalysis", :dependent => :destroy
 
-  GOOGLE_MAPS_API_KEY = 'ABQIAAAAU2DhWAoQ76ku3zRokt1DnRQX-pfkEHFxdgQJJn1KX_braIcbexTk-gFyApGHhSC0zwacV0-kZeHAzg'
+  #GOOGLE_MAPS_API_KEY = 'ABQIAAAAU2DhWAoQ76ku3zRokt1DnRQX-pfkEHFxdgQJJn1KX_braIcbexTk-gFyApGHhSC0zwacV0-kZeHAzg'
+  GOOGLE_MAPS_API_KEY = 'ABQIAAAAzr2EBOXUKnm_jVnk0OJI7xSosDVG8KKPE1-m51RBrvYughuyMxQ-i1QfUnH94QxWIa6N4U6MouMmBA'
   CHART_COLORS = ["66ccff", "669966", "666666", "cc3366", "ff6633", "ffff33", "000000"]
 
 
@@ -360,6 +361,50 @@ class SeoCampaign < ActiveRecord::Base
       end
     end
     return days_url
+  end
+
+  def seo_keyword_ranking_table(month_date = Date.today - 1.month)
+    keyword_table = Array.new
+
+    keywords = self.keywords
+    this_start_date = month_date.beginning_of_month
+    this_end_date = month_date.end_of_month
+    last_start_date = (month_date - 1.month).beginning_of_month
+    last_end_date = (month_date - 1.month).end_of_month
+
+    keywords.each do |keyword|
+      this_google_rank = 99999
+      last_google_rank = 99999
+      this_yahoo_rank = 99999
+      last_yahoo_rank = 99999
+      this_bing_rank = 99999
+      last_bing_rank =99999
+
+      this_ranking = keyword.keyword_rankings.last(:conditions => ['created_at between ? AND ?', this_start_date, this_end_date])
+      if this_ranking.present?
+        this_google_rank = this_ranking.google
+        this_yahoo_rank = this_ranking.yahoo
+        this_bing_rank = this_ranking.bing
+      end
+      last_ranking = keyword.keyword_rankings.last(:conditions => ['created_at between ? AND ?', last_start_date, last_end_date])
+      if last_ranking.present?
+        last_google_rank = last_ranking.google
+        last_yahoo_rank = last_ranking.yahoo
+        last_bing_rank = last_ranking.bing
+      end
+
+      google_change = last_google_rank - this_google_rank
+      yahoo_change = last_yahoo_rank - this_yahoo_rank
+      bing_change = last_bing_rank - this_bing_rank
+      google_change = '+' + google_change.to_s if google_change > 0
+      yahoo_change = '+' + yahoo_change.to_s if yahoo_change > 0
+      bing_change = '+' + bing_change.to_s if bing_change > 0
+      this_google_rank = '> 50' if this_google_rank > 50
+      this_yahoo_rank = '> 50' if this_yahoo_rank > 50
+      this_bing_rank = '> 50' if this_bing_rank > 50
+      keyword_table.push([keyword.descriptor, this_google_rank, google_change, this_yahoo_rank, yahoo_change, this_bing_rank, bing_change])
+    end
+    return keyword_table
   end
 
 end

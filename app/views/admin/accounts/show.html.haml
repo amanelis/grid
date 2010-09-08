@@ -32,7 +32,7 @@
         %td
           = campaign.name
         %td
-          = campaign.number_of_all_calls_between(Date.today - 1.week, Date.today).to_s
+          = campaign.number_of_lead_calls_between(Date.today - 1.week, Date.today).to_s
         %td
           = campaign.number_of_submissions_between(Date.today - 1.week, Date.today).to_s
         %td
@@ -75,7 +75,7 @@
                   %td
                     = campaign.name
                   %td
-                    = campaign.number_of_all_calls_between(Date.today - 1.month, Date.today).to_s
+                    = campaign.number_of_lead_calls_between(Date.today - 1.month, Date.today).to_s
                   %td
                     = campaign.number_of_submissions_between(Date.today - 1.month, Date.today).to_s
                   %td
@@ -88,7 +88,7 @@
               %th
                 Totals
               %th
-                = @account.number_of_all_calls_between(Date.today - 1.month, Date.today)
+                = @account.number_of_lead_calls_between(Date.today - 1.month, Date.today)
               %th
                 = @account.number_of_submissions_between(Date.today - 1.month, Date.today)
               %th
@@ -256,103 +256,154 @@
 
 /Begin of PPC Detailed Reports
 -if @account.campaigns.sem.present?
-  %table{:class => "pretty"}
-    %thead
-      %th
-        Detailed PPC Reports
-    %tbody
-      -@account.campaigns.sem.each_index do |index|
+  -@account.campaigns.sem.each_index do |index|
+    %table{:class => "pretty"}
+      %thead
+        %th
+          = @account.campaigns.sem[index].name + ' Detailed Report'
+      %tbody
         %tr
           %td
-            %table{:class => "pretty"}
-              %thead
-                %th
-                  = @account.campaigns.sem[index].name
-              %tbody
-                %tr
-                  %td
-                    /
-                    /-if @sem_campaign_timelines[index].empty?
-                    /  No Data
-                    /-else
-                    /  = render inline_annotated_timeline(@sem_campaign_timelines[index], 620, 280, 'div_id_to_create', {:zoomEndTime => @sem_campaign_timelines[index].keys.sort[-1], :zoomStartTime  => @sem_campaign_timelines[index].keys.sort[-30] })
-
-
-
+            /
+            /-if @sem_campaign_timelines[index].empty?
+            /  No Data
+            /-else
+            /   = render inline_annotated_timeline(@sem_campaign_timelines[index], 620, 280, 'div_id_to_create', {:zoomEndTime => @sem_campaign_timelines[index].keys.sort[-1], :zoomStartTime  => @sem_campaign_timelines[index].keys.sort[-30] })
+            %br
+            -@keywords = @account.campaigns.sem[index].websites.first.try(:keywords_searched_between, Date.today - 1.month, Date.today)
+            -if @keywords.present?
+              %table{:class => "pretty"}
+                %thead
+                  %th
+                    Keyword
+                  %th
+                    Count
+                  %th
+                  %th
+                    Keyword
+                  %th
+                    Count
+                %tbody
+                  -@keywords.each_index  do |index2|
+                    -if index2.even?
+                      %tr{ :class => cycle('odd', 'even')}
+                        %td
+                          = @keywords[index2][0]
+                        %td
+                          = @keywords[index2][1]
+                        %td
+                        %td
+                          = @keywords[index2 + 1][0] if @keywords[index2 + 1].present?
+                        %td
+                          = @keywords[index2 + 1][1] if @keywords[index2 + 1].present?
+            -@url_link = @account.campaigns.sem[index].websites.first.try(:visitors_by_location_graph)
+            -if @url_link.present?
+              %br
+              .center
+              Visitors by Location
+              %br
+              = link_to image_tag(@url_link, :alt => 'Visitors By Location'), @url_link
+            -if @keywords.blank? && @url_link.blank?
+              .center
+              There is currently no data for this report.
+              
 /Begin of SEO Detailed Reports
 -if @account.campaigns.seo.present?
-  %table{:class => "pretty"}
-    %thead
-      %th
-        Detailed SEO Reports
-    %tbody
-      -@account.campaigns.seo.each_index do |index|
+  -@account.campaigns.seo.each_index do |index|
+    %table{:class => "pretty"}
+      %thead
+        %th
+          = @account.campaigns.seo[index].name + ' Detailed Report'
+      %tbody
         %tr
           %td
-            %table{:class => "pretty"}
-              %thead
-                %th
-                  = @account.campaigns.seo[index].name
-              %tbody
-                %tr
-                  %td
-                    /
-                    /-if @seo_campaign_timelines[index].empty?
-                    /  No Data
-                    /-else
-                    /  = render inline_annotated_timeline(@seo_campaign_timelines[index], 620, 280, 'div_id_to_create', {:zoomEndTime => @seo_campaign_timelines[index].keys.sort[-1], :zoomStartTime  => @seo_campaign_timelines[index].keys.sort[-30] })
-                %tr
-                  %td
-                    %a{:hover => @account.campaigns.seo[index].campaign_style.website_traffic_sources_graph(300, 1000)}
-                      = link_to image_tag(@account.campaigns.seo[index].campaign_style.website_traffic_sources_graph, :alt => 'Click to View'), @account.campaigns.seo[index].campaign_style.website_traffic_sources_graph(300, 1000)
-                %tr
-                  %td
-                    %a{:hover => @account.campaigns.seo[index].campaign_style.seo_keyword_rankings_graph(300, 1000)}
-                      = link_to image_tag(@account.campaigns.seo[index].campaign_style.seo_keyword_rankings_graph, :alt => 'Click to View'), @account.campaigns.seo[index].campaign_style.seo_keyword_rankings_graph(300, 1000)
-                /
-                  /%tr
-                  /%td
-                  /  .center
-                  /    Visitors by Location
-                  /    %br
-                  /    %a{:hover => @account.campaigns.seo[index].websites.first.visitors_by_location_graph(Date.today - 1.month, Date.today, 300, 1000, 7)}
-                  /      = link_to image_tag(@account.campaigns.seo[index].websites.first.visitors_by_location_graph, :alt => 'Click to View'), @account.campaigns.seo[index].websites.first.visitors_by_location_graph(Date.today - 1.month, Date.today, 300, 1000, 13)
+            /
+            /-if @seo_campaign_timelines[index].empty?
+            /  No Data
+            /-else
+            /  = render inline_annotated_timeline(@seo_campaign_timelines[index], 620, 280, 'div_id_to_create', {:zoomEndTime => @seo_campaign_timelines[index].keys.sort[-1], :zoomStartTime  => @seo_campaign_timelines[index].keys.sort[-30] })
+            -@sources_link = @account.campaigns.seo[index].campaign_style.website_traffic_sources_graph
+            -if @sources_link.present?
+              %br
+              = link_to image_tag(@sources_link, :alt => 'Traffice Sources'), @sources_link
+            -@keyword_link = @account.campaigns.seo[index].campaign_style.seo_keyword_rankings_graph
+            -if @keyword_link.present?
+              %br
+              = link_to image_tag(@keyword_link, :alt => 'Keyword Rankings By Month'), @keyword_link
+              %br
+            -@location_link = @account.campaigns.seo[index].websites.first.try(:visitors_by_location_graph)
+            -if @location_link.present?
+              %br
+              .center
+              Visitors by Location
+              %br
+              = link_to image_tag(@location_link, :alt => 'Visitors By Location'), @location_link
+              %br
+            -rankings = @account.campaigns.seo[index].campaign_style.seo_keyword_ranking_table
+            -if rankings.present?
+              %table{:class => "pretty"}
+                %thead
+                  %th
+                    Keyword
+                  %th
+                    Google Rank
+                  %th
+                    1 Month Change
+                  %th
+                    Yahoo Rank
+                  %th
+                    1 Month Change
+                  %th
+                    Bing Rank
+                  %th
+                    1 Month Change
+                %tbody
+                  -rankings.each do |ranking|
+                    %tr{ :class => cycle('odd', 'even')}
+                      %td
+                        = ranking[0]
+                      %td
+                        = ranking[1]
+                      %td
+                        = ranking[2]
+                      %td
+                        = ranking[3]
+                      %td
+                        = ranking[4]
+                      %td
+                        = ranking[5]
+                      %td
+                        = ranking[6]
 
 
 /Begin of Map Detailed Reports
 -if @account.campaigns.maps.present?
-  %table{:class => "pretty"}
-    %thead
-      %th
-        Detailed Map Reports
-    %tbody
-      -@account.campaigns.maps.each do |campaign|
+  -@account.campaigns.maps.each do |campaign|
+    %table{:class => "pretty"}
+      %thead
+        %th
+          = campaign.name + ' Detailed Report'
+      %tbody
         %tr
           %td
-            %table{:class => "pretty"}
-              %thead
-                %th
-                  = campaign.name
-              %tbody
-                %tr
-                  %td
-                    %a{:hover => campaign.campaign_style.google_keyword_rankings_graph(300, 1000)}
-                      = link_to image_tag(campaign.campaign_style.google_keyword_rankings_graph, :alt => 'Click to View'), campaign.campaign_style.google_keyword_rankings_graph(300, 1000)
-                %tr
-                  %td
-                    %a{:hover => campaign.campaign_style.google_map_data_counts_graph(300, 1000)}
-                      = link_to image_tag(campaign.campaign_style.google_map_data_counts_graph, :alt => 'Click to View'), campaign.campaign_style.google_map_data_counts_graph(300, 1000)
-                %tr
-                  %td
-                    %a{:hover => campaign.campaign_style.google_map_website_clicks_graph(300, 1000)}
-                      = link_to image_tag(campaign.campaign_style.google_map_website_clicks_graph, :alt => 'Click to View'), campaign.campaign_style.google_map_website_clicks_graph(300, 1000)
+            -@keyword_link = campaign.campaign_style.google_keyword_rankings_graph
+            -if @keyword_link.present?
+              = link_to image_tag(@keyword_link, :alt => 'Google Map Keyword Rankings'), @keyword_link
+              %br
+            -@count_link = campaign.campaign_style.google_map_data_counts_graph
+            -if @count_link.present?
+              = link_to image_tag(campaign.campaign_style.google_map_data_counts_graph, :alt => 'Click to View'), campaign.campaign_style.google_map_data_counts_graph(300, 1000)
+              %br
+            -@clicks_link = campaign.campaign_style.google_map_website_clicks_graph
+            -if @clicks_link.present?
+              = link_to image_tag(campaign.campaign_style.google_map_website_clicks_graph, :alt => 'Click to View'), campaign.campaign_style.google_map_website_clicks_graph(300, 1000)
 
 /Begin of Calls Section
 -@account.campaigns.each do |campaign|
   -if campaign.calls.find(:all, :conditions => ['call_start between ? AND ?', Date.today - 1.week, Date.today]).present?
     .center
       %h3
-        = "Calls for" + campaign.name
+        = "Calls for " + campaign.name
       %table{:class => "pretty"}
         %thead
           %tr

@@ -138,7 +138,7 @@ class Website < ActiveRecord::Base
           check["count"] += 1
         end
       end
-      if markers.size != 0
+      if markers.present?
         #Get Geocode from Zip Code
         url = 'http://local.yahooapis.com/MapsService/V1/geocode?appid=YD-9G7bey8_JXxQP6rxl.fBFGgCdNjoDMACQA--&zip=' + self.campaigns.first.zip_code.to_s
         response = HTTParty.get(url)
