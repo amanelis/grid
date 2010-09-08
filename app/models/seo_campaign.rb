@@ -363,14 +363,14 @@ class SeoCampaign < ActiveRecord::Base
     return days_url
   end
 
-  def seo_keyword_ranking_table(month_date = Date.today - 1.month)
+  def seo_keyword_ranking_table(start_date = Date.today - 1.month, end_date = Date.today)
     keyword_table = Array.new
 
     keywords = self.keywords
-    this_start_date = month_date.beginning_of_month
-    this_end_date = month_date.end_of_month
-    last_start_date = (month_date - 1.month).beginning_of_month
-    last_end_date = (month_date - 1.month).end_of_month
+    this_start_date = start_date.beginning_of_day
+    this_end_date = end_date.end_of_day
+    last_start_date = (start_date - 1.month).beginning_of_day
+    last_end_date = (end_date - 1.month).end_of_day
 
     keywords.each do |keyword|
       this_google_rank = 99999
@@ -378,33 +378,62 @@ class SeoCampaign < ActiveRecord::Base
       this_yahoo_rank = 99999
       last_yahoo_rank = 99999
       this_bing_rank = 99999
-      last_bing_rank =99999
+      last_bing_rank = 99999
 
       this_ranking = keyword.keyword_rankings.last(:conditions => ['created_at between ? AND ?', this_start_date, this_end_date])
       if this_ranking.present?
-        this_google_rank = this_ranking.google
-        this_yahoo_rank = this_ranking.yahoo
-        this_bing_rank = this_ranking.bing
+        this_google_rank = this_ranking.google if this_ranking.google.present?
+        this_yahoo_rank = this_ranking.yahoo if this_ranking.yahoo.present?
+        this_bing_rank = this_ranking.bing if this_ranking.bing.present?
       end
       last_ranking = keyword.keyword_rankings.last(:conditions => ['created_at between ? AND ?', last_start_date, last_end_date])
       if last_ranking.present?
-        last_google_rank = last_ranking.google
-        last_yahoo_rank = last_ranking.yahoo
-        last_bing_rank = last_ranking.bing
+        last_google_rank = last_ranking.google if last_ranking.google.present?
+        last_yahoo_rank = last_ranking.yahoo if last_ranking.yahoo.present?
+        last_bing_rank = last_ranking.bing if last_ranking.bing.present?
       end
-
+      this_google_rank = 51 if this_google_rank > 50
+      last_google_rank = 51 if last_google_rank > 50
+      this_yahoo_rank = 51 if this_yahoo_rank > 50
+      last_yahoo_rank = 51 if last_yahoo_rank > 50
+      this_bing_rank = 51 if this_bing_rank > 50
+      last_bing_rank = 51 if last_bing_rank > 50
+      this_google_rank = 1 if this_google_rank == 0
+      last_google_rank = 1 if last_google_rank == 0
+      this_yahoo_rank = 1 if this_yahoo_rank == 0
+      last_yahoo_rank = 1 if last_yahoo_rank == 0
+      this_bing_rank = 1 if this_bing_rank == 0
+      last_bing_rank = 1 if last_bing_rank == 0
       google_change = last_google_rank - this_google_rank
       yahoo_change = last_yahoo_rank - this_yahoo_rank
       bing_change = last_bing_rank - this_bing_rank
-      google_change = '+' + google_change.to_s if google_change > 0
-      yahoo_change = '+' + yahoo_change.to_s if yahoo_change > 0
-      bing_change = '+' + bing_change.to_s if bing_change > 0
-      this_google_rank = '> 50' if this_google_rank > 50
-      this_yahoo_rank = '> 50' if this_yahoo_rank > 50
-      this_bing_rank = '> 50' if this_bing_rank > 50
       keyword_table.push([keyword.descriptor, this_google_rank, google_change, this_yahoo_rank, yahoo_change, this_bing_rank, bing_change])
     end
+    keyword_table = keyword_table.sort{|x, y| x[1] <=> y[1]}
+
+    keyword_table.each_index do |index|
+      puts keyword_table[index]
+      keyword_table[index][2] = '+' + keyword_table[index][2].to_s if keyword_table[index][2] > 0
+      keyword_table[index][4] = '+' + keyword_table[index][4].to_s if keyword_table[index][4] > 0
+      keyword_table[index][6] = '+' + keyword_table[index][6].to_s if keyword_table[index][6] > 0
+      keyword_table[index][1] = '> 50' if keyword_table[index][1] > 50
+      keyword_table[index][3] = '> 50' if keyword_table[index][3] > 50
+      keyword_table[index][5] = '> 50' if keyword_table[index][5] > 50
+    end
     return keyword_table
+  end
+
+  def seo_keyword_ranking_date(start_date = Date.today - 1.year, end_date = Date.today)
+    keywords = self.keywords
+    this_start_date = start_date.beginning_of_day
+    this_end_date = end_date.end_of_day
+    keywords.each do |keyword|
+      this_ranking = keyword.keyword_rankings.last(:conditions => ['created_at between ? AND ?', this_start_date, this_end_date])
+      if this_ranking.present?
+        ranking_date = this_ranking.create_at
+        return ranking_date
+      end
+    end
   end
 
 end

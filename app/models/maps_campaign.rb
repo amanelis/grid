@@ -68,7 +68,7 @@ class MapsCampaign < ActiveRecord::Base
         GoogleChart::LineChart.new(chart_size, 'Google Local Map Keyword Rankings', false) do |bc|
           k = 0
           while k < kcount
-            bc.data self.map_keywords[k].descriptor + ' (' + rankings[k].last.to_s + ')', rankings[k], CHART_COLORS[k]
+            bc.data self.map_keywords[k].descriptor + ' (' + (ranking_count - rankings[k].last).to_s + ')', rankings[k], CHART_COLORS[k]
             k += 1
           end
           bc.axis :x, :labels => klabels, :font_size => 10
