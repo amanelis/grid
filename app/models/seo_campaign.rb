@@ -349,9 +349,9 @@ class SeoCampaign < ActiveRecord::Base
       chart_size = width.to_s + 'x' + height.to_s
       GoogleChart::LineChart.new(chart_size, chart_name, false) do |bc|
         bc.data "", keyword_array, '65432100'
-        bc.data "Google", google_array, CHART_COLORS[0]
-        bc.data "Yahoo", yahoo_array, CHART_COLORS[1]
-        bc.data "Bing", bing_array, CHART_COLORS[2]
+        bc.data "Google" + ' (' + google_array.last.to_s + ')', google_array, CHART_COLORS[0]
+        bc.data "Yahoo" + ' (' + yahoo_array.last.to_s + ')', yahoo_array, CHART_COLORS[1]
+        bc.data "Bing" + ' (' + bing_array.last.to_s + ')', bing_array, CHART_COLORS[2]
         bc.axis :x, :labels => keyword_labels, :font_size => 10
         bc.axis :y, :range => [0, keywords.count], :font_size => 10
         bc.fill(:background, :solid, {:color => '65432100'})
