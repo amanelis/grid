@@ -87,9 +87,18 @@ class Account < ActiveRecord::Base
     Utilities.merge_and_sum_timeline_data(self.campaigns.collect { |campaign| campaign.campaign_style.number_of_visits_by_date }, :visits)
   end
 
+  def number_of_leads_by_date
+    Utilities.merge_and_sum_timeline_data(self.campaigns.collect { |campaign| campaign.campaign_style.number_of_leads_by_date }, :leads)
+  end
+
+  #def combined_timeline_data
+  #  raw_data = self.number_of_visits_by_date
+  #  Utilities.massage_timeline(raw_data, [:visits])
+  #end
+  
   def combined_timeline_data
-    raw_data = self.number_of_visits_by_date
-    Utilities.massage_timeline(raw_data, [:visits])
+    raw_data = self.number_of_leads_by_date
+    Utilities.massage_timeline(raw_data, [:leads])
   end
 
   def campaign_seo_combined_timeline_data

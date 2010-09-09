@@ -15,13 +15,13 @@
         %td= account.id
         %td= account.name
         %td= account.account_type
-        -@ctr = account.sem_click_through_rate_between(Date.yesterday - 1.week, Date.yesterday)
+        -@ctr = (account.sem_click_through_rate_between(Date.yesterday - 1.week, Date.yesterday) * 100)
         -if @ctr > 0.75
-          %td{:class => 'green-font'}= @ctr
+          %td{:class => 'green-font'}= sprintf("%.3f", @ctr) + '%'
         -elsif @ctr.between?(0.5, 0.749999)
-          %td{:class => 'yellow-font'}= @ctr
+          %td{:class => 'yellow-font'}= sprintf("%.3f", @ctr) + '%'
         -else
-          %td{:class => 'red-font'}= @ctr
+          %td{:class => 'red-font'}= sprintf("%.3f", @ctr) + '%'
         -@cpconv = account.cost_per_lead_between(Date.yesterday - 1.week, Date.yesterday)
         -if @cpconv > 75
           %td{:class => 'red-font'}
