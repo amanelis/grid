@@ -128,6 +128,10 @@ class Account < ActiveRecord::Base
     self.campaigns.sem.to_a.sum { |campaign| campaign.spend_between(start_date, end_date) }
   end
 
+  def sem_cost_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.sem.to_a.sum { |campaign| campaign.cost_between(start_date, end_date) }
+  end
+
   def seo_spend_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.seo.to_a.sum { |campaign| campaign.spend_between(start_date, end_date) }
   end
@@ -168,6 +172,13 @@ class Account < ActiveRecord::Base
     self.campaigns.to_a.sum { |campaign| campaign.number_of_lead_calls_between(start_date, end_date) }
   end
 
+  def sem_cost_per_click_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    (spend = self.sem_spend_between(start_date, end_date)) > 0 ? self.sem_clicks_between(start_date, end_date)/spend : 0.0
+  end
+
+  def total_spend_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.sem_cost_between(start_date, end_date) + self.sem_spend_between(start_date, end_date)
+  end
 
   # NOTE...these methods don't really make sense at this level in the hierarchy.
 
@@ -207,5 +218,12 @@ class Account < ActiveRecord::Base
     self.campaigns.to_a.sum { |campaign| campaign.number_of_submissions_between(start_date, end_date) }
   end
 
+  def total_monthly_budget_between(start_date = Date.yesterday, end_date = Date.yesterday)
+
+  end
+
+  def sem_cost_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    (cost = self.sem_cost_between(start_date, end_date)) > 0 ? cost : 0.0
+  end
   
 end

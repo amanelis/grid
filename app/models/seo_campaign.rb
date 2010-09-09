@@ -257,8 +257,24 @@ class SeoCampaign < ActiveRecord::Base
     Digest::SHA1.hexdigest(signature)
   end
 
-  def spend_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    (spend = self.budget).present? ? spend : 0.0
+  def spend_between(start_date = Date.today - 1.month, end_date = Date.today)
+    spend = 0
+    (start_date..end_date).each do |day|
+      daily_spend = (budget = self.budget).present? ? (budget/(Time.days_in_month(day.month, day.year))) : 0.0
+      puts daily_spend
+      spend += daily_spend
+    end
+    return spend
+  end
+
+  def cost_between(start_date = Date.today - 1.month, end_date = Date.today)
+    spend = 0
+    (start_date..end_date).each do |day|
+      daily_spend = (budget = self.budget).present? ? (budget/(Time.days_in_month(day.month, day.year))) : 0.0
+      puts daily_spend
+      spend += daily_spend
+    end
+    return spend
   end
 
   def number_of_visits_by_date
@@ -274,7 +290,7 @@ class SeoCampaign < ActiveRecord::Base
     Utilities.massage_timeline(raw_data, [:visits, :leads])
   end
 
-  def website_traffic_sources_graph(start_date = Date.today - 30.days, end_date = Date.today, height = 250, width = 750)
+  def website_traffic_sources_graph(start_date = Date.today - 1.month, end_date = Date.today, height = 250, width = 750)
     width = 1000 if width > 1000
     height = 300 if height > 300
     website = self.websites.first

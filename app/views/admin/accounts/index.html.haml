@@ -1,9 +1,13 @@
+%h3
+  = 'For ' + (Date.yesterday - 1.week).to_s + ' to ' + Date.yesterday.to_s
 %table{:class => "pretty"}
   %thead
     %tr
       %th ID
       %th Name
       %th Account Type
+      %th CTR
+      %th CPConv
       %th
   %tbody
     - @accounts.each do |account|
@@ -11,4 +15,81 @@
         %td= account.id
         %td= account.name
         %td= account.account_type
+        -@ctr = account.sem_click_through_rate_between(Date.yesterday - 1.week, Date.yesterday)
+        -if @ctr > 0.75
+          %td{:class => 'green-font'}= @ctr
+        -elsif @ctr.between?(0.5, 0.749999)
+          %td{:class => 'yellow-font'}= @ctr
+        -else
+          %td{:class => 'red-font'}= @ctr
+        -@cpconv = account.cost_per_lead_between(Date.yesterday - 1.week, Date.yesterday)
+        -if @cpconv > 75
+          %td{:class => 'red-font'}
+            = ActionController::Base.helpers.number_to_currency(@cpconv)
+        -elsif @cpconv.between?(35, 74.999)
+          %td{:class => 'yellow-font'}= ActionController::Base.helpers.number_to_currency(@cpconv)
+        -else
+          %td{:class => 'green-font'}= ActionController::Base.helpers.number_to_currency(@cpconv)
         %td= link_to 'Show', admin_account_path(account)
+
+/Weekly Performance Report
+%h3
+  Weekly Performance Report
+%table{:class => "pretty"}
+  %thead
+    %th
+      Client
+    %th
+      Clicks
+    %th
+      Impressions
+    %th
+      CTR
+    %th
+      CPC
+    %th
+      Avg Pos
+    %th
+      Forms
+    %th
+      Calls
+    %th
+      Total Leads
+    %th
+      Monthly Budget
+    %th
+      Monthly Spend
+    %th
+      Amount Spent
+    %th
+      Amount Remaining
+    %th
+      Conv Rate
+    %th
+      Cost/Conv
+  %tbody
+    - @accounts.each do |account|
+      - @total_cost_per_lead = account.cost_per_lead_between(Date.today - 1.week, Date.today)
+      - if @total_cost_per_lead.between?(35, 75)
+        %tr{ :class => cycle('odd', 'even')}
+      - elsif @total_cost_per_lead >= 75
+        %tr{ :class => cycle('odd', 'even')}
+      - else
+        %tr{ :class => cycle('odd', 'even')}
+      %td= account.name
+      %td= account.sem_clicks_between(Date.today - 1.week, Date.today)
+      %td= account.sem_impressions_between(Date.today - 1.week, Date.today)
+      %td= account.sem_click_through_rate_between(Date.today - 1.week, Date.today)
+      %td= account.sem_cost_per_click_between(Date.today - 1.week, Date.today)
+      %td= account.sem_average_position_between(Date.today - 1.week, Date.today)
+      %td= account.number_of_submissions_between(Date.today - 1.week, Date.today)
+      %td= account.number_of_lead_calls_between(Date.today - 1.week, Date.today)
+      %td= account.number_of_total_leads_between(Date.today - 1.week, Date.today)
+      %td= 0
+      %td= 0
+      %td= 0
+      %td= 0
+      %td= account.sem_impressions_between(Date.today - 1.week, Date.today)
+      %td= ActionController::Base.helpers.number_to_currency(account.cost_per_lead_between(Date.today - 1.week, Date.today))
+
+        

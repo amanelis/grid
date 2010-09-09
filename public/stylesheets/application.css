@@ -349,3 +349,27 @@ table.pretty .odd{
 table.pretty td.price {
   text-align: right;
 }
+
+table.pretty .green-back{
+  background-color: #339900 !important;
+}
+
+table.pretty .yellow-back{
+  background-color: #ffcc33 !important;
+}
+
+table.pretty .red-back{
+  background-color: #ff3300 !important;
+}
+
+table.pretty .green-font{
+  color: #339900 !important;
+}
+
+table.pretty .yellow-font{
+  color: #ffcc33 !important;
+}
+
+table.pretty .red-font{
+  color: #ff3300 !important;
+}

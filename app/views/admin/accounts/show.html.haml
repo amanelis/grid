@@ -23,7 +23,9 @@
       %th
         Total Leads
       %th
-        Spend
+        Cost
+      %th
+        Spend(Marked Up)
       %th
         Cost Per Lead
   %tbody
@@ -38,16 +40,21 @@
         %td
           = campaign.number_of_total_leads_between(Date.today - 1.week, Date.today).to_s
         %td
+          = ActionController::Base.helpers.number_to_currency(campaign.cost_between(Date.today - 1.week, Date.today))
+        %td
           = ActionController::Base.helpers.number_to_currency(campaign.spend_between(Date.today - 1.week, Date.today))
         %td
           = ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(Date.today - 1.week, Date.today))
         %td
           = link_to "Details", admin_campaign_path(campaign)
 
+
 /Begin Monthly Report
+-@month_start = (Date.today - 1.month).beginning_of_month
+-@month_end = (Date.today - 1.month).end_of_month
 -if @account.campaigns.present?
   %h3
-    = 'Last Month Report (' + (Date.today - 1.month).to_s + ' to ' + Date.today.to_s + ')'
+    = 'Last Month Report (' + @month_start.to_s + ' to ' + @month_end.to_s + ')'
   %table{:class => "pretty"}
     %thead
       %th
@@ -75,28 +82,29 @@
                   %td
                     = campaign.name
                   %td
-                    = campaign.number_of_lead_calls_between(Date.today - 1.month, Date.today).to_s
+                    = campaign.number_of_lead_calls_between(Date.today - 1.month, @month_end).to_s
                   %td
-                    = campaign.number_of_submissions_between(Date.today - 1.month, Date.today).to_s
+                    = campaign.number_of_submissions_between(Date.today - 1.month, @month_end).to_s
                   %td
-                    = campaign.number_of_total_leads_between(Date.today - 1.month, Date.today).to_s
+                    = campaign.number_of_total_leads_between(Date.today - 1.month, @month_end).to_s
                   %td
-                    = ActionController::Base.helpers.number_to_currency(campaign.spend_between(Date.today - 1.month, Date.today))
+                    = ActionController::Base.helpers.number_to_currency(campaign.spend_between(Date.today - 1.month, @month_end))
                   %td
-                    = ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(Date.today - 1.month, Date.today))
+                    = ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(Date.today - 1.month, @month_end))
             %tfoot
               %th
                 Totals
               %th
-                = @account.number_of_lead_calls_between(Date.today - 1.month, Date.today)
+                = @account.number_of_lead_calls_between(Date.today - 1.month, @month_end)
               %th
-                = @account.number_of_submissions_between(Date.today - 1.month, Date.today)
+                = @account.number_of_submissions_between(Date.today - 1.month, @month_end)
               %th
-                = @account.number_of_total_leads_between(Date.today - 1.month, Date.today)
+                = @account.number_of_total_leads_between(Date.today - 1.month, @month_end)
               %th
-                = ActionController::Base.helpers.number_to_currency(@account.spend_between(Date.today - 1.month, Date.today))
+                = ActionController::Base.helpers.number_to_currency(@account.spend_between(Date.today - 1.month, @month_end))
               %th
-                = ActionController::Base.helpers.number_to_currency(@account.cost_per_lead_between(Date.today - 1.month, Date.today))
+                = ActionController::Base.helpers.number_to_currency(@account.cost_per_lead_between(Date.today - 1.month, @month_end))
+
 
 /Begin PPC Summary Table
 -if @account.campaigns.sem.present?
@@ -155,6 +163,7 @@
                 = '%.2f' % @account.sem_average_position_between(Date.today - 1.month, Date.today).to_s
               %th
                 = ActionController::Base.helpers.number_to_currency(@account.sem_spend_between(Date.today - 1.month, Date.today))
+
 
 /Begin SEO Summary Table
 -if @account.campaigns.seo.present?
@@ -226,6 +235,7 @@
               %th
                 = ActionController::Base.helpers.number_to_currency(@account.seo_spend_between(Date.today - 1.month, Date.today))
 
+
 /Begin Maps Summary Table
 -if @account.campaigns.maps.present?
   %table{:class => "pretty"}
@@ -254,7 +264,9 @@
               %th
                 = @account.maps_number_of_visits_between(Date.today - 1.month, Date.today)
 
+
 /Begin of PPC Detailed Reports
+
 -if @account.campaigns.sem.present?
   -@account.campaigns.sem.each_index do |index|
     %table{:class => "pretty"}
@@ -306,8 +318,10 @@
             -if @keywords.blank? && @url_link.blank?
               .center
               There is currently no data for this report.
-              
+
+
 /Begin of SEO Detailed Reports
+
 -if @account.campaigns.seo.present?
   -@account.campaigns.seo.each_index do |index|
     %table{:class => "pretty"}
@@ -376,6 +390,7 @@
                         = ranking[6]
 
 
+
 /Begin of Map Detailed Reports
 -if @account.campaigns.maps.present?
   -@account.campaigns.maps.each do |campaign|
@@ -397,6 +412,7 @@
             -@clicks_link = campaign.campaign_style.google_map_website_clicks_graph
             -if @clicks_link.present?
               = link_to image_tag(campaign.campaign_style.google_map_website_clicks_graph, :alt => 'Click to View'), campaign.campaign_style.google_map_website_clicks_graph(300, 1000)
+
 
 /Begin of Calls Section
 -@account.campaigns.each do |campaign|
