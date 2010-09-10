@@ -97,7 +97,6 @@ class Campaign < ActiveRecord::Base
             new_google_maps_campaign.password = sf_campaign.maps_password__c
             new_maps_campaign.save!
             existing_campaign.save
-                        
           end
         end
       end

@@ -5,6 +5,7 @@ class SemCampaign < ActiveRecord::Base
 
   CAMPAIGN_REPORT_TYPE = "Campaign"
   AD_REPORT_TYPE = "Ad"
+  ALL_AD_REPORT_TYPE = "All Ad"
   GOOGLE_MAPS_API_KEY = 'ABQIAAAAzr2EBOXUKnm_jVnk0OJI7xSosDVG8KKPE1-m51RBrvYughuyMxQ-i1QfUnH94QxWIa6N4U6MouMmBA'
   CHART_COLORS = ["66ccff", "669966", "666666", "cc3366", "ff6633", "ffff33", "000000"]
 
@@ -35,10 +36,192 @@ class SemCampaign < ActiveRecord::Base
     job_status.finish_with_no_errors
   end
 
+  def self.create_all_ad_level_report_for_google(date)
+    report_exists = SemCampaignReportStatus.first(:conditions => ['pulled_on = ? AND report_type= ?', date.strftime('%m/%d/%Y'), ALL_AD_REPORT_TYPE])
+    new_report = SemCampaignReportStatus.new
+    new_report.result = 'Started'
 
-  # INSTANCE BEHAVIOR
+    if report_exists.blank?
+      puts 'Started all ad-level report the date ' + date.strftime('%m/%d/%Y') + ' at ' + Time.now.to_s
+      new_report.pulled_on = date.strftime("%m/%d/%Y")
+      new_report.provider = 'Google'
+      new_report.sem_campaign_id = 1
+      new_report.report_type = "Ad"
+      new_report.save
 
-  # campaign-level report
+      adwords = AdWords::API.new(AdWords::AdWordsCredentials.new({'developerToken' => 'HC3GEwJ4LqgyVNeNTenIVw', 'applicationToken' => '-o8E21xqBmVx7CkQ5TfAag', 'useragent' => 'Biz Search Local', 'password' => 'brayden11', 'email' => 'bizsearchlocal.jon@gmail.com', 'clientEmail' => 'bizsearchlocal.jon@gmail.com', 'environment' => 'PRODUCTION', }))
+      report_name = "Ad- " + self.name + date.year.to_s + "-" + date.month.to_s + "-" + date.day.to_s
+      report_srv = adwords.get_service('Report', 13)
+      job = report_srv.module::DefinedReportJob.new
+      job.selectedReportType = 'Creative'
+      job.aggregationTypes = 'Summary'
+      job.name = report_name
+      job.selectedColumns = %w{   AdWordsType SignupCount CostPerTransaction CostPerVideoPlayback ConversionRate CostPerConverstion CostPerVideoPlayback KeywordStatus KeywordTypeDisplay CreativeId AdGroup AdGroupId AdGroupMaxCpa AdGroupStatus AdStatus AverageConversionValue AveragePosition AvgPercentOfVideoPlayed BottomPosition BusinessAddress BusinessName CPC CPM CTR Campaign CampaignId CampaignStatus Clicks Conversions Cost DescriptionLine1 DescriptionLine2 DescriptionLine3 DestinationURL ExternalCustomerId KeywordMinCPC CreativeDestUrl CreativeType CustomerName CustomerTimeZone DailyBudget DefaultCount DefaultValue FirstPageCpc ImageAdName ImageHostingKey Impressions Keyword KeywordId KeywordDestUrlDisplay LeadCount LeadValue MaxContentCPC MaximumCPC MaximumCPM PageViewCount PageViewValue PhoneNo PreferredCPC PreferredCPM Preview QualityScore SalesCount SalesValue SignupValue TopPosition TotalConversionValue Transactions ValuePerClick ValuePerCost VideoPlaybackRate VideoPlaybacks VideoPlaybacksThrough100Percent VideoPlaybacksThrough75Percent VideoPlaybacksThrough50Percent VideoPlaybacksThrough25Percent VideoSkips VisibleUrl                                }
+      job.startDay = date.year.to_s + "-" + date.month.to_s + "-" + date.day.to_s
+      job.endDay = date.year.to_s + "-" + date.month.to_s + "-" + date.day.to_s
+      job.crossClient = true
+
+      begin
+        report_srv.validateReportJob(job)
+        job_id = report_srv.scheduleReportJob(job).scheduleReportJobReturn
+        #puts 'Scheduled report with id %d. Now sleeping %d seconds.' %[job_id, sleep_interval]
+        #sleep(20)
+        report = Nokogiri::XML(report_srv.downloadXmlReport(job_id))
+        rows = report.xpath("//row")
+        if rows.present?
+          rows.each do |row|            
+            begin
+              #Add or Update the Client
+              client = AdwordsClient.find_by_name(row['acctname'])
+              if client.blank?
+                client = AdwordsClient.new
+                #client.account_id = self.campaign.account.id
+                client.name = row['acctname']
+              end
+              client.timezone = row['timezone']
+              client.reference_id = row['customerid']
+              client.save
+
+              #Add or Update the Campaign
+              sem_campaign = GoogleSemCampaign.find_by_reference_id(row['campaignid'])
+              #
+              # I think the problem is here.
+              #
+
+
+              sem_campaign.name = row['campaign']
+              sem_campaign.status = row['campStatus']
+              sem_campaign.campaign_type = row['adwordsType']
+              sem_campaign.save
+
+              #Add or Update the Ad Group
+              adgroup = AdwordsAdGroup.find_by_reference_id(row["adgroupid"])
+              if adgroup.blank?
+                adgroup = AdwordsAdGroup.new
+                adgroup.google_sem_campaign_id = sem_campaign.id
+                adgroup.reference_id = row["adgroupid"]
+              end
+              adgroup.status = row["agStatus"]
+              adgroup.save
+
+              #Add or Update the Keyword
+              keyword = AdwordsKeyword.find_by_reference_id(row["keywordid"])
+              if keyword.blank?
+                keyword = AdwordsKeyword.new
+                keyword.adwords_ad_group_id = adgroup.id
+                keyword.reference_id = row["keywordid"]
+              end
+              keyword.descriptor = row["keyword"]
+              keyword.dest_url = row["kwDestUrl"]
+              keyword.status = row["kwStatus"]
+              keyword.keyword_type = row["kwType"]
+              keyword.save
+
+              #Add or Update the Ad
+              ad = AdwordsAd.find_by_reference_id(row["creativeid"])
+              if ad.blank?
+                ad = AdwordsAd.new
+                ad.adwords_ad_group_id = adgroup.id
+                ad.reference_id = row["creativeid"]
+              end
+              ad.status = row["creativeStatus"]
+              ad.dest_url = row["creativeDestUrl"]
+              ad.creative_type = row["creativeType"]
+              ad.headline = row["headline"]
+              ad.desc1 = row["desc1"]
+              ad.desc2 = row["desc2"]
+              ad.dest_url = row["destUrl"]
+              ad.img_name = row["imgCreativeName"]
+              ad.hosting_key = row["hostingKey"]
+              ad.preview = row["preview"]
+              ad.vis_url = row["creativeVisUrl"]
+              ad.save
+
+              #Add the Ad Summary
+              adword = AdwordsAdSummary.find_by_adwords_ad_id_and_summary_date(ad.id, date)
+              if adword.blank?
+                adword = AdwordsAdSummary.new
+                adword.adwords_ad_id = ad.id
+                adword.summary_date = date
+              end
+              adword.conv = row["conv"]
+              adword.cost = row["cost"]
+              adword.budget = row["budget"]
+              adword.default_conv = row["defaultConv"]
+              adword.default_conv_value = row["defaultConvValue"]
+              adword.first_page_cpc = row["firstPageCpc"]
+              adword.imps = row["imps"]
+              adword.leads = row["leads"]
+              adword.lead_value = row["leadValue"]
+              adword.max_content_cpc = row["maxContentCpc"]
+              adword.max_cpc = row["maxCpc"]
+              adword.max_cpm = row["maxCpm"]
+              adword.page_views = row["pageviews"]
+              adword.page_view_value = row["pageviewValue"]
+              adword.ag_max_cpa = row["agMaxCpa"]
+              adword.avg_conv_value = row["avgConvValue"]
+              adword.pos = row["pos"]
+              adword.avg_percent_played = row["avgPercentPlayed"]
+              adword.bottom_position = row["bottomPosition"]
+              adword.cpc = row["cpc"]
+              adword.cpm = row["cpm"]
+              adword.ctr = row["ctr"]
+              adword.quality_score = row["qualityScore"]
+              adword.purchases = row["conv"]
+              adword.purchase_value = row["purchaseValue"]
+              adword.sign_ups = row["signups"]
+              adword.sign_up_value = row["signupValue"]
+              adword.top_position = row["topPosition"]
+              adword.conv_value = row["convValue"]
+              adword.transactions = row["transactions"]
+              adword.conv_vpc = row["convVpc"]
+              adword.value_cost_ratio = row["valueCostRatio"]
+              adword.video_playbacks = row["videoPlaybacks"]
+              adword.video_playbacks_through_100_percent = row["videoPlaybacksThrough100Percent"]
+              adword.video_playbacks_through_75_percent = row["videoPlaybacksThrough75Percent"]
+              adword.video_playbacks_through_50_percent = row["videoPlaybacksThrough50Percent"]
+              adword.video_playbacks_through_25_percent = row["videoPlaybacksThrough25Percent"]
+              adword.video_skips = row["videoSkips"]
+              adword.keyword_min_cpc = row["keywordMinCpc"]
+              adword.cpt = row["cpt"]
+              adword.cost_per_video_playback = row["costPerVideoPlayback"]
+              adword.conv_rate = row["convRate"]
+              adword.cost_per_conv = row["costPerConv"]
+              adword.clicks = row["clicks"]
+              adword.save
+
+            rescue => e
+              new_report.result = "Error Occurred"
+              new_report.save
+              puts "Error updating ad-level report: #{ e }"
+              next
+            end
+          end
+        end
+      rescue AdWords::Error::Error => e
+        new_report.result = "Error Occurred"
+        new_report.save
+        puts "Error updating ad-level report: #{ e }"
+      end
+
+      if new_report.result == 'Started'
+        new_report.job_id = job_id
+        new_report.result = 'Completed'
+        new_report.save
+        puts 'Completed adding ad-level report at ' + Time.now.to_s
+      else
+        SemCampaignReportStatus.delete(new_report.id)
+        puts 'Completed with error(s) updating ad-level report at ' + Time.now.to_s
+      end
+
+    elsif report_exists.result == "Started" && report_exists.created_at < (Date.yesterday)
+      SemCampaignReportStatus.delete(report_exists.id)
+    end
+  end
+
+# INSTANCE BEHAVIOR
+
+# campaign-level report
 
   def create_campaign_level_sem_campaign_report_for_google(date)
     campaign_array = self.google_sem_campaigns.collect { |google_sem_campaign| google_sem_campaign.reference_id }
@@ -62,7 +245,7 @@ class SemCampaign < ActiveRecord::Base
           job.selectedReportType = 'Campaign'
           job.aggregationTypes = 'Summary'
           job.name = report_name
-          job.selectedColumns = %w{                              Campaign CampaignId AdWordsType AveragePosition CPC CPM CTR CampaignStatus Clicks Conversions Cost ExternalCustomerId CustomerName CustomerTimeZone DailyBudget Impressions exactMatchImpShare impShare lostImpShareBudget lostImpShareRank                              }
+          job.selectedColumns = %w{                                Campaign CampaignId AdWordsType AveragePosition CPC CPM CTR CampaignStatus Clicks Conversions Cost ExternalCustomerId CustomerName CustomerTimeZone DailyBudget Impressions exactMatchImpShare impShare lostImpShareBudget lostImpShareRank                                }
           job.startDay = date.year.to_s + '-' + date.month.to_s + '-' + date.day.to_s
           job.endDay = date.year.to_s + '-' + date.month.to_s + '-' + date.day.to_s
           job.crossClient = true
@@ -187,7 +370,7 @@ class SemCampaign < ActiveRecord::Base
     end
   end
 
-  # ad-level report
+# ad-level report
 
   def create_ad_level_sem_campaign_report_for_google(date)
     campaign_array = self.google_sem_campaigns.collect { |google_sem_campaign| google_sem_campaign.reference_id }
@@ -204,14 +387,14 @@ class SemCampaign < ActiveRecord::Base
         new_report.report_type = "Ad"
         new_report.save
 
-        adwords = AdWords::API.new(AdWords::AdWordsCredentials.new({'developerToken' => self.developer_token, 'applicationToken' => self.application_token, 'useragent' => self.user_agent, 'password' => self.password, 'email' => self.email, 'clientEmail' => self.client_email, 'environment' => 'PRODUCTION', }))
+        adwords = AdWords::API.new(AdWords::AdWordsCredentials.new({'developerToken' => campaign.developer_token, 'applicationToken' => campaign.application_token, 'useragent' => campaign.user_agent, 'password' => campaign.password, 'email' => campaign.email, 'clientEmail' => campaign.client_email, 'environment' => 'PRODUCTION', }))
         report_name = "Ad- " + self.name + date.year.to_s + "-" + date.month.to_s + "-" + date.day.to_s
         report_srv = adwords.get_service('Report', 13)
         job = report_srv.module::DefinedReportJob.new
         job.selectedReportType = 'Creative'
         job.aggregationTypes = 'Summary'
         job.name = report_name
-        job.selectedColumns = %w{ AdWordsType SignupCount CostPerTransaction CostPerVideoPlayback ConversionRate CostPerConverstion CostPerVideoPlayback KeywordStatus KeywordTypeDisplay CreativeId AdGroup AdGroupId AdGroupMaxCpa AdGroupStatus AdStatus AverageConversionValue AveragePosition AvgPercentOfVideoPlayed BottomPosition BusinessAddress BusinessName CPC CPM CTR Campaign CampaignId CampaignStatus Clicks Conversions Cost DescriptionLine1 DescriptionLine2 DescriptionLine3 DestinationURL ExternalCustomerId KeywordMinCPC CreativeDestUrl CreativeType CustomerName CustomerTimeZone DailyBudget DefaultCount DefaultValue FirstPageCpc ImageAdName ImageHostingKey Impressions Keyword KeywordId KeywordDestUrlDisplay LeadCount LeadValue MaxContentCPC MaximumCPC MaximumCPM PageViewCount PageViewValue PhoneNo PreferredCPC PreferredCPM Preview QualityScore SalesCount SalesValue SignupValue TopPosition TotalConversionValue Transactions ValuePerClick ValuePerCost VideoPlaybackRate VideoPlaybacks VideoPlaybacksThrough100Percent VideoPlaybacksThrough75Percent VideoPlaybacksThrough50Percent VideoPlaybacksThrough25Percent VideoSkips VisibleUrl                              }
+        job.selectedColumns = %w{   AdWordsType SignupCount CostPerTransaction CostPerVideoPlayback ConversionRate CostPerConverstion CostPerVideoPlayback KeywordStatus KeywordTypeDisplay CreativeId AdGroup AdGroupId AdGroupMaxCpa AdGroupStatus AdStatus AverageConversionValue AveragePosition AvgPercentOfVideoPlayed BottomPosition BusinessAddress BusinessName CPC CPM CTR Campaign CampaignId CampaignStatus Clicks Conversions Cost DescriptionLine1 DescriptionLine2 DescriptionLine3 DestinationURL ExternalCustomerId KeywordMinCPC CreativeDestUrl CreativeType CustomerName CustomerTimeZone DailyBudget DefaultCount DefaultValue FirstPageCpc ImageAdName ImageHostingKey Impressions Keyword KeywordId KeywordDestUrlDisplay LeadCount LeadValue MaxContentCPC MaximumCPC MaximumCPM PageViewCount PageViewValue PhoneNo PreferredCPC PreferredCPM Preview QualityScore SalesCount SalesValue SignupValue TopPosition TotalConversionValue Transactions ValuePerClick ValuePerCost VideoPlaybackRate VideoPlaybacks VideoPlaybacksThrough100Percent VideoPlaybacksThrough75Percent VideoPlaybacksThrough50Percent VideoPlaybacksThrough25Percent VideoSkips VisibleUrl                                }
         job.startDay = date.year.to_s + "-" + date.month.to_s + "-" + date.day.to_s
         job.endDay = date.year.to_s + "-" + date.month.to_s + "-" + date.day.to_s
         job.crossClient = true
