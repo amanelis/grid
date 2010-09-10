@@ -53,6 +53,7 @@ class Campaign < ActiveRecord::Base
             new_sem_campaign.environment = 'PRODUCTION'
             new_sem_campaign.save!
             existing_campaign.save
+
           elsif sf_campaign.campaign_type__c.include? 'SEO'
             sf_account = Salesforce::Account.find(account.salesforce_id)
             if existing_campaign.blank?
