@@ -63,7 +63,7 @@ class SemCampaign < ActiveRecord::Base
       job.endDay = date.year.to_s + "-" + date.month.to_s + "-" + date.day.to_s
       job.crossClient = true
 
-      cityvoice_campaign = Campaign.find_by_name('CityVoice SEM Orphaned Campaigns')
+      cityvoice_sem_campaign = Campaign.find_by_name('CityVoice SEM Orphaned Campaigns').campaign_style
       begin
         report_srv.validateReportJob(job)
         job_id = report_srv.scheduleReportJob(job).scheduleReportJobReturn
@@ -75,35 +75,26 @@ class SemCampaign < ActiveRecord::Base
           rows.each do |row|            
             begin
 
-              sem_campaign = GoogleSemCampaign.find_by_reference_id(row['campaignid'])
-              if sem_campaign.blank?
-
-                cityvoice_campaign    
+              google_sem_campaign = GoogleSemCampaign.find_by_reference_id(row['campaignid'])
+              if google_sem_campaign.blank?
+                google_sem_campaign = cityvoice_sem_campaign.google_sem_campaigns.build
+                google_sem_campaign.reference_id = row['campaignid']
               else
-
+                #Add or Update the Client
+                client = AdwordsClient.find_by_name(row['acctname'])
+                if client.blank?
+                  client = AdwordsClient.new
+                  Client.account_id = google_sem_campaign.account.id
+                  client.name = row['acctname']
+                end
+                client.timezone = row['timezone']
+                client.reference_id = row['customerid']
+                client.save
               end
-
-              sem_campaign.name = row['campaign']
-              sem_campaign.status = row['campStatus']
-              sem_campaign.campaign_type = row['adwordsType']
-              sem_campaign.save
-
-              #Add or Update the Client
-              client = AdwordsClient.find_by_name(row['acctname'])
-              if client.blank?
-                client = AdwordsClient.new
-                #client.account_id = self.campaign.account.id
-                client.name = row['acctname']
-              end
-              client.timezone = row['timezone']
-              client.reference_id = row['customerid']
-              client.save
-
-              #Add or Update the Campaign
-              sem_campaign = GoogleSemCampaign.find_by_reference_id(row['campaignid'])
-              #
-              # I think the problem is here.
-              #
+              google_sem_campaign.name = row['campaign']
+              google_sem_campaign.status = row['campStatus']
+              google_sem_campaign.campaign_type = row['adwordsType']
+              google_sem_campaign.save
 
 
 
@@ -111,7 +102,7 @@ class SemCampaign < ActiveRecord::Base
               adgroup = AdwordsAdGroup.find_by_reference_id(row["adgroupid"])
               if adgroup.blank?
                 adgroup = AdwordsAdGroup.new
-                adgroup.google_sem_campaign_id = sem_campaign.id
+                adgroup.google_sem_campaign_id = google_sem_campaign.id
                 adgroup.reference_id = row["adgroupid"]
               end
               adgroup.status = row["agStatus"]
@@ -618,7 +609,7 @@ class SemCampaign < ActiveRecord::Base
   end
 
   def percentage_spent_this_month()
-    ( budget = self.budget)  > 0 ? self.spend_between(Date.today.beginning_of_month, Date.today.end_of_month) / budget : 0
+    ( budget = self.monthly_budget).present? && ( budget = self.monthly_budget)  > 0 ? (self.spend_between(Date.today.beginning_of_month, Date.today.end_of_month) / budget.to_f) * 100 : 0
   end
 
 end
