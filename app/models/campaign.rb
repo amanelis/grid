@@ -57,7 +57,7 @@ class Campaign < ActiveRecord::Base
               if google_sem_campaign.blank?
                 new_google_sem_campaign = new_sem_campaign.google_sem_campaigns.build
                 new_google_sem_campaign.reference_id = google_id.gsub(' ', '')
-              elsif google_sem_campaign.sem_campaign.campaign.name == 'CityVoice SEM Orphaned Campaigns'
+              elsif google_sem_campaign.sem_campaign.name == 'CityVoice SEM Orphaned Campaigns'
                 google_sem_campaign.sem_campaign_id = new_sem_campaign.id
                 google_sem_campaign.save
               end

@@ -63,6 +63,7 @@ class SemCampaign < ActiveRecord::Base
       job.endDay = date.year.to_s + "-" + date.month.to_s + "-" + date.day.to_s
       job.crossClient = true
 
+      cityvoice_campaign = Campaign.find_by_name('CityVoice SEM Orphaned Campaigns')
       begin
         report_srv.validateReportJob(job)
         job_id = report_srv.scheduleReportJob(job).scheduleReportJobReturn
@@ -76,12 +77,13 @@ class SemCampaign < ActiveRecord::Base
 
               sem_campaign = GoogleSemCampaign.find_by_reference_id(row['campaignid'])
               if sem_campaign.blank?
-                
+
+                cityvoice_campaign    
               else
 
               end
 
-              em_campaign.name = row['campaign']
+              sem_campaign.name = row['campaign']
               sem_campaign.status = row['campStatus']
               sem_campaign.campaign_type = row['adwordsType']
               sem_campaign.save
@@ -104,7 +106,6 @@ class SemCampaign < ActiveRecord::Base
               #
 
 
-              s
 
               #Add or Update the Ad Group
               adgroup = AdwordsAdGroup.find_by_reference_id(row["adgroupid"])
