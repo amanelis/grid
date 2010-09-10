@@ -279,4 +279,23 @@ class Campaign < ActiveRecord::Base
     self.industries.each { |industry| industry.campaigns.delete(self) }
   end
 
+
+  # PREDICATES
+
+  def is_seo?
+    self.campaign_style.instance_of?(SeoCampaign)
+  end
+
+  def is_sem?
+    self.campaign_style.instance_of?(SemCampaign)
+  end
+
+  def is_maps?
+    self.campaign_style.instance_of?(MapsCampaign)
+  end
+
+  def is_other?
+    self.campaign_style.instance_of?(OtherCampaign)
+  end
+
 end
