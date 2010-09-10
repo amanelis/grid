@@ -76,9 +76,15 @@ class Account < ActiveRecord::Base
     job_status.finish_with_no_errors
   end
 
+  #def self.combined_timeline_data
+  #  raw_data = Utilities.merge_and_sum_timeline_data(Account.all.collect { |account| account.number_of_visits_by_date }, :visits)
+  #  Utilities.massage_timeline(raw_data, [:visits])
+  #end
+
   def self.combined_timeline_data
-    raw_data = Utilities.merge_and_sum_timeline_data(Account.all.collect { |account| account.number_of_visits_by_date }, :visits)
-    Utilities.massage_timeline(raw_data, [:visits])
+    raw_data = Utilities.merge_and_sum_timeline_data(Account.all.collect { |account| account.number_of_leads_by_date }, :leads)
+    raw_data2 = Utilities.merge_and_sum_timeline_data(Account.all.collect { |account| account.number_of_visits_by_date }, :visits)
+    Utilities.massage_timeline(raw_data, [:leads])
   end
 
   # INSTANCE BEHAVIOR
@@ -126,7 +132,7 @@ class Account < ActiveRecord::Base
   end
 
   def sem_click_through_rate_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    (count = self.campaigns.sem.count) > 0 ? self.campaigns.sem.to_a.sum { |campaign| campaign.campaign_style.click_through_rate_between(start_date, end_date) } / count : 0.0
+    (impressions = self.campaigns.sem.to_a.sum { |campaign| campaign.campaign_style.impressions_between(start_date, end_date) }) > 0 ? self.campaigns.sem.to_a.sum { |campaign| campaign.campaign_style.clicks_between(start_date, end_date) } / impressions : 0.0
   end
 
   def sem_average_position_between(start_date = Date.yesterday, end_date = Date.yesterday)
