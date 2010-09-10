@@ -389,7 +389,7 @@ class SemCampaign < ActiveRecord::Base
   end
 
   def click_through_rate_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    (impressions = self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.impressions_between(start_date, end_date) }) > 0 ? (self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.clicks_between(start_date, end_date) })/impressions : 0.0
+    (impressions = self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.impressions_between(start_date, end_date) }) > 0 ? (self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.clicks_between(start_date, end_date) })/impressions.to_f : 0.0
   end
 
   def average_position_between(start_date = Date.yesterday, end_date = Date.yesterday)

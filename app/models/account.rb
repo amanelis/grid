@@ -83,11 +83,10 @@ class Account < ActiveRecord::Base
 
   def self.combined_timeline_data
     raw_data = Utilities.merge_and_sum_timeline_data(Account.all.collect { |account| account.number_of_leads_by_date }, :leads)
-    raw_data2 = Utilities.merge_and_sum_timeline_data(Account.all.collect { |account| account.number_of_visits_by_date }, :visits)
+    #raw_data2 = Utilities.merge_and_sum_timeline_data(Account.all.collect { |account| account.number_of_visits_by_date }, :visits)
     Utilities.massage_timeline(raw_data, [:leads])
   end
-
-  # INSTANCE BEHAVIOR
+   # INSTANCE BEHAVIOR
 
   def number_of_visits_by_date
     Utilities.merge_and_sum_timeline_data(self.campaigns.collect { |campaign| campaign.campaign_style.number_of_visits_by_date }, :visits)
@@ -103,10 +102,10 @@ class Account < ActiveRecord::Base
   #end
   
   def combined_timeline_data
-    raw_data = self.number_of_leads_by_date
-    Utilities.massage_timeline(raw_data, [:leads])
+    raw_data = Utilities.merge_timeline_data(self.number_of_leads_by_date, self.number_of_visits_by_date)
+    Utilities.massage_timeline(raw_data, [:leads, :visits])
   end
-
+   
   def campaign_seo_combined_timeline_data
     self.campaigns.seo.collect {|campaign| campaign.campaign_style.combined_timeline_data}
   end
@@ -132,7 +131,7 @@ class Account < ActiveRecord::Base
   end
 
   def sem_click_through_rate_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    (impressions = self.campaigns.sem.to_a.sum { |campaign| campaign.campaign_style.impressions_between(start_date, end_date) }) > 0 ? self.campaigns.sem.to_a.sum { |campaign| campaign.campaign_style.clicks_between(start_date, end_date) } / impressions : 0.0
+    (impressions = self.campaigns.sem.to_a.sum { |campaign| campaign.campaign_style.impressions_between(start_date, end_date) }) > 0 ? self.campaigns.sem.to_a.sum { |campaign| campaign.campaign_style.clicks_between(start_date, end_date) } / impressions.to_f : 0.0
   end
 
   def sem_average_position_between(start_date = Date.yesterday, end_date = Date.yesterday)
