@@ -73,6 +73,11 @@ class SemCampaign < ActiveRecord::Base
         if rows.present?
           rows.each do |row|            
             begin
+
+              sem_campaign = GoogleSemCampaign.find_by_reference_id(row['campaignid'])
+              if sem_campaign.blank?
+                
+              end
               #Add or Update the Client
               client = AdwordsClient.find_by_name(row['acctname'])
               if client.blank?
@@ -604,6 +609,10 @@ class SemCampaign < ActiveRecord::Base
       data[visit] = self.campaign.calls.snapshot(visit.time_of_visit, 60)
     end
     data
+  end
+
+  def percentage_spent_this_month()
+    ( budget = self.budget)  > 0 ? self.spend_between(Date.today.beginning_of_month, Date.today.end_of_month) / budget : 0
   end
 
 end

@@ -31,14 +31,11 @@ class Campaign < ActiveRecord::Base
               existing_campaign = new_sem_campaign.build_campaign
               existing_campaign.account_id = account.id
               existing_campaign.salesforce_id = sf_campaign.id
-              google_ids = sf_campaign.google_campaign_id__c.present? ? sf_campaign.google_campaign_id__c.split(',') : ''
-              google_ids.each do |google_id|
-                new_google_sem_campaign = new_sem_campaign.google_sem_campaigns.build
-                new_google_sem_campaign.reference_id = google_id.gsub(' ', '')
-              end
+
             else
               new_sem_campaign = existing_campaign.campaign_style
             end
+
             existing_campaign.status = sf_campaign.status__c
             existing_campaign.name = sf_campaign.name
             existing_campaign.zip_code = sf_campaign.zip_code__c
@@ -53,6 +50,18 @@ class Campaign < ActiveRecord::Base
             new_sem_campaign.environment = 'PRODUCTION'
             new_sem_campaign.save!
             existing_campaign.save
+
+            google_ids = sf_campaign.google_campaign_id__c.present? ? sf_campaign.google_campaign_id__c.split(',') : ''
+            google_ids.each do |google_id|
+              google_sem_campaign = GoogleSemCampaign.find_by_reference_id(google_id)
+              if google_sem_campaign.blank?
+                new_google_sem_campaign = new_sem_campaign.google_sem_campaigns.build
+                new_google_sem_campaign.reference_id = google_id.gsub(' ', '')
+              elsif google_sem_campaign.sem_campaign_id == 424
+                google_sem_campaign.sem_campaign_id = new_sem_campaign.id
+                google_sem_campaign.save
+              end
+            end
 
           elsif sf_campaign.campaign_type__c.include? 'SEO'
             sf_account = Salesforce::Account.find(account.salesforce_id)
