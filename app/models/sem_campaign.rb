@@ -77,7 +77,15 @@ class SemCampaign < ActiveRecord::Base
               sem_campaign = GoogleSemCampaign.find_by_reference_id(row['campaignid'])
               if sem_campaign.blank?
                 
+              else
+
               end
+
+              em_campaign.name = row['campaign']
+              sem_campaign.status = row['campStatus']
+              sem_campaign.campaign_type = row['adwordsType']
+              sem_campaign.save
+
               #Add or Update the Client
               client = AdwordsClient.find_by_name(row['acctname'])
               if client.blank?
@@ -96,10 +104,7 @@ class SemCampaign < ActiveRecord::Base
               #
 
 
-              sem_campaign.name = row['campaign']
-              sem_campaign.status = row['campStatus']
-              sem_campaign.campaign_type = row['adwordsType']
-              sem_campaign.save
+              s
 
               #Add or Update the Ad Group
               adgroup = AdwordsAdGroup.find_by_reference_id(row["adgroupid"])
