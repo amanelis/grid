@@ -17,6 +17,7 @@ class SemCampaign < ActiveRecord::Base
     begin
       #pull the days report and save each
       SemCampaign.all.each { |sem_campaign| (hard_update ? 30 : 7).downto(1) { |days| sem_campaign.create_campaign_level_sem_campaign_report_for_google(date - days) } }
+#      SemCampaign.all.each { |sem_campaign| (hard_update ? 30 : 7).downto(1) { |days| sem_campaign.send_later(:create_campaign_level_sem_campaign_report_for_google, date - days) } }
     rescue Exception => ex
       job_status.finish_with_errors(ex)
       raise
@@ -29,6 +30,7 @@ class SemCampaign < ActiveRecord::Base
     begin
       #pull the days report and save each
       SemCampaign.all.each { |sem_campaign| (hard_update ? 30 : 7).downto(1) { |days| sem_campaign.create_ad_level_sem_campaign_report_for_google(date - days) } }
+#      SemCampaign.all.each { |sem_campaign| (hard_update ? 30 : 7).downto(1) { |days| sem_campaign.send_later(:create_ad_level_sem_campaign_report_for_google, date - days) } }
     rescue Exception => ex
       job_status.finish_with_errors(ex)
       raise
@@ -224,13 +226,13 @@ class SemCampaign < ActiveRecord::Base
 # campaign-level report
 
   def create_campaign_level_sem_campaign_report_for_google(date)
-    campaign_array = self.google_sem_campaigns.collect { |google_sem_campaign| google_sem_campaign.reference_id }
-    report_exists = SemCampaignReportStatus.first(:conditions => ['pulled_on = ? AND report_type= ? AND sem_campaign_id = ?', date.strftime('%m/%d/%Y'), CAMPAIGN_REPORT_TYPE, self.id])
-    new_report = SemCampaignReportStatus.new
-    new_report.result = 'Started'
+    existing_report = SemCampaignReportStatus.first(:conditions => ['pulled_on = ? AND report_type= ? AND sem_campaign_id = ?', date.strftime('%m/%d/%Y'), CAMPAIGN_REPORT_TYPE, self.id])
 
-    if report_exists.blank?
+    if existing_report.blank?
+      campaign_array = self.google_sem_campaigns.collect { |google_sem_campaign| google_sem_campaign.reference_id }
       if campaign_array.present?
+        new_report = SemCampaignReportStatus.new
+        new_report.result = 'Started'
         puts 'Started campaign-level report for: ' + self.name + ' for the date ' + date.strftime('%m/%d/%Y') + ' at ' + Time.now.to_s
         new_report.sem_campaign_id = self.id
         new_report.pulled_on = date.strftime('%m/%d/%Y')
@@ -250,6 +252,7 @@ class SemCampaign < ActiveRecord::Base
           job.endDay = date.year.to_s + '-' + date.month.to_s + '-' + date.day.to_s
           job.crossClient = true
           job.campaigns = campaign_array
+
           puts 'Started report_srv.validateReportJob(job)'
           time1 = Time.now
           report_srv.validateReportJob(job)
@@ -288,7 +291,7 @@ class SemCampaign < ActiveRecord::Base
 
           puts 'Started Loop of Rows'
           time11 = Time.now
-          if rows.size < (job.campaigns.size + 5)
+          if rows.present?
             rows.each do |row|
               begin
                 #Add or Update the Client
@@ -332,11 +335,10 @@ class SemCampaign < ActiveRecord::Base
                 adwords_campaign_summary.lost_imp_share_rank = row['lostImpShareRank']
                 adwords_campaign_summary.clicks = row['clicks']
                 adwords_campaign_summary.save
-
               rescue => e
                 new_report.result = 'Error Occurred'
                 new_report.save
-                puts "Error updating ad-level report: #{ e }"
+                puts "Error updating campaign-level report: #{ e }"
                 next
               end
             end
@@ -344,14 +346,11 @@ class SemCampaign < ActiveRecord::Base
           puts 'Ended Loop of Rows'
           time12 = Time.now
           puts "Time to run: #{time12 - time11} seconds"
-
-
         rescue AdWords::Error::Error => e
           new_report.result = 'Error Occurred'
           new_report.save
-          puts "Error updating ad-level report: #{ e }"
+          puts "Error updating campaign-level report: #{ e }"
         end
-
         if new_report.result == 'Started'
           new_report.job_id = job_id
           new_report.result = 'Completed'
@@ -361,25 +360,24 @@ class SemCampaign < ActiveRecord::Base
           SemCampaignReportStatus.delete(new_report.id)
           puts 'Completed with error(s) updating campaign-level report at ' + Time.now.to_s
         end
-
       else
         puts 'No campaign-level report found for: ' + self.name + ' for the date ' + date.strftime('%m/%d/%Y') + ' at ' + Time.now.to_s
       end
-    elsif report_exists.result == 'Started' && report_exists.created_at < (Date.yesterday)
-      SemCampaignReportStatus.delete(report_exists.id)
+    elsif existing_report.result == 'Started' && existing_report.created_at < (Date.yesterday)
+      SemCampaignReportStatus.delete(existing_report.id)
     end
   end
 
 # ad-level report
 
   def create_ad_level_sem_campaign_report_for_google(date)
-    campaign_array = self.google_sem_campaigns.collect { |google_sem_campaign| google_sem_campaign.reference_id }
-    report_exists = SemCampaignReportStatus.first(:conditions => ['pulled_on = ? AND report_type= ? AND sem_campaign_id = ?', date.strftime('%m/%d/%Y'), AD_REPORT_TYPE, self.id])
-    new_report = SemCampaignReportStatus.new
-    new_report.result = 'Started'
+    existing_report = SemCampaignReportStatus.first(:conditions => ['pulled_on = ? AND report_type= ? AND sem_campaign_id = ?', date.strftime('%m/%d/%Y'), AD_REPORT_TYPE, self.id])
 
-    if report_exists.blank?
+    if existing_report.blank?
+      campaign_array = self.google_sem_campaigns.collect { |google_sem_campaign| google_sem_campaign.reference_id }
       if campaign_array.present?
+        new_report = SemCampaignReportStatus.new
+        new_report.result = 'Started'
         puts 'Started ad-level report for: ' + self.name + ' for the date ' + date.strftime('%m/%d/%Y') + ' at ' + Time.now.to_s
         new_report.sem_campaign_id = self.id
         new_report.pulled_on = date.strftime("%m/%d/%Y")
@@ -407,7 +405,7 @@ class SemCampaign < ActiveRecord::Base
           #sleep(20)
           report = Nokogiri::XML(report_srv.downloadXmlReport(job_id))
           rows = report.xpath("//row")
-          if rows.size < (job.campaigns.size + 5)
+          if rows.present?
             rows.each do |row|
               begin
                 #Add or Update the Client
@@ -537,7 +535,6 @@ class SemCampaign < ActiveRecord::Base
           new_report.save
           puts "Error updating ad-level report: #{ e }"
         end
-
         if new_report.result == 'Started'
           new_report.job_id = job_id
           new_report.result = 'Completed'
@@ -550,8 +547,8 @@ class SemCampaign < ActiveRecord::Base
       else
         puts 'No ad-level report found for: ' + self.name + ' for the date ' + date.strftime('%m/%d/%Y') + ' at ' + Time.now.to_s
       end
-    elsif report_exists.result == "Started" && report_exists.created_at < (Date.yesterday)
-      SemCampaignReportStatus.delete(report_exists.id)
+    elsif existing_report.result == "Started" && existing_report.created_at < (Date.yesterday)
+      SemCampaignReportStatus.delete(existing_report.id)
     end
   end
 
