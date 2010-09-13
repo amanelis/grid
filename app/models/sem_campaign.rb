@@ -16,8 +16,7 @@ class SemCampaign < ActiveRecord::Base
     job_status = JobStatus.create(:name => "SemCampaign.update_sem_campaign_reports_by_campaign")
     begin
       #pull the days report and save each
-      SemCampaign.all.each { |sem_campaign| (hard_update ? 30 : 7).downto(1) { |days| sem_campaign.create_campaign_level_sem_campaign_report_for_google(date - days) } }
-#      SemCampaign.all.each { |sem_campaign| (hard_update ? 30 : 7).downto(1) { |days| sem_campaign.send_later(:create_campaign_level_sem_campaign_report_for_google, date - days) } }
+      SemCampaign.all.each { |sem_campaign| (hard_update ? 30 : 6).downto(0) { |days| sem_campaign.create_campaign_level_sem_campaign_report_for_google(date - days) } }
     rescue Exception => ex
       job_status.finish_with_errors(ex)
       raise
@@ -29,8 +28,7 @@ class SemCampaign < ActiveRecord::Base
     job_status = JobStatus.create(:name => "SemCampaign.update_sem_campaign_reports_by_ad")
     begin
       #pull the days report and save each
-      SemCampaign.all.each { |sem_campaign| (hard_update ? 30 : 7).downto(1) { |days| sem_campaign.create_ad_level_sem_campaign_report_for_google(date - days) } }
-#      SemCampaign.all.each { |sem_campaign| (hard_update ? 30 : 7).downto(1) { |days| sem_campaign.send_later(:create_ad_level_sem_campaign_report_for_google, date - days) } }
+      (hard_update ? 30 : 6).downto(0) { |days| self.create_all_ad_level_report_for_google(date - days) }
     rescue Exception => ex
       job_status.finish_with_errors(ex)
       raise
@@ -38,7 +36,7 @@ class SemCampaign < ActiveRecord::Base
     job_status.finish_with_no_errors
   end
 
-  def self.create_all_ad_level_report_for_google(date)
+  def self.create_all_ad_level_report_for_google(date = Date.yesterday)
     report_exists = SemCampaignReportStatus.first(:conditions => ['pulled_on = ? AND report_type= ?', date.strftime('%m/%d/%Y'), ALL_AD_REPORT_TYPE])
     new_report = SemCampaignReportStatus.new
     new_report.result = 'Started'
@@ -72,7 +70,7 @@ class SemCampaign < ActiveRecord::Base
         report = Nokogiri::XML(report_srv.downloadXmlReport(job_id))
         rows = report.xpath("//row")
         if rows.present?
-          rows.each do |row|            
+          rows.each do |row|
             begin
 
               google_sem_campaign = GoogleSemCampaign.find_by_reference_id(row['campaignid'])
@@ -84,7 +82,7 @@ class SemCampaign < ActiveRecord::Base
                 client = AdwordsClient.find_by_name(row['acctname'])
                 if client.blank?
                   client = AdwordsClient.new
-                  Client.account_id = google_sem_campaign.account.id
+                  client.account_id = google_sem_campaign.sem_campaign.account.id
                   client.name = row['acctname']
                 end
                 client.timezone = row['timezone']
@@ -95,8 +93,6 @@ class SemCampaign < ActiveRecord::Base
               google_sem_campaign.status = row['campStatus']
               google_sem_campaign.campaign_type = row['adwordsType']
               google_sem_campaign.save
-
-
 
               #Add or Update the Ad Group
               adgroup = AdwordsAdGroup.find_by_reference_id(row["adgroupid"])
@@ -609,7 +605,7 @@ class SemCampaign < ActiveRecord::Base
   end
 
   def percentage_spent_this_month()
-    ( budget = self.monthly_budget).present? && ( budget = self.monthly_budget)  > 0 ? (self.spend_between(Date.today.beginning_of_month, Date.today.end_of_month) / budget.to_f) * 100 : 0
+    (budget = self.monthly_budget).present? && (budget = self.monthly_budget) > 0 ? (self.spend_between(Date.today.beginning_of_month, Date.today.end_of_month) / budget.to_f) * 100 : 0
   end
 
 end
