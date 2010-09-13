@@ -12,7 +12,7 @@ class SemCampaign < ActiveRecord::Base
 
   # CLASS BEHAVIOR
 
-  def self.update_sem_campaign_reports_by_campaign(hard_update = false, date = Date.yesterday)
+  def self.update_sem_campaign_reports_by_campaign(date = Date.yesterday, hard_update = false)
     job_status = JobStatus.create(:name => "SemCampaign.update_sem_campaign_reports_by_campaign")
     begin
       #pull the days report and save each
@@ -24,7 +24,7 @@ class SemCampaign < ActiveRecord::Base
     job_status.finish_with_no_errors
   end
 
-  def self.update_sem_campaign_reports_by_ad(hard_update = false, date = Date.yesterday)
+  def self.update_sem_campaign_reports_by_ad(date = Date.yesterday, hard_update = false)
     job_status = JobStatus.create(:name => "SemCampaign.update_sem_campaign_reports_by_ad")
     begin
       #pull the days report and save each
