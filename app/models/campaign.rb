@@ -53,10 +53,10 @@ class Campaign < ActiveRecord::Base
 
             google_ids = sf_campaign.google_campaign_id__c.present? ? sf_campaign.google_campaign_id__c.split(',') : ''
             google_ids.each do |google_id|
-              google_sem_campaign = GoogleSemCampaign.find_by_reference_id(google_id)
+              google_sem_campaign = GoogleSemCampaign.find_by_reference_id(google_id.strip)
               if google_sem_campaign.blank?
                 new_google_sem_campaign = new_sem_campaign.google_sem_campaigns.build
-                new_google_sem_campaign.reference_id = google_id.gsub(' ', '')
+                new_google_sem_campaign.reference_id = google_id.strip
               elsif google_sem_campaign.sem_campaign.name == 'CityVoice SEM Orphaned Campaigns'
                 google_sem_campaign.sem_campaign_id = new_sem_campaign.id
                 google_sem_campaign.save
