@@ -25,7 +25,7 @@
             %td{:class => 'red-font'}= sprintf("%.2f", @ctr) + '%'
         -else
           %td
-        %td= @account.number_of_total_leads_between(Date.yesterday - 1.week, Date.yesterday)
+        %td= account.number_of_total_leads_between(Date.yesterday - 1.week, Date.yesterday)
         -@cpconv = account.cost_per_lead_between(Date.yesterday - 1.week, Date.yesterday)
         -if @cpconv > 75
           %td{:class => 'red-font'}
