@@ -76,16 +76,16 @@ class Account < ActiveRecord::Base
     job_status.finish_with_no_errors
   end
 
-  #def self.combined_timeline_data
-  #  raw_data = Utilities.merge_and_sum_timeline_data(Account.all.collect { |account| account.number_of_visits_by_date }, :visits)
-  #  Utilities.massage_timeline(raw_data, [:visits])
-  #end
-
   def self.combined_timeline_data
-    raw_data = Utilities.merge_and_sum_timeline_data(Account.all.collect { |account| account.number_of_leads_by_date }, :leads)
-    #raw_data2 = Utilities.merge_and_sum_timeline_data(Account.all.collect { |account| account.number_of_visits_by_date }, :visits)
-    Utilities.massage_timeline(raw_data, [:leads])
+    raw_data = Utilities.merge_and_sum_timeline_data(Account.all.collect { |account| account.number_of_visits_by_date }, :visits)
+    Utilities.massage_timeline(raw_data, [:visits])
   end
+
+  #def self.combined_timeline_data
+    #raw_data = Utilities.merge_and_sum_timeline_data(Account.all.collect { |account| account.number_of_leads_by_date }, :leads)
+    #raw_data2 = Utilities.merge_and_sum_timeline_data(Account.all.collect { |account| account.number_of_visits_by_date }, :visits)
+    #Utilities.massage_timeline(raw_data, [:leads])
+  #end
    # INSTANCE BEHAVIOR
 
   def number_of_visits_by_date
