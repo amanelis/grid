@@ -159,7 +159,7 @@ class Campaign < ActiveRecord::Base
   def self.fix_duplicates
     after_date = Date.new(2010, 9, 1)
     campaigns = Campaign.find(:all, :conditions => ['created_at > ?', after_date])
-    styles = campaigns.collect {|campaign| campaign.campaign_style}
+    styles = campaigns.collect { |campaign| campaign.campaign_style }
     styles.each do |style|
       style.destroy
     end
@@ -289,11 +289,6 @@ class Campaign < ActiveRecord::Base
     self.website.try(:number_of_map_visits_by_date) || {}
   end
 
-  def remove_from_many_to_many_relationships
-    self.websites.each { |website| website.campaigns.delete(self) }
-    self.industries.each { |industry| industry.campaigns.delete(self) }
-  end
-
 
   # PREDICATES
 
@@ -311,6 +306,14 @@ class Campaign < ActiveRecord::Base
 
   def is_other?
     self.campaign_style.instance_of?(OtherCampaign)
+  end
+
+
+  private
+
+  def remove_from_many_to_many_relationships
+    self.websites.each { |website| website.campaigns.delete(self) }
+    self.industries.each { |industry| industry.campaigns.delete(self) }
   end
 
 end
