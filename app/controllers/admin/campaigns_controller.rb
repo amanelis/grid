@@ -6,7 +6,7 @@ class Admin::CampaignsController < ApplicationController
     @timeline = @campaign.campaign_style.combined_timeline_data
     @sorted_dates = @timeline.keys.sort
     @title = @campaign.account.name
-    #if @campaign.campaign_style == 'SEM'
+    if @campaign.is_sem?
       @chart = GoogleVisualr::Gauge.new
       @chart.add_column('string' , 'Label')
 	  @chart.add_column('number' , 'Value')
@@ -14,10 +14,14 @@ class Admin::CampaignsController < ApplicationController
 	  # Add Rows and Values
 	  @chart.add_rows(1)
       @chart.set_value(0, 0, 'PPC Spend')
-      @chart.set_value(0, 1, @campaign.campaign_style.percentage_spent_this_month)
-	  @chart.width  = 350
-	  @chart.height = 200
-    #end
+      if @campaign.campaign_style.monthly_budget.present?
+        @chart.set_value(0, @campaign.campaign_style.monthly_budget, @campaign.campaign_style.spend_between(Date.today.beginning_of_month, Date.today.end_of_month))
+      else
+        @chart.set_value(0, 1, 60)
+      end
+	  @chart.width  = 250
+	  @chart.height = 175
+    end
     
   end
 
