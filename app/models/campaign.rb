@@ -11,6 +11,7 @@ class Campaign < ActiveRecord::Base
   named_scope :seo, :conditions => {:campaign_style_type => SeoCampaign.name}
   named_scope :sem, :conditions => {:campaign_style_type => SemCampaign.name}
   named_scope :maps, :conditions => {:campaign_style_type => MapsCampaign.name}
+  named_scope :other, :conditions => {:campaign_style_type => OtherCampaign.name}
 
   before_destroy :remove_from_many_to_many_relationships
 

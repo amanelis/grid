@@ -6,7 +6,10 @@
     %h3 Campaign Performance
     = render :partial => "shared/timeline"
   .right
-    = render :partial => "shared/gauge"
+    - if @campaign.is_sem?
+      = render :partial => "shared/gauge"
+    - else
+      = render :partial => "shared/news_results"
   .clear
 
 %h3
