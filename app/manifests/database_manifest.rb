@@ -28,6 +28,7 @@ class DatabaseManifest < Moonshine::Manifest::Rails
   
   configure({    
     :mysql => { 
+      :version => "5.1",
       :log_bin => "mysql-bin",
       :server_id => "1",
       :innodb_flush_log_at_trx_commit => "1",
