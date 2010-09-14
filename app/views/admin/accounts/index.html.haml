@@ -1,5 +1,5 @@
 %h3
-  = 'For ' + (Date.yesterday - 1.week).to_s + ' to ' + Date.yesterday.to_s
+  = 'For ' + (Date.yesterday - 1.week).to_s(:long) + ' to ' + Date.yesterday.to_s(:long)
 %table{:class => "pretty"}
   %thead
     %tr

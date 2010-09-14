@@ -10,7 +10,7 @@
   .clear
 
 %h3
-  Last Week
+  Last Week (#{(Date.yesterday - 1.week).to_s(:long) + ' to ' + Date.yesterday.to_s(:long)})
 %table{:class => "pretty"}
   %thead
     %tr
@@ -34,17 +34,17 @@
         %td
           = campaign.name
         %td
-          = campaign.number_of_lead_calls_between(Date.today - 1.week, Date.today).to_s
+          = campaign.number_of_lead_calls_between(Date.yesterday - 1.week, Date.yesterday).to_s
         %td
-          = campaign.number_of_submissions_between(Date.today - 1.week, Date.today).to_s
+          = campaign.number_of_submissions_between(Date.yesterday - 1.week, Date.yesterday).to_s
         %td
-          = campaign.number_of_total_leads_between(Date.today - 1.week, Date.today).to_s
+          = campaign.number_of_total_leads_between(Date.yesterday - 1.week, Date.yesterday).to_s
         %td
-          = ActionController::Base.helpers.number_to_currency(campaign.cost_between(Date.today - 1.week, Date.today))
+          = ActionController::Base.helpers.number_to_currency(campaign.cost_between(Date.yesterday - 1.week, Date.yesterday))
         %td
-          = ActionController::Base.helpers.number_to_currency(campaign.spend_between(Date.today - 1.week, Date.today))
+          = ActionController::Base.helpers.number_to_currency(campaign.spend_between(Date.yesterday - 1.week, Date.yesterday))
         %td
-          = ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(Date.today - 1.week, Date.today))
+          = ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(Date.yesterday - 1.week, Date.yesterday))
         %td
           = link_to "Details", admin_campaign_path(campaign)
 
@@ -54,7 +54,7 @@
 -@month_end = (Date.today - 1.month).end_of_month
 -if @account.campaigns.present?
   %h3
-    = 'Last Month Report (' + @month_start.to_s + ' to ' + @month_end.to_s + ')'
+    = 'Last Month Report (' + @month_start.to_s(:long) + ' to ' + @month_end.to_s(:long) + ')'
   %table{:class => "pretty"}
     %thead
       %th
