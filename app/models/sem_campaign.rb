@@ -12,7 +12,7 @@ class SemCampaign < ActiveRecord::Base
 
   # CLASS BEHAVIOR
 
-  def self.update_sem_campaign_reports_by_campaign(hard_update = false, date = Date.yesterday)
+  def self.update_sem_campaign_reports_by_campaign(date = Date.yesterday, hard_update = false)
     job_status = JobStatus.create(:name => "SemCampaign.update_sem_campaign_reports_by_campaign")
     begin
       #pull the days report and save each
@@ -24,7 +24,7 @@ class SemCampaign < ActiveRecord::Base
     job_status.finish_with_no_errors
   end
 
-  def self.update_sem_campaign_reports_by_ad(hard_update = false, date = Date.yesterday)
+  def self.update_sem_campaign_reports_by_ad(date = Date.yesterday, hard_update = false)
     job_status = JobStatus.create(:name => "SemCampaign.update_sem_campaign_reports_by_ad")
     begin
       #pull the days report and save each
@@ -46,11 +46,11 @@ class SemCampaign < ActiveRecord::Base
       new_report.pulled_on = date.strftime("%m/%d/%Y")
       new_report.provider = 'Google'
       new_report.sem_campaign_id = 1
-      new_report.report_type = "Ad"
+      new_report.report_type = ALL_AD_REPORT_TYPE
       new_report.save
 
       adwords = AdWords::API.new(AdWords::AdWordsCredentials.new({'developerToken' => 'HC3GEwJ4LqgyVNeNTenIVw', 'applicationToken' => '-o8E21xqBmVx7CkQ5TfAag', 'useragent' => 'Biz Search Local', 'password' => 'brayden11', 'email' => 'bizsearchlocal.jon@gmail.com', 'clientEmail' => 'bizsearchlocal.jon@gmail.com', 'environment' => 'PRODUCTION', }))
-      report_name = "Ad- " + self.name + date.year.to_s + "-" + date.month.to_s + "-" + date.day.to_s
+      report_name = "All Ad- " + date.year.to_s + "-" + date.month.to_s + "-" + date.day.to_s
       report_srv = adwords.get_service('Report', 13)
       job = report_srv.module::DefinedReportJob.new
       job.selectedReportType = 'Creative'
@@ -72,7 +72,6 @@ class SemCampaign < ActiveRecord::Base
         if rows.present?
           rows.each do |row|
             begin
-
               google_sem_campaign = GoogleSemCampaign.find_by_reference_id(row['campaignid'])
               if google_sem_campaign.blank?
                 google_sem_campaign = cityvoice_sem_campaign.google_sem_campaigns.build
@@ -219,6 +218,7 @@ class SemCampaign < ActiveRecord::Base
     end
   end
 
+
 # INSTANCE BEHAVIOR
 
 # campaign-level report
@@ -235,7 +235,7 @@ class SemCampaign < ActiveRecord::Base
         new_report.sem_campaign_id = self.id
         new_report.pulled_on = date.strftime('%m/%d/%Y')
         new_report.provider = 'Google'
-        new_report.report_type = 'Campaign'
+        new_report.report_type = CAMPAIGN_REPORT_TYPE
         new_report.save
         begin
           adwords = AdWords::API.new(AdWords::AdWordsCredentials.new({'developerToken' => self.developer_token, 'applicationToken' => self.application_token, 'useragent' => self.user_agent, 'password' => self.password, 'email' => self.email, 'clientEmail' => self.client_email, 'environment' => 'PRODUCTION', }))
@@ -380,7 +380,7 @@ class SemCampaign < ActiveRecord::Base
         new_report.sem_campaign_id = self.id
         new_report.pulled_on = date.strftime("%m/%d/%Y")
         new_report.provider = 'Google'
-        new_report.report_type = "Ad"
+        new_report.report_type = AD_REPORT_TYPE
         new_report.save
 
         adwords = AdWords::API.new(AdWords::AdWordsCredentials.new({'developerToken' => campaign.developer_token, 'applicationToken' => campaign.application_token, 'useragent' => campaign.user_agent, 'password' => campaign.password, 'email' => campaign.email, 'clientEmail' => campaign.client_email, 'environment' => 'PRODUCTION', }))

@@ -107,6 +107,21 @@ class Campaign < ActiveRecord::Base
             new_google_maps_campaign.password = sf_campaign.maps_password__c
             new_maps_campaign.save!
             existing_campaign.save
+
+          else
+            if existing_campaign.blank?
+              new_other_campaign = OtherCampaign.new
+              existing_campaign = new_other_campaign.build_campaign
+              existing_campaign.account_id = account.id
+              existing_campaign.salesforce_id = sf_campaign.id
+            else
+              new_other_campaign = existing_campaign.campaign_style
+            end
+            existing_campaign.zip_code = sf_campaign.zip_code__c
+            existing_campaign.status = sf_campaign.status__c
+            existing_campaign.name = sf_campaign.name
+            new_other_campaign.save!
+            existing_campaign.save
           end
         end
       end
