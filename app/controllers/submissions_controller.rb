@@ -3,6 +3,7 @@ class SubmissionsController < ApplicationController
     @submission = Submission.new(params)
     @submission.ip_address = request.remote_ip
     @submission.user_agent = request.user_agent
+    @submission.time_of_submission = DateTime.now
     if @submission.save
       # HTTP 200 OK
       Notifier.deliver_form_submission(@submission)
