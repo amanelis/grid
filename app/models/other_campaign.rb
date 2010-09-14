@@ -10,4 +10,8 @@ class OtherCampaign < ActiveRecord::Base
     self.campaign.number_of_leads_by_date
   end
 
+  def combined_timeline_data
+    {}
+  end
+
 end
