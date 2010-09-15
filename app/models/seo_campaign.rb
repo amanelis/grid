@@ -261,7 +261,6 @@ class SeoCampaign < ActiveRecord::Base
     spend = 0
     (start_date..end_date).each do |day|
       daily_spend = (budget = self.budget).present? ? (budget/(Time.days_in_month(day.month, day.year))) : 0.0
-      puts daily_spend
       spend += daily_spend
     end
     return spend
@@ -271,7 +270,6 @@ class SeoCampaign < ActiveRecord::Base
     spend = 0
     (start_date..end_date).each do |day|
       daily_spend = (budget = self.budget).present? ? (budget/(Time.days_in_month(day.month, day.year))) : 0.0
-      puts daily_spend
       spend += daily_spend
     end
     return spend
