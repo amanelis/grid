@@ -258,21 +258,11 @@ class SeoCampaign < ActiveRecord::Base
   end
 
   def spend_between(start_date = Date.today - 1.month, end_date = Date.today)
-    spend = 0
-    (start_date..end_date).each do |day|
-      daily_spend = (budget = self.budget).present? ? (budget/(Time.days_in_month(day.month, day.year))) : 0.0
-      spend += daily_spend
-    end
-    return spend
+    (budget = self.budget).present? ? budget * (end_date - start_date).to_i / 30.0 : 0.0
   end
 
   def cost_between(start_date = Date.today - 1.month, end_date = Date.today)
-    spend = 0
-    (start_date..end_date).each do |day|
-      daily_spend = (budget = self.budget).present? ? (budget/(Time.days_in_month(day.month, day.year))) : 0.0
-      spend += daily_spend
-    end
-    return spend
+    (budget = self.budget).present? ? budget * (end_date - start_date).to_i / 30.0 : 0.0
   end
 
   def number_of_visits_by_date

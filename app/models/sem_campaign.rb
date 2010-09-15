@@ -45,7 +45,7 @@ class SemCampaign < ActiveRecord::Base
       puts 'Started all ad-level report the date ' + date.strftime('%m/%d/%Y') + ' at ' + Time.now.to_s
       new_report.pulled_on = date.strftime("%m/%d/%Y")
       new_report.provider = 'Google'
-      new_report.sem_campaign_id = 1
+#      new_report.sem_campaign_id = 1
       new_report.report_type = ALL_AD_REPORT_TYPE
       new_report.save
 
