@@ -1,6 +1,6 @@
 class SubmissionsController < ApplicationController
   def create    
-    @submission = Submission.new(params)
+    @submission = Submission.new(params[:submission])
     @submission.ip_address = request.remote_ip
     @submission.user_agent = request.user_agent
     @submission.time_of_submission = DateTime.now
@@ -9,7 +9,7 @@ class SubmissionsController < ApplicationController
       Notifier.deliver_form_submission(@submission)
       redirect_to params[:retURL]
     else
-       # Let's not give the (likely) bot too much info on why this failed.
+      # Let's not give the (likely) bot too much info on why this failed.
       head 400
     end
   end

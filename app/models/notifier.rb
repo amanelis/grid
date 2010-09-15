@@ -1,4 +1,5 @@
 class Notifier < ActionMailer::Base
+  include SendGrid
   default_url_options[:host] = APP_CONFIG[:host] 
 
   def form_submission(submission)
