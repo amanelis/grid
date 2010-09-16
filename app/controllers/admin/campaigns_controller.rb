@@ -15,12 +15,20 @@ class Admin::CampaignsController < ApplicationController
 	  @chart.add_rows(1)
       @chart.set_value(0, 0, 'PPC Spend')
       if @campaign.campaign_style.monthly_budget.present?
-        @chart.set_value(0, @campaign.campaign_style.monthly_budget, @campaign.campaign_style.spend_between(Date.today.beginning_of_month, Date.today.end_of_month))
+        @budget = @campaign.campaign_style.monthly_budget
+        @chart.max = @budget
+        @chart.set_value(0, 1, @campaign.campaign_style.spend_between(Date.today.beginning_of_month, Date.today.end_of_month))
+        @chart.greenFrom = 0
+        @chart.greenTo = (@budget * 0.8)
+        @chart.yellowFrom = (@budget * 0.8)
+        @chart.yellowTo = (@budget * 0.9)
+        @chart.redFrom = (@budget * 0.9)
+        @chart.redTo = @budget
       else
-        @chart.set_value(0, 1, 60)
+        @chart.set_value(0, 1, 0)
       end
-	  @chart.width  = 250
-	  @chart.height = 175
+      @chart.width  = 250
+	  @chart.height = 250
     end
     
   end

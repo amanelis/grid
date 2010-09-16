@@ -1,80 +1,79 @@
+<form action="http://grid.cityvoice.com/submission" method="POST" name="Form1" onsubmit="return Form1_Validator(this)">
 
-<form action="http://grid.cityvoice.com/submission" method="POST" name="Form1"
-      onsubmit="return Form1_Validator(this)">
 
-    <input type=hidden id="contact_form_id" name="contact_form_id" value="1">
-    <input type=hidden name="retURL" value="http://www.cityvoice.com/contact/confirm.asp">
-    
-    <table border="0" width="100%">
-        <tr>
-            <td width="164">
-                &nbsp;</td>
-            <td>*Required</td>
-        </tr>
-        <tr>
-            <td width="164">
-                <p align="right"><label for="first_name">*Name</label></td>
-            <td><input id="name" maxlength="40" name="name" size="20" type="text"/></td>
-        </tr>
-        <tr>
-            <td width="164">
-                <p align="right"><label for="email">Email</label></td>
-            <td><input id="from_email" maxlength="80" name="from_email" size="20" type="text"/></td>
-        </tr>
-        <tr>
-            <td width="164" align="right"><label for="other_information">Description of Work</label></td>
-            <td><textarea id="work_description" name="work_description"></textarea></td>
-        </tr>
-        <tr>
-            <td width="164" align="right"><label for="address">Address of Work</label></td>
-            <td><input id="home_address" maxlength="40" name="home_address" size="20" type="text"/></td>
-        </tr>
-        <tr>
-            <td width="164" align="right"><label for="phone">Phone Number</label></td>
-            <td><input id="phone_number" maxlength="40" name="phone_number" size="20" type="text"/></td>
-        </tr>
-        <tr>
-            <td width="164" align="right"><label for="work_date">Date Requested for Work</label></td>
-            <td><input id="date_requested" maxlength="40" name="date_requested" size="20" type="text"/></td>
-        </tr>
-        <tr>
-            <td width="164" align="right"><label for="time">Time Requested for Work</label></td>
-            <td><input id="time_requested" maxlength="40" name="time_requested" size="20" type="text"/></td>
-        </tr>
-        <tr>
-            <td width="164" align="right"><label for="category">Type of Work</label></td>
-            <td><select id="work_category" name="work_category">
-                <option value="">--None--</option>
-                <option value="AC Tuneup">AC Tuneup</option>
-                <option value="Heating Repair">Heating Repair</option>
-                <option value="AC Installation">AC Installation</option>
-                <option value="AC Repair">AC Repair</option>
-                <option value="Other">Other</option>
-            </select></td>
-        </tr>
-        <tr>
-            <td width="164" align="right"><label for="time">Custom 1</label></td>
-            <td><input id="custom1_value" maxlength="40" name="custom1_value" size="20" type="text"/></td>
-        </tr>
-        <tr>
-            <td width="164" align="right"><label for="time">Custom 2</label></td>
-            <td><input id="custom2_value" maxlength="40" name="custom2_value" size="20" type="text"/></td>
-        </tr>
-        <tr>
-            <td width="164" align="right"><label for="time">Custom 3</label></td>
-            <td><input id="custom3_value" maxlength="40" name="custom3_value" size="20" type="text"/></td>
-        </tr>
-        <tr>
-            <td width="164" align="right"><label for="time">Custom 4</label></td>
-            <td><input id="custom4_value" maxlength="40" name="custom4_value" size="20" type="text"/></td>
-        </tr>
-        <tr>
-            <td width="164" align="right"><label for="other_information">Questions or Comments</label></td>
-            <td><textarea name="other_information"></textarea></td>
-        </tr>
-        <tr>
-            <td width="164">&nbsp;</td>
-            <td><input type="submit" name="submit"></td>
-        </tr>
-    </table>
+<input type=hidden id="contact_form_id" name="submission[contact_form_id]" value="1">
+<input type=hidden name="submission[retURL]" value="http://www.cityvoice.com/contact/confirm.asp">
+
+<table border="0" width="100%">
+<tr>
+<td width="164">
+&nbsp;</td>
+<td>*Required</td>
+</tr>
+<tr>
+<td width="164">
+<p align="right"><label for="first_name">*Name</label></td>
+<td><input id="name" maxlength="40" name="submission[name]" size="20" type="text"/></td>
+</tr>
+<tr>
+<td width="164">
+<p align="right"><label for="email">Email</label></td>
+<td><input id="from_email" maxlength="80" name="submission[from_email]" size="20" type="text"/></td>
+</tr>
+<tr>
+<td width="164" align="right"><label for="other_information">Description of Work</label></td>
+<td><textarea id="work_description" name="submission[work_description]"></textarea></td>
+</tr>
+<tr>
+<td width="164" align="right"><label for="address">Address of Work</label></td>
+<td><input id="home_address" maxlength="40" name="submission[home_address]" size="20" type="text"/></td>
+</tr>
+<tr>
+<td width="164" align="right"><label for="phone">Phone Number</label></td>
+<td><input id="phone_number" maxlength="40" name="submission[phone_number]" size="20" type="text"/></td>
+</tr>
+<tr>
+<td width="164" align="right"><label for="work_date">Date Requested for Work</label></td>
+<td><input id="date_requested" maxlength="40" name="submission[date_requested]" size="20" type="text"/></td>
+</tr>
+<tr>
+<td width="164" align="right"><label for="time">Time Requested for Work</label></td>
+<td><input id="time_requested" maxlength="40" name="submission[time_requested]" size="20" type="text"/></td>
+</tr>
+<tr>
+<td width="164" align="right"><label for="category">Type of Work</label></td>
+<td><select id="work_category" name="submission[work_category]">
+<option value="">--None--</option>
+<option value="AC Tuneup">AC Tuneup</option>
+<option value="Heating Repair">Heating Repair</option>
+<option value="AC Installation">AC Installation</option>
+<option value="AC Repair">AC Repair</option>
+<option value="Other">Other</option>
+</select></td>
+</tr>
+<tr>
+<td width="164" align="right"><label for="time">Custom 1</label></td>
+<td><input id="custom1_value" maxlength="40" name="submission[custom1_value]" size="20" type="text"/></td>
+</tr>
+<tr>
+<td width="164" align="right"><label for="time">Custom 2</label></td>
+<td><input id="custom2_value" maxlength="40" name="submission[custom2_value]" size="20" type="text"/></td>
+</tr>
+<tr>
+<td width="164" align="right"><label for="time">Custom 3</label></td>
+<td><input id="custom3_value" maxlength="40" name="submission[custom3_value]" size="20" type="text"/></td>
+</tr>
+<tr>
+<td width="164" align="right"><label for="time">Custom 4</label></td>
+<td><input id="custom4_value" maxlength="40" name="submission[custom4_value]" size="20" type="text"/></td>
+</tr>
+<tr>
+<td width="164" align="right"><label for="other_information">Questions or Comments</label></td>
+<td><textarea name="submission[other_information]"></textarea></td>
+</tr>
+<tr>
+<td width="164">&nbsp;</td>
+<td><input type="submit" name="submit"></td>
+</tr>
+</table>
 </form>

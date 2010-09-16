@@ -6,6 +6,7 @@ class SemCampaign < ActiveRecord::Base
   CAMPAIGN_REPORT_TYPE = "Campaign"
   AD_REPORT_TYPE = "Ad"
   ALL_AD_REPORT_TYPE = "All Ad"
+  ALL_CAMPAIGN_REPORT_TYPE = "All Campaign"
   GOOGLE_MAPS_API_KEY = 'ABQIAAAAzr2EBOXUKnm_jVnk0OJI7xSosDVG8KKPE1-m51RBrvYughuyMxQ-i1QfUnH94QxWIa6N4U6MouMmBA'
   CHART_COLORS = ["66ccff", "669966", "666666", "cc3366", "ff6633", "ffff33", "000000"]
 
@@ -16,7 +17,8 @@ class SemCampaign < ActiveRecord::Base
     job_status = JobStatus.create(:name => "SemCampaign.update_sem_campaign_reports_by_campaign")
     begin
       #pull the days report and save each
-      SemCampaign.all.each { |sem_campaign| (hard_update ? 30 : 6).downto(0) { |days| sem_campaign.create_campaign_level_sem_campaign_report_for_google(date - days) } }
+      #SemCampaign.all.each { |sem_campaign| (hard_update ? 30 : 6).downto(0) { |days| sem_campaign.create_campaign_level_sem_campaign_report_for_google(date - days) } }
+      (hard_update ? 30 : 6).downto(0) { |days| self.create_all_campaign_level_report_for_google(date - days) }
     rescue Exception => ex
       job_status.finish_with_errors(ex)
       raise
@@ -218,7 +220,117 @@ class SemCampaign < ActiveRecord::Base
     end
   end
 
+  def self.create_all_campaign_level_report_for_google(date = Date.yesterday)
+    report_exists = SemCampaignReportStatus.first(:conditions => ['pulled_on = ? AND report_type= ?', date.strftime('%m/%d/%Y'), ALL_CAMPAIGN_REPORT_TYPE])
+    new_report = SemCampaignReportStatus.new
+    new_report.result = 'Started'
 
+    if report_exists.blank?
+      puts 'Started all campaign-level report the date ' + date.strftime('%m/%d/%Y') + ' at ' + Time.now.to_s
+      new_report.pulled_on = date.strftime("%m/%d/%Y")
+      new_report.provider = 'Google'
+#      new_report.sem_campaign_id = 1
+      new_report.report_type = ALL_CAMPAIGN_REPORT_TYPE
+      new_report.save
+
+      adwords = AdWords::API.new(AdWords::AdWordsCredentials.new({'developerToken' => 'HC3GEwJ4LqgyVNeNTenIVw', 'applicationToken' => '-o8E21xqBmVx7CkQ5TfAag', 'useragent' => 'Biz Search Local', 'password' => 'brayden11', 'email' => 'bizsearchlocal.jon@gmail.com', 'clientEmail' => 'bizsearchlocal.jon@gmail.com', 'environment' => 'PRODUCTION', }))
+      report_name = "All Campaigns- " + date.year.to_s + "-" + date.month.to_s + "-" + date.day.to_s
+      report_srv = adwords.get_service('Report', 13)
+      job = report_srv.module::DefinedReportJob.new
+      job.selectedReportType = 'Campaign'
+      job.aggregationTypes = 'Summary'
+      job.name = report_name
+      job.selectedColumns = %w{  Campaign CampaignId AdWordsType AveragePosition CPC CPM CTR CampaignStatus Clicks Conversions Cost ExternalCustomerId CustomerName CustomerTimeZone DailyBudget Impressions exactMatchImpShare impShare lostImpShareBudget lostImpShareRank }
+      job.startDay = date.year.to_s + "-" + date.month.to_s + "-" + date.day.to_s
+      job.endDay = date.year.to_s + "-" + date.month.to_s + "-" + date.day.to_s
+      job.crossClient = true
+
+      cityvoice_sem_campaign = Campaign.find_by_name('CityVoice SEM Orphaned Campaigns').campaign_style
+      begin
+        report_srv.validateReportJob(job)
+        job_id = report_srv.scheduleReportJob(job).scheduleReportJobReturn
+        #puts 'Scheduled report with id %d. Now sleeping %d seconds.' %[job_id, sleep_interval]
+        #sleep(20)
+        report = Nokogiri::XML(report_srv.downloadXmlReport(job_id))
+        rows = report.xpath("//row")
+        if rows.present?
+          rows.each do |row|
+            begin
+              google_sem_campaign = GoogleSemCampaign.find_by_reference_id(row['campaignid'])
+              if google_sem_campaign.blank?
+                google_sem_campaign = cityvoice_sem_campaign.google_sem_campaigns.build
+                google_sem_campaign.reference_id = row['campaignid']
+              else
+                #Add or Update the Client
+                client = AdwordsClient.find_by_name(row['acctname'])
+                if client.blank?
+                  client = AdwordsClient.new
+                  client.account_id = google_sem_campaign.sem_campaign.account.id
+                  client.name = row['acctname']
+                end
+                client.timezone = row['timezone']
+                client.reference_id = row['customerid']
+                client.save
+              end
+              google_sem_campaign.name = row['campaign']
+              google_sem_campaign.status = row['campStatus']
+              google_sem_campaign.campaign_type = row['adwordsType']
+              google_sem_campaign.save
+                       
+
+              #Add the Campaign Summary
+             adwords_campaign_summary = AdwordsCampaignSummary.find_by_google_sem_campaign_id_and_report_date(google_sem_campaign.id, date)
+                if adwords_campaign_summary.blank?
+                  adwords_campaign_summary = AdwordsCampaignSummary.new
+                  adwords_campaign_summary.google_sem_campaign_id = google_sem_campaign.id
+                  adwords_campaign_summary.report_date = date
+                end
+                adwords_campaign_summary.conv = row['conv']
+                adwords_campaign_summary.cost = row['cost']
+                adwords_campaign_summary.status = row['campStatus']
+                adwords_campaign_summary.invalid_clicks = row['invalidClicks']
+                adwords_campaign_summary.total_interactions = row['totalInteractions']
+                adwords_campaign_summary.budget = row['budget']
+                adwords_campaign_summary.imps = row['imps']
+                adwords_campaign_summary.pos = row['pos']
+                adwords_campaign_summary.cpc = row['cpc']
+                adwords_campaign_summary.cpm = row['cpm']
+                adwords_campaign_summary.ctr = row['ctr']
+                adwords_campaign_summary.exact_match_imp_share = row['exactMatchImpShare']
+                adwords_campaign_summary.imp_share = row['impShare']
+                adwords_campaign_summary.lost_imp_share_budget = row['lostImpShareBudget']
+                adwords_campaign_summary.lost_imp_share_rank = row['lostImpShareRank']
+                adwords_campaign_summary.clicks = row['clicks']
+                adwords_campaign_summary.save
+
+            rescue => e
+              new_report.result = "Error Occurred"
+              new_report.save
+              puts "Error updating campaign-level report: #{ e }"
+              next
+            end
+          end
+        end
+      rescue AdWords::Error::Error => e
+        new_report.result = "Error Occurred"
+        new_report.save
+        puts "Error updating campaign-level report: #{ e }"
+      end
+
+      if new_report.result == 'Started'
+        new_report.job_id = job_id
+        new_report.result = 'Completed'
+        new_report.save
+        puts 'Completed adding campaign-level report at ' + Time.now.to_s
+      else
+        SemCampaignReportStatus.delete(new_report.id)
+        puts 'Completed with error(s) updating campaign-level report at ' + Time.now.to_s
+      end
+
+    elsif report_exists.result == "Started" && report_exists.created_at < (Date.yesterday)
+      SemCampaignReportStatus.delete(report_exists.id)
+    end
+  end
 # INSTANCE BEHAVIOR
 
 # campaign-level report
@@ -549,6 +661,7 @@ class SemCampaign < ActiveRecord::Base
       SemCampaignReportStatus.delete(existing_report.id)
     end
   end
+
 
   def spend_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.spend_between(start_date, end_date) }

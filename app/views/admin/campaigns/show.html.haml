@@ -1,16 +1,22 @@
 %h1
   Summary for #{@campaign.name}
 
-.section#first-section
-  .left#timeline_chart
-    %h3 Campaign Performance
-    = render :partial => "shared/timeline"
-  .right
-    - if @campaign.is_sem?
+- if @campaign.is_sem?
+  .section#first-section
+    .left#timeline_chart
+      %h3 Campaign Performance
+      = render :partial => "shared/timeline"
+    .right#gauge
       = render :partial => "shared/gauge"
-    - else
-      = render :partial => "shared/news_results"
   .clear
+-else
+  .section#first-section
+    .left#timeline_chart
+      %h3 Campaign Performance
+      = render :partial => "shared/timeline"
+    .right
+      = render :partial => "shared/news_results"
+  .clear     
 
 %h3
   Last Week
