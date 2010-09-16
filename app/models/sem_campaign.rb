@@ -28,7 +28,7 @@ class SemCampaign < ActiveRecord::Base
     job_status = JobStatus.create(:name => "SemCampaign.update_sem_campaign_reports_by_ad")
     begin
       #pull the days report and save each
-      (hard_update ? 30 : 6).downto(0) { |days| self.create_all_ad_level_report_for_google(date - days) }
+      (hard_update ? 30 : 6).downto(0) { |days| self.create_all_ad_level_reports_for_google(date - days) }
     rescue Exception => ex
       job_status.finish_with_errors(ex)
       raise
@@ -36,7 +36,7 @@ class SemCampaign < ActiveRecord::Base
     job_status.finish_with_no_errors
   end
 
-  def self.create_all_ad_level_report_for_google(date = Date.yesterday)
+  def self.create_all_ad_level_reports_for_google(date = Date.yesterday)
     report_exists = SemCampaignReportStatus.first(:conditions => ['pulled_on = ? AND report_type= ?', date.strftime('%m/%d/%Y'), ALL_AD_REPORT_TYPE])
     new_report = SemCampaignReportStatus.new
     new_report.result = 'Started'
@@ -45,7 +45,6 @@ class SemCampaign < ActiveRecord::Base
       puts 'Started all ad-level report the date ' + date.strftime('%m/%d/%Y') + ' at ' + Time.now.to_s
       new_report.pulled_on = date.strftime("%m/%d/%Y")
       new_report.provider = 'Google'
-#      new_report.sem_campaign_id = 1
       new_report.report_type = ALL_AD_REPORT_TYPE
       new_report.save
 
