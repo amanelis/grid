@@ -196,8 +196,6 @@ class Account < ActiveRecord::Base
     self.sem_cost_between(start_date, end_date) + self.sem_spend_between(start_date, end_date)
   end
 
-  # NOTE...these methods don't really make sense at this level in the hierarchy.
-
   def number_of_total_leads_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.to_a.sum { |campaign| campaign.number_of_total_leads_between(start_date, end_date) }
   end
@@ -209,6 +207,8 @@ class Account < ActiveRecord::Base
   def cost_per_lead_between(start_date = Date.yesterday, end_date = Date.yesterday)
     (total_leads = self.number_of_total_leads_between(start_date, end_date)) > 0 ? self.spend_between(start_date, end_date) / total_leads : 0.0
   end
+
+  # NOTE...these methods don't really make sense at this level in the hierarchy.
 
   def number_of_answered_calls_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.to_a.sum { |campaign| campaign.number_of_answered_calls_between(start_date, end_date) }
@@ -238,8 +238,4 @@ class Account < ActiveRecord::Base
 
   end
 
-  def sem_cost_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    (cost = self.sem_cost_between(start_date, end_date)) > 0 ? cost : 0.0
-  end
-  
 end
