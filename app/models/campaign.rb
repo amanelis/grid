@@ -65,7 +65,7 @@ class Campaign < ActiveRecord::Base
             end
 
           elsif sf_campaign.campaign_type__c.include? 'SEO'
-            sf_account = Salesforce::Account.find(account.salesforce_id) 
+            sf_account = Salesforce::Account.find(account.salesforce_id)
             if existing_campaign.blank?
               new_seo_campaign = SeoCampaign.new
               existing_campaign = new_seo_campaign.build_campaign
