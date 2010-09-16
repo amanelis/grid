@@ -416,7 +416,6 @@ class SeoCampaign < ActiveRecord::Base
     keyword_table = keyword_table.sort{|x, y| x[1] <=> y[1]}
 
     keyword_table.each_index do |index|
-      puts keyword_table[index]
       keyword_table[index][2] = '+' + keyword_table[index][2].to_s if keyword_table[index][2] > 0
       keyword_table[index][4] = '+' + keyword_table[index][4].to_s if keyword_table[index][4] > 0
       keyword_table[index][6] = '+' + keyword_table[index][6].to_s if keyword_table[index][6] > 0
