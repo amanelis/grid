@@ -184,6 +184,10 @@ class Campaign < ActiveRecord::Base
     self.campaign_style.respond_to?(:cost_between) ? self.campaign_style.cost_between(start_date, end_date) : 0.0
   end
 
+  def cost_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaign_style.respond_to?(:cost_between) ? self.campaign_style.cost_between(start_date, end_date) : 0.0
+  end
+
   def cost_per_lead_between(start_date = Date.yesterday, end_date = Date.yesterday)
     (total_leads = self.number_of_total_leads_between(start_date, end_date)) > 0 ? self.spend_between(start_date, end_date) / total_leads : 0.0
   end
@@ -290,7 +294,7 @@ class Campaign < ActiveRecord::Base
     self.website.try(:number_of_map_visits_by_date) || {}
   end
 
-
+  def 
   # PREDICATES
 
   def is_seo?

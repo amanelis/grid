@@ -235,7 +235,7 @@ class Account < ActiveRecord::Base
   end
 
   def total_monthly_budget_between(start_date = Date.yesterday, end_date = Date.yesterday)
-
+    self.campaigns.to_a.sum { |campaign| campaign.number_of_submissions_between(start_date, end_date) }
   end
 
 end
