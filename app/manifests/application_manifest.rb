@@ -63,8 +63,8 @@ class ApplicationManifest < Moonshine::Manifest::Rails
     cron 'update_keywords_from_salesforce', :command => "/home/deploy/grid/current/script/runner -e production MapKeyword.update_keywords_from_salesforce", :user => configuration[:user], :minute => 1, :hour => 4
     cron 'update_map_rankings', :command => "/home/deploy/grid/current/script/runner -e production MapKeyword.update_map_rankings", :user => configuration[:user], :minute => 1, :hour => 5
     
-    cron 'update_sem_campaign_reports_by_campaign', :command => "/home/deploy/grid/current/script/runner -e production SemCampaign.update_sem_campaign_reports_by_campaign", :user => configuration[:user], :minute => 1, :hour => 9, :ensure => :absent 
-    cron 'update_sem_campaign_reports_by_ad', :command => "/home/deploy/grid/current/script/runner -e production SemCampaign.update_sem_campaign_reports_by_ad", :user => configuration[:user], :minute => 1, :hour => 11, :ensure => :absent 
+    cron 'update_sem_campaign_reports_by_campaign', :command => "/home/deploy/grid/current/script/runner -e production SemCampaign.update_sem_campaign_reports_by_campaign", :user => configuration[:user], :minute => 1, :hour => 9
+    cron 'update_sem_campaign_reports_by_ad', :command => "/home/deploy/grid/current/script/runner -e production SemCampaign.update_sem_campaign_reports_by_ad", :user => configuration[:user], :minute => 1, :hour => 11 
 
     # %w( root rails ).each do |user|
     #   mailalias user, :recipient => 'you@domain.com', :notify => exec('newaliases')
