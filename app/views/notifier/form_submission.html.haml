@@ -3,9 +3,9 @@
 = "Name: #{@submission.name}\n"
 = "Email: #{@submission.from_email}\n"
 = "Phone: #{@submission.phone_number}\n"
-= "Work Description: #{+ @submission.work_description}\n"
+= "Work Description: #{@submission.work_description}\n"
 -if @submission.home_address.present?
-  = "Home Address: #{+ @submission.home_address}\n"
+  = "Home Address: #{@submission.home_address}\n"
 -if @submission.home_address.present?
   = "Work Category: #{@submission.work_category}\n"
 -if @submission.home_address.present?
