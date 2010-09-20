@@ -1,4 +1,5 @@
 set :rails_env, 'development'
+set :branch, 'develop'
 
 role :gateway, "localhost:3000"
 role :web, "localhost:3000"                          # Your HTTP server, Apache/etc

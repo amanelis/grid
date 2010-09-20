@@ -1,6 +1,9 @@
 # app_config.yml
 development:
   host: "localhost:3000"
+  
+staging:
+  host: "staging.cityvoice.com"
 
 test:
   host: "localhost:3000"

@@ -1,4 +1,5 @@
 set :rails_env, 'production'
+set :branch, 'master'
 
 role :gateway, "grid.cityvoice.com"
 role :web, "grid.cityvoice.com"                          # Your HTTP server, Apache/etc
