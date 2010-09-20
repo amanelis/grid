@@ -28,7 +28,13 @@ class ApplicationManifest < Moonshine::Manifest::Rails
      '-A INPUT -p tcp -m tcp --dport 80 -j ACCEPT',
      '-A INPUT -p tcp -m tcp --dport 443 -j ACCEPT',
      '-A INPUT -s 127.0.0.1 -j ACCEPT'
-   ]})
+   ]},
+   :memcached => {
+     :max_memory => '256',     # default is 64
+     :client => '1.7.2',
+     :enable_on_boot => true  # maybe you want god to start it instead of init
+   } 
+   )
 
   # The default_stack recipe install Rails, Apache, Passenger, the database from
   # database.yml, Postfix, Cron, logrotate and NTP. See lib/moonshine/manifest/rails.rb
@@ -40,6 +46,8 @@ class ApplicationManifest < Moonshine::Manifest::Rails
   
   recipe :iptables
   recipe :ssh
+  
+  recipe :memcached
 
   # Add your application's custom requirements here
   def application_packages
