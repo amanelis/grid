@@ -1,8 +1,8 @@
 <form action="http://grid.cityvoice.com/submission" method="POST" name="Form1" onsubmit="return Form1_Validator(this)">
 
 
-<input type=hidden id="contact_form_id" name="submission[contact_form_id]" value="1">
-<input type=hidden name="submission[retURL]" value="http://www.cityvoice.com/contact/confirm.asp">
+<input type=hidden id="contact_form_id" name="submission[contact_form_id]" value="2">
+<input type=hidden name="submission[retURL]" value="http://kingapplianceservice.com/">
 
 <table border="0" width="100%">
 <tr>
@@ -21,6 +21,10 @@
 <td><input id="from_email" maxlength="80" name="submission[from_email]" size="20" type="text"/></td>
 </tr>
 <tr>
+<td width="164" align="right"><label for="phone">Phone Number</label></td>
+<td><input id="phone_number" maxlength="40" name="submission[phone_number]" size="20" type="text"/></td>
+</tr>
+<tr>
 <td width="164" align="right"><label for="other_information">Description of Work</label></td>
 <td><textarea id="work_description" name="submission[work_description]"></textarea></td>
 </tr>
@@ -28,10 +32,7 @@
 <td width="164" align="right"><label for="address">Address of Work</label></td>
 <td><input id="home_address" maxlength="40" name="submission[home_address]" size="20" type="text"/></td>
 </tr>
-<tr>
-<td width="164" align="right"><label for="phone">Phone Number</label></td>
-<td><input id="phone_number" maxlength="40" name="submission[phone_number]" size="20" type="text"/></td>
-</tr>
+
 <tr>
 <td width="164" align="right"><label for="work_date">Date Requested for Work</label></td>
 <td><input id="date_requested" maxlength="40" name="submission[date_requested]" size="20" type="text"/></td>

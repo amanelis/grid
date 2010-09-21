@@ -16,8 +16,9 @@ class Admin::CampaignsController < ApplicationController
       @chart.set_value(0, 0, 'PPC Spend')
       if @campaign.campaign_style.monthly_budget.present?
         @budget = @campaign.campaign_style.monthly_budget
+        @spend = (@campaign.campaign_style.spend_between(Date.today.beginning_of_month, Date.today.end_of_month) * 100).round.to_f / 100
         @chart.max = @budget
-        @chart.set_value(0, 1, @campaign.campaign_style.spend_between(Date.today.beginning_of_month, Date.today.end_of_month))
+        @chart.set_value(0, 1, @spend)
         @chart.greenFrom = 0
         @chart.greenTo = (@budget * 0.8)
         @chart.yellowFrom = (@budget * 0.8)
