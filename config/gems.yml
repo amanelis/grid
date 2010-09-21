@@ -1,4 +1,5 @@
 --- 
+- :name: hpricot
 - :source: http://gems.github.com
   :name: johnreilly-activerecord-activesalesforce-adapter
 - :name: httparty
@@ -7,8 +8,8 @@
 - :name: adwords4r
 - :name: haml
 - :name: formtastic
-- :version: ~> 2.3.11
-  :source: http://gemcutter.org
+- :source: http://gemcutter.org
+  :version: ~> 2.3.11
   :name: will_paginate
 - :source: http://gemcutter.org
   :name: sendgrid
