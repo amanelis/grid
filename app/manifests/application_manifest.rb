@@ -27,6 +27,7 @@ class ApplicationManifest < Moonshine::Manifest::Rails
      '-A INPUT -p tcp -m tcp --dport 22 -j ACCEPT',
      '-A INPUT -p tcp -m tcp --dport 80 -j ACCEPT',
      '-A INPUT -p tcp -m tcp --dport 443 -j ACCEPT',
+     '-A INPUT -p tcp -m tcp --dport 3306 -j ACCEPT',
      '-A INPUT -s 127.0.0.1 -j ACCEPT'
    ]},
    :memcached => {
