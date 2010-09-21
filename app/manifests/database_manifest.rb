@@ -39,7 +39,10 @@ class DatabaseManifest < Moonshine::Manifest::Rails
       :max_heap_table_size => "256M",
       :tmp_table_size => "256M",
       :max_connections => "250",
-      :extra => "bind-address = #{ deploy_stage == 'production' ? 173.203.219.85 | 173.203.219.193 }" },   
+      :extra => "bind-address = 173.203.219.#{deploy_stage == 'production' ? 85 : 193 }"
+       },   
+      
+      
     
     :iptables => { :rules => [
         '-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT',
