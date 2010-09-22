@@ -16,7 +16,7 @@
         -account_data = @accounts_data[account.id]
         -account_type = account.account_type
         %td= account_type
-        -if account_type =~ /SEM|Moblie/i
+        -if account_type =~ /SEM|Mobile/i
           -ctr = account_data.present? ? account_data[:ctr] : 0.0
           -if ctr > 0.75
             %td{:class => 'green-font'}= sprintf("%.2f", ctr) + '%'
