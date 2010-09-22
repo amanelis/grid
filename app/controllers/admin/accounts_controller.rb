@@ -83,4 +83,13 @@ class Admin::AccountsController < ApplicationController
       format.html { redirect_to(accounts_url) }
     end
   end
+
+  def report
+    @account = Account.find(params[:id])
+
+    respond_to do |format|
+      format.html # show.html.erb
+    end
+    
+  end
 end

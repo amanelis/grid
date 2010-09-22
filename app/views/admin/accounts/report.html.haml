@@ -1,51 +1,9 @@
-%h1
-  Monthly Report for #{@account.name}
-
-  .section#first-section
-    .left#timeline_chart
-      %h3 Account Performance
-      = render :partial => "shared/timeline"
-    .right
-      = render :partial => "shared/news_results"
-    .clear
-
+/Begin Monthly Report
+-@month_start = (Date.today - 1.month).beginning_of_month
+-@month_end = (Date.today - 1.month).end_of_month
+-if @account.campaigns.present?
   %h3
-    Last Week
-  %table{:class => "pretty"}
-    %thead
-      %tr
-        %th
-          Campaign Name
-        %th
-          Calls
-        %th
-          Forms
-        %th
-          Total Leads
-        %th
-          Spend
-        %th
-          Cost Per Lead
-    %tbody
-      -@account.campaigns.each do |campaign|
-        %tr{ :class => cycle('odd', 'even')}
-          %td
-            = campaign.name
-          %td
-            = campaign.number_of_all_calls_between(Date.today - 1.week, Date.today).to_s
-          %td
-            = campaign.number_of_submissions_between(Date.today - 1.week, Date.today).to_s
-          %td
-            = campaign.number_of_total_leads_between(Date.today - 1.week, Date.today).to_s
-          %td
-            = ActionController::Base.helpers.number_to_currency(campaign.spend_between(Date.today - 1.week, Date.today))
-          %td
-            = ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(Date.today - 1.week, Date.today))
-          %td
-            = link_to "Details", admin_campaign_path(campaign)
-
-  %h3
-    = 'Last Month Report (' + (Date.today - 1.month).to_s + ' to ' + Date.today.to_s + ')'
+    = 'Last Month Report (' + @month_start.to_s(:long) + ' to ' + @month_end.to_s(:long) + ')'
   %table{:class => "pretty"}
     %thead
       %th
@@ -73,28 +31,32 @@
                   %td
                     = campaign.name
                   %td
-                    = campaign.number_of_all_calls_between(Date.today - 1.month, Date.today).to_s
+                    = campaign.number_of_lead_calls_between(@month_start, @month_end).to_s
                   %td
-                    = campaign.number_of_submissions_between(Date.today - 1.month, Date.today).to_s
+                    = campaign.number_of_submissions_between(@month_start, @month_end).to_s
                   %td
-                    = campaign.number_of_total_leads_between(Date.today - 1.month, Date.today).to_s
+                    = campaign.number_of_total_leads_between(@month_start, @month_end).to_s
                   %td
-                    = ActionController::Base.helpers.number_to_currency(campaign.spend_between(Date.today - 1.month, Date.today))
+                    = ActionController::Base.helpers.number_to_currency(campaign.spend_between(@month_start, @month_end))
                   %td
-                    = ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(Date.today - 1.month, Date.today))
+                    = ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(@month_start, @month_end))
             %tfoot
               %th
                 Totals
               %th
-                = @account.number_of_all_calls_between(Date.today - 1.month, Date.today)
+                = @account.number_of_lead_calls_between(@month_start, @month_end)
               %th
-                = @account.number_of_submissions_between(Date.today - 1.month, Date.today)
+                = @account.number_of_submissions_between(@month_start, @month_end)
               %th
-                = @account.number_of_total_leads_between(Date.today - 1.month, Date.today)
+                = @account.number_of_total_leads_between(@month_start, @month_end)
               %th
-                = ActionController::Base.helpers.number_to_currency(@account.spend_between(Date.today - 1.month, Date.today))
+                = ActionController::Base.helpers.number_to_currency(@account.spend_between(@month_start, @month_end))
               %th
-                = ActionController::Base.helpers.number_to_currency(@account.cost_per_lead_between(Date.today - 1.month, Date.today))
+                = ActionController::Base.helpers.number_to_currency(@account.cost_per_lead_between(@month_start, @month_end))
+
+
+/Begin PPC Summary Table
+-if @account.campaigns.sem.present?
   %table{:class => "pretty"}
     %thead
       %th
@@ -124,33 +86,36 @@
                   %td
                     = campaign.name
                   %td
-                    = campaign.number_of_total_leads_between(Date.today - 1.month, Date.today).to_s
+                    = campaign.number_of_total_leads_between(@month_start, @month_end).to_s
                   %td
-                    = campaign.campaign_style.clicks_between(Date.today - 1.month, Date.today).to_s
+                    = campaign.campaign_style.clicks_between(@month_start, @month_end).to_s
                   %td
-                    = campaign.campaign_style.impressions_between(Date.today - 1.month, Date.today).to_s
+                    = campaign.campaign_style.impressions_between(@month_start, @month_end).to_s
                   %td
-                    = (sprintf("%.3f", (campaign.campaign_style.click_through_rate_between(Date.today - 1.month, Date.today) * 100)) + '%')
+                    = (sprintf("%.3f", (campaign.campaign_style.click_through_rate_between(@month_start, @month_end) * 100)) + '%')
                   %td
-                    = '%.2f' % campaign.campaign_style.average_position_between(Date.today - 1.month, Date.today).to_s
+                    = '%.2f' % campaign.campaign_style.average_position_between(@month_start, @month_end).to_s
                   %td
-                    = ActionController::Base.helpers.number_to_currency(campaign.spend_between(Date.today - 1.month, Date.today))
+                    = ActionController::Base.helpers.number_to_currency(campaign.spend_between(@month_start, @month_end))
             %tfoot
               %th
                 Totals
               %th
-                = @account.sem_number_of_total_leads_between(Date.today - 1.month, Date.today)
+                = @account.sem_number_of_total_leads_between(@month_start, @month_end)
               %th
-                = @account.sem_clicks_between(Date.today - 1.month, Date.today)
+                = @account.sem_clicks_between(@month_start, @month_end)
               %th
-                = @account.sem_impressions_between(Date.today - 1.month, Date.today)
+                = @account.sem_impressions_between(@month_start, @month_end)
               %th
-                = (sprintf("%.3f", (@account.sem_click_through_rate_between(Date.today - 1.month, Date.today) * 100)) + '%')
+                = (sprintf("%.3f", (@account.sem_click_through_rate_between(@month_start, @month_end) * 100)) + '%')
               %th
-                = '%.2f' % @account.sem_average_position_between(Date.today - 1.month, Date.today).to_s
+                = '%.2f' % @account.sem_average_position_between(@month_start, @month_end).to_s
               %th
-                = ActionController::Base.helpers.number_to_currency(@account.sem_spend_between(Date.today - 1.month, Date.today))
+                = ActionController::Base.helpers.number_to_currency(@account.sem_spend_between(@month_start, @month_end))
 
+
+/Begin SEO Summary Table
+-if @account.campaigns.seo.present?
   %table{:class => "pretty"}
     %thead
       %th
@@ -184,41 +149,48 @@
                   %td
                     = campaign.name
                   %td
-                    = campaign.number_of_total_leads_between(Date.today - 1.month, Date.today).to_s
+                    = campaign.number_of_total_leads_between(@month_start, @month_end).to_s
                   %td
-                    = campaign.number_of_visits_between(Date.today - 1.month, Date.today).to_s
+                    = campaign.number_of_visits_between(@month_start, @month_end).to_s
                   %td
-                    = campaign.number_of_actions_between(Date.today - 1.month, Date.today).to_s
+                    = campaign.number_of_actions_between(@month_start, @month_end).to_s
                   %td
-                    = '%.2f' % campaign.number_of_average_actions_between(Date.today - 1.month, Date.today).to_s
+                    = '%.2f' % campaign.number_of_average_actions_between(@month_start, @month_end).to_s
                   %td
-                    = [(campaign.total_time_spent_between(Date.today - 1.month, Date.today)/3600).to_s + 'h', (campaign.total_time_spent_between(Date.today - 1.month, Date.today)/60 % 60).to_s + 'm', (campaign.total_time_spent_between(Date.today - 1.month, Date.today) % 60).to_s + 's'].map{|t| t.to_s.rjust(2,'0')}.join(':')
+                    - @total_time = campaign.total_time_spent_between(@month_start, @month_end)
+                    = [(@total_time/3600).to_s + 'h', (@total_time/60 % 60).to_s + 'm', (@total_time % 60).to_s + 's'].map{|t| t.to_s.rjust(2,'0')}.join(':')
                   %td
-                    = [((campaign.average_total_time_spent_between(Date.today - 1.month, Date.today).to_i)/3600).to_s + 'h', ((campaign.average_total_time_spent_between(Date.today - 1.month, Date.today).to_i)/60 % 60).to_s + 'm', ((campaign.average_total_time_spent_between(Date.today - 1.month, Date.today).to_i) % 60).to_s + 's'].map{|t| t.to_s.rjust(2,'0')}.join(':')
+                    - @avg_time = campaign.average_total_time_spent_between(@month_start, @month_end).to_i
+                    = [(@avg_time/3600).to_s + 'h', (@avg_time/60 % 60).to_s + 'm', (@avg_time % 60).to_s + 's'].map{|t| t.to_s.rjust(2,'0')}.join(':')
                   %td
-                    = (sprintf("%.2f", (campaign.bounce_rate_between(Date.today - 1.month, Date.today) * 100)) + '%')
+                    = (sprintf("%.2f", (campaign.bounce_rate_between(@month_start, @month_end) * 100)) + '%')
                   %td
-                    = ActionController::Base.helpers.number_to_currency(campaign.spend_between(Date.today - 1.month, Date.today))
+                    = ActionController::Base.helpers.number_to_currency(campaign.spend_between(@month_start, @month_end))
             %tfoot
               %th
                 Totals
               %th
-                = @account.seo_number_of_total_leads_between(Date.today - 1.month, Date.today)
+                = @account.seo_number_of_total_leads_between(@month_start, @month_end)
               %th
-                = @account.seo_number_of_visits_between(Date.today - 1.month, Date.today)
+                = @account.seo_number_of_visits_between(@month_start, @month_end)
               %th
-                = @account.seo_number_of_actions_between(Date.today - 1.month, Date.today)
+                = @account.seo_number_of_actions_between(@month_start, @month_end)
               %th
-                = '%.2f' % @account.seo_number_of_average_actions_between(Date.today - 1.month, Date.today)
+                = '%.2f' % @account.seo_number_of_average_actions_between(@month_start, @month_end)
               %th
-                = [(@account.seo_total_time_spent_between(Date.today - 1.month, Date.today)/3600).to_s + 'h', (@account.seo_total_time_spent_between(Date.today - 1.month, Date.today)/60 % 60).to_s + 'm', (@account.seo_total_time_spent_between(Date.today - 1.month, Date.today) % 60).to_s + 's'].map{|t| t.to_s.rjust(2,'0')}.join(':')
+                - @total_time = @account.seo_total_time_spent_between(@month_start, @month_end)
+                = [(@total_time/3600).to_s + 'h', (@total_time/60 % 60).to_s + 'm', (@total_time % 60).to_s + 's'].map{|t| t.to_s.rjust(2,'0')}.join(':')
               %th
-                = [((@account.seo_average_total_time_spent_between(Date.today - 1.month, Date.today).to_i)/3600).to_s + 'h', ((@account.seo_average_total_time_spent_between(Date.today - 1.month, Date.today).to_i)/60 % 60).to_s + 'm', ((@account.seo_average_total_time_spent_between(Date.today - 1.month, Date.today).to_i) % 60).to_s + 's'].map{|t| t.to_s.rjust(2,'0')}.join(':')
+                - @avg_time = @account.seo_average_total_time_spent_between(@month_start, @month_end).to_i
+                = [(@avg_time/3600).to_s + 'h', (@avg_time/60 % 60).to_s + 'm', (@avg_time % 60).to_s + 's'].map{|t| t.to_s.rjust(2,'0')}.join(':')
               %th
-                = (sprintf("%.2f", (@account.seo_bounce_rate_between(Date.today - 1.month, Date.today) * 100)) + '%')
+                = (sprintf("%.2f", (@account.seo_bounce_rate_between(@month_start, @month_end) * 100)) + '%')
               %th
-                = ActionController::Base.helpers.number_to_currency(@account.seo_spend_between(Date.today - 1.month, Date.today))
+                = ActionController::Base.helpers.number_to_currency(@account.seo_spend_between(@month_start, @month_end))
 
+
+/Begin Maps Summary Table
+-if @account.campaigns.maps.present?
   %table{:class => "pretty"}
     %thead
       %th
@@ -238,24 +210,208 @@
                   %td
                     = campaign.name
                   %td
-                    = campaign.number_of_map_visits_between(Date.today - 1.month, Date.today).to_s
+                    = campaign.number_of_map_visits_between(@month_start, @month_end).to_s
             %tfoot
               %th
                 Totals
               %th
-                = @account.maps_number_of_visits_between(Date.today - 1.month, Date.today)
-  %h3
-    Detailed SEM Reports
+                = @account.maps_number_of_visits_between(@month_start, @month_end)
+
+
+/Begin of PPC Detailed Reports
+
+-if @account.campaigns.sem.present?
+  -@account.campaigns.sem.each_index do |index|
+    %table{:class => "pretty"}
+      %thead
+        %th
+          = @account.campaigns.sem[index].name + ' Detailed Report'
+      %tbody
+        %tr
+          %td
+            /
+            /-if @sem_campaign_timelines[index].empty?
+            /  No Data
+            /-else
+            /   = render inline_annotated_timeline(@sem_campaign_timelines[index], 620, 280, 'div_id_to_create', {:zoomEndTime => @sem_campaign_timelines[index].keys.sort[-1], :zoomStartTime  => @sem_campaign_timelines[index].keys.sort[-30] })
+            %br
+            -@keywords = @account.campaigns.sem[index].websites.first.try(:keywords_searched_between, @month_start, @month_end)
+            -if @keywords.present?
+              %table{:class => "pretty"}
+                %thead
+                  %th
+                    Keyword
+                  %th
+                    Count
+                  %th
+                  %th
+                    Keyword
+                  %th
+                    Count
+                %tbody
+                  -@keywords.each_index  do |index2|
+                    -if index2.even?
+                      %tr{ :class => cycle('odd', 'even')}
+                        %td
+                          = @keywords[index2][0]
+                        %td
+                          = @keywords[index2][1]
+                        %td
+                        %td
+                          = @keywords[index2 + 1][0] if @keywords[index2 + 1].present?
+                        %td
+                          = @keywords[index2 + 1][1] if @keywords[index2 + 1].present?
+            -@url_link = @account.campaigns.sem[index].websites.first.try(:visitors_by_location_graph, @month_start, @month_end)
+            -if @url_link.present?
+              %br
+              .center
+              Visitors by Location
+              %br
+              = link_to image_tag(@url_link, :alt => 'Visitors By Location'), @url_link
+            -if @keywords.blank? && @url_link.blank?
+              .center
+              There is currently no data for this report.
+
+
+/Begin of SEO Detailed Reports
+
+-if @account.campaigns.seo.present?
+  -@account.campaigns.seo.each_index do |index|
+    %table{:class => "pretty"}
+      %thead
+        %th
+          = @account.campaigns.seo[index].name + ' Detailed Report'
+      %tbody
+        %tr
+          %td
+            /
+            /-if @seo_campaign_timelines[index].empty?
+            /  No Data
+            /-else
+            /  = render inline_annotated_timeline(@seo_campaign_timelines[index], 620, 280, 'div_id_to_create', {:zoomEndTime => @seo_campaign_timelines[index].keys.sort[-1], :zoomStartTime  => @seo_campaign_timelines[index].keys.sort[-30] })
+            -@sources_link = @account.campaigns.seo[index].campaign_style.website_traffic_sources_graph(@month_start, @month_end)
+            -if @sources_link.present?
+              %br
+              = link_to image_tag(@sources_link, :alt => 'Traffice Sources'), @sources_link
+            -@keyword_link = @account.campaigns.seo[index].campaign_style.seo_keyword_rankings_graph(@month_start, @month_end)
+            -if @keyword_link.present?
+              %br
+              = link_to image_tag(@keyword_link, :alt => 'Keyword Rankings By Month'), @keyword_link
+              %br
+            -@location_link = @account.campaigns.seo[index].websites.first.try(:visitors_by_location_graph, @month_start, @month_end)
+            -if @location_link.present?
+              %br
+              .center
+              Visitors by Location
+              %br
+              = link_to image_tag(@location_link, :alt => 'Visitors By Location'), @location_link
+              %br
+            -rankings = @account.campaigns.seo[index].campaign_style.seo_keyword_ranking_table(@month_start, @month_end)
+            -if rankings.present?
+              %table{:class => "pretty"}
+                %thead
+                  %th
+                    Keyword
+                  %th
+                    Google Rank
+                  %th
+                    1 Month Change
+                  %th
+                    Yahoo Rank
+                  %th
+                    1 Month Change
+                  %th
+                    Bing Rank
+                  %th
+                    1 Month Change
+                %tbody
+                  -rankings.each do |ranking|
+                    %tr{ :class => cycle('odd', 'even')}
+                      %td
+                        = ranking[0]
+                      %td
+                        = ranking[1]
+                      %td
+                        = ranking[2]
+                      %td
+                        = ranking[3]
+                      %td
+                        = ranking[4]
+                      %td
+                        = ranking[5]
+                      %td
+                        = ranking[6]
 
 
 
+/Begin of Map Detailed Reports
+-if @account.campaigns.maps.present?
+  -@account.campaigns.maps.each do |campaign|
+    %table{:class => "pretty"}
+      %thead
+        %th
+          = campaign.name + ' Detailed Report'
+      %tbody
+        %tr
+          %td
+            -@keyword_link = campaign.campaign_style.google_keyword_rankings_graph(@month_start, @month_end)
+            -if @keyword_link.present?
+              = link_to image_tag(@keyword_link, :alt => 'Google Map Keyword Rankings'), @keyword_link
+              %br
+            -@count_link = campaign.campaign_style.google_map_data_counts_graph(@month_start, @month_end)
+            -if @count_link.present?
+              = link_to image_tag(@count_link, :alt => 'Click to View'), @count_link
+              %br
+            -@clicks_link = campaign.campaign_style.google_map_website_clicks_graph(@month_start, @month_end)
+            -if @clicks_link.present?
+              = link_to image_tag(@clicks_link, :alt => 'Click to View'), @clicks_link
 
-  %h3
-    Detailed SEO Reports
 
-
-  %h3
-    Detailed Maps Reports
-
-
-
+/Begin of Calls Section
+-@account.campaigns.each do |campaign|
+  -if campaign.calls.find(:all, :conditions => ['call_start between ? AND ?', @month_start, @month_end]).present?
+    .center
+      %h3
+        = "Calls for " + campaign.name
+      %table{:class => "pretty"}
+        %thead
+          %tr
+            %th
+              Caller
+            %th
+              Caller #
+            %th
+              Inbound #
+            %th
+              Time of Call
+            %th
+              Duration
+            %th
+              Result
+            %th
+              Disposition
+            %th
+              Rating
+            %th
+              Revenue
+        %tbody
+          -campaign.calls.find(:all, :conditions => ['call_start between ? AND ?', @month_start, @month_end]).each do |call|
+            %tr{ :class => cycle('odd', 'even')}
+              %td
+                = call.caller_name
+              %td
+                = call.caller_number
+              %td
+                = call.inboundno
+              %td
+                = call.call_start.to_s
+              %td
+                = call.duration
+              %td
+                = call.call_status
+              %td
+                = call.disposition
+              %td
+                = call.rating
+              %td
+                = call.revenue
