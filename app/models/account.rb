@@ -97,7 +97,8 @@ class Account < ActiveRecord::Base
     self.active.inject({}) do |the_data, an_account|
       the_data[an_account.id] = {:ctr => an_account.sem_click_through_rate_between(Date.yesterday - 1.week, Date.yesterday) * 100,
                                  :leads => an_account.number_of_total_leads_between(Date.yesterday - 1.week, Date.yesterday),
-                                 :cpconv => an_account.cost_per_lead_between(Date.yesterday - 1.week, Date.yesterday)}
+                                 :cpconv => an_account.cost_per_lead_between(Date.yesterday - 1.week, Date.yesterday),
+                                 :leads_by_day => an_account.number_of_total_leads_by_day_between(Date.yesterday - 1.week, Date.yesterday)}
       the_data
     end
   end
@@ -213,6 +214,14 @@ class Account < ActiveRecord::Base
 
   def number_of_total_leads_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.to_a.sum { |campaign| campaign.number_of_total_leads_between(start_date, end_date) }
+  end
+  
+  def number_of_total_leads_by_day_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    data = []
+    start_date.upto(end_date) do |date|
+      data << self.campaigns.to_a.sum { |campaign| campaign.number_of_total_leads_between(date, date) }
+    end
+    data
   end
 
   def spend_between(start_date = Date.yesterday, end_date = Date.yesterday)
