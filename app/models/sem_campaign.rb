@@ -249,11 +249,11 @@ class SemCampaign < ActiveRecord::Base
               ad.save
 
               #Add the Ad Summary
-              adword = AdwordsAdSummary.find_by_adwords_ad_id_and_keyword_id_and_summary_date(ad.id, keyword.id, date)
+              adword = AdwordsAdSummary.find_by_adwords_ad_id_and_adwords_keyword_id_and_summary_date(ad.id, keyword.id, date)
               if adword.blank?
                 adword = AdwordsAdSummary.new
                 adword.adwords_ad_id = ad.id
-                adword.keyword_id = keyword.id
+                adword.adwords_keyword_id = keyword.id
                 adword.summary_date = date
               end
               adword.conv = row["conv"]
