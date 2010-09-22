@@ -18,6 +18,14 @@ class Call < ActiveRecord::Base
   named_scope :between, lambda { |start_date, end_date| {:conditions => ['call_start between ? AND ?', start_date.to_time.utc.at_beginning_of_day, end_date.to_time.utc.end_of_day]} }
   named_scope :snapshot, lambda { |start_datetime, duration| {:conditions => ['call_start between ? AND ?', start_datetime.utc, start_datetime.utc + duration.minutes]} }
 
+  #has_attached_file :recording,
+    #:url  => "/assets/tracks/:account_id/:basename.:extension",
+    #:path => ":rails_root/public/assets/tracks/:account_id/:basename.:extension",
+    #:storage => :s3,
+    #:s3_credentials => "#{RAILS_ROOT}/config/s3.yml",
+    #:bucket => "cv_#{RAILS_ENV}_recordings"
+
+
 
   # CLASS BEHAVIOR
 
