@@ -30,4 +30,8 @@ config.action_mailer.raise_delivery_errors = false
 # Enable threaded mode
 # config.threadsafe!
 # Use postfix for mail delivery 
-#ActionMailer::Base.delivery_method = :sendmail 
+#ActionMailer::Base.delivery_method = :sendmail
+
+config.after_initialize do
+  ExceptionNotification::Notifier.email_prefix = "[STAGING] "
+end

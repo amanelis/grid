@@ -37,3 +37,7 @@ ActionMailer::Base.smtp_settings = {
   :user_name => 'paul.singh@cityvoice.com',
   :password => 'c1tyvo1ce'
 }
+
+config.after_initialize do
+  ExceptionNotification::Notifier.email_prefix = "[PRODUCTION] "
+end

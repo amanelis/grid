@@ -80,6 +80,7 @@ class Call < ActiveRecord::Base
       raise
     end
     exception.present? ? job_status.finish_with_errors(exception) : job_status.finish_with_no_errors
+    Account.cache_results_for_accounts
   end
 
 
