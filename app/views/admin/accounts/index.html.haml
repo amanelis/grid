@@ -16,7 +16,7 @@
         -account_data = @accounts_data[account.id]
         -account_type = account.account_type
         %td= account_type
-        -if account_type =~ /SEM|Moblie/i
+        -if account_type =~ /SEM|Mobile/i
           -ctr = account_data.present? ? account_data[:ctr] : 0.0
           -if ctr > 0.75
             %td{:class => 'green-font'}= sprintf("%.2f", ctr) + '%'
@@ -26,7 +26,10 @@
             %td{:class => 'red-font'}= sprintf("%.2f", ctr) + '%'
         -else
           %td
-        %td= account_data.present? ? account_data[:leads] : 0
+        %td
+          %b= account_data.present? ? account_data[:leads] : 0
+          - if account_data.present?
+            =image_tag(Gchart.sparkline(:data => account_data[:leads_by_day], :size => '80x15', :line_colors => '0077CC', :background => "#{ current_cycle == 'even' ? '000' : 'F1EDE0'}"))
         -cpconv = account_data.present? ? account_data[:cpconv] : 0.0
         -if cpconv > 75
           %td{:class => 'red-font'}
