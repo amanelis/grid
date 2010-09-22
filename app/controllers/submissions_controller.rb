@@ -7,6 +7,7 @@ class SubmissionsController < ApplicationController
     if @submission.save
       # HTTP 200 OK
       Notifier.deliver_form_submission(@submission)
+      Account.send_later(:cache_results_for_accounts)
       redirect_to params[:submission][:retURL]
     else
       # Let's not give the (likely) bot too much info on why this failed.
