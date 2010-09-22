@@ -148,6 +148,31 @@ text-decoration:underline;
     padding: 0 0px;
 }
 
+div.shortbox {
+  background-color:#FFFFFF;
+  /*border:1px solid #999999;*/
+  float:left;
+  height:270px;
+  margin:15px;
+  padding:10px;
+  text-align:center;
+  width:260px;
+}
+
+p#worst {
+    padding-bottom: 4px;
+    color: #ff3300;
+}
+
+p#worst a {
+  color:#444;
+  text-decoration:none;
+}
+
+p#worst a:hover {
+    text-decoration: underline;
+}
+
 .peoplesection { /* For a horizontal section of content */
     width: 640px; /* content - 20 (borders) */
     padding: 0 0px;

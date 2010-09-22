@@ -95,7 +95,9 @@ class Account < ActiveRecord::Base
 
   def self.get_accounts_data
     self.active.inject({}) do |the_data, an_account|
-      the_data[an_account.id] = {:ctr => an_account.sem_click_through_rate_between(Date.yesterday - 1.week, Date.yesterday) * 100,
+      the_data[an_account.id] = {:name => an_account.name,
+                                 :account_type => an_account.account_type,
+                                 :ctr => an_account.sem_click_through_rate_between(Date.yesterday - 1.week, Date.yesterday) * 100,
                                  :leads => an_account.number_of_total_leads_between(Date.yesterday - 1.week, Date.yesterday),
                                  :cpconv => an_account.cost_per_lead_between(Date.yesterday - 1.week, Date.yesterday),
                                  :leads_by_day => an_account.number_of_total_leads_by_day_between(Date.yesterday - 1.week, Date.yesterday)}
