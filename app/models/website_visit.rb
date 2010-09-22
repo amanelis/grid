@@ -32,6 +32,7 @@ class WebsiteVisit < ActiveRecord::Base
       end
     end
     exception.present? ? job_status.finish_with_errors(exception) : job_status.finish_with_no_errors
+    Account.cache_results_for_accounts
   end
 
   def self.update_website_visits(website_id, start = Date.today - 3.days, fend = Date.yesterday, verbose = false)

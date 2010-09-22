@@ -2,6 +2,8 @@ class Account < ActiveRecord::Base
   has_many :campaigns, :dependent => :destroy
   has_one :adwords_client, :dependent => :destroy
 
+  named_scope :active, :conditions => ['status = ? OR status = ?', "Active", "Paused"], :order => "name ASC"
+
 
   # CLASS BEHAVIOR
 
@@ -87,8 +89,21 @@ class Account < ActiveRecord::Base
     Utilities.massage_timeline(raw_data, [:leads])
   end
 
+  def self.cache_results_for_accounts
+    Rails.cache.write("accounts_data", self.get_accounts_data)
+  end
 
-   # INSTANCE BEHAVIOR
+  def self.get_accounts_data
+    self.active.inject({}) do |the_data, an_account|
+      the_data[an_account.id] = {:ctr => an_account.sem_click_through_rate_between(Date.yesterday - 1.week, Date.yesterday) * 100,
+                                 :leads => an_account.number_of_total_leads_between(Date.yesterday - 1.week, Date.yesterday),
+                                 :cpconv => an_account.cost_per_lead_between(Date.yesterday - 1.week, Date.yesterday)}
+      the_data
+    end
+  end
+
+
+  # INSTANCE BEHAVIOR
 
   def number_of_visits_by_date
     Utilities.merge_and_sum_timeline_data(self.campaigns.collect { |campaign| campaign.campaign_style.number_of_visits_by_date }, :visits)
@@ -102,22 +117,22 @@ class Account < ActiveRecord::Base
   #  raw_data = self.number_of_visits_by_date
   #  Utilities.massage_timeline(raw_data, [:visits])
   #end
-  
+
   def combined_timeline_data
     raw_data = Utilities.merge_timeline_data(self.number_of_leads_by_date, self.number_of_visits_by_date)
     Utilities.massage_timeline(raw_data, [:leads, :visits])
   end
-   
+
   def campaign_seo_combined_timeline_data
-    self.campaigns.seo.collect {|campaign| campaign.campaign_style.combined_timeline_data}
+    self.campaigns.seo.collect { |campaign| campaign.campaign_style.combined_timeline_data }
   end
 
   def campaign_sem_combined_timeline_data
-    self.campaigns.sem.collect {|campaign| campaign.campaign_style.combined_timeline_data}
+    self.campaigns.sem.collect { |campaign| campaign.campaign_style.combined_timeline_data }
   end
 
   def campaign_map_combined_timeline_data
-    self.campaigns.map.collect {|campaign| campaign.campaign_style.combined_timeline_data}
+    self.campaigns.map.collect { |campaign| campaign.campaign_style.combined_timeline_data }
   end
 
   def sem_number_of_total_leads_between(start_date = Date.yesterday, end_date = Date.yesterday)

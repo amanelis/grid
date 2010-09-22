@@ -1,11 +1,12 @@
 class Admin::AccountsController < ApplicationController
   before_filter :require_admin
   layout 'admin'
-  
+
   # GET /accounts
   # GET /accounts.xml
   def index
-    @accounts = Account.find(:all, :order => :name).select { |an_account| an_account.status.present?}
+    @accounts = Account.active.to_a
+    @accounts_data = Rails.cache.fetch("accounts_data") { Account.get_accounts_data }
 
     respond_to do |format|
       format.html # index.html.erb

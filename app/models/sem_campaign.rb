@@ -23,6 +23,7 @@ class SemCampaign < ActiveRecord::Base
       raise
     end
     job_status.finish_with_no_errors
+    Account.cache_results_for_accounts
   end
 
   def self.update_sem_campaign_reports_by_ad(date = Date.yesterday, hard_update = false)
@@ -35,6 +36,7 @@ class SemCampaign < ActiveRecord::Base
       raise
     end
     job_status.finish_with_no_errors
+    Account.cache_results_for_accounts
   end
 
   def self.create_all_campaign_level_reports_for_google(date = Date.yesterday)

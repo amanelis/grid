@@ -33,6 +33,7 @@ Rails::Initializer.run do |config|
   config.gem 'static-gmaps', :lib => 'static_gmaps', :source => 'http://gemcutter.org'
   config.gem 'delayed_job'
   config.gem 'daemons', :version => '1.0.10'
+  config.gem 'exception_notification'
 
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named

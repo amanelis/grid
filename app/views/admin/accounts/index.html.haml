@@ -11,30 +11,29 @@
       %th
   %tbody
     - @accounts.each do |account|
-      %tr{ :class => cycle('odd', 'even')}
+      %tr{:class => cycle('odd', 'even')}
         %td= account.name
-        -@account_type = account.account_type
-        %td= @account_type
-        -if @account_type =~ /SEM|Moblie/i
-          -@ctr = (account.sem_click_through_rate_between(Date.yesterday - 1.week, Date.yesterday) * 100)
-          -if @ctr > 0.75
-            %td{:class => 'green-font'}= sprintf("%.2f", @ctr) + '%'
-          -elsif @ctr.between?(0.5, 0.749999)
-            %td{:class => 'yellow-font'}= sprintf("%.2f", @ctr) + '%'
+        -account_data = @accounts_data[account.id]
+        -account_type = account.account_type
+        %td= account_type
+        -if account_type =~ /SEM|Moblie/i
+          -ctr = account_data.present? ? account_data[:ctr] : 0.0
+          -if ctr > 0.75
+            %td{:class => 'green-font'}= sprintf("%.2f", ctr) + '%'
+          -elsif ctr.between?(0.5, 0.749999)
+            %td{:class => 'yellow-font'}= sprintf("%.2f", ctr) + '%'
           -else
-            %td{:class => 'red-font'}= sprintf("%.2f", @ctr) + '%'
+            %td{:class => 'red-font'}= sprintf("%.2f", ctr) + '%'
         -else
           %td
-        %td= account.number_of_total_leads_between(Date.yesterday - 1.week, Date.yesterday)
-        -@cpconv = account.cost_per_lead_between(Date.yesterday - 1.week, Date.yesterday)
-        -if @cpconv > 75
+        %td= account_data.present? ? account_data[:leads] : 0
+        -cpconv = account_data.present? ? account_data[:cpconv] : 0.0
+        -if cpconv > 75
           %td{:class => 'red-font'}
-            = ActionController::Base.helpers.number_to_currency(@cpconv)
-        -elsif @cpconv.between?(35, 74.999)
-          %td{:class => 'yellow-font'}= ActionController::Base.helpers.number_to_currency(@cpconv)
+            = ActionController::Base.helpers.number_to_currency(cpconv)
+        -elsif cpconv.between?(35, 74.999)
+          %td{:class => 'yellow-font'}= ActionController::Base.helpers.number_to_currency(cpconv)
         -else
-          %td{:class => 'green-font'}= ActionController::Base.helpers.number_to_currency(@cpconv)
+          %td{:class => 'green-font'}= ActionController::Base.helpers.number_to_currency(cpconv)
         %td= link_to 'Show', admin_account_path(account)
-
-
         

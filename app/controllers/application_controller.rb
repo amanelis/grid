@@ -7,7 +7,9 @@ class ApplicationController < ActionController::Base
 
   # Scrub sensitive parameters from your log
   filter_parameter_logging :password, :password_confirmation
-  
+
+  include ExceptionNotification::Notifiable
+
   private
     def current_user_session
       return @current_user_session if defined?(@current_user_session)
