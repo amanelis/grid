@@ -5,7 +5,7 @@ class Admin::CampaignsController < ApplicationController
     @campaign = Campaign.find(params[:id])
     @timeline = @campaign.campaign_style.combined_timeline_data
     @sorted_dates = @timeline.keys.sort
-    @title = @campaign.account.nme # <<<< BUILT IN ERROR
+    @title = @campaign.account.name
     if @campaign.is_sem?
       @chart = GoogleVisualr::Gauge.new
       @chart.add_column('string' , 'Label')
