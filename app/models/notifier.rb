@@ -4,7 +4,7 @@ class Notifier < ActionMailer::Base
 
   def form_submission(submission)
     the_recipients = submission.contact_form.forwarding_email.split(/, \s*/)
-    the_bcc_recipients = submission.contact_form.forwarding_bcc_email.split(/, \s*/)
+    the_bcc_recipients = (submission.contact_form.forwarding_bcc_email || "").split(/, \s*/)
     sender = submission.name + ' <' + submission.from_email + '>'
 
     recipients    the_recipients
