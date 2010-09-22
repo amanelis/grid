@@ -73,7 +73,7 @@ class ApplicationManifest < Moonshine::Manifest::Rails
     cron 'update_map_rankings', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} MapKeyword.update_map_rankings", :user => configuration[:user], :minute => 1, :hour => 5
     
     cron 'update_sem_campaign_reports_by_campaign', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} SemCampaign.update_sem_campaign_reports_by_campaign", :user => configuration[:user], :minute => 1, :hour => 9
-    cron 'update_sem_campaign_reports_by_ad', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} SemCampaign.update_sem_campaign_reports_by_ad", :user => configuration[:user], :minute => 1, :hour => 11, :ensure => :absent
+    cron 'update_sem_campaign_reports_by_ad', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} SemCampaign.update_sem_campaign_reports_by_ad", :user => configuration[:user], :minute => 1, :hour => 11
 
     # %w( root rails ).each do |user|
     #   mailalias user, :recipient => 'you@domain.com', :notify => exec('newaliases')
