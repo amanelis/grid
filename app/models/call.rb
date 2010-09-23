@@ -9,6 +9,18 @@ class Call < ActiveRecord::Base
   VOICEMAIL_CALL = "VOICEMAIL"
   OTHER_CALL = "OTHER"
 
+  PENDING = 'pending'
+  UNANSWERED = 'unanswered'
+  SPAM = 'spam'
+  HANGUP = 'hangup'
+  WRONG_NUMBER = 'wrong number'
+  OTHER = 'other'
+  LEAD = 'lead'
+
+  REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['Unanswered', UNANSWERED], ['Spam', SPAM], ['Hangup', HANGUP], ['Wrong Number', WRONG_NUMBER], ['Other', OTHER], ['Lead', LEAD]].to_ordered_hash
+
+  validates_inclusion_of :review_status, :in => REVIEW_STATUS_OPTIONS.values
+
   named_scope :answered, :conditions => {:call_status => ANSWERED_CALL}
   named_scope :canceled, :conditions => {:call_status => CANCELED_CALL}
   named_scope :voicemail, :conditions => {:call_status => VOICEMAIL_CALL}
@@ -96,6 +108,12 @@ class Call < ActiveRecord::Base
 
   def timestamp
     self.call_start
+  end
+
+  def initialize(attributes={})
+    super(attributes)
+    self.review_status = PENDING unless self.review_status.present?
+    self
   end
 
 end
