@@ -17,6 +17,7 @@ class Call < ActiveRecord::Base
 
   named_scope :between, lambda { |start_date, end_date| {:conditions => ['call_start between ? AND ?', start_date.to_time.utc.at_beginning_of_day, end_date.to_time.utc.end_of_day]} }
   named_scope :snapshot, lambda { |start_datetime, duration| {:conditions => ['call_start between ? AND ?', start_datetime.utc, start_datetime.utc + duration.minutes]} }
+  named_scope :previous_hours, lambda { |number| {:conditions => ['call_start between ? AND ?', Time.now.utc - number.hours, Time.now]} }
 
   #has_attached_file :recording,
     #:url  => "/assets/tracks/:account_id/:basename.:extension",
@@ -91,6 +92,10 @@ class Call < ActiveRecord::Base
     min = (span / 60).floor
     secs = span.modulo(60).ceil
     min.to_s + (secs < 10 ? ":0" : ":") + secs.to_s
+  end
+
+  def timestamp
+    self.call_start
   end
 
 end

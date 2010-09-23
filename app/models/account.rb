@@ -105,6 +105,10 @@ class Account < ActiveRecord::Base
     end
   end
 
+  def self.leads_in_previous_hours(number)
+    self.all.collect { |account| account.leads_in_previous_hours(number) }.flatten.sort { |x, y| y.timestamp <=> x.timestamp }
+  end
+
 
   # INSTANCE BEHAVIOR
 
@@ -217,7 +221,7 @@ class Account < ActiveRecord::Base
   def number_of_total_leads_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.to_a.sum { |campaign| campaign.number_of_total_leads_between(start_date, end_date) }
   end
-  
+
   def number_of_total_leads_by_day_between(start_date = Date.yesterday, end_date = Date.yesterday)
     data = []
     start_date.upto(end_date) do |date|
@@ -232,6 +236,10 @@ class Account < ActiveRecord::Base
 
   def cost_per_lead_between(start_date = Date.yesterday, end_date = Date.yesterday)
     (total_leads = self.number_of_total_leads_between(start_date, end_date)) > 0 ? self.spend_between(start_date, end_date) / total_leads : 0.0
+  end
+
+  def leads_in_previous_hours(number)
+    self.campaigns.collect { |campaign| campaign.leads_in_previous_hours(number) }.flatten
   end
 
   # NOTE...these methods don't really make sense at this level in the hierarchy.
