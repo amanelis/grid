@@ -23,7 +23,7 @@ class Submission < ActiveRecord::Base
 
   def initialize(attributes={})
     super(attributes)
-    self.review_status = PENDING unless self.review_status.present?
+    self.review_status = PENDING
     self
   end
 
