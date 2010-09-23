@@ -14,7 +14,7 @@
     -@sorted_by_ctr.each do |account|
       %p#worst
         =link_to account[1][:name], admin_account_path(account[0])
-        ="(#{account[1][:ctr]})"
+        ="(#{sprintf("%.2f", account[1][:ctr]) + '%'})"
   .shortbox
     %h3 Worst by Lead Count
     -@sorted_by_leads.each do |account|
