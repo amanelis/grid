@@ -4,7 +4,7 @@
   .icon
     =image_tag("mail.png", :height => "48", :width => "48")
     .time
-      =time_ago_in_words(activity.call_start) + " ago"
+      =time_ago_in_words(activity.try(:call_start) || activity.try(:time_of_submission))+ " ago"
   .info
     %ul
       %li
