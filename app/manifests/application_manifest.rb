@@ -61,7 +61,7 @@ class ApplicationManifest < Moonshine::Manifest::Rails
     cron 'pull_salesforce_accounts', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} Account.pull_salesforce_accounts", :user => configuration[:user], :minute => 1, :hour => 22
     cron 'get_salesforce_numbers', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} PhoneNumber.get_salesforce_numbers", :user => configuration[:user], :minute => 31, :hour => 22
     cron 'pull_salesforce_campaigns', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} Campaign.pull_salesforce_campaigns", :user => configuration[:user], :minute => 45, :hour => 22
-    cron 'update_calls', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} Call.update_calls((Time.now - 1.day), (Time.now + 1.day))", :user => configuration[:user], :minute => '*/15'
+    cron 'update_calls', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} Call.update_calls", :user => configuration[:user], :minute => '*/15'
     cron 'add_websites', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} Website.add_websites", :user => configuration[:user], :minute => 1, :hour => 23
     cron 'data_pull_websites_visits', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} WebsiteVisit.data_pull_websites_visits", :user => configuration[:user], :minute => 45, :hour => '*/8'
     cron 'update_keywords_from_salesforce', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} Keyword.update_keywords_from_salesforce", :user => configuration[:user], :minute => 31, :hour => 23
