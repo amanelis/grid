@@ -36,6 +36,7 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :accounts, :member => {:report => :get}
     admin.resources :users
     admin.resources :campaigns
+    admin.resources :activities
   end
 
   map.with_options :controller => 'home' do |home|

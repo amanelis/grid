@@ -29,7 +29,7 @@ class Call < ActiveRecord::Base
 
   named_scope :between, lambda { |start_date, end_date| {:conditions => ['call_start between ? AND ?', start_date.to_time.utc.at_beginning_of_day, end_date.to_time.utc.end_of_day]} }
   named_scope :snapshot, lambda { |start_datetime, duration| {:conditions => ['call_start between ? AND ?', start_datetime.utc, start_datetime.utc + duration.minutes]} }
-  named_scope :previous_hours, lambda { |number| {:conditions => ['call_start between ? AND ?', Time.now.utc - number.hours, Time.now]} }
+  named_scope :previous_hours, lambda { |*args| {:conditions => ['call_start > ?', (args.first || nil)]} }
 
   #has_attached_file :recording,
     #:url  => "/assets/tracks/:account_id/:basename.:extension",

@@ -15,8 +15,8 @@ class Submission < ActiveRecord::Base
   validates_presence_of :contact_form_id
 
   named_scope :between, lambda { |start_date, end_date| {:conditions => ['time_of_submission between ? AND ?', start_date.to_time.utc.at_beginning_of_day, end_date.to_time.utc.end_of_day]} }
-  named_scope :previous_hours, lambda { |number| {:conditions => ['time_of_submission between ? AND ?', Time.now.utc - number.hours, Time.now]} }
-
+  named_scope :previous_hours, lambda { |*args| {:conditions => ['time_of_submission > ?', (args.first || nil)]} }
+  
   def timestamp
     self.time_of_submission
   end

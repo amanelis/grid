@@ -105,8 +105,8 @@ class Account < ActiveRecord::Base
     end
   end
 
-  def self.leads_in_previous_hours(number)
-    self.all.collect { |account| account.leads_in_previous_hours(number) }.flatten.sort { |x, y| y.timestamp <=> x.timestamp }
+  def self.leads_in_previous_hours(time=nil)
+    self.all.collect { |account| account.leads_in_previous_hours(time) }.flatten.sort { |x, y| y.timestamp <=> x.timestamp }
   end
 
 
@@ -238,8 +238,8 @@ class Account < ActiveRecord::Base
     (total_leads = self.number_of_total_leads_between(start_date, end_date)) > 0 ? self.spend_between(start_date, end_date) / total_leads : 0.0
   end
 
-  def leads_in_previous_hours(number)
-    self.campaigns.collect { |campaign| campaign.leads_in_previous_hours(number) }.flatten
+  def leads_in_previous_hours(time=nil)
+    self.campaigns.collect { |campaign| campaign.leads_in_previous_hours(time) }.flatten
   end
 
   # NOTE...these methods don't really make sense at this level in the hierarchy.

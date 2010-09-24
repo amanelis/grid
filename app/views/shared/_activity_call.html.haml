@@ -1,0 +1,33 @@
+.activity_item
+  .title
+    =activity.phone_number.campaign.name
+  .icon
+    =image_tag("telephone.png", :height => "48", :width => "48")
+    .time
+      =time_ago_in_words(activity.call_start) + " ago"
+  .info
+    %ul
+      %li 
+        Caller: 
+        =number_to_phone(activity.caller_number)
+        ="(#{activity.caller_name})"
+      %li
+        Status: 
+        %b
+          = "#{activity.call_status} (#{(activity.call_end - activity.call_start).to_int} seconds)"
+      %li
+        Inbound #:
+        =number_to_phone(activity.inboundno)
+      %li
+        Answered By:
+        =number_to_phone(activity.forwardno)
+      %li 
+        [MP3 PLAYER GOES HERE]
+  .review
+    - semantic_form_for activity, :url => admin_activity_path(activity) do |f| 
+      = f.semantic_errors :state
+      - f.inputs do
+        %br
+        = f.input :review_status, :label => 'Review', :as => :select, :collection => Call::REVIEW_STATUS_OPTIONS, :include_blank => false
+      - f.buttons do
+        = f.commit_button :update, :button_html => { :class => "sexybutton sexysimple sexygreen" }
