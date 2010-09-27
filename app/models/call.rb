@@ -35,6 +35,7 @@ class Call < ActiveRecord::Base
 
   has_attached_file :recording,
                     :storage => :s3,
+                    :s3_permissions => :private,
                     :s3_credentials => File.join(Rails.root, 'config', 's3.yml'),
                     :path => ':class/:id/:style.mp3'
   
@@ -109,7 +110,7 @@ class Call < ActiveRecord::Base
     server = XMLRPC::Client.new("api.voicestar.com", "/api/xmlrpc/1", 80)
     server.user = 'reporting@cityvoice.com'
     server.password = 'C1tyv01c3'
-    if !call.recording? || hard_update
+    if !recording? || hard_update
       File.open("#{RAILS_ROOT}/tmp/#{call_id}.mp3", "a+") {|f| f.write(server.call("call.audio", call_id, 'mp3'))}
       self.recording = File.open("#{RAILS_ROOT}/tmp/#{call_id}.mp3")
       File.delete("#{RAILS_ROOT}/tmp/#{call_id}.mp3") if save!
