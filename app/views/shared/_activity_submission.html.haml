@@ -1,6 +1,6 @@
 .activity_item
   .title
-    [CAMPAIGN NAME]
+    =activity.contact_form.campaign.name
   .icon
     =image_tag("mail.png", :height => "48", :width => "48")
     .time
@@ -8,7 +8,23 @@
   .info
     %ul
       %li
-        [SUBMISSION DATA GOES HERE]
+        Name:
+        =mail_to("#{activity.from_email}", "#{activity.name || activity.from_email}")
+      %li
+        Phone:
+        =activity.phone_number
+      %li
+        Address:
+        =activity.home_address
+      %li
+        Submitted at:
+        =activity.time_of_submission.to_s(:rfc822)
+      %li
+        Work Category:
+        =activity.work_category
+      %li
+        Description:
+        =activity.work_description
   .review
     - semantic_form_for activity, :url => admin_activity_path(activity) do |f| 
       = f.semantic_errors :state
@@ -17,3 +33,8 @@
         = f.input :review_status, :label => 'Review', :as => :select, :collection => Submission::REVIEW_STATUS_OPTIONS, :include_blank => false
       - f.buttons do
         = f.commit_button :update, :button_html => { :class => "sexybutton sexysimple sexygreen" }
+  .bottom_title
+    .ip
+      =activity.ip_address
+    .user_agent
+      =activity.user_agent

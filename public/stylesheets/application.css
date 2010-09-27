@@ -193,6 +193,29 @@ div.activity_item .title {
   width:100%;
 }
 
+div.activity_item .bottom_title {
+  background-color:#FFF;
+  padding: 5px 0;
+  float:left;
+  height:auto;
+  text-align:center;
+  width:100%;
+}
+
+div.activity_item .ip {
+  float: left;
+  margin: 5px 10px;
+  font-size: 10px;
+  color:#64503F;
+}
+
+div.activity_item .user_agent{
+  float: right;
+  margin: 5px 10px;
+  font-size: 10px;
+  color:#64503F;
+}
+
 div.activity_item .icon {
   float:left;
   margin: 6px 10px;
