@@ -31,12 +31,12 @@ class Call < ActiveRecord::Base
   named_scope :snapshot, lambda { |start_datetime, duration| {:conditions => ['call_start between ? AND ?', start_datetime.utc, start_datetime.utc + duration.minutes]} }
   named_scope :previous_hours, lambda { |*args| {:conditions => ['call_start > ?', (args.first || nil)]} }
 
-  #has_attached_file :recording,
-  #                  :storage => :s3,
-  #                  :s3_credentials => "#{RAILS_ROOT}/config/s3.yml",
-  #                  :url => ':s3_domain_url',
-  #                  :path => ':class/:id_partition/:style.mp3',
-  #                  :bucket => "cv_#{RAILS_ENV}_recordings"
+  has_attached_file :recording,
+                    :storage => :s3,
+                    :s3_credentials => "#{RAILS_ROOT}/config/s3.yml",
+                    :url => ':s3_domain_url',
+                    :path => ':class/:id_partition/:style.mp3',
+                    :bucket => "cv_#{RAILS_ENV}_recordings"
                     
 
   #validates_attachment_presence :recording
@@ -76,8 +76,8 @@ class Call < ActiveRecord::Base
                   existing_call.inbound_ext = call_result["inbound_ext"]
                   existing_call.inboundno = call_result["inboundno"]
                   existing_call.recorded = call_result["recorded"]
-                  #mp3_file = File.open("/tmp/#{call_result["call_id"]}.mp3", "a+") {|f| f.write(server.call("call.audio", call_result["call_id"], 'mp3')) }
-                 # existing_call.recording =  mp3_file
+                  mp3_file = File.open("/tmp/#{call_result["call_id"]}.mp3", "a+") {|f| f.write(server.call("call.audio", call_result["call_id"], 'mp3')) }
+                  existing_call.recording =  mp3_file
                   existing_call.phone_number_id = phone_number.id
                 end
                 existing_call.assigned_to = call_result["assigned_to"]
