@@ -2,6 +2,8 @@ require 'xmlrpc/client'
 require 'xmlrpc/datetime'
 
 class Call < ActiveRecord::Base
+  include ActivityTypeMixin
+  
   belongs_to :phone_number
 
   ANSWERED_CALL = "ANSWER"
@@ -121,14 +123,13 @@ class Call < ActiveRecord::Base
     min.to_s + (secs < 10 ? ":0" : ":") + secs.to_s
   end
 
-  def timestamp
-    self.call_start
+  def initial_review_status
+    PENDING
   end
 
-  def initialize(attributes={})
-    super(attributes)
-    self.review_status = PENDING
-    self
+  def call_start= the_start_time
+    self[:call_start] = the_start_time
+    self.timestamp = the_start_time
   end
-
+  
 end
