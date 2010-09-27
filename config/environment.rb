@@ -35,7 +35,8 @@ Rails::Initializer.run do |config|
   config.gem 'daemons', :version => '1.0.10'
   config.gem 'exception_notification'
   config.gem 'googlecharts'
-  config.gem 'aws-s3', :lib => 'aws/s3', :source => 'http://gemcutter.org'
+  config.gem 'aws-s3', :lib => 'aws/s3'
+  config.gem "paperclip"
 
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named

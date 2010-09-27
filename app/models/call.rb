@@ -33,12 +33,9 @@ class Call < ActiveRecord::Base
 
   has_attached_file :recording,
                     :storage => :s3,
-                    :s3_credentials => "#{RAILS_ROOT}/config/s3.yml",
-                    :url => ':s3_domain_url',
-                    :path => ':class/:id_partition/:style.mp3',
-                    :bucket => "cv_#{RAILS_ENV}_recordings"
-                    
-
+                    :s3_credentials => File.join(Rails.root, 'config', 's3.yml'),
+                    :path => ':class/:id/:style.mp3'
+  
   #validates_attachment_presence :recording
   #validates_attachment_content_type :recording, :content_type => [ 'application/mp3', 'application/x-mp3', 'audio/mpeg', 'audio/mp3' ]
 
@@ -76,15 +73,13 @@ class Call < ActiveRecord::Base
                   existing_call.inbound_ext = call_result["inbound_ext"]
                   existing_call.inboundno = call_result["inboundno"]
                   existing_call.recorded = call_result["recorded"]
-                  mp3_file = File.open("/tmp/#{call_result["call_id"]}.mp3", "a+") {|f| f.write(server.call("call.audio", call_result["call_id"], 'mp3')) }
-                  existing_call.recording =  mp3_file
                   existing_call.phone_number_id = phone_number.id
                 end
                 existing_call.assigned_to = call_result["assigned_to"]
                 existing_call.disposition = call_result["disposition"]
                 existing_call.rating = call_result["rating"]
                 existing_call.revenue = call_result["revenue"]
-                existing_call.save!
+                Call.send_later(:fetch_call_recording, call_result["call_id"]) if existing_call.save!
               end
             end
           end
@@ -100,9 +95,24 @@ class Call < ActiveRecord::Base
     exception.present? ? job_status.finish_with_errors(exception) : job_status.finish_with_no_errors
     Account.cache_results_for_accounts
   end
-
+  
+  def self.fetch_call_recording(call_id)
+    call = Call.find_by_call_id(call_id)
+    call.fetch_call_recording
+  end
 
   # INSTANCE BEHAVIOR
+  
+  def fetch_call_recording(hard_update = false)
+    server = XMLRPC::Client.new("api.voicestar.com", "/api/xmlrpc/1", 80)
+    server.user = 'reporting@cityvoice.com'
+    server.password = 'C1tyv01c3'
+    if !call.recording? || hard_update
+      File.open("#{RAILS_ROOT}/tmp/#{call_id}.mp3", "a+") {|f| f.write(server.call("call.audio", call_id, 'mp3'))}
+      self.recording = File.open("#{RAILS_ROOT}/tmp/#{call_id}.mp3")
+      File.delete("#{RAILS_ROOT}/tmp/#{call_id}.mp3") if save!
+    end
+  end
 
   def duration
     span = self.call_end - self.call_start
