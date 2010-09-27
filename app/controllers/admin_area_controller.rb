@@ -21,9 +21,5 @@ class AdminAreaController < ApplicationController
     @sorted_by_cpconv = @accounts_data.to_a.sort {|x, y| y[1][:cpconv] <=> x[1][:cpconv]}
     @sorted_by_cpconv = @sorted_by_cpconv[0..4]
   end
-  
-  def realtime
-    @user = current_user
-  end
 
 end

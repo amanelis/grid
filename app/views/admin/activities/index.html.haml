@@ -1,0 +1,9 @@
+.activity
+  = will_paginate(@activities)
+  -@activities.each do |activity|
+    -if activity.instance_of?(Call)
+      = render :partial => "shared/activity_call", :locals => { :activity => activity }
+    -if activity.instance_of?(Submission)
+      = render :partial => "shared/activity_submission", :locals => { :activity => activity }
+  = will_paginate(@activities)
+  .clear

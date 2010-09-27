@@ -1,0 +1,3 @@
+if @activities.size > 0 && !page.select('div.activity_notice')
+  page.insert_html :before, '.activity', :partial => "shared/activity_notice"
+end

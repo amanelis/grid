@@ -148,6 +148,96 @@ text-decoration:underline;
     padding: 0 0px;
 }
 
+div.pagination{
+	margin: 5px 0px;
+	padding: 0px;
+	text-align: center ; 
+}
+
+div.activity { /* For a horizontal section of content */
+    width: 940px; /* content - 20 (borders) */
+    padding: 0 0px;
+    margin: 0 auto;
+    color:#444444;
+}
+
+div.activity_item {
+  background-color:#FFF;
+  border:1px dotted #EEE;
+  font-size: 14px;
+  float:left;
+  height:auto;
+  margin:5px auto;
+  text-align:center;
+  width:100%;
+}
+
+div.activity_notice{
+  background-color:#FFF;
+  border:1px dotted #EEE;
+  font-size: 200%;
+  float:left;
+  height:auto;
+  margin:5px auto;
+  text-align:center;
+  width:100%;
+}
+
+div.activity_item .title {
+  background-color:#EEE;
+  padding: 5px 0;
+  font-weight: bold;
+  float:left;
+  height:auto;
+  text-align:center;
+  width:100%;
+}
+
+div.activity_item .icon {
+  float:left;
+  margin: 6px 10px;
+}
+
+div.activity_item .info {
+  font-size: 14px;
+  float:left;
+  margin: 6px 10px;
+  text-align: left;
+}
+
+div.activity_item .review {
+  font-size: 14px;
+  float:right;
+  margin: 6px 10px;
+  width: 200px;
+}
+
+div.activity_item .time {
+  margin: 5px 2px;
+  font-size: 10px;
+  color:#64503F;
+}
+
+div.activity_item ul {
+  list-style:none outside none;
+  margin:0;
+  padding:0;
+}
+div.activity_item li {
+  line-height:1.3em;
+  margin-bottom:3px;
+  font-size: 12px;
+}
+
+div.activity_item .tinybox {
+  background-color:#FFFFFF;
+  /*border:1px solid #999999;*/
+  float:left;
+  margin:6px 10px;
+  text-align:left;
+  width:260px;
+}
+
 div.shortbox {
   background-color:#FFFFFF;
   /*border:1px solid #999999;*/

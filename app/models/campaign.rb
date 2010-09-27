@@ -290,8 +290,8 @@ class Campaign < ActiveRecord::Base
     self.website.try(:number_of_map_visits_by_date) || {}
   end
 
-  def leads_in_previous_hours(number)
-    self.calls.lead.previous_hours(number) + self.submissions.previous_hours(number)
+  def leads_in_previous_hours(time = nil)
+    self.calls.lead.previous_hours(time) + self.submissions.previous_hours(time)
   end
 
   # PREDICATES

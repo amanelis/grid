@@ -1,0 +1,19 @@
+.activity_item
+  .title
+    [CAMPAIGN NAME]
+  .icon
+    =image_tag("mail.png", :height => "48", :width => "48")
+    .time
+      =time_ago_in_words(activity.time_of_submission)+ " ago"
+  .info
+    %ul
+      %li
+        [SUBMISSION DATA GOES HERE]
+  .review
+    - semantic_form_for activity, :url => admin_activity_path(activity) do |f| 
+      = f.semantic_errors :state
+      - f.inputs do
+        %br
+        = f.input :review_status, :label => 'Review', :as => :select, :collection => Submission::REVIEW_STATUS_OPTIONS, :include_blank => false
+      - f.buttons do
+        = f.commit_button :update, :button_html => { :class => "sexybutton sexysimple sexygreen" }
