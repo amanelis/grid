@@ -1,0 +1,15 @@
+development:
+  access_key_id: AKIAIINZSHMCOMSURAHQ
+  secret_access_key: 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
+  bucket_base_name: cv_development_recordings
+
+staging:
+  access_key_id: AKIAIINZSHMCOMSURAHQ
+  secret_access_key: 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
+  bucket_base_name: cv_staging_recordings
+
+production:
+  access_key_id: AKIAIINZSHMCOMSURAHQ
+  secret_access_key: 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
+  bucket_base_name: cv_production_recordings
+

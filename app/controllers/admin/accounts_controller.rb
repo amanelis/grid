@@ -93,4 +93,10 @@ class Admin::AccountsController < ApplicationController
     end
     
   end
+
+  def weekly_perf_report
+    respond_to do |format|
+      format.html # show.html.erb
+    end
+  end
 end

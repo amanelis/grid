@@ -1,9 +1,9 @@
 <script language="javascript">
 <!--
-var form1 = Form1.submission[name].value
-var form2 = Form1.submission[from_email].value
-var form3 = Form1.submission[phone_number].value
-var form3 = Form1.submission[work_description].value
+var form1 = Form1.name.value
+var form2 = Form1.from_email.value
+var form3 = Form1.phone_number.value
+var form3 = Form1.work_description.value
 if (form1==""&&Submit=1) {
 alert("You have not filled out all the required fields.");
 }
@@ -16,10 +16,81 @@ alert("You have not filled out all the required fields.");
 if (form4==""&&Submit=1) {
 alert("You have not filled out all the required fields.");
 }
+
+        function checkform(){
+		var form1 = document.Form1.name.value
+		var form2 = document.Form1.phone_number.value
+		var form3 = document.Form1.custom1_value.value
+		var form4 = document.Form1.from_email.value
+		var form5 = document.Form1.home_address.value
+		var form6 = document.Form1.date_requested.value
+		var form7 = document.Form1.time_requested.value
+		var form8 = document.Form1.custom2_value.value
+		var form9 = document.Form1.custom3_value.value
+		var form10 = document.Form1.work_category.value
+		var form11 = document.Form1.work_description.value
+		var spam = document.Form1.no_spam.value
+
+		if (form1=="") {
+		alert("Please fill out all the required fields.");
+		return false;
+		}
+		if (form2=="") {
+		alert("Please fill out all the required fields.");
+		return false;
+		}
+		if (form3=="") {
+		alert("Please fill out all the required fields.");
+		return false;
+		}
+		if (form4=="") {
+		alert("Please fill out all the required fields.");
+		return false;
+		}
+		if (form5=="") {
+		alert("Please fill out all the required fields.");
+		return false;
+		}
+		if (form6=="") {
+		alert("Please fill out all the required fields.");
+		return false;
+		}
+		if (form7=="") {
+		alert("Please fill out all the required fields.");
+		return false;
+		}
+		if (form8=="") {
+		alert("Please fill out all the required fields.");
+		return false;
+		}
+		if (form9=="") {
+		alert("Please fill out all the required fields.");
+		return false;
+		}
+		if (form10=="") {
+		alert("Please fill out all the required fields.");
+		return false;
+		}
+		if (form11=="") {
+		alert("Please fill out all the required fields.");
+		return false;
+		}
+		if (spam!="") {
+		alert("You are SPAM!!!");
+		return false;
+		}
+		return true; };
 -->
 </script>
+        
+<link rel="stylesheet" type="text/css" media="all" href="jsDatePick_ltr.min.css" />
+<script type="text/javascript" src="jsDatePick.min.1.3.js"></script>
+<script type="text/javascript">
+	window.onload = function(){new JsDatePick({useMode:2, target:"date_requested", dateFormat:"%Y-%M-%d"});};
+</script>
 
-<form action="http://grid.cityvoice.com/submission" method="POST" name="Form1" onsubmit="return Form1_Validator(this)">
+
+<form action="http://grid.cityvoice.com/submission" method="POST" name="Form1" onSubmit="return checkform()">
 
 
 <input type=hidden id="contact_form_id" name="submission[contact_form_id]" value="2">
@@ -27,8 +98,6 @@ alert("You have not filled out all the required fields.");
 
 <table border="0" width="100%">
 <tr>
-<td width="164">
-&nbsp;</td>
 <td>*Required</td>
 </tr>
 <tr>
@@ -56,11 +125,25 @@ alert("You have not filled out all the required fields.");
 
 <tr>
 <td width="164" align="right"><label for="work_date">Date Requested for Work</label></td>
-<td><input id="date_requested" maxlength="40" name="submission[date_requested]" size="20" type="text"/></td>
+<td><input id="date_requested" size="12" name="submission[date_requested]" type="text"/></td>
 </tr>
 <tr>
 <td width="164" align="right"><label for="time">Time Requested for Work</label></td>
-<td><input id="time_requested" maxlength="40" name="submission[time_requested]" size="20" type="text"/></td>
+<td><select id="time_requested" name="submission[time_requested]">
+<option value="Any">Any</option>
+<option value="ASAP">ASAP</option>
+<option value="8 AM">8 AM</option>
+<option value="9 AM">9 AM</option>
+<option value="10 AM">10 AM</option>
+<option value="11 AM">11 AM</option>
+<option value="12 PM">12 PM</option>
+<option value="1 PM">1 PM</option>
+<option value="2 PM">2 PM</option>
+<option value="2 PM">3 PM</option>
+<option value="2 PM">4 PM</option>
+<option value="2 PM">5 PM</option>
+<option value="Other">Other</option>
+</select></td>
 </tr>
 <tr>
 <td width="164" align="right"><label for="category">Type of Work</label></td>

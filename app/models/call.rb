@@ -20,13 +20,15 @@ class Call < ActiveRecord::Base
   named_scope :previous_hours, lambda { |number| {:conditions => ['call_start between ? AND ?', Time.now.utc - number.hours, Time.now]} }
 
   #has_attached_file :recording,
-    #:url  => "/assets/tracks/:account_id/:basename.:extension",
-    #:path => ":rails_root/public/assets/tracks/:account_id/:basename.:extension",
-    #:storage => :s3,
-    #:s3_credentials => "#{RAILS_ROOT}/config/s3.yml",
-    #:bucket => "cv_#{RAILS_ENV}_recordings"
+  #                  :storage => :s3,
+  #                  :s3_credentials => "#{RAILS_ROOT}/config/s3.yml",
+  #                  :url => ':s3_domain_url',
+  #                  :path => ':class/:id_partition/:style.mp3',
+  #                  :bucket => "cv_#{RAILS_ENV}_recordings"
+                    
 
-
+  #validates_attachment_presence :recording
+  #validates_attachment_content_type :recording, :content_type => [ 'application/mp3', 'application/x-mp3', 'audio/mpeg', 'audio/mp3' ]
 
   # CLASS BEHAVIOR
 
@@ -34,6 +36,7 @@ class Call < ActiveRecord::Base
     job_status = JobStatus.create(:name => "Call.update_calls")
     exception = nil
     begin
+      
       server = XMLRPC::Client.new("api.voicestar.com", "/api/xmlrpc/1", 80)
       # or http://api.voicestar.com/
       server.user = 'reporting@cityvoice.com'
@@ -61,13 +64,15 @@ class Call < ActiveRecord::Base
                   existing_call.inbound_ext = call_result["inbound_ext"]
                   existing_call.inboundno = call_result["inboundno"]
                   existing_call.recorded = call_result["recorded"]
+                  #mp3_file = File.open("/tmp/#{call_result["call_id"]}.mp3", "a+") {|f| f.write(server.call("call.audio", call_result["call_id"], 'mp3')) }
+                 # existing_call.recording =  mp3_file
                   existing_call.phone_number_id = phone_number.id
                 end
                 existing_call.assigned_to = call_result["assigned_to"]
                 existing_call.disposition = call_result["disposition"]
                 existing_call.rating = call_result["rating"]
                 existing_call.revenue = call_result["revenue"]
-                existing_call.save
+                existing_call.save!
               end
             end
           end
