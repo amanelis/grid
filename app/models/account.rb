@@ -106,7 +106,8 @@ class Account < ActiveRecord::Base
   end
 
   def self.leads_in_previous_hours(time=nil)
-    self.all.collect { |account| account.leads_in_previous_hours(time) }.flatten.sort { |x, y| y.timestamp <=> x.timestamp }
+    Activity.previous_hours(time).sort { |x, y| y.timestamp <=> x.timestamp }.collect {|activity| activity.activity_type }
+#    self.all.collect { |account| account.leads_in_previous_hours(time) }.flatten.sort { |x, y| y.timestamp <=> x.timestamp }
   end
 
 
