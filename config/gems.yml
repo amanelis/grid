@@ -7,6 +7,8 @@
 - :name: authlogic
 - :name: adwords4r
 - :name: haml
+- :version: = 0.4.0
+  :name: i18n
 - :name: formtastic
 - :source: http://gemcutter.org
   :version: ~> 2.3.11

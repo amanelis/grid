@@ -26,6 +26,7 @@ Rails::Initializer.run do |config|
   config.gem 'authlogic'
   config.gem 'adwords4r'
   config.gem 'haml'
+  config.gem 'i18n', :version => '0.4.0'
   config.gem 'formtastic'
   config.gem 'will_paginate', :version => '~> 2.3.11', :source => 'http://gemcutter.org'
   config.gem 'sendgrid', :source => 'http://gemcutter.org'
