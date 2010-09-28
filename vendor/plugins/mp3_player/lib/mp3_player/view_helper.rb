@@ -76,7 +76,7 @@ module Mp3Player
       flash_vars += boolean_options.collect {|key,value| "#{key}=#{value}" }
 
       # add the soundFile param
-      flash_vars << "soundFile=#{path_to_file}"
+      flash_vars << "soundFile=#{CGI::escape(path_to_file)}"
 
       # join params with an ampersand
       flash_vars = flash_vars.join("&").to_s
