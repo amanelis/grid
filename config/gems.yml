@@ -8,8 +8,8 @@
 - :name: adwords4r
 - :name: haml
 - :name: formtastic
-- :version: ~> 2.3.11
-  :source: http://gemcutter.org
+- :source: http://gemcutter.org
+  :version: ~> 2.3.11
   :name: will_paginate
 - :source: http://gemcutter.org
   :name: sendgrid
@@ -22,7 +22,7 @@
   :name: daemons
 - :name: exception_notification
 - :name: googlecharts
-- :source: http://gemcutter.org
-  :name: aws-s3
+- :name: aws-s3
+- :name: paperclip
 - :version: 2.3.9
   :name: rails
