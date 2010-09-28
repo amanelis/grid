@@ -4,8 +4,8 @@ class Admin::ActivitiesController < ApplicationController
   
   def index
     @user = current_user
-    @activities = Account.leads_in_previous_hours(Time.at(params[:after].to_i + 1))
-    @activities = @activities.paginate(:page => (params[:page] || 1))
+    #@activities = Account.leads_in_previous_hours(Time.at(params[:after].to_i + 1))
+    @activities = Activity.paginate(:page => (params[:page] || 1), :order => 'timestamp DESC')
   end
   
   def update

@@ -1,4 +1,4 @@
-.activity_item{:id => "#{activity.created_at.to_i}"}
+.activity_item{:id => "#{activity.timestamp.to_i}"}
   .title
     =activity.phone_number.campaign.name
   .icon
