@@ -15,12 +15,6 @@
         Status: 
         %b
           = "#{activity.call_status} (#{(activity.call_end - activity.call_start).to_int} seconds)"
-      %li
-        Inbound #:
-        =number_to_phone(activity.inboundno)
-      %li
-        Answered By:
-        =number_to_phone(activity.forwardno)
       %li 
         [MP3 PLAYER GOES HERE]
   .review
@@ -31,3 +25,10 @@
         = f.input :review_status, :label => 'Review', :as => :select, :collection => Call::REVIEW_STATUS_OPTIONS, :include_blank => false
       - f.buttons do
         = f.commit_button :update, :button_html => { :class => "sexybutton sexysimple sexygreen" }
+  .bottom_title
+    .leftinfo
+      Inbound #: 
+      =number_to_phone(activity.inboundno)
+    .rightinfo
+      Answered By:
+      =number_to_phone(activity.forwardno)

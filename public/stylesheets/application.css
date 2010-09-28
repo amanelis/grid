@@ -202,14 +202,14 @@ div.activity_item .bottom_title {
   width:100%;
 }
 
-div.activity_item .ip {
+div.activity_item .leftinfo {
   float: left;
   margin: 5px 10px;
   font-size: 10px;
   color:#64503F;
 }
 
-div.activity_item .user_agent{
+div.activity_item .rightinfo{
   float: right;
   margin: 5px 10px;
   font-size: 10px;
