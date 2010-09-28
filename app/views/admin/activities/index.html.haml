@@ -1,9 +1,9 @@
 .activity
   = will_paginate(@activities)
   -@activities.each do |activity|
-    -if activity.activity_type_type == "Call"
+    -if activity.is_call?
       = render :partial => "shared/activity_call", :locals => { :activity => activity.activity_type }
-    -if activity.activity_type_type == "Submission"
+    -if activity.is_submission?
       = render :partial => "shared/activity_submission", :locals => { :activity => activity.activity_type }
   = will_paginate(@activities)
   .clear
