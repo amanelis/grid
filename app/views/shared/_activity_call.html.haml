@@ -15,8 +15,15 @@
         Status: 
         %b
           = "#{activity.call_status} (#{(activity.call_end - activity.call_start).to_int} seconds)"
+      %li
+        %br
       %li 
-        [MP3 PLAYER GOES HERE]
+        -if activity.recording?
+          = link_to('Listen', activity.recording.expiring_url(14400))
+          = mp3_player "#{activity.recording.expiring_url(14400)}"
+        -else
+          =image_tag("sound.png", :height => "14", :width => "14")
+          Call Recording Unavailable
   .review
     - semantic_form_for activity, :url => admin_activity_path(activity) do |f| 
       = f.semantic_errors :state
