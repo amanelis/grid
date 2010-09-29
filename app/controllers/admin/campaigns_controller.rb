@@ -29,7 +29,7 @@ class Admin::CampaignsController < ApplicationController
         @chart.set_value(0, 1, 0)
       end
       @chart.width  = 250
-	  @chart.height = 250
+	    @chart.height = 250
     end
     
   end

@@ -303,7 +303,10 @@ p#worst a:hover {
     margin-bottom: 30px;
 }
 
-#gauge {}
+
+#chart table {
+	width: 100%;
+}
 
 
 #dropping-articles {}
