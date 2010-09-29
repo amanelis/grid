@@ -1,6 +1,6 @@
 .activity_item
   .title
-    =activity.contact_form.campaign.name
+    = link_to activity.contact_form.campaign.name, admin_campaign_path(activity.contact_form.campaign.name)
   .icon
     =image_tag("mail.png", :height => "48", :width => "48")
     .time

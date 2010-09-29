@@ -1,6 +1,6 @@
 .activity_item{:id => "#{activity.timestamp.to_i}"}
   .title
-    =activity.phone_number.campaign.name
+    = link_to activity.phone_number.campaign.name, admin_campaign_path(activity.phone_number.campaign)
   .icon
     =image_tag("telephone.png", :height => "48", :width => "48")
     .time
