@@ -11,10 +11,16 @@ class Admin::ActivitiesController < ApplicationController
   def update
     @user = current_user
     
-    @call = Call.find(params[:id]) if params[:call]
-    @submission = Submission.find(params[:id]) if params[:submission]
+    @activity = Activity.find(params[:id]) 
+    params[:activity] = {}
     
-    if (@call.update_attributes(params[:call]) if @call) || (@submission.update_attributes(params[:submission]) if @submission)
+    if params[:call]
+      params[:activity][:review_status] = params[:call][:review_status]
+    elsif params[:submission]
+      params[:activity][:review_status] = params[:submission][:review_status]
+    end
+    
+    if @activity.update_attributes(params[:activity])
       redirect_to admin_activities_path
     else
       flash[:notice] = "Something went wrong."

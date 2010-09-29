@@ -1,6 +1,6 @@
 .activity_item
   .title
-    = link_to activity.contact_form.campaign.name, admin_campaign_path(activity.contact_form.campaign.name)
+    = link_to activity.contact_form.campaign.name, admin_campaign_path(activity.contact_form.campaign)
   .icon
     =image_tag("mail.png", :height => "48", :width => "48")
     .time
@@ -26,7 +26,7 @@
         Description:
         =activity.work_description
   .review
-    - semantic_form_for activity, :url => admin_activity_path(activity) do |f| 
+    - semantic_form_for activity, :url => admin_activity_path(activity.activity) do |f| 
       = f.semantic_errors :state
       - f.inputs do
         %br

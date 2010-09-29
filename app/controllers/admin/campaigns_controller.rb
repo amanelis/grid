@@ -1,5 +1,6 @@
 class Admin::CampaignsController < ApplicationController
   before_filter :require_admin
+  layout 'admin'
 
   def show
     @campaign = Campaign.find(params[:id])
