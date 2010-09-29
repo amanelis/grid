@@ -3,6 +3,10 @@ class SubmissionsController < ApplicationController
     head 200
   end
   
+  def show
+    head 200
+  end
+  
   def create
     unless ContactForm.exists?(params[:submission][:contact_form_id])
       # Let's not give the (likely) bot too much info on why this failed.

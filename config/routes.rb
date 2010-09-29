@@ -46,7 +46,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resource :person, :controller => "users"
   map.resources :users, :password_resets
   map.resource :user_session
-  map.resource :submission, :only => [:index, :create]
+  map.resource :submission, :only => [:index, :create, :show]
   map.root :controller => "home", :action => "index" # optional, this just sets the root route
 
   # You can have the root of your site routed with map.root -- just remember to delete public/index.html.
