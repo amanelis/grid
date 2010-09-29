@@ -1,5 +1,12 @@
 class SubmissionsController < ApplicationController
-  def create    
+  def create
+
+    unless ContactForm.exists?(params[:submission][:contact_form_id])
+      # Let's not give the (likely) bot too much info on why this failed.
+      head 400
+      return
+    end
+    
     @submission = Submission.new(params[:submission])
     @submission.ip_address = request.remote_ip
     @submission.user_agent = request.user_agent
