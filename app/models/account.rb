@@ -46,7 +46,7 @@ class Account < ActiveRecord::Base
   def self.pull_salesforce_accounts
     job_status = JobStatus.create(:name => "Account.pull_salesforce_accounts")
     begin
-      sf_accounts = Salesforce::Account.find(:all, :conditions => ['account_status__c = ? OR account_status__c = ?', "Active", "Paused"])
+      sf_accounts = Salesforce::Account.find(:all, :conditions => ['account_status__c != ?', ''])
       sf_accounts.each do |sf_account|
         existing_account = Account.find_by_salesforce_id(sf_account.id)
         if existing_account.blank?
