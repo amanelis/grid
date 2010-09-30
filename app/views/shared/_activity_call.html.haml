@@ -20,7 +20,7 @@
       %li 
         -if activity.recording?
           = link_to('Listen', activity.recording.expiring_url(14400))
-          = mp3_player "#{activity.recording.expiring_url(14400)}"
+          = mp3_player "#{activity.recording.expiring_url(14400)}", :bg => "EEEEEE", :track => "EEEEEE", :slider => "222222", :loader => "EEEEEE"
         -else
           =image_tag("sound.png", :height => "14", :width => "14")
           Call Recording Unavailable
