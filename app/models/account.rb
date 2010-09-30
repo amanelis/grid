@@ -89,7 +89,7 @@ class Account < ActiveRecord::Base
   end
 
   def self.combined_timeline_data
-    raw_data = Utilities.merge_and_sum_timeline_data(Account.all.collect { |account| account.number_of_leads_by_date }, :leads)
+    raw_data = Utilities.merge_and_sum_timeline_data(self.active.collect { |account| account.number_of_leads_by_date }, :leads)
     Utilities.massage_timeline(raw_data, [:leads])
   end
 
