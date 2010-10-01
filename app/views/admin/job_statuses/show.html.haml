@@ -7,7 +7,10 @@
   =time_ago_in_words(@job_status.created_at) + " ago"
 %p
   Duration:
-  = "#{(@job_status.end_time - @job_status.start_time).to_i} seconds"
+  -if job.end_time
+    = "#{(@job_status.end_time - @job_status.start_time).to_i} seconds"
+  -else
+    Running
 %p
   Status:
   %b

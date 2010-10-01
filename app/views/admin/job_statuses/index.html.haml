@@ -11,7 +11,11 @@
       %tr{:class => cycle('odd', 'even')}
         %td= job.name
         %td= time_ago_in_words(job.created_at) + " ago"
-        %td= "#{(job.end_time - job.start_time).to_i} seconds"
+        %td
+          -if job.end_time
+            = "#{(job.end_time - job.start_time).to_i} seconds"
+          -else
+            Running
         %td= job.status
         %td= link_to 'Show', admin_job_status_path(job)
 = will_paginate(@activities)
