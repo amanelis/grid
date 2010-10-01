@@ -1,0 +1,18 @@
+%table{:class => "pretty"}
+  %thead
+    %tr
+      %th Name
+      %th Logged
+      %th Duration
+      %th Status
+      %th
+  %tbody
+    - @job_statuses.each do |job|
+      %tr{:class => cycle('odd', 'even')}
+        %td= job.name
+        %td= time_ago_in_words(job.created_at) + " ago"
+        %td= "#{(job.end_time - job.start_time).to_i} seconds"
+        %td= job.status
+        %td= link_to 'Show', admin_job_status_path(job)
+= will_paginate(@activities)
+.clear

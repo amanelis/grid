@@ -1,0 +1,17 @@
+%p
+  Job Name:
+  %b
+    = @job_status.name
+%p
+  Logged:
+  =time_ago_in_words(@job_status.created_at) + " ago"
+%p
+  Duration:
+  = "#{(@job_status.end_time - @job_status.start_time).to_i} seconds"
+%p
+  Status:
+  %b
+    = @job_status.status
+%p
+  Errors:
+  ~ text_area_tag("error_message", @job_status.error_message, :cols =>'120', :rows => '40')
