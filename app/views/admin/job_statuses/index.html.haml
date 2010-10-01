@@ -15,7 +15,7 @@
           -if job.end_time
             = "#{(job.end_time - job.start_time).to_i} seconds"
           -else
-            Running
+            = "---"
         %td= job.status
         %td= link_to 'Show', admin_job_status_path(job)
 = will_paginate(@activities)
