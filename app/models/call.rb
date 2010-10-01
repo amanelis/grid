@@ -107,6 +107,7 @@ class Call < ActiveRecord::Base
   # INSTANCE BEHAVIOR
   
   def fetch_call_recording(hard_update = false)
+    unless self.recorded return
     server = XMLRPC::Client.new("api.voicestar.com", "/api/xmlrpc/1", 80)
     server.user = 'reporting@cityvoice.com'
     server.password = 'C1tyv01c3'
