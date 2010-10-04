@@ -63,18 +63,18 @@
       %th
         Result
       %th
-        Call
+        Recording
   %tbody
     -@campaign.calls.find(:all, :conditions => ['call_start between ? AND ?', Date.today - 1.week, Date.today]).each do |call|
       %tr{ :class => cycle('odd', 'even')}
         %td
           = call.caller_name
         %td
-          = call.caller_number
+          = number_to_phone(call.caller_number)
         %td
-          = call.inboundno
+          = number_to_phone(call.inboundno)
         %td
-          = call.call_start.to_s
+          = call.call_start.in_time_zone.to_s(:short) + " UTC"
         %td
           = call.duration
         %td
