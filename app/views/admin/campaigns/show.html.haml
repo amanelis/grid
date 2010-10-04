@@ -80,7 +80,7 @@
         %td
           = call.call_status
         %td
-          -if call.recorded?
+          -if call.recorded? && call.recording?
             = mp3_player "#{call.recording.expiring_url(14400)}", :bg => "EEEEEE", :track => "EEEEEE", :slider => "222222", :loader => "EEEEEE"
           -else
             =image_tag("sound.png", :height => "14", :width => "14")
