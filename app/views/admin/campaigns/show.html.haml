@@ -65,7 +65,7 @@
       %th
         Recording
   %tbody
-    -@campaign.calls.find(:all, :conditions => ['call_start between ? AND ?', Date.today - 1.week, Date.today]).each do |call|
+    -@campaign.calls.find(:all, :conditions => ['call_start between ? AND ?', Date.today.to_time.utc.at_beginning_of_day - 1.week, Date.today.to_time.utc.end_of_day]).each do |call|
       %tr{ :class => cycle('odd', 'even')}
         %td
           = call.caller_name
