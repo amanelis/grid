@@ -20,7 +20,7 @@ class SubmissionsController < ApplicationController
     @submission.time_of_submission = DateTime.now
     if @submission.save
       # HTTP 200 OK
-      Notifier.deliver_form_submission(@submission)
+      Notifier.send_later(:deliver_form_submission, @submission)
       Account.send_later(:cache_results_for_accounts)
       redirect_to params[:submission][:retURL]
     else
