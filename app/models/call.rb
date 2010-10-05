@@ -47,8 +47,9 @@ class Call < ActiveRecord::Base
   def self.update_calls(start=(Time.now - 2.days), fend=(Time.now + 1.day))
     job_status = JobStatus.create(:name => "Call.update_calls")
     exception = nil
-    begin
-      
+    orphan_campaign = Campaign.find_by_name('CityVoice SEM Orphaned Campaigns')
+
+    begin      
       server = XMLRPC::Client.new("api.voicestar.com", "/api/xmlrpc/1", 80)
       # or http://api.voicestar.com/
       server.user = 'reporting@cityvoice.com'
@@ -63,28 +64,32 @@ class Call < ActiveRecord::Base
           if call_results.present?
             call_results.each do |call_result|
               phone_number = PhoneNumber.find_by_cmpid(call_result["cmpid"])
-              if phone_number.present?
-                existing_call = Call.find_by_call_id(call_result["call_id"])
-                if existing_call.blank?
-                  existing_call = Call.new
-                  existing_call.call_id = call_result["call_id"]
-                  existing_call.call_end = call_result["call_end"].to_time()
-                  existing_call.call_start = call_result["call_start"].to_time()
-                  existing_call.call_status = call_result["call_status"]
-                  existing_call.caller_name = call_result["caller_name"]
-                  existing_call.caller_number = call_result["caller_number"]
-                  existing_call.forwardno = call_result["forwardno"]
-                  existing_call.inbound_ext = call_result["inbound_ext"]
-                  existing_call.inboundno = call_result["inboundno"]
-                  existing_call.recorded = call_result["recorded"]
-                  existing_call.phone_number_id = phone_number.id
-                end
-                existing_call.assigned_to = call_result["assigned_to"]
-                existing_call.disposition = call_result["disposition"]
-                existing_call.rating = call_result["rating"]
-                existing_call.revenue = call_result["revenue"]
-                Call.send_later(:fetch_call_recording, call_result["call_id"]) if existing_call.save!
+              if phone_number.blank?
+                phone_number = orphan_campaign.phone_numbers.build
+                phone_number.inboundno = call_result["inboundno"]
+                phone_number.cmpid = call_result["cmpid"]
+                phone_number.save!                
               end
+              existing_call = Call.find_by_call_id(call_result["call_id"])
+              if existing_call.blank?
+                existing_call = Call.new
+                existing_call.call_id = call_result["call_id"]
+                existing_call.call_end = call_result["call_end"].to_time()
+                existing_call.call_start = call_result["call_start"].to_time()
+                existing_call.call_status = call_result["call_status"]
+                existing_call.caller_name = call_result["caller_name"]
+                existing_call.caller_number = call_result["caller_number"]
+                existing_call.forwardno = call_result["forwardno"]
+                existing_call.inbound_ext = call_result["inbound_ext"]
+                existing_call.inboundno = call_result["inboundno"]
+                existing_call.recorded = call_result["recorded"]
+                existing_call.phone_number_id = phone_number.id
+              end
+              existing_call.assigned_to = call_result["assigned_to"]
+              existing_call.disposition = call_result["disposition"]
+              existing_call.rating = call_result["rating"]
+              existing_call.revenue = call_result["revenue"]
+              Call.send_later(:fetch_call_recording, call_result["call_id"]) if existing_call.save!
             end
           end
         rescue Exception => ex
