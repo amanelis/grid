@@ -65,7 +65,7 @@
       %th
         Recording
   %tbody
-    -@campaign.calls.find(:all, :conditions => ['call_start between ? AND ?', Date.today - 1.week, Date.today]).each do |call|
+    -@campaign.calls.find(:all, :conditions => ['call_start between ? AND ?', Date.today.to_time.utc.at_beginning_of_day - 1.week, Date.today.to_time.utc.end_of_day]).each do |call|
       %tr{ :class => cycle('odd', 'even')}
         %td
           = call.caller_name
@@ -80,7 +80,7 @@
         %td
           = call.call_status
         %td
-          -if call.recorded?
+          -if call.recorded? && call.recording?
             = mp3_player "#{call.recording.expiring_url(14400)}", :bg => "EEEEEE", :track => "EEEEEE", :slider => "222222", :loader => "EEEEEE"
           -else
             =image_tag("sound.png", :height => "14", :width => "14")
