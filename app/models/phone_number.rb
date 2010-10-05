@@ -1,3 +1,7 @@
+require 'xmlrpc/client'
+require 'xmlrpc/datetime'
+
+
 class PhoneNumber < ActiveRecord::Base
   belongs_to :campaign
   has_many :calls, :dependent => :destroy
@@ -8,6 +12,8 @@ class PhoneNumber < ActiveRecord::Base
   def self.get_salesforce_numbers
     job_status = JobStatus.create(:name => "PhoneNumber.get_salesforce_numbers")
     begin
+      orphan_campaign = Campaign.find_by_name('CityVoice SEM Orphaned Campaigns')
+
       sf_campaigns = Salesforce::Clientcampaign.all
       sf_campaigns.each do |sf_campaign|
         local_campaign = Campaign.find_by_name(sf_campaign.name)
@@ -19,9 +25,11 @@ class PhoneNumber < ActiveRecord::Base
               existing_number = PhoneNumber.new
               existing_number.cmpid = sf_campaign.primary_marchex_id__c
               existing_number.inboundno = number
+            else
+              existing_number.campaign_id = local_campaign.id if existing_number.campaign_id == orphan_campaign.id
             end
             existing_number.name = sf_campaign.name,
-                    existing_number.campaign_id = local_campaign.id
+            existing_number.campaign_id = local_campaign.id
             existing_number.descript = sf_campaign.name
             existing_number.save
           end
@@ -33,9 +41,11 @@ class PhoneNumber < ActiveRecord::Base
               existing_number = PhoneNumber.new
               existing_number.cmpid = sf_campaign.secondary_marchex_id__c
               existing_number.inboundno = number
+            else
+              existing_number.campaign_id = local_campaign.id if existing_number.campaign_id == orphan_campaign.id
             end
             existing_number.name = sf_campaign.name,
-                    existing_number.campaign_id = local_campaign.id
+            existing_number.campaign_id = local_campaign.id
             existing_number.descript = sf_campaign.name
             existing_number.save
           end
@@ -47,14 +57,43 @@ class PhoneNumber < ActiveRecord::Base
               existing_number = PhoneNumber.new
               existing_number.cmpid = sf_campaign.third_marchex_id__c
               existing_number.inboundno = number
+            else
+              existing_number.campaign_id = local_campaign.id if existing_number.campaign_id == orphan_campaign.id
             end
             existing_number.name = sf_campaign.name,
-                    existing_number.campaign_id = local_campaign.id
+            existing_number.campaign_id = local_campaign.id
             existing_number.descript = sf_campaign.name
             existing_number.save
           end
         end
       end
+
+      #Create/Update orphaned phone numbers and phone number information
+      server = XMLRPC::Client.new("api.voicestar.com", "/api/xmlrpc/1", 80)
+      # or http://api.voicestar.com/
+      server.user = 'reporting@cityvoice.com'
+      server.password = 'C1tyv01c3'
+      results = server.call("acct.list")
+      results.each do |result|
+        group_results = server.call("group.list", result["acct"])
+        group_results.each do |group_result|
+          grpid = group_result["grpid"]
+          ad_results = server.call("ad.list", grpid)
+          ad_results.each do |ad_result|
+            phone_number = PhoneNumber.find_by_inboundno(ad_result["inboundno"])
+            if phone_number.blank?
+              phone_number = orphan_campaign.phone_numbers.build
+              phone_number.inboundno = ad_result["inboundno"]
+              phone_number.cmpid = ad_result["cmpid"]
+            end
+            phone_number.descript = ad_result["descript"]
+            phone_number.name = ad_result["name"]
+            phone_number.save
+          end
+        end
+      end
+
+
     rescue Exception => ex
       job_status.finish_with_errors(ex)
       raise

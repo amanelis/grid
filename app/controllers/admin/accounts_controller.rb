@@ -95,6 +95,8 @@ class Admin::AccountsController < ApplicationController
   end
 
   def weekly_perf_report
+    @accounts = Account.active.to_a
+
     respond_to do |format|
       format.html # show.html.erb
     end

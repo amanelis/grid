@@ -81,11 +81,11 @@ function checkform(){
 <input type="hidden" name="no_spam" value="">
 <table border="0" width="100%">
 <tr>
-<td>*Required</td>
+<td>All Fields Are Required</td>
 </tr>
 <tr>
 <td width="164">
-<p align="right"><label for="first_name">*Name</label></td>
+<p align="right"><label for="first_name">Name</label></td>
 <td><input id="name" maxlength="40" name="submission[name]" size="20" type="text"/></td>
 </tr>
 <tr>
@@ -161,7 +161,89 @@ function checkform(){
 </tr>
 <tr>
 <td width="164">&nbsp;</td>
-<td><input type="submit" name="submit"></td>
+<td><input type="submit" name="submit" value="Submit Request" onclick="return checkform()"></td>
 </tr>
 </table>
 </form>
+
+
+
+
+
+        ################ Four fields only
+
+<script language="javascript">
+<!--
+function checkform(){
+        var form1 = document.Form1.name.value
+        var form2 = document.Form1.phone_number.value
+        var form3 = document.Form1.from_email.value
+        var form4 = document.Form1.work_description.value
+        var spam = document.Form1.no_spam.value
+
+        if (form1=="") {
+        alert("Please fill out all the required fields.");
+        return false;
+        }
+        if (form2=="") {
+        alert("Please fill out all the required fields.");
+        return false;
+        }
+        if (form3=="") {
+        alert("Please fill out all the required fields.");
+        return false;
+        }
+        if (form4=="") {
+        alert("Please fill out all the required fields.");
+        return false;
+        }
+        if (spam!="") {
+        alert("You are SPAM!!!");
+        return false;
+        }
+        return true; }
+-->
+</script>
+
+
+        <form action="http://grid.cityvoice.com/submission" method="POST" name="Form1" onSubmit="return checkform()">
+
+
+				<input type=hidden id="contact_form_id" name="submission[contact_form_id]" value="24">
+				<input type=hidden name="submission[retURL]" value="http://www.currentelectricco.com/landing/thankyou.html">
+				<input type="hidden" name="no_spam" value="">
+				<table border="0" width="100%">
+				<tr>
+				<td>*All Fields Are Required</td>
+				</tr>
+				<tr>
+				<td width="164">
+				<p align="right"><label for="first_name">Name</label></td>
+				<td><input id="name" maxlength="40" name="submission[name]" size="20" type="text"/></td>
+				</tr>
+				<tr>
+				<td width="164">
+				<p align="right"><label for="email">Email</label></td>
+				<td><input id="from_email" maxlength="80" name="submission[from_email]" size="20" type="text"/></td>
+				</tr>
+				<tr>
+				<td width="164" align="right"><label for="phone">Phone Number</label></td>
+				<td><input id="phone_number" maxlength="40" name="submission[phone_number]" size="20" type="text"/></td>
+				</tr>
+				<tr>
+				<td width="164" align="right"><label for="other_information">Description of Work</label></td>
+				<td><textarea id="work_description" name="submission[work_description]"></textarea></td>
+				</tr>
+				<tr>
+				<td width="164">&nbsp;</td>
+				<td><input type="submit" name="submit" value="Submit Request" onclick="return checkform()"></td>
+				</tr>
+				</table>
+				</form>
+
+
+
+
+
+        
+        

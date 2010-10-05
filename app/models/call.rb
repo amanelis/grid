@@ -53,6 +53,7 @@ class Call < ActiveRecord::Base
       # or http://api.voicestar.com/
       server.user = 'reporting@cityvoice.com'
       server.password = 'C1tyv01c3'
+      
       results = server.call("acct.list")
       results.each do |result|
         begin
