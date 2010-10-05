@@ -46,6 +46,27 @@
       %td
         = ActionController::Base.helpers.number_to_currency(@campaign.cost_per_lead_between(Date.today - 1.week, Date.today))
 %h3
+  Phone Numbers On Campaign
+%table{:class => "pretty"}
+  %thead
+    %tr
+      %th
+        Name
+      %th
+        Description
+      %th
+        Number
+  %tbdoy
+    -@campaign.phone_numbers.each do |number|
+      %tr
+        %td
+          = number.name
+        %td
+          = number.descript
+        %td
+          = number.inboundno
+
+%h3
   Call Log
 %table{:class => "pretty"}
   %thead
