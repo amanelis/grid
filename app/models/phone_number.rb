@@ -24,7 +24,7 @@ class PhoneNumber < ActiveRecord::Base
         grpid = group_result["grpid"]
         ad_results = server.call("ad.list", grpid)
         ad_results.each do |ad_result|
-          phone_number = PhoneNumber.find_by_inboundno(ad_result["inboundno"])
+          phone_number = PhoneNumber.find_by_cmpid_and_inboundno(ad_result["cmpid"], ad_result["inboundno"])
           if phone_number.blank?
             phone_number = orphan_campaign.phone_numbers.build
             phone_number.inboundno = ad_result["inboundno"]
