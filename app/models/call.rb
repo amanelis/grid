@@ -63,7 +63,7 @@ class Call < ActiveRecord::Base
           call_results = server.call("call.search", result["acct"], search_term)
           if call_results.present?
             call_results.each do |call_result|
-              phone_number = PhoneNumber.find_by_cmpid(call_result["cmpid"])
+              phone_number = PhoneNumber.find_by_cmpid_and_inboundno(call_result["cmpid"], call_result["inboundno"])
               if phone_number.blank?
                 phone_number = orphan_campaign.phone_numbers.build
                 phone_number.inboundno = call_result["inboundno"]
