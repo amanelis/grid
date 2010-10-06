@@ -10,6 +10,9 @@ class Call < ActiveRecord::Base
   CANCELED_CALL = "CANCEL"
   VOICEMAIL_CALL = "VOICEMAIL"
   OTHER_CALL = "OTHER"
+  NOANSWER_CALL = "NOANSWER"
+  CONGESTION_CALL = "CONGESTION"
+  BUSY_CALL = "BUSY"
 
   PENDING = 'pending'
   UNANSWERED = 'unanswered'
@@ -138,6 +141,15 @@ class Call < ActiveRecord::Base
   def call_start= the_start_time
     self[:call_start] = the_start_time
     self.timestamp = the_start_time
+  end
+  
+  def determine_default_review_status
+    return unless self.review_status == PENDING
+    if self.call_status == CANCELED_CALL
+      self.review_status = HANGUP 
+    elsif self.call_status == CANCELED_CALL
+      self.review_status = HANGUP
+    end
   end
   
 end
