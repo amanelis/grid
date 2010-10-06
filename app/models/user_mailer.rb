@@ -1,4 +1,5 @@
 class UserMailer < ActionMailer::Base
+  include SendGrid
   default_url_options[:host] = APP_CONFIG[:host]
   
   def password_reset_instructions(user)  
