@@ -11,6 +11,32 @@ class PhoneNumber < ActiveRecord::Base
 
   def self.get_salesforce_numbers
     job_status = JobStatus.create(:name => "PhoneNumber.get_salesforce_numbers")
+    orphan_campaign = Campaign.find_by_name('CityVoice SEM Orphaned Campaigns')
+    
+    server = XMLRPC::Client.new("api.voicestar.com", "/api/xmlrpc/1", 80)
+    # or http://api.voicestar.com/
+    server.user = 'reporting@cityvoice.com'
+    server.password = 'C1tyv01c3'
+    results = server.call("acct.list")
+    results.each do |result|
+      group_results = server.call("group.list", result["acct"])
+      group_results.each do |group_result|
+        grpid = group_result["grpid"]
+        ad_results = server.call("ad.list", grpid)
+        ad_results.each do |ad_result|
+          phone_number = PhoneNumber.find_by_cmpid_and_inboundno(ad_result["cmpid"], ad_result["inboundno"])
+          if phone_number.blank?
+            phone_number = orphan_campaign.phone_numbers.build
+            phone_number.inboundno = ad_result["inboundno"]
+            phone_number.cmpid = ad_result["cmpid"]
+          end
+          phone_number.descript = ad_result["descript"]
+          phone_number.name = ad_result["name"]
+          phone_number.save!
+        end
+      end
+    end
+  
     begin
       sf_campaigns = Salesforce::Clientcampaign.all
       sf_campaigns.each do |sf_campaign|
@@ -19,43 +45,34 @@ class PhoneNumber < ActiveRecord::Base
           if sf_campaign.primary_tracking_number__c.present?
             number = sf_campaign.primary_tracking_number__c.gsub('(', '').gsub(')', '').gsub('-', '').gsub(' ', '')
             existing_number = PhoneNumber.find_by_cmpid_and_inboundno(sf_campaign.primary_marchex_id__c, number)
-            if existing_number.blank?
-              existing_number = PhoneNumber.new
-              existing_number.cmpid = sf_campaign.primary_marchex_id__c
-              existing_number.inboundno = number
+            if existing_number.present?
+              existing_number.campaign_id = local_campaign.id
+              existing_number.name = sf_campaign.name
+              existing_number.descript = sf_campaign.name
+              existing_number.save!
             end
-            existing_number.name = sf_campaign.name,
-            existing_number.campaign_id = local_campaign.id
-            existing_number.descript = sf_campaign.name
-            existing_number.save!
           end
           
           if sf_campaign.secondary_tracking_number__c.present?
             number = sf_campaign.secondary_tracking_number__c.gsub('(', '').gsub(')', '').gsub('-', '').gsub(' ', '')
             existing_number = PhoneNumber.find_by_cmpid_and_inboundno(sf_campaign.secondary_marchex_id__c, number)
-            if existing_number.blank?
-              existing_number = PhoneNumber.new
-              existing_number.cmpid = sf_campaign.secondary_marchex_id__c
-              existing_number.inboundno = number
+            if existing_number.present?
+              existing_number.campaign_id = local_campaign.id
+              existing_number.name = sf_campaign.name
+              existing_number.descript = sf_campaign.name
+              existing_number.save!
             end
-            existing_number.name = sf_campaign.name,
-            existing_number.campaign_id = local_campaign.id
-            existing_number.descript = sf_campaign.name
-            existing_number.save!
           end
 
           if sf_campaign.third_tracking_number__c.present?
             number = sf_campaign.third_tracking_number__c.gsub('(', '').gsub(')', '').gsub('-', '').gsub(' ', '')
             existing_number = PhoneNumber.find_by_cmpid_and_inboundno(sf_campaign.third_marchex_id__c, number)
-            if existing_number.blank?
-              existing_number = PhoneNumber.new
-              existing_number.cmpid = sf_campaign.third_marchex_id__c
-              existing_number.inboundno = number
+            if existing_number.present?
+              existing_number.campaign_id = local_campaign.id
+              existing_number.name = sf_campaign.name
+              existing_number.descript = sf_campaign.name
+              existing_number.save!
             end
-            existing_number.name = sf_campaign.name,
-            existing_number.campaign_id = local_campaign.id
-            existing_number.descript = sf_campaign.name
-            existing_number.save!
           end
         end
       end

@@ -10,6 +10,9 @@ class Call < ActiveRecord::Base
   CANCELED_CALL = "CANCEL"
   VOICEMAIL_CALL = "VOICEMAIL"
   OTHER_CALL = "OTHER"
+  NOANSWER_CALL = "NOANSWER"
+  CONGESTION_CALL = "CONGESTION"
+  BUSY_CALL = "BUSY"
 
   PENDING = 'pending'
   UNANSWERED = 'unanswered'
@@ -63,7 +66,7 @@ class Call < ActiveRecord::Base
           call_results = server.call("call.search", result["acct"], search_term)
           if call_results.present?
             call_results.each do |call_result|
-              phone_number = PhoneNumber.find_by_cmpid(call_result["cmpid"])
+              phone_number = PhoneNumber.find_by_cmpid_and_inboundno(call_result["cmpid"], call_result["inboundno"])
               if phone_number.blank?
                 phone_number = orphan_campaign.phone_numbers.build
                 phone_number.inboundno = call_result["inboundno"]
@@ -138,6 +141,15 @@ class Call < ActiveRecord::Base
   def call_start= the_start_time
     self[:call_start] = the_start_time
     self.timestamp = the_start_time
+  end
+  
+  def determine_default_review_status
+    return unless self.review_status == PENDING
+    if self.call_status == CANCELED_CALL
+      self.review_status = HANGUP 
+    elsif self.call_status == CANCELED_CALL
+      self.review_status = HANGUP
+    end
   end
   
 end
