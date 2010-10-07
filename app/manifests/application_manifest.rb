@@ -50,6 +50,7 @@ class ApplicationManifest < Moonshine::Manifest::Rails
   
   recipe :memcached
   
+  plugin :monit
   recipe :monit
 
   # Add your application's custom requirements here
