@@ -49,6 +49,8 @@ class ApplicationManifest < Moonshine::Manifest::Rails
   recipe :ssh
   
   recipe :memcached
+  
+  recipe :monit if deploy_stage == 'production'
 
   # Add your application's custom requirements here
   def application_packages
