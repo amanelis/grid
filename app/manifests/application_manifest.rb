@@ -50,8 +50,6 @@ class ApplicationManifest < Moonshine::Manifest::Rails
   
   recipe :memcached
   
-  recipe :monit
-
   # Add your application's custom requirements here
   def application_packages
     # If you've already told Moonshine about a package required by a gem with

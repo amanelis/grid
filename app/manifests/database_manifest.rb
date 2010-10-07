@@ -61,8 +61,6 @@ class DatabaseManifest < Moonshine::Manifest::Rails
   recipe :iptables
   recipe :ssh
   
-  recipe :monit
-  
   def application_packages
     # If you've already told Moonshine about a package required by a gem with
     # :apt_gems in <tt>moonshine.yml</tt> you do not need to include it here.
