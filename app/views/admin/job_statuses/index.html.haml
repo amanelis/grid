@@ -22,7 +22,7 @@
           -elsif job.status == JobStatus::FINISHED_NO_ERRORS
             = "Finished"
           -elsif job.status == JobStatus::FINISHED_WITH_ERRORS
-            = "* Errors *"
+            = "-Errors-"
           -else
             = "Unknown"
         %td= link_to 'Show', admin_job_status_path(job)
