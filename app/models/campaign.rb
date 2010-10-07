@@ -23,16 +23,18 @@ class Campaign < ActiveRecord::Base
       sf_campaigns = Salesforce::Clientcampaign.all
 
       sf_campaigns.each do |sf_campaign|
+        next if sf_campaign.campaign_type__c.blank?          
+        
         account = Account.find_by_salesforce_id(sf_campaign.account_id__c)
         if account.present?
           existing_campaign = Campaign.find_by_salesforce_id(sf_campaign.id)
+          
           if sf_campaign.campaign_type__c.include? 'SEM'
             if existing_campaign.blank?
               new_sem_campaign = SemCampaign.new
               existing_campaign = new_sem_campaign.build_campaign
               existing_campaign.account_id = account.id
               existing_campaign.salesforce_id = sf_campaign.id
-
             else
               new_sem_campaign = existing_campaign.campaign_style
             end
