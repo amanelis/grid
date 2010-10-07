@@ -60,6 +60,10 @@
 #    - awesome
 #    - libawesome-dev
 
+# Monit-specific options
+:monit:
+  :interval: 15  # the interval that monit checks things in seconds
+
 # Passenger-specific options. Refer to the following templates for details
 # about what values are used:
 # - vendor/plugins/moonshine/lib/moonshine/manifest/rails/templates/passenger.conf.erb 
