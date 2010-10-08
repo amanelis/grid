@@ -215,7 +215,7 @@ class Campaign < ActiveRecord::Base
   end
 
   def number_of_submissions_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.submissions.between(start_date, end_date).count
+    self.submissions.non_spam.between(start_date, end_date).count
   end
 
   def number_of_visits_between(start_date = Date.yesterday, end_date = Date.yesterday)
@@ -267,7 +267,7 @@ class Campaign < ActiveRecord::Base
   end
 
   def number_of_submissions_by_date
-    self.number_of_specific_submissions_labeled_by_date(self.submissions, :submissions)
+    self.number_of_specific_submissions_labeled_by_date(self.submissions.non_spam, :submissions)
   end
 
   def number_of_specific_submissions_labeled_by_date(specific_submissions, label)
@@ -276,7 +276,7 @@ class Campaign < ActiveRecord::Base
 
   def number_of_leads_by_date
     calls_as_leads = self.number_of_specific_calls_labeled_by_date(self.calls.lead, :leads)
-    submissions_as_leads = self.number_of_specific_submissions_labeled_by_date(self.submissions, :leads)
+    submissions_as_leads = self.number_of_specific_submissions_labeled_by_date(self.submissions.non_spam, :leads)
     Utilities.merge_and_sum_timeline_data([calls_as_leads, submissions_as_leads], :leads)
   end
 

@@ -18,6 +18,13 @@ class Submission < ActiveRecord::Base
 
   named_scope :between, lambda { |start_date, end_date| {:conditions => ['time_of_submission between ? AND ?', start_date.to_time.utc.at_beginning_of_day, end_date.to_time.utc.end_of_day]} }
   named_scope :previous_hours, lambda { |*args| {:conditions => ['time_of_submission > ?', (args.first || nil)], :order => 'time_of_submission DESC'} }
+  
+  named_scope :non_spam, {
+    :select => "submissions.*",
+    :joins => "INNER JOIN activities ON submissions.id = activities.activity_type_id AND activities.activity_type_type = 'Submission'", 
+    :conditions => "activities.review_status <> 'spam'"
+  }
+  
 
   def initial_review_status
     PENDING
