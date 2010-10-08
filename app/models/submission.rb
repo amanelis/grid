@@ -28,4 +28,20 @@ class Submission < ActiveRecord::Base
     self.timestamp = the_time_of_submission
   end
   
+  def is_spam?
+    return true if self.phone_number =~ /123456/
+    return true if self.work_description =~ /http:/
+    return true if self.work_description =~ /search.*engine/i
+    return true if self.work_description =~ /internet.* marketing/i
+    false
+  end
+  
+  def set_review_status_spam
+    self.review_status = SPAM
+  end
+  
+  def review_status_spam?
+    self.review_status == SPAM
+  end
+  
 end
