@@ -30,7 +30,14 @@ class Call < ActiveRecord::Base
   named_scope :canceled, :conditions => {:call_status => CANCELED_CALL}
   named_scope :voicemail, :conditions => {:call_status => VOICEMAIL_CALL}
   named_scope :other, :conditions => {:call_status => OTHER_CALL}
-  named_scope :lead, :conditions => ['call_status IN (?)', [ANSWERED_CALL, VOICEMAIL_CALL, OTHER_CALL]]
+
+  # named_scope :lead, :conditions => ['call_status IN (?)', [ANSWERED_CALL, VOICEMAIL_CALL, OTHER_CALL]]
+
+  named_scope :lead, {
+    :select => "calls.*",
+    :joins => "INNER JOIN activities ON calls.id = activities.activity_type_id AND activities.activity_type_type = 'Call'", 
+    :conditions => ['activities.review_status = ? OR activities.review_status = ?', PENDING, LEAD]
+  }
 
   named_scope :between, lambda { |start_date, end_date| {:conditions => ['call_start between ? AND ?', start_date.to_time.utc.at_beginning_of_day, end_date.to_time.utc.end_of_day]} }
   named_scope :snapshot, lambda { |start_datetime, duration| {:conditions => ['call_start between ? AND ?', start_datetime.utc, start_datetime.utc + duration.minutes]} }
