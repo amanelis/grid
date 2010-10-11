@@ -80,6 +80,7 @@ class Call < ActiveRecord::Base
                 existing_call.call_end = call_result["call_end"].to_time()
                 existing_call.call_start = call_result["call_start"].to_time()
                 existing_call.call_status = call_result["call_status"]
+                existing_call.determine_default_review_status
                 existing_call.caller_name = call_result["caller_name"]
                 existing_call.caller_number = call_result["caller_number"]
                 existing_call.forwardno = call_result["forwardno"]
@@ -147,8 +148,12 @@ class Call < ActiveRecord::Base
     return unless self.review_status == PENDING
     if self.call_status == CANCELED_CALL
       self.review_status = HANGUP 
-    elsif self.call_status == CANCELED_CALL
+    elsif self.call_status == BUSY_CALL
       self.review_status = HANGUP
+    elsif self.call_status == CONGESTION_CALL
+      self.review_status = HANGUP
+    elsif self.call_status == NOANSWER_CALL
+      self.review_status = UNANSWERED
     end
   end
   
