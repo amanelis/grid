@@ -39,7 +39,8 @@ class Submission < ActiveRecord::Base
     return true if self.phone_number =~ /123456/
     return true if self.work_description =~ /http:/i
     return true if self.work_description =~ /search.*engine/i
-    return true if self.work_description =~ /internet.* marketing/i
+    return true if self.work_description =~ /internet.*marketing/i
+    return true if self.work_description =~ /increase.*traffic/i
     false
   end
   
