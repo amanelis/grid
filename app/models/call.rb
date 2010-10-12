@@ -16,13 +16,14 @@ class Call < ActiveRecord::Base
 
   PENDING = 'pending'
   UNANSWERED = 'unanswered'
+  AFTERHOURS = 'after hours'
   SPAM = 'spam'
   HANGUP = 'hangup'
   WRONG_NUMBER = 'wrong number'
   OTHER = 'other'
   LEAD = 'lead'
 
-  REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['Unanswered', UNANSWERED], ['Spam', SPAM], ['Hangup', HANGUP], ['Wrong Number', WRONG_NUMBER], ['Other', OTHER], ['Lead', LEAD]].to_ordered_hash
+  REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['Unanswered', UNANSWERED], ['After Hours', AFTERHOURS], ['Spam', SPAM], ['Hangup', HANGUP], ['Wrong Number', WRONG_NUMBER], ['Other', OTHER], ['Lead', LEAD]].to_ordered_hash
 
   validates_inclusion_of :review_status, :in => REVIEW_STATUS_OPTIONS.values
 
