@@ -1,0 +1,2 @@
+page.insert_html :before, "#{@activity.timestamp.to_i}", :partial => 'shared/flash', :locals => { :flash => flash }
+flash.discard
