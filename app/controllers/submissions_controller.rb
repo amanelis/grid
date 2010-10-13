@@ -14,9 +14,9 @@ class SubmissionsController < ApplicationController
       return
     end
     
-    puts "**********************************"
-    puts params[:submission]
-    puts "**********************************"
+    logger.debug "\n\n**********************************"
+    logger.debug params[:submission].to_yaml
+    logger.debug "**********************************\n\n"
     
     @submission = Submission.new(params[:submission])
     @submission.ip_address = request.remote_ip
