@@ -24,12 +24,15 @@ class Submission < ActiveRecord::Base
     :joins => "INNER JOIN activities ON submissions.id = activities.activity_type_id AND activities.activity_type_type = 'Submission'", 
     :conditions => "activities.review_status <> 'spam'"
   }
+
+
+  # INSTANCE BEHAVIOR
   
-
-  def initial_review_status
-    PENDING
+  def initialize_specifics(attributes={})
+    self.review_status = PENDING
+    self.review_status = SPAM if self.is_spam?
   end
-
+  
   def time_of_submission= the_time_of_submission
     self[:time_of_submission] = the_time_of_submission
     self.timestamp = the_time_of_submission
@@ -42,10 +45,6 @@ class Submission < ActiveRecord::Base
     return true if self.work_description =~ /internet.*marketing/i
     return true if self.work_description =~ /increase.*traffic/i
     false
-  end
-  
-  def set_review_status_spam
-    self.review_status = SPAM
   end
   
   def review_status_spam?

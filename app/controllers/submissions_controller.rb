@@ -14,11 +14,14 @@ class SubmissionsController < ApplicationController
       return
     end
     
+    puts "**********************************"
+    puts params[:submission]
+    puts "**********************************"
+    
     @submission = Submission.new(params[:submission])
     @submission.ip_address = request.remote_ip
     @submission.user_agent = request.user_agent
     @submission.time_of_submission = DateTime.now
-    @submission.set_review_status_spam if @submission.is_spam?
     if @submission.save
       # HTTP 200 OK
       Notifier.send_later(:deliver_form_submission, @submission) unless @submission.review_status_spam?

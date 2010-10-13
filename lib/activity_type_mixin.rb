@@ -9,7 +9,7 @@ module ActivityTypeMixin
       def initialize(attributes={})
         super(attributes)
         self.activity = Activity.new
-        self.review_status = self.initial_review_status
+        self.initialize_specifics(attributes)
         self
       end
 

@@ -122,7 +122,12 @@ class Call < ActiveRecord::Base
     call.fetch_call_recording
   end
 
+
   # INSTANCE BEHAVIOR
+  
+  def initialize_specifics(attributes={})
+    self.review_status = PENDING
+  end
   
   def fetch_call_recording(hard_update = false)
     return unless self.recorded?
@@ -141,10 +146,6 @@ class Call < ActiveRecord::Base
     min = (span / 60).floor
     secs = span.modulo(60).ceil
     min.to_s + (secs < 10 ? ":0" : ":") + secs.to_s
-  end
-
-  def initial_review_status
-    PENDING
   end
 
   def call_start= the_start_time
