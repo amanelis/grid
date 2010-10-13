@@ -40,6 +40,12 @@ class Call < ActiveRecord::Base
     :conditions => ['activities.review_status = ? OR activities.review_status = ?', PENDING, LEAD]
   }
 
+  named_scope :unanswered, {
+    :select => "calls.*",
+    :joins => "INNER JOIN activities ON calls.id = activities.activity_type_id AND activities.activity_type_type = 'Call'", 
+    :conditions => ['activities.review_status = ?', UNANSWERED]
+  }
+
   named_scope :between, lambda { |start_date, end_date| {:conditions => ['call_start between ? AND ?', start_date.to_time.utc.at_beginning_of_day, end_date.to_time.utc.end_of_day]} }
   named_scope :snapshot, lambda { |start_datetime, duration| {:conditions => ['call_start between ? AND ?', start_datetime.utc, start_datetime.utc + duration.minutes]} }
   named_scope :previous_hours, lambda { |*args| {:conditions => ['call_start > ?', (args.first || nil)], :order => 'call_start DESC'} }
@@ -58,7 +64,7 @@ class Call < ActiveRecord::Base
   def self.update_calls(start=(Time.now - 2.days), fend=(Time.now + 1.day))
     job_status = JobStatus.create(:name => "Call.update_calls")
     exception = nil
-    orphan_campaign = Campaign.find_by_name('CityVoice SEM Orphaned Campaigns')
+    orphan_campaign = Campaign.orphanage
 
     begin      
       server = XMLRPC::Client.new("api.voicestar.com", "/api/xmlrpc/1", 80)
@@ -121,7 +127,7 @@ class Call < ActiveRecord::Base
     call = Call.find_by_call_id(call_id)
     call.fetch_call_recording
   end
-
+  
 
   # INSTANCE BEHAVIOR
   

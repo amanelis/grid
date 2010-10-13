@@ -11,7 +11,7 @@ class PhoneNumber < ActiveRecord::Base
 
   def self.get_salesforce_numbers
     job_status = JobStatus.create(:name => "PhoneNumber.get_salesforce_numbers")
-    orphan_campaign = Campaign.find_by_name('CityVoice SEM Orphaned Campaigns')
+    orphan_campaign = Campaign.orphanage
     
     server = XMLRPC::Client.new("api.voicestar.com", "/api/xmlrpc/1", 80)
     # or http://api.voicestar.com/
@@ -83,6 +83,10 @@ class PhoneNumber < ActiveRecord::Base
     end
     job_status.finish_with_no_errors
   end
+
+  def self.orphaned_phone_numbers
+    Campaign.orphanage.phone_numbers
+  end 
 
 
   # INSTANCE BEHAVIOR

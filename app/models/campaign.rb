@@ -16,6 +16,10 @@ class Campaign < ActiveRecord::Base
   before_destroy :remove_from_many_to_many_relationships
 
   # CLASS BEHAVIOR
+  
+  def self.orphanage
+    Campaign.find_by_name('CityVoice SEM Orphaned Campaigns')
+  end
 
   def self.pull_salesforce_campaigns
     job_status = JobStatus.create(:name => "Campaign.pull_salesforce_campaigns")
