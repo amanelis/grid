@@ -14,6 +14,8 @@ class Campaign < ActiveRecord::Base
   named_scope :other, :conditions => {:campaign_style_type => OtherCampaign.name}
 
   before_destroy :remove_from_many_to_many_relationships
+  
+  attr_accessor :adopting_phone_number
 
   # CLASS BEHAVIOR
   
@@ -176,6 +178,10 @@ class Campaign < ActiveRecord::Base
 
   def website
     self.websites.first
+  end
+  
+  def adopting_phone_number
+    @adopting_phone_number
   end
 
   def number_of_total_leads_between(start_date = Date.yesterday, end_date = Date.yesterday)

@@ -32,7 +32,16 @@ class Admin::CampaignsController < ApplicationController
       @chart.width  = 250
 	    @chart.height = 250
     end
+  end
+  
+  def update
+    @campaign = Campaign.find(params[:id])
     
+    if params[:campaign][:adopting_phone_number].present?
+      @phone_number = PhoneNumber.find(params[:campaign][:adopting_phone_number])
+    end
+    
+    redirect_to admin_campaign_path(@campaign)
   end
 
 end

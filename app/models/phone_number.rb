@@ -86,7 +86,11 @@ class PhoneNumber < ActiveRecord::Base
 
   def self.orphaned_phone_numbers
     Campaign.orphanage.phone_numbers
-  end 
+  end
+  
+  def self.selectable_oprhaned_phone_numbers
+    self.orphaned_phone_numbers.collect { |orphan| ["#{orphan.name} - #{orphan.inboundno}", orphan.id] }
+  end
 
 
   # INSTANCE BEHAVIOR
