@@ -41,9 +41,7 @@ class DatabaseManifest < Moonshine::Manifest::Rails
       :max_connections => "250",
       :extra => "bind-address = 173.203.219.#{deploy_stage == 'production' ? 85 : 193 }"
        },   
-      
-      
-    
+       
     :iptables => { :rules => [
         '-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT',
         '-A INPUT -p icmp -j ACCEPT',

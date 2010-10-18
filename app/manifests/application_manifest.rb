@@ -34,8 +34,7 @@ class ApplicationManifest < Moonshine::Manifest::Rails
      :max_memory => '256',     # default is 64
      :client => '1.7.2',
      :enable_on_boot => true  # maybe you want god to start it instead of init
-   },
-   :passenger => { :version => '2.2.15' }
+   } 
    )
 
   # The default_stack recipe install Rails, Apache, Passenger, the database from
