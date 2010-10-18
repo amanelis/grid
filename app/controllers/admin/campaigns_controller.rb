@@ -39,6 +39,7 @@ class Admin::CampaignsController < ApplicationController
     
     if params[:campaign][:adopting_phone_number].present?
       @phone_number = PhoneNumber.find(params[:campaign][:adopting_phone_number])
+      @phone_number.update_attribute(:campaign_id, @campaign.id)
     end
     
     redirect_to admin_campaign_path(@campaign)

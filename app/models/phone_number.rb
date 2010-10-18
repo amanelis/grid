@@ -9,8 +9,8 @@ class PhoneNumber < ActiveRecord::Base
 
   # CLASS BEHAVIOR
 
-  def self.get_salesforce_numbers
-    job_status = JobStatus.create(:name => "PhoneNumber.get_salesforce_numbers")
+  def self.get_marchex_numbers
+    job_status = JobStatus.create(:name => "PhoneNumber.get_marchex_numbers")
     orphan_campaign = Campaign.orphanage
     
     server = XMLRPC::Client.new("api.voicestar.com", "/api/xmlrpc/1", 80)
@@ -36,7 +36,9 @@ class PhoneNumber < ActiveRecord::Base
         end
       end
     end
-  
+  end
+
+  def self.get_salesforce_numbers  
     begin
       sf_campaigns = Salesforce::Clientcampaign.all
       sf_campaigns.each do |sf_campaign|
@@ -94,6 +96,12 @@ class PhoneNumber < ActiveRecord::Base
 
 
   # INSTANCE BEHAVIOR
+  
+  def orphan!
+    self.campaign_id = Campaign.orphanage.id
+    self.save
+  end
+  
 
   def number_of_answered_calls_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.calls.answered.between(start_date, end_date).count

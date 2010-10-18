@@ -16,11 +16,13 @@ class Campaign < ActiveRecord::Base
   before_destroy :remove_from_many_to_many_relationships
   
   attr_accessor :adopting_phone_number
+  
+  ORPHANAGE_NAME = 'CityVoice SEM Orphaned Campaigns'
 
   # CLASS BEHAVIOR
   
   def self.orphanage
-    Campaign.find_by_name('CityVoice SEM Orphaned Campaigns')
+    Campaign.find_by_name(ORPHANAGE_NAME)
   end
 
   def self.pull_salesforce_campaigns
@@ -66,7 +68,7 @@ class Campaign < ActiveRecord::Base
               if google_sem_campaign.blank?
                 new_google_sem_campaign = new_sem_campaign.google_sem_campaigns.build
                 new_google_sem_campaign.reference_id = google_id.strip
-              elsif google_sem_campaign.sem_campaign.name == 'CityVoice SEM Orphaned Campaigns'
+              elsif google_sem_campaign.sem_campaign.name == ORPHANAGE_NAME
                 google_sem_campaign.sem_campaign_id = new_sem_campaign.id
                 google_sem_campaign.save
               end
