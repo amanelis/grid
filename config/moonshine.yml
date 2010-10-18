@@ -60,10 +60,6 @@
 #    - awesome
 #    - libawesome-dev
 
-# Forcing passenger version until 3.x is stable...
-:passenger:
-  :version: 2.2.15
-
 # Monit-specific options
 :monit:
   :interval: 15  # the interval that monit checks things in seconds
