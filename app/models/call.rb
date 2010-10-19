@@ -16,13 +16,14 @@ class Call < ActiveRecord::Base
 
   PENDING = 'pending'
   UNANSWERED = 'unanswered'
+  AFTERHOURS = 'after hours'
   SPAM = 'spam'
   HANGUP = 'hangup'
   WRONG_NUMBER = 'wrong number'
   OTHER = 'other'
   LEAD = 'lead'
 
-  REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['Unanswered', UNANSWERED], ['Spam', SPAM], ['Hangup', HANGUP], ['Wrong Number', WRONG_NUMBER], ['Other', OTHER], ['Lead', LEAD]].to_ordered_hash
+  REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['Unanswered', UNANSWERED], ['After Hours', AFTERHOURS], ['Spam', SPAM], ['Hangup', HANGUP], ['Wrong Number', WRONG_NUMBER], ['Other', OTHER], ['Lead', LEAD]].to_ordered_hash
 
   validates_inclusion_of :review_status, :in => REVIEW_STATUS_OPTIONS.values
 
@@ -30,7 +31,20 @@ class Call < ActiveRecord::Base
   named_scope :canceled, :conditions => {:call_status => CANCELED_CALL}
   named_scope :voicemail, :conditions => {:call_status => VOICEMAIL_CALL}
   named_scope :other, :conditions => {:call_status => OTHER_CALL}
-  named_scope :lead, :conditions => ['call_status IN (?)', [ANSWERED_CALL, VOICEMAIL_CALL, OTHER_CALL]]
+
+  # named_scope :lead, :conditions => ['call_status IN (?)', [ANSWERED_CALL, VOICEMAIL_CALL, OTHER_CALL]]
+
+  named_scope :lead, {
+    :select => "calls.*",
+    :joins => "INNER JOIN activities ON calls.id = activities.activity_type_id AND activities.activity_type_type = 'Call'", 
+    :conditions => ['activities.review_status = ? OR activities.review_status = ?', PENDING, LEAD]
+  }
+
+  named_scope :unanswered, {
+    :select => "calls.*",
+    :joins => "INNER JOIN activities ON calls.id = activities.activity_type_id AND activities.activity_type_type = 'Call'", 
+    :conditions => ['activities.review_status = ?', UNANSWERED]
+  }
 
   named_scope :between, lambda { |start_date, end_date| {:conditions => ['call_start between ? AND ?', start_date.to_time.utc.at_beginning_of_day, end_date.to_time.utc.end_of_day]} }
   named_scope :snapshot, lambda { |start_datetime, duration| {:conditions => ['call_start between ? AND ?', start_datetime.utc, start_datetime.utc + duration.minutes]} }
@@ -50,7 +64,7 @@ class Call < ActiveRecord::Base
   def self.update_calls(start=(Time.now - 2.days), fend=(Time.now + 1.day))
     job_status = JobStatus.create(:name => "Call.update_calls")
     exception = nil
-    orphan_campaign = Campaign.find_by_name('CityVoice SEM Orphaned Campaigns')
+    orphan_campaign = Campaign.orphanage
 
     begin      
       server = XMLRPC::Client.new("api.voicestar.com", "/api/xmlrpc/1", 80)
@@ -80,6 +94,7 @@ class Call < ActiveRecord::Base
                 existing_call.call_end = call_result["call_end"].to_time()
                 existing_call.call_start = call_result["call_start"].to_time()
                 existing_call.call_status = call_result["call_status"]
+                existing_call.determine_default_review_status
                 existing_call.caller_name = call_result["caller_name"]
                 existing_call.caller_number = call_result["caller_number"]
                 existing_call.forwardno = call_result["forwardno"]
@@ -112,8 +127,13 @@ class Call < ActiveRecord::Base
     call = Call.find_by_call_id(call_id)
     call.fetch_call_recording
   end
+  
 
   # INSTANCE BEHAVIOR
+  
+  def initialize_specifics(attributes={})
+    self.review_status = PENDING
+  end
   
   def fetch_call_recording(hard_update = false)
     return unless self.recorded?
@@ -134,10 +154,6 @@ class Call < ActiveRecord::Base
     min.to_s + (secs < 10 ? ":0" : ":") + secs.to_s
   end
 
-  def initial_review_status
-    PENDING
-  end
-
   def call_start= the_start_time
     self[:call_start] = the_start_time
     self.timestamp = the_start_time
@@ -147,8 +163,12 @@ class Call < ActiveRecord::Base
     return unless self.review_status == PENDING
     if self.call_status == CANCELED_CALL
       self.review_status = HANGUP 
-    elsif self.call_status == CANCELED_CALL
+    elsif self.call_status == BUSY_CALL
       self.review_status = HANGUP
+    elsif self.call_status == CONGESTION_CALL
+      self.review_status = HANGUP
+    elsif self.call_status == NOANSWER_CALL
+      self.review_status = UNANSWERED
     end
   end
   

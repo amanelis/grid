@@ -41,18 +41,16 @@ class DatabaseManifest < Moonshine::Manifest::Rails
       :max_connections => "250",
       :extra => "bind-address = 173.203.219.#{deploy_stage == 'production' ? 85 : 193 }"
        },   
-      
-      
-    
+       
     :iptables => { :rules => [
         '-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT',
         '-A INPUT -p icmp -j ACCEPT',
         '-A INPUT -p tcp -m tcp --dport 22 -j ACCEPT',
         '-A INPUT -p tcp -m tcp --dport 80 -j ACCEPT',
+        '-A INPUT -p tcp -m tcp --dport 443 -j ACCEPT',
         '-A INPUT -p tcp -m tcp --dport 3306 -j ACCEPT',
         '-A INPUT -s 127.0.0.1 -j ACCEPT'
-      ]}
-
+        ]}
   })
 
   plugin :iptables
@@ -60,6 +58,9 @@ class DatabaseManifest < Moonshine::Manifest::Rails
 
   recipe :iptables
   recipe :ssh
+  
+  plugin :monit
+  recipe :monit
   
   def application_packages
     # If you've already told Moonshine about a package required by a gem with

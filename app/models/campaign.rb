@@ -14,8 +14,16 @@ class Campaign < ActiveRecord::Base
   named_scope :other, :conditions => {:campaign_style_type => OtherCampaign.name}
 
   before_destroy :remove_from_many_to_many_relationships
+  
+  attr_accessor :adopting_phone_number
+  
+  ORPHANAGE_NAME = 'CityVoice SEM Orphaned Campaigns'
 
   # CLASS BEHAVIOR
+  
+  def self.orphanage
+    Campaign.find_by_name(ORPHANAGE_NAME)
+  end
 
   def self.pull_salesforce_campaigns
     job_status = JobStatus.create(:name => "Campaign.pull_salesforce_campaigns")
@@ -23,16 +31,18 @@ class Campaign < ActiveRecord::Base
       sf_campaigns = Salesforce::Clientcampaign.all
 
       sf_campaigns.each do |sf_campaign|
+        next if sf_campaign.campaign_type__c.blank?          
+        
         account = Account.find_by_salesforce_id(sf_campaign.account_id__c)
         if account.present?
           existing_campaign = Campaign.find_by_salesforce_id(sf_campaign.id)
+          
           if sf_campaign.campaign_type__c.include? 'SEM'
             if existing_campaign.blank?
               new_sem_campaign = SemCampaign.new
               existing_campaign = new_sem_campaign.build_campaign
               existing_campaign.account_id = account.id
               existing_campaign.salesforce_id = sf_campaign.id
-
             else
               new_sem_campaign = existing_campaign.campaign_style
             end
@@ -58,7 +68,7 @@ class Campaign < ActiveRecord::Base
               if google_sem_campaign.blank?
                 new_google_sem_campaign = new_sem_campaign.google_sem_campaigns.build
                 new_google_sem_campaign.reference_id = google_id.strip
-              elsif google_sem_campaign.sem_campaign.name == 'CityVoice SEM Orphaned Campaigns'
+              elsif google_sem_campaign.sem_campaign.name == ORPHANAGE_NAME
                 google_sem_campaign.sem_campaign_id = new_sem_campaign.id
                 google_sem_campaign.save
               end
@@ -171,6 +181,10 @@ class Campaign < ActiveRecord::Base
   def website
     self.websites.first
   end
+  
+  def adopting_phone_number
+    @adopting_phone_number
+  end
 
   def number_of_total_leads_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.number_of_lead_calls_between(start_date, end_date) + self.number_of_submissions_between(start_date, end_date)
@@ -213,7 +227,7 @@ class Campaign < ActiveRecord::Base
   end
 
   def number_of_submissions_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.submissions.between(start_date, end_date).count
+    self.submissions.non_spam.between(start_date, end_date).count
   end
 
   def number_of_visits_between(start_date = Date.yesterday, end_date = Date.yesterday)
@@ -265,7 +279,7 @@ class Campaign < ActiveRecord::Base
   end
 
   def number_of_submissions_by_date
-    self.number_of_specific_submissions_labeled_by_date(self.submissions, :submissions)
+    self.number_of_specific_submissions_labeled_by_date(self.submissions.non_spam, :submissions)
   end
 
   def number_of_specific_submissions_labeled_by_date(specific_submissions, label)
@@ -274,7 +288,7 @@ class Campaign < ActiveRecord::Base
 
   def number_of_leads_by_date
     calls_as_leads = self.number_of_specific_calls_labeled_by_date(self.calls.lead, :leads)
-    submissions_as_leads = self.number_of_specific_submissions_labeled_by_date(self.submissions, :leads)
+    submissions_as_leads = self.number_of_specific_submissions_labeled_by_date(self.submissions.non_spam, :leads)
     Utilities.merge_and_sum_timeline_data([calls_as_leads, submissions_as_leads], :leads)
   end
 

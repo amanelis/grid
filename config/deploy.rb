@@ -6,8 +6,8 @@ set :stages, %w(production staging development)
 set :scm, :git
 # Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`
 
-before "deploy", "delayed_job:stop"
-after "deploy:cleanup", "delayed_job:start"
+#before "deploy", "delayed_job:stop"
+#after "deploy:cleanup", "delayed_job:start"
 
 # If you are using Passenger mod_rails uncomment this:
 # if you're still using the script/reapear helper you will need

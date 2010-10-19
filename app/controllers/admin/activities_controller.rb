@@ -21,10 +21,17 @@ class Admin::ActivitiesController < ApplicationController
     end
     
     if @activity.update_attributes(params[:activity])
-      redirect_to admin_activities_path
+      flash[:notice] = "Activity updated!"
+      respond_to do |format|
+        format.html {redirect_to admin_activities_path}
+        format.js
+      end
     else
-      flash[:notice] = "Something went wrong."
-      redirect_to admin_activities_path
+      flash[:error] = "Something went wrong."
+      respond_to do |format|
+        format.html {redirect_to admin_activities_path}
+        format.js
+      end
     end
     
   end

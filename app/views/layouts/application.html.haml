@@ -10,9 +10,8 @@
           =render :partial => "shared/menu"
           .clear
         .content
-          = flash[:notice] 
+          =render :partial => "shared/flash", :locals => { :flash => flash }
           = yield
-
         .push
       .footer
         = render :partial => "layouts/footer"

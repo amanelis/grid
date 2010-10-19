@@ -14,13 +14,17 @@ class SubmissionsController < ApplicationController
       return
     end
     
+    logger.debug "\n\n**********************************"
+    logger.debug params[:submission].to_yaml
+    logger.debug "**********************************\n\n"
+    
     @submission = Submission.new(params[:submission])
     @submission.ip_address = request.remote_ip
     @submission.user_agent = request.user_agent
     @submission.time_of_submission = DateTime.now
     if @submission.save
       # HTTP 200 OK
-      Notifier.send_later(:deliver_form_submission, @submission)
+      Notifier.send_later(:deliver_form_submission, @submission) unless @submission.review_status_spam?
       Account.send_later(:cache_results_for_accounts)
       redirect_to params[:submission][:retURL]
     else

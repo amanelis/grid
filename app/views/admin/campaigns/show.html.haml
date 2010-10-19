@@ -66,6 +66,15 @@
         %td
           = number.inboundno
 
+%h5
+  - semantic_form_for @campaign, :url => admin_campaign_path(@campaign) do |f| 
+    = f.semantic_errors :state
+    - f.inputs do
+      %br
+      = f.input :adopting_phone_number, :label => 'Add Orphaned Phone Number', :as => :select, :collection => PhoneNumber.selectable_oprhaned_phone_numbers, :include_blank => true
+    - f.buttons do
+      = f.commit_button :update, :button_html => { :class => "sexybutton sexysimple sexygreen" }
+
 %h3
   Call Log
 %table{:class => "pretty"}

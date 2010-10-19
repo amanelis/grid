@@ -63,7 +63,7 @@ class SemCampaign < ActiveRecord::Base
       job.endDay = date.year.to_s + "-" + date.month.to_s + "-" + date.day.to_s
       job.crossClient = true
 
-      cityvoice_sem_campaign = Campaign.find_by_name('CityVoice SEM Orphaned Campaigns').campaign_style
+      cityvoice_sem_campaign = Campaign.orphanage.campaign_style
       begin
         report_srv.validateReportJob(job)
         job_id = report_srv.scheduleReportJob(job).scheduleReportJobReturn
@@ -173,7 +173,7 @@ class SemCampaign < ActiveRecord::Base
       job.endDay = date.year.to_s + "-" + date.month.to_s + "-" + date.day.to_s
       job.crossClient = true
 
-      cityvoice_sem_campaign = Campaign.find_by_name('CityVoice SEM Orphaned Campaigns').campaign_style
+      cityvoice_sem_campaign = Campaign.orphanage.campaign_style
       begin
         report_srv.validateReportJob(job)
         job_id = report_srv.scheduleReportJob(job).scheduleReportJobReturn

@@ -12,8 +12,8 @@ class Account < ActiveRecord::Base
     Account.pull_salesforce_accounts
     puts "Pulling Salesforce Campaigns..."
     Campaign.pull_salesforce_campaigns
-    puts "Pulling Salesforce Phone Numbers..."
-    PhoneNumber.get_salesforce_numbers
+    puts "Pulling Marchex Phone Numbers..."
+    PhoneNumber.get_marchex_numbers
     puts "Updating Calls..."
     Call.update_calls
     puts "Adding Websites..."

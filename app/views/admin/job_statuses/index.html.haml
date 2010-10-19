@@ -16,7 +16,15 @@
             = "#{(job.end_time - job.start_time).to_i} seconds"
           -else
             = "---"
-        %td= job.status
+        %td
+          -if job.status == JobStatus::RUNNING
+            = "Running"
+          -elsif job.status == JobStatus::FINISHED_NO_ERRORS
+            = "Finished"
+          -elsif job.status == JobStatus::FINISHED_WITH_ERRORS
+            = "-Errors-"
+          -else
+            = "Unknown"
         %td= link_to 'Show', admin_job_status_path(job)
 = will_paginate(@activities)
 .clear

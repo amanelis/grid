@@ -1,4 +1,4 @@
-.activity_item
+.activity_item{:id => "#{activity.timestamp.to_i}"}
   .title
     = link_to activity.contact_form.campaign.name, admin_campaign_path(activity.contact_form.campaign)
   .icon
@@ -26,7 +26,7 @@
         Description:
         =activity.work_description
   .review
-    - semantic_form_for activity, :url => admin_activity_path(activity.activity) do |f| 
+    - semantic_remote_form_for activity, :url => admin_activity_path(activity.activity) do |f| 
       = f.semantic_errors :state
       - f.inputs do
         %br

@@ -25,7 +25,7 @@
           =image_tag("sound.png", :height => "14", :width => "14")
           Call Recording Unavailable
   .review
-    - semantic_form_for activity, :url => admin_activity_path(activity.activity) do |f| 
+    - semantic_remote_form_for activity, :url => admin_activity_path(activity.activity) do |f| 
       = f.semantic_errors :state
       - f.inputs do
         %br
