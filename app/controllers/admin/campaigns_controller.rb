@@ -4,6 +4,7 @@ class Admin::CampaignsController < ApplicationController
 
   def show
     @campaign = Campaign.find(params[:id])
+    Time.zone = @campaign.account.time_zone
     @timeline = @campaign.campaign_style.combined_timeline_data
     @sorted_dates = @timeline.keys.sort
     @title = @campaign.account.name

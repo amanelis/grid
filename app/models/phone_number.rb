@@ -12,33 +12,39 @@ class PhoneNumber < ActiveRecord::Base
   def self.get_marchex_numbers
     job_status = JobStatus.create(:name => "PhoneNumber.get_marchex_numbers")
     orphan_campaign = Campaign.orphanage
-    
-    server = XMLRPC::Client.new("api.voicestar.com", "/api/xmlrpc/1", 80)
-    # or http://api.voicestar.com/
-    server.user = 'reporting@cityvoice.com'
-    server.password = 'C1tyv01c3'
-    results = server.call("acct.list")
-    results.each do |result|
-      group_results = server.call("group.list", result["acct"])
-      group_results.each do |group_result|
-        grpid = group_result["grpid"]
-        ad_results = server.call("ad.list", grpid)
-        ad_results.each do |ad_result|
-          phone_number = PhoneNumber.find_by_cmpid_and_inboundno(ad_result["cmpid"], ad_result["inboundno"])
-          if phone_number.blank?
-            phone_number = orphan_campaign.phone_numbers.build
-            phone_number.inboundno = ad_result["inboundno"]
-            phone_number.cmpid = ad_result["cmpid"]
+    begin
+      server = XMLRPC::Client.new("api.voicestar.com", "/api/xmlrpc/1", 80)
+      # or http://api.voicestar.com/
+      server.user = 'reporting@cityvoice.com'
+      server.password = 'C1tyv01c3'
+      results = server.call("acct.list")
+      results.each do |result|
+        group_results = server.call("group.list", result["acct"])
+        group_results.each do |group_result|
+          grpid = group_result["grpid"]
+          ad_results = server.call("ad.list", grpid)
+          ad_results.each do |ad_result|
+            phone_number = PhoneNumber.find_by_cmpid_and_inboundno(ad_result["cmpid"], ad_result["inboundno"])
+            if phone_number.blank?
+              phone_number = orphan_campaign.phone_numbers.build
+              phone_number.inboundno = ad_result["inboundno"]
+              phone_number.cmpid = ad_result["cmpid"]
+            end
+            phone_number.descript = ad_result["descript"]
+            phone_number.name = ad_result["name"]
+            phone_number.save!
           end
-          phone_number.descript = ad_result["descript"]
-          phone_number.name = ad_result["name"]
-          phone_number.save!
         end
       end
+    rescue Exception => ex
+      job_status.finish_with_errors(ex)
+      raise
     end
+    job_status.finish_with_no_errors
   end
 
   def self.get_salesforce_numbers  
+    job_status = JobStatus.create(:name => "PhoneNumber.get_salesforce_numbers *SHOULDN'T BE RUN*")
     begin
       sf_campaigns = Salesforce::Clientcampaign.all
       sf_campaigns.each do |sf_campaign|
@@ -78,7 +84,6 @@ class PhoneNumber < ActiveRecord::Base
           end
         end
       end
-
     rescue Exception => ex
       job_status.finish_with_errors(ex)
       raise

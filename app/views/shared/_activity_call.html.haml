@@ -4,7 +4,8 @@
   .icon
     =image_tag("telephone.png", :height => "48", :width => "48")
     .time
-      =time_ago_in_words(activity.call_start) + " ago"
+      -activity_time_zone = activity.phone_number.campaign.account.time_zone
+      =time_ago_in_words(activity.call_start) + " ago at " + activity.call_start.in_time_zone(activity_time_zone).to_s(:time) + " " + activity_time_zone
   .info
     %ul
       %li 
