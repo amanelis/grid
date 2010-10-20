@@ -369,10 +369,10 @@
 
 /Begin of Calls Section
 -@account.campaigns.each do |campaign|
-  -if campaign.calls.find(:all, :conditions => ['call_start between ? AND ?', @month_start, @month_end]).present?
+  -if campaign.calls.between(@month_start, @month_end).present?
     .center
       %h3
-        = "Calls for " + campaign.name
+        = "Calls for #{campaign.name} (#{@account.time_zone})"
       %table{:class => "pretty"}
         %thead
           %tr
@@ -395,7 +395,7 @@
             %th
               Revenue
         %tbody
-          -campaign.calls.find(:all, :conditions => ['call_start between ? AND ?', @month_start, @month_end]).each do |call|
+          -campaign.calls.between(@month_start, @month_end).each do |call|
             %tr{ :class => cycle('odd', 'even')}
               %td
                 = call.caller_name
@@ -404,7 +404,7 @@
               %td
                 = call.inboundno
               %td
-                = call.call_start.to_s
+                = call.call_start.to_s(:short)
               %td
                 = call.duration
               %td

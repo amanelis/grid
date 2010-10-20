@@ -89,6 +89,7 @@ class Admin::AccountsController < ApplicationController
 
   def report
     @account = Account.find(params[:id])
+    Time.zone = @account.time_zone
 
     respond_to do |format|
       format.html # show.html.erb
