@@ -52,6 +52,7 @@ class Account < ActiveRecord::Base
         if existing_account.blank?
           existing_account = Account.new
           existing_account.salesforce_id = sf_account.id
+          existing_account.time_zone = "Central Time (US & Canada)"
         end
         existing_account.account_type = sf_account.account_type__c
         existing_account.status = sf_account.account_status__c

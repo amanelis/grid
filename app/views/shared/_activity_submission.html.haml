@@ -18,7 +18,8 @@
         =activity.home_address
       %li
         Submitted at:
-        =activity.time_of_submission.to_s(:rfc822)
+        -activity_time_zone = activity.contact_form.campaign.account.time_zone
+        =activity.time_of_submission.in_time_zone(activity_time_zone).to_s(:long) + " " + activity_time_zone
       %li
         Work Category:
         =activity.work_category

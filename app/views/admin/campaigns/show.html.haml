@@ -113,6 +113,8 @@
 
 %h3
   Call Log
+%h5
+  = @campaign.account.time_zone
 %table{:class => "pretty"}
   %thead
     %tr
@@ -140,7 +142,7 @@
         %td
           = number_to_phone(call.inboundno)
         %td
-          = call.call_start.in_time_zone.to_s(:short) + " UTC"
+          = call.call_start.in_time_zone.to_s(:short)
         %td
           = call.duration
         %td

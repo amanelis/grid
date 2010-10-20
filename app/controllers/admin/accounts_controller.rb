@@ -1,7 +1,8 @@
 class Admin::AccountsController < ApplicationController
   before_filter :require_admin
   layout 'admin'
-
+  
+  
   # GET /accounts
   # GET /accounts.xml
   def index
@@ -17,6 +18,7 @@ class Admin::AccountsController < ApplicationController
   # GET /accounts/1.xml
   def show
     @account = Account.find(params[:id])
+    Time.zone = @account.time_zone
     @timeline = @account.combined_timeline_data
     @sorted_dates = @timeline.keys.sort
     @title = @account.name
