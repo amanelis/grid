@@ -74,6 +74,42 @@
       = f.input :adopting_phone_number, :label => 'Add Orphaned Phone Number', :as => :select, :collection => PhoneNumber.selectable_oprhaned_phone_numbers, :include_blank => true
     - f.buttons do
       = f.commit_button :update, :button_html => { :class => "sexybutton sexysimple sexygreen" }
+%h3
+  Submission Log
+%table{:class => "pretty"}
+  %thead
+    %tr
+      %th
+        Name
+      %th
+        Email
+      %th
+        Phone Number
+      %th
+        Submission Time
+      %th
+        Date Requested
+      %th
+        Time Requested
+      %th
+        Work Description
+  %tbody
+    -@campaign.submissions.non_spam.between(Date.today.to_time.utc.at_beginning_of_day - 1.week, Date.today.to_time.utc.end_of_day).each do |submission|
+      %tr{ :class => cycle('odd', 'even')}
+        %td
+          = submission.name
+        %td
+          = submission.from_email
+        %td
+          = submission.phone_number
+        %td
+          = submission.time_of_submission.in_time_zone.to_s(:short) + " UTC"
+        %td
+          = submission.date_requested
+        %td
+          = submission.time_requested
+        %td
+          = submission.work_description
 
 %h3
   Call Log
