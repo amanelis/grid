@@ -15,7 +15,7 @@
   %thead
     %tr
       %th
-        Campaign Name
+        Campaign Name (Click for Details)
       %th
         Calls
       %th
@@ -32,7 +32,7 @@
     -@account.campaigns.each do |campaign|
       %tr{ :class => cycle('odd', 'even')}
         %td
-          = campaign.name
+          = link_to campaign.name, admin_campaign_path(campaign)
         %td
           = campaign.number_of_lead_calls_between(Date.yesterday - 1.week, Date.yesterday).to_s
         %td
@@ -45,8 +45,7 @@
           = ActionController::Base.helpers.number_to_currency(campaign.spend_between(Date.yesterday - 1.week, Date.yesterday))
         %td
           = ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(Date.yesterday - 1.week, Date.yesterday))
-        %td
-          = link_to "Details", admin_campaign_path(campaign)
+        /%td= link_to "Details", admin_campaign_path(campaign)
 
 %h3
   = link_to "Click Here for Monthly Report", report_admin_account_path(@account)
