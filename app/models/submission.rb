@@ -39,7 +39,6 @@ class Submission < ActiveRecord::Base
   end
   
   def is_spam?
-    return true if self.phone_number = "123456"
     return true if self.work_description =~ /http:/i
     return true if self.work_description =~ /search.*engine/i
     return true if self.work_description =~ /internet.*marketing/i
