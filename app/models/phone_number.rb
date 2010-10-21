@@ -96,7 +96,7 @@ class PhoneNumber < ActiveRecord::Base
   end
   
   def self.selectable_oprhaned_phone_numbers
-    self.orphaned_phone_numbers.collect { |orphan| ["#{orphan.name} - #{orphan.inboundno}", orphan.id] }
+    self.orphaned_phone_numbers.collect { |orphan| ["#{orphan.name} - #{orphan.inboundno}", orphan.id] }.sort { |x, y| x.first.downcase <=> y.first.downcase }
   end
 
 
