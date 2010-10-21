@@ -8,8 +8,8 @@
 - :version: = 0.4.0
   :name: i18n
 - :name: formtastic
-- :source: http://gemcutter.org
-  :version: ~> 2.3.11
+- :version: ~> 2.3.11
+  :source: http://gemcutter.org
   :name: will_paginate
 - :source: http://gemcutter.org
   :name: sendgrid
@@ -24,5 +24,7 @@
 - :name: googlecharts
 - :name: aws-s3
 - :name: paperclip
+- :version: = 2.8.1
+  :name: facets
 - :version: 2.3.9
   :name: rails
