@@ -1,19 +1,25 @@
-!!! XML
-!!!
-%html{:xmlns => "http://www.w3.org/1999/xhtml", "xml:lang" => "en", :lang => "en"}
-  = render :partial => "layouts/head"
-  %body
-    = render :partial => "layouts/header"
-    .wrapper
-      .inner
-        #header
-          =render :partial => "shared/menu"
-          .clear
-        .content
-          =render :partial => "shared/flash", :locals => { :flash => flash }
-          = yield
-        .push
-      .footer
-        = render :partial => "layouts/footer"
-        /-if RAILS_ENV == "production"
-        /  =render :partial => "shared/footerincludes"
+%html{ :lang => "en"}
+	%head
+	%title= @browser_title || 'CityVoice Grid'
+
+	%meta{'http-equiv' => "content-type", :content => "text/html;charset=UTF-8"}
+	%link{ :rel => "shortcut icon", :href => "/favicon.ico" }
+	%meta{:name => "description", :content => "The Grid helps you manage and measure your marketing campaigns - online or offline." }
+
+	= stylesheet_link_tag 'sexybuttons.css', 'application', 'formtastic', 'formtastic_changes'
+	= javascript_include_tag 'jquery-1.4.2.min' ,"http://www.google.com/jsapi", 'application'
+	%body
+		%header
+			%h1
+				= link_to "CityVoice Grid", "/"
+			%h2
+				Marketing ROI Measurement, Served Fresh
+		=render :partial => "shared/menu"
+		=render :partial => "shared/flash", :locals => { :flash => flash }
+		= yield
+		%footer
+			%small
+				&copy; Copyright 2010
+				=link_to "CityVoice", "http://www.cityvoice.com"
+/-if RAILS_ENV == "production"
+/  =render :partial => "shared/footerincludes"

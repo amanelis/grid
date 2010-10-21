@@ -20,7 +20,7 @@ Rails::Initializer.run do |config|
   # config.gem "sqlite3-ruby", :lib => "sqlite3"
   # config.gem "aws-s3", :lib => "aws/s3"
   config.gem 'hpricot'
-  config.gem 'johnreilly-activerecord-activesalesforce-adapter', :source => 'http://gems.github.com', :lib => 'activerecord-activesalesforce-adapter'
+  # config.gem 'johnreilly-activerecord-activesalesforce-adapter', :source => 'http://gems.github.com', :lib => 'activerecord-activesalesforce-adapter'
   config.gem 'httparty'
   config.gem 'nokogiri'
   config.gem 'authlogic'
