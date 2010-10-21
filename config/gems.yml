@@ -1,7 +1,5 @@
 --- 
 - :name: hpricot
-- :source: http://gems.github.com
-  :name: johnreilly-activerecord-activesalesforce-adapter
 - :name: httparty
 - :name: nokogiri
 - :name: authlogic
