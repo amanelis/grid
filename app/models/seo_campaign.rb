@@ -36,7 +36,8 @@ class SeoCampaign < ActiveRecord::Base
                       else
                         InboundLink.create(:link_url => link, :seo_campaign_id => seo_campaign.id, :last_date_found => Date.today, :is_active => true)
                       end
-                    rescue
+                    rescue Exception => ex
+                      exception = ex
                       next
                     end
                   end
