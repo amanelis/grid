@@ -20,27 +20,32 @@ class SeoCampaign < ActiveRecord::Base
         websites = seo_campaign.websites
         if websites.present?
           websites.each do |website|
-            freshness = seo_campaign.inbound_links.find(:all, :conditions => ['created_at > ?', 1.day.ago])
-            if freshness.empty? && website.nickname.present?
-              url = 'http://perl.pearanalytics.com/v2/domain/get/linklist?url=http://' + website.nickname.gsub('http://', '')
-              response = HTTParty.get(url)
-              links = JSON.parse(response)['result']
-              if links.present?
-                links.each do |link|
-                  begin
-                    existing_link = InboundLink.find_by_link_url_and_seo_campaign_id(link, seo_campaign.id)
-                    if existing_link.present?
-                      existing_link.last_date_found = Date.today
-                      existing_link.save
-                    else
-                      InboundLink.create(:link_url => link, :seo_campaign_id => seo_campaign.id, :last_date_found => Date.today, :is_active => true)
+            begin
+              freshness = seo_campaign.inbound_links.find(:all, :conditions => ['created_at > ?', 1.day.ago])
+              if freshness.empty? && website.nickname.present?
+                url = 'http://perl.pearanalytics.com/v2/domain/get/linklist?url=http://' + website.nickname.gsub('http://', '')
+                response = HTTParty.get(url)
+                links = JSON.parse(response)['result']
+                if links.present?
+                  links.each do |link|
+                    begin
+                      existing_link = InboundLink.find_by_link_url_and_seo_campaign_id(link, seo_campaign.id)
+                      if existing_link.present?
+                        existing_link.last_date_found = Date.today
+                        existing_link.save
+                      else
+                        InboundLink.create(:link_url => link, :seo_campaign_id => seo_campaign.id, :last_date_found => Date.today, :is_active => true)
+                      end
+                    rescue Exception => ex
+                      exception = ex
+                      next
                     end
-                  rescue Exception => ex
-                    exception = ex
-                    next
                   end
                 end
               end
+            rescue Exception => ex
+              exception = ex
+              next
             end
           end
         end
@@ -347,7 +352,7 @@ class SeoCampaign < ActiveRecord::Base
 
       count -= 1
     end
-    
+
     if keywords.count != 0
       chart_name = "1st Page Spots out of " + keywords.count.to_s + " Keywords"
       chart_size = width.to_s + 'x' + height.to_s
@@ -413,7 +418,7 @@ class SeoCampaign < ActiveRecord::Base
       bing_change = last_bing_rank - this_bing_rank
       keyword_table.push([keyword.descriptor, this_google_rank, google_change, this_yahoo_rank, yahoo_change, this_bing_rank, bing_change])
     end
-    keyword_table = keyword_table.sort{|x, y| x[1] <=> y[1]}
+    keyword_table = keyword_table.sort { |x, y| x[1] <=> y[1] }
 
     keyword_table.each_index do |index|
       keyword_table[index][2] = '+' + keyword_table[index][2].to_s if keyword_table[index][2] > 0
