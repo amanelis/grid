@@ -139,6 +139,30 @@ input.checkbox, input.radio {
 form.inline { line-height:3; }
 form.inline p { margin-bottom:0; }
 
+
+form.formtastic fieldset > ol > li label {
+width:100px;
+}
+
+form.formtastic fieldset > ol > li.string input, form.formtastic fieldset > ol > li.password input {
+width:200px;
+}
+
+form.formtastic fieldset > ol > li p.inline-errors {
+margin:0.5em 0 0 150px;
+}
+
+form.formtastic fieldset {
+display: block;
+}
+
+form.formtastic fieldset.buttons {
+padding-left:0;
+}
+
+form.formtastic fieldset.buttons {
+padding:0;
+}
 /*-------------------------------------------------------------- */
 /* Old Stuff */
 .wrapper {
