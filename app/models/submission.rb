@@ -16,7 +16,7 @@ class Submission < ActiveRecord::Base
   validates_inclusion_of :review_status, :in => REVIEW_STATUS_OPTIONS.values
   validates_presence_of :contact_form_id
 
-  named_scope :between, lambda { |start_date, end_date| {:conditions => ['time_of_submission between ? AND ?', start_date.to_time.in_time_zone.at_beginning_of_day.utc, end_date.to_time.in_time_zone.end_of_day.utc]} }
+  named_scope :between, lambda { |start_date, end_date| {:conditions => ['time_of_submission between ? AND ?', start_date.to_time_in_current_zone.at_beginning_of_day.utc, end_date.to_time_in_current_zone.end_of_day.utc]} }
   named_scope :previous_hours, lambda { |*args| {:conditions => ['time_of_submission > ?', (args.first || nil)], :order => 'time_of_submission DESC'} }
   
   named_scope :non_spam, {
