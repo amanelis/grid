@@ -7,3 +7,16 @@ module GridArrayInflections
 end
 
 Array.send(:include, GridArrayInflections)
+
+
+module GridDateInflections
+  def to_time_in_current_zone
+    if ::Time.zone_default
+      ::Time.zone.local(year, month, day)
+    else
+      to_time
+    end
+  end
+end
+
+Date.send(:include, GridDateInflections)
