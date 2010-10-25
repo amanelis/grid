@@ -58,8 +58,8 @@ figure img {width: 100%;}
 }
 
 /* Main Layouts */
-body {
-font-family: helvetica, arial, sans-serif;
+body{
+font-family: 'Molengo', helvetica, arial, sans-serif;
 background-color:#BBE1F7;
 margin:0 auto;
 }
@@ -658,7 +658,7 @@ table.pretty {
 table.pretty td, table.pretty th {
   padding: 3px 8px;
   border: solid 1px #CCC;
-  text-align:center;
+  text-align:left;
 }
 
 table.pretty .odd{
