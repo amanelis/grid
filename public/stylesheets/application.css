@@ -101,6 +101,9 @@ small{
 text-transform: uppercase;
 }
 
+hr{
+color:#EFEFEF;
+}
 /*
 	Buttons
 	------------------
@@ -526,10 +529,10 @@ h2 span {
 }
 
 h3 {
-    font-size: 120%;
+	margin-bottom:15px;
+	text-decoration: underline;
     font-weight: bold;
     padding-bottom: 4px;
-    color: #444;
 }
 
 h3 span {
