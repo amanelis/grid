@@ -59,6 +59,7 @@ figure img {width: 100%;}
 
 /* Main Layouts */
 body {
+font-family: helvetica, arial, sans-serif;
 background-color:#BBE1F7;
 margin:0 auto;
 }
@@ -100,6 +101,64 @@ small{
 text-transform: uppercase;
 }
 
+hr{
+color:#EFEFEF;
+}
+/*
+	Buttons
+	------------------
+*/
+/* BUTTON CLASS */
+a.button, input.button,	.button {
+text-decoration:none;
+margin: 15px 0;
+color:#373737;
+background:-webkit-gradient(linear,0% 0%,0% 100%,from(#E8E7E7),to(#BEBFC2));
+background:-moz-linear-gradient(top, #E8E7E7, #BEBFC2);
+display: inline-block;
+padding:5px;
+font-size:24px;
+font-weight:bold;
+text-shadow: 1px 1px 1px rgba(255,255,255,0.5);
+border:1px solid rgba(0,0,0,0.4);
+	-moz-border-radius: 5px;
+		-webkit-border-radius: 5px;
+	-moz-box-shadow: 0 0 0 1px #2C7CD1 inset, 0 1px 0 1px rgba(143, 228, 255, 0.6) inset, 0 28px 20px -18px rgba(143, 228, 255, 0.65) inset, 0 0 0 2px #2F94FF inset, 0 1px 0 0 rgba(255, 255, 255, 0.6)
+		-webkit-box-shadow:0 0 0 1px #2C7CD1 inset, 0 1px 0 1px rgba(143, 228, 255, 0.6) inset, 0 28px 20px -18px rgba(143, 228, 255, 0.65) inset, 0 0 0 2px #2F94FF inset, 0 1px 0 0 rgba(255, 255, 255, 0.6)
+}
+
+a.button:hover, input.button:hover, .button:hover {
+color:#000;
+background:-webkit-gradient(linear,0% 0%,0% 100%,from(#BEBFC2),to(#E8E7E7));
+background:-moz-linear-gradient(top, #BEBFC2, #E8E7E7);
+cursor:pointer;
+}
+	
+a.button:active, a.button:focus,  input.button:active, input.button:focus, .button:active, .button:focus {
+background:-webkit-gradient(linear,0% 100%,0% 0%,from(rgba(255,255,255,1)),to(rgba(185,185,185,1)));
+background:-moz-linear-gradient(bottom,rgba(255,255,255,1),rgba(185,185,185,1));
+}
+
+
+button:disabled {
+color:rgba(0,0,0,0.4);
+text-shadow:1px 1px 0px rgba(255,255,255,0.5);
+background:rgba(220,220,220,1);
+}
+
+/* CALL TO ACTION */
+.action, a.action, input.action{
+background:-webkit-gradient(linear,0% 0%,0% 100%,from(#FFC100),to(#FF8B00));
+background:-moz-linear-gradient(top, #FFC100, #FF8B00);
+font-size:24px;
+}
+
+
+.action:hover, a.action:hover, input.action:hover{
+background:-webkit-gradient(linear,0% 0%,0% 100%,from(#FF8B00),to(#FFC100));
+background:-moz-linear-gradient(top, #FF8B00, #FFC100);
+}
+
 /*-------------------------------------------------------------- */
 /* Forms */
 label       { font-weight: bold;}
@@ -123,7 +182,7 @@ textarea:focus, select:focus {
 input[type=text], input[type=password],
 input.text, input.title,
 textarea, select {
-  margin:0.5em 0;
+  margin:0 0 15px 0;
 }
 
 input.text,
@@ -138,31 +197,6 @@ input.checkbox, input.radio {
 
 form.inline { line-height:3; }
 form.inline p { margin-bottom:0; }
-
-
-form.formtastic fieldset > ol > li label {
-width:100px;
-}
-
-form.formtastic fieldset > ol > li.string input, form.formtastic fieldset > ol > li.password input {
-width:200px;
-}
-
-form.formtastic fieldset > ol > li p.inline-errors {
-margin:0.5em 0 0 150px;
-}
-
-form.formtastic fieldset {
-display: block;
-}
-
-form.formtastic fieldset.buttons {
-padding-left:0;
-}
-
-form.formtastic fieldset.buttons {
-padding:0;
-}
 /*-------------------------------------------------------------- */
 /* Old Stuff */
 .wrapper {
@@ -495,11 +529,10 @@ h2 span {
 }
 
 h3 {
-    font-size: 120%;
+	margin-bottom:15px;
+	text-decoration: underline;
     font-weight: bold;
     padding-bottom: 4px;
-    border-bottom: 1px dotted #BBB;
-    color: #444;
 }
 
 h3 span {
