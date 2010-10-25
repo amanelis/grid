@@ -15,6 +15,7 @@
 			%header
 				= link_to image_tag("cityvoice_logo.png"), "/"
 				=render :partial => "shared/flash", :locals => { :flash => flash }
+				=render :partial => "shared/adminnav"
 				%hr
 			%section
 				= yield
