@@ -87,6 +87,14 @@ margin-right:20px;
 font-weight:bold;
 }
 
+.right{
+float:right;
+}
+
+a#logout:hover{
+color:#D5334C;
+}
+
 .content{
 width: 1128px;
 margin-top:50px;
