@@ -6,17 +6,14 @@
 	%link{ :rel => "shortcut icon", :href => "/favicon.ico" }
 	%meta{:name => "description", :content => "The Grid helps you manage and measure your marketing campaigns - online or offline." }
 
-	= stylesheet_link_tag 'sexybuttons.css', 'formtastic', 'formtastic_changes', 'application'
+	= stylesheet_link_tag 'sexybuttons.css', 'application'
 	= javascript_include_tag 'jquery-1.4.2.min' ,"http://www.google.com/jsapi", 'application'
 	%body
 		%nav
 			=render :partial => "shared/menu"
 		.content
 			%header
-				%h1
-					= link_to "CityVoice Grid", "/"
-				%h2
-					Marketing ROI Measurement, Served Fresh
+				= link_to image_tag("cityvoice_logo.png"), "/"
 				=render :partial => "shared/flash", :locals => { :flash => flash }
 				%hr
 			%section
