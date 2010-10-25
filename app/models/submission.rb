@@ -10,8 +10,9 @@ class Submission < ActiveRecord::Base
   FEEDBACK = 'feedback'
   OTHER = 'other'
   LEAD = 'lead'
+  DUPLICATE = 'duplicate'
 
-  REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['Spam', SPAM], ['Feedback', FEEDBACK], ['Other', OTHER], ['Lead', LEAD]].to_ordered_hash
+  REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['Spam', SPAM], ['Feedback', FEEDBACK], ['Other', OTHER], ['Lead', LEAD], ['Duplicate', DUPLICATE]].to_ordered_hash
 
   validates_inclusion_of :review_status, :in => REVIEW_STATUS_OPTIONS.values
   validates_presence_of :contact_form_id
@@ -31,6 +32,17 @@ class Submission < ActiveRecord::Base
   def initialize_specifics(attributes={})
     self.review_status = PENDING
     self.review_status = SPAM if self.is_spam?
+  end
+  
+  def duplicate?
+    self.submissions_from_same_email_over_past_30_days.present?
+  end
+
+  def submissions_from_same_email_over_past_30_days
+    return [] if self.from_email.blank?
+    Submission.find(:all,
+              :joins => "INNER JOIN activities ON submissions.id = activities.activity_type_id AND activities.activity_type_type = 'Submission'",
+              :conditions => ['submissions.id <> ? AND from_email = ? AND activities.review_status IN (?) AND (time_of_submission between ? AND ?)', self.id, self.from_email, [PENDING, SPAM, FEEDBACK, OTHER, DUPLICATE], self.time_of_submission - 30.days, self.time_of_submission])
   end
   
   def time_of_submission= the_time_of_submission

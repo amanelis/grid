@@ -3,9 +3,11 @@
 	%title= @browser_title || 'CityVoice Grid'
 
 	%meta{'http-equiv' => "content-type", :content => "text/html;charset=UTF-8"}
-	%link{ :rel => "shortcut icon", :href => "/favicon.ico" }
+	%link{ :rel => "shortcut icon", :href => "images/favicon.png" }
+	%link{ :rel => "stylesheet", :href => "http://fonts.googleapis.com/css?family=Molengo&subset=latin" }
 	%meta{:name => "description", :content => "The Grid helps you manage and measure your marketing campaigns - online or offline." }
 
+	
 	= stylesheet_link_tag 'sexybuttons.css', 'application'
 	= javascript_include_tag 'jquery-1.4.2.min' ,"http://www.google.com/jsapi", 'application'
 	%body

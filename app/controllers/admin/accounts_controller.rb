@@ -1,7 +1,5 @@
 class Admin::AccountsController < ApplicationController
   before_filter :require_admin
-  layout 'admin'
-  
   
   # GET /accounts
   # GET /accounts.xml
