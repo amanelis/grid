@@ -12,5 +12,6 @@
 			=link_to "My Account", person_url
 			=link_to 'Logout', user_session_path, :method => :delete, :id => "logout"
 	- else
+		=link_to "Home", root_path
 		=link_to "Register", new_person_path
 		=link_to "Login", new_user_session_path
