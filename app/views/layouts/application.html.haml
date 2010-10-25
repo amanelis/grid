@@ -18,10 +18,10 @@
 				%hr
 			%section
 				= yield
-			%footer
-				%hr
-				%small
-					&copy; Copyright 2010
-					=link_to "CityVoice", "http://www.cityvoice.com"
+		%footer
+			%small
+				%br
+				&copy; Copyright 2010
+				=link_to "CityVoice", "http://www.cityvoice.com"
 /-if RAILS_ENV == "production"
 /  =render :partial => "shared/footerincludes"

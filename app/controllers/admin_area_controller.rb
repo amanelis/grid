@@ -1,6 +1,5 @@
 class AdminAreaController < ApplicationController
   before_filter :require_admin
-  layout 'admin'
 
   def index
     @user = current_user
