@@ -120,7 +120,7 @@ class Call < ActiveRecord::Base
           next
         end
       end
-      processed_calls.each { |call| call.update_attribute(:review_status, DUPLICATE) if call.duplicate? }
+      processed_calls.each { |call| call.update_if_duplicate }
     rescue Exception => ex
       job_status.finish_with_errors(ex)
       raise
@@ -139,6 +139,10 @@ class Call < ActiveRecord::Base
   
   def initialize_specifics(attributes={})
     self.review_status = PENDING
+  end
+  
+  def update_if_duplicate
+    self.update_attribute(:review_status, DUPLICATE) if self.duplicate?
   end
   
   def duplicate?
