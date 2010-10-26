@@ -22,8 +22,9 @@ class Call < ActiveRecord::Base
   WRONG_NUMBER = 'wrong number'
   OTHER = 'other'
   LEAD = 'lead'
+  DUPLICATE = 'duplicate'
 
-  REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['Unanswered', UNANSWERED], ['After Hours', AFTERHOURS], ['Spam', SPAM], ['Hangup', HANGUP], ['Wrong Number', WRONG_NUMBER], ['Other', OTHER], ['Lead', LEAD]].to_ordered_hash
+  REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['Unanswered', UNANSWERED], ['After Hours', AFTERHOURS], ['Spam', SPAM], ['Hangup', HANGUP], ['Wrong Number', WRONG_NUMBER], ['Other', OTHER], ['Lead', LEAD], ['Duplicate', DUPLICATE]].to_ordered_hash
 
   validates_inclusion_of :review_status, :in => REVIEW_STATUS_OPTIONS.values
 
@@ -46,7 +47,7 @@ class Call < ActiveRecord::Base
     :conditions => ['activities.review_status = ?', UNANSWERED]
   }
 
-  named_scope :between, lambda { |start_date, end_date| {:conditions => ['call_start between ? AND ?', start_date.to_time.in_time_zone.at_beginning_of_day, end_date.to_time.in_time_zone.end_of_day]} }
+  named_scope :between, lambda { |start_date, end_date| {:conditions => ['call_start between ? AND ?', start_date.to_time_in_current_zone.at_beginning_of_day.utc, end_date.to_time_in_current_zone.end_of_day.utc]} }
   named_scope :snapshot, lambda { |start_datetime, duration| {:conditions => ['call_start between ? AND ?', start_datetime.in_time_zone, start_datetime.in_time_zone + duration.minutes]} }
   named_scope :previous_hours, lambda { |*args| {:conditions => ['call_start > ?', (args.first || nil)], :order => 'call_start DESC'} }
 
@@ -58,7 +59,8 @@ class Call < ActiveRecord::Base
   
   #validates_attachment_presence :recording
   #validates_attachment_content_type :recording, :content_type => [ 'application/mp3', 'application/x-mp3', 'audio/mpeg', 'audio/mp3' ]
-
+    
+  
   # CLASS BEHAVIOR
 
   def self.update_calls(start=(Time.now - 2.days), fend=(Time.now + 1.day))
@@ -102,6 +104,7 @@ class Call < ActiveRecord::Base
                 existing_call.inboundno = call_result["inboundno"]
                 existing_call.recorded = call_result["recorded"]
                 existing_call.phone_number_id = phone_number.id
+                existing_call.review_status = DUPLICATE if existing_call.duplicate?
               end
               existing_call.assigned_to = call_result["assigned_to"]
               existing_call.disposition = call_result["disposition"]
@@ -133,6 +136,17 @@ class Call < ActiveRecord::Base
   
   def initialize_specifics(attributes={})
     self.review_status = PENDING
+  end
+  
+  def duplicate?
+    self.calls_from_same_number_over_past_30_days.present?
+  end
+
+  def calls_from_same_number_over_past_30_days
+    return [] if self.caller_number.blank?
+    Call.find(:all,
+              :joins => "INNER JOIN activities ON calls.id = activities.activity_type_id AND activities.activity_type_type = 'Call'",
+              :conditions => ['calls.id <> ? AND caller_number = ? AND activities.review_status IN (?) AND (call_start between ? AND ?)', self.id, self.caller_number, [PENDING, SPAM, WRONG_NUMBER, OTHER, LEAD, DUPLICATE], self.call_start - 30.days, self.call_start])
   end
   
   def fetch_call_recording(hard_update = false)

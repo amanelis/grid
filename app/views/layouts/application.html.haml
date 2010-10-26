@@ -3,28 +3,27 @@
 	%title= @browser_title || 'CityVoice Grid'
 
 	%meta{'http-equiv' => "content-type", :content => "text/html;charset=UTF-8"}
-	%link{ :rel => "shortcut icon", :href => "/favicon.ico" }
+	%link{ :rel => "shortcut icon", :href => "images/favicon.png" }
+	%link{ :rel => "stylesheet", :href => "http://fonts.googleapis.com/css?family=Molengo&subset=latin" }
 	%meta{:name => "description", :content => "The Grid helps you manage and measure your marketing campaigns - online or offline." }
 
-	= stylesheet_link_tag 'sexybuttons.css', 'formtastic', 'formtastic_changes', 'application'
+	
+	= stylesheet_link_tag 'sexybuttons.css', 'application'
 	= javascript_include_tag 'jquery-1.4.2.min' ,"http://www.google.com/jsapi", 'application'
 	%body
 		%nav
 			=render :partial => "shared/menu"
 		.content
 			%header
-				%h1
-					= link_to "CityVoice Grid", "/"
-				%h2
-					Marketing ROI Measurement, Served Fresh
+				= link_to image_tag("cityvoice_logo.png"), "/"
 				=render :partial => "shared/flash", :locals => { :flash => flash }
 				%hr
 			%section
 				= yield
-			%footer
-				%hr
-				%small
-					&copy; Copyright 2010
-					=link_to "CityVoice", "http://www.cityvoice.com"
+		%footer
+			%small
+				%br
+				&copy; Copyright 2010
+				=link_to "CityVoice", "http://www.cityvoice.com"
 /-if RAILS_ENV == "production"
 /  =render :partial => "shared/footerincludes"

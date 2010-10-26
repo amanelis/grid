@@ -8,10 +8,10 @@ class JobStatus < ActiveRecord::Base
   named_scope :finished_no_errors, :conditions => {:status => FINISHED_NO_ERRORS}
   named_scope :finished_with_errors, :conditions => {:status => FINISHED_WITH_ERRORS}
 
-  named_scope :between, lambda { |start_date, end_date| {:conditions => ['start_time between ? AND ?', start_date.to_time.in_time_zone.at_beginning_of_day, end_date.to_time.in_time_zone.end_of_day], :order => 'start_time DESC'} }
-  named_scope :today, {:conditions => ['start_time between ? AND ?', Date.today.to_time.in_time_zone.at_beginning_of_day, Date.today.to_time.in_time_zone.end_of_day], :order => 'start_time DESC'}
-  named_scope :yesterday, {:conditions => ['start_time between ? AND ?', Date.yesterday.to_time.in_time_zone.at_beginning_of_day, Date.yesterday.to_time.in_time_zone.end_of_day], :order => 'start_time DESC'}
-  named_scope :past_week, {:conditions => ['start_time between ? AND ?', (Date.today - 1.week).to_time.in_time_zone.at_beginning_of_day, Date.today.to_time.in_time_zone.end_of_day], :order => 'start_time DESC'}
+  named_scope :between, lambda { |start_date, end_date| {:conditions => ['start_time between ? AND ?', start_date.to_time_in_current_zone.at_beginning_of_day.utc, end_date.to_time_in_current_zone.end_of_day.utc], :order => 'start_time DESC'} }
+  named_scope :today, {:conditions => ['start_time between ? AND ?', Date.today.to_time_in_current_zone.at_beginning_of_day.utc, Date.today.to_time_in_current_zone.end_of_day.utc], :order => 'start_time DESC'}
+  named_scope :yesterday, {:conditions => ['start_time between ? AND ?', Date.yesterday.to_time_in_current_zone.at_beginning_of_day.utc, Date.yesterday.to_time_in_current_zone.end_of_day.utc], :order => 'start_time DESC'}
+  named_scope :past_week, {:conditions => ['start_time between ? AND ?', (Date.today - 1.week).to_time_in_current_zone.at_beginning_of_day.utc, Date.today.to_time_in_current_zone.end_of_day.utc], :order => 'start_time DESC'}
 
   def self.remove_old_statuses(older_than = Date.today - 2.weeks)
     self.destroy_all(['start_time < ?', older_than])

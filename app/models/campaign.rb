@@ -4,7 +4,7 @@ class Campaign < ActiveRecord::Base
   has_many :phone_numbers, :dependent => :destroy
   has_many :calls, :through => :phone_numbers, :order => "call_start DESC"
   has_many :contact_forms, :dependent => :destroy
-  has_many :submissions, :through => :contact_forms
+  has_many :submissions, :through => :contact_forms, :order => "time_of_submission DESC"
   has_and_belongs_to_many :websites, :uniq => true
   has_and_belongs_to_many :industries
 
