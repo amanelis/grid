@@ -265,4 +265,8 @@ class Account < ActiveRecord::Base
     self.campaigns.to_a.sum { |campaign| campaign.number_of_submissions_between(start_date, end_date) }
   end
 
+  def self.search_by_name(search_text)
+    Account.find(:all, :conditions => ['name LIKE ?', "%#{search_text}%"])
+  end
+
 end
