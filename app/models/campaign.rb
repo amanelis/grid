@@ -304,6 +304,11 @@ class Campaign < ActiveRecord::Base
     self.website.try(:number_of_map_visits_by_date) || {}
   end
 
+  def contact_form_id_string
+    self.contact_forms.collect {|x| x.id.to_s}.join(", ")
+  end       
+  
+
 
   # PREDICATES
 
