@@ -104,6 +104,7 @@ class Call < ActiveRecord::Base
                 existing_call.inboundno = call_result["inboundno"]
                 existing_call.recorded = call_result["recorded"]
                 existing_call.phone_number_id = phone_number.id
+                existing_call.review_status = DUPLICATE if existing_call.duplicate?
               end
               existing_call.assigned_to = call_result["assigned_to"]
               existing_call.disposition = call_result["disposition"]
