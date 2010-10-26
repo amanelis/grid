@@ -74,6 +74,8 @@ class Call < ActiveRecord::Base
       server.user = 'reporting@cityvoice.com'
       server.password = 'C1tyv01c3'
       
+      processed_calls = []
+      
       results = server.call("acct.list")
       results.each do |result|
         begin
@@ -104,13 +106,13 @@ class Call < ActiveRecord::Base
                 existing_call.inboundno = call_result["inboundno"]
                 existing_call.recorded = call_result["recorded"]
                 existing_call.phone_number_id = phone_number.id
-                existing_call.review_status = DUPLICATE if existing_call.duplicate?
               end
               existing_call.assigned_to = call_result["assigned_to"]
               existing_call.disposition = call_result["disposition"]
               existing_call.rating = call_result["rating"]
               existing_call.revenue = call_result["revenue"]
               Call.send_later(:fetch_call_recording, call_result["call_id"]) if existing_call.save!
+              processed_calls << existing_call
             end
           end
         rescue Exception => ex
@@ -118,6 +120,7 @@ class Call < ActiveRecord::Base
           next
         end
       end
+      processed_calls.each { |call| call.update_if_duplicate }
     rescue Exception => ex
       job_status.finish_with_errors(ex)
       raise
@@ -136,6 +139,10 @@ class Call < ActiveRecord::Base
   
   def initialize_specifics(attributes={})
     self.review_status = PENDING
+  end
+  
+  def update_if_duplicate
+    self.update_attribute(:review_status, DUPLICATE) if self.duplicate?
   end
   
   def duplicate?
