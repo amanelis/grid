@@ -34,6 +34,10 @@ class Submission < ActiveRecord::Base
     self.review_status = SPAM if self.is_spam?
   end
   
+  def update_if_duplicate
+    self.update_attribute(:review_status, DUPLICATE) if self.duplicate?
+  end
+
   def duplicate?
     self.submissions_from_same_email_over_past_30_days.present?
   end
