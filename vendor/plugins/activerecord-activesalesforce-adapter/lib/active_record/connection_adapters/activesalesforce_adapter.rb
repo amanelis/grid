@@ -117,7 +117,7 @@ module ActiveRecord
     class SalesforceAdapter < AbstractAdapter
       include StringHelper
       
-      MAX_BOXCAR_SIZE = 200
+      MAX_BOXCAR_SIZE = 2000
       
       attr_accessor :batch_size
       attr_reader :entity_def_map, :keyprefix_to_entity_def_map, :config, :class_to_entity_map
