@@ -153,7 +153,12 @@ class Call < ActiveRecord::Base
     return [] if self.caller_number.blank?
     Call.find(:all,
               :joins => "INNER JOIN activities ON calls.id = activities.activity_type_id AND activities.activity_type_type = 'Call'",
-              :conditions => ['calls.id <> ? AND caller_number = ? AND activities.review_status IN (?) AND (call_start between ? AND ?)', self.id, self.caller_number, [PENDING, SPAM, WRONG_NUMBER, OTHER, LEAD, DUPLICATE], self.call_start - 30.days, self.call_start])
+              :conditions => ['calls.id <> ? AND caller_number = ? AND activities.review_status IN (?) AND (call_start between ? AND ?)', self.id, self.caller_number, [PENDING, SPAM, WRONG_NUMBER, OTHER, LEAD, DUPLICATE], self.call_start - 30.days, self.call_start],
+              :order => 'call_start DESC')
+  end
+  
+  def duplicate_call_chain(chain = [])
+    (calls = self.calls_from_same_number_over_past_30_days).empty? ? chain << self : calls.pop.duplicate_call_chain(chain.concat(calls))
   end
   
   def fetch_call_recording(hard_update = false)
