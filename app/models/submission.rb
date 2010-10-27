@@ -61,11 +61,13 @@ class Submission < ActiveRecord::Base
   
   def is_spam?
     return true if self.work_description =~ /http:/i
-    return true if self.work_description =~ /search.*engine/i
-    return true if self.work_description =~ /internet.*marketing/i
-    return true if self.work_description =~ /increase.*traffic/i
-    return true if self.work_description =~ /online.*leads/i
     return true if self.work_description =~ /\s*porn/i
+    return true if self.work_description =~ /search\s*engine/i
+    return true if self.work_description =~ /internet\s*marketing/i
+    return true if self.work_description =~ /increase\s*traffic/i
+    return true if self.work_description =~ /online\s*leads/i
+    return true if self.work_description =~ /micro-ticket\s*leasing/i
+    return true if self.work_description =~ /no\s*application\s*fee/i
     false
   end
   
