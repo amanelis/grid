@@ -65,6 +65,7 @@ class Submission < ActiveRecord::Base
     return true if self.work_description =~ /internet.*marketing/i
     return true if self.work_description =~ /increase.*traffic/i
     return true if self.work_description =~ /online.*leads/i
+    return true if self.work_description =~ /\s*porn/i
     false
   end
   
