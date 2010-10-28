@@ -12,5 +12,9 @@ class ContactForm < ActiveRecord::Base
   def number_of_submissions_by_date
     self.submissions.non_spam.count(:group => "date(time_of_submission)", :order =>"time_of_submission ASC").inject({}) {|data, (key, value)| data[key.to_date] = {:submission => value} ; data}
   end
+  
+  def inactive?
+    self.active? ? false : true
+  end
 
 end

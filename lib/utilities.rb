@@ -18,5 +18,9 @@ class Utilities
     end
     timeline_hash
   end
-
+  
+  def self.is_valid_email_address?(email_address)
+    email_address =~ /^[a-zA-Z][\w\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]$/ ? true : false
+  end
+  
 end
