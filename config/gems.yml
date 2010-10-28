@@ -1,5 +1,6 @@
 --- 
 - :name: hpricot
+- :name: searchlogic
 - :name: httparty
 - :name: nokogiri
 - :name: authlogic

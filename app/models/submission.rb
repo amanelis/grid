@@ -46,7 +46,7 @@ class Submission < ActiveRecord::Base
     return [] if self.from_email.blank?
     Submission.find(:all,
               :joins => "INNER JOIN activities ON submissions.id = activities.activity_type_id AND activities.activity_type_type = 'Submission'",
-              :conditions => ['submissions.id <> ? AND from_email = ? AND activities.review_status IN (?) AND (time_of_submission between ? AND ?)', self.id, self.from_email, [PENDING, SPAM, FEEDBACK, OTHER, DUPLICATE], self.time_of_submission - 30.days, self.time_of_submission],
+              :conditions => ['submissions.id <> ? AND from_email = ? AND contact_form_id = ? AND activities.review_status IN (?) AND (time_of_submission between ? AND ?)', self.id, self.from_email, self.contact_form_id, [PENDING, SPAM, FEEDBACK, OTHER, DUPLICATE], self.time_of_submission - 30.days, self.time_of_submission],
               :order => 'time_of_submission DESC')
   end
   
@@ -61,10 +61,13 @@ class Submission < ActiveRecord::Base
   
   def is_spam?
     return true if self.work_description =~ /http:/i
-    return true if self.work_description =~ /search.*engine/i
-    return true if self.work_description =~ /internet.*marketing/i
-    return true if self.work_description =~ /increase.*traffic/i
-    return true if self.work_description =~ /online.*leads/i
+    return true if self.work_description =~ /\s*porn/i
+    return true if self.work_description =~ /search\s*engine/i
+    return true if self.work_description =~ /internet\s*marketing/i
+    return true if self.work_description =~ /increase\s*traffic/i
+    return true if self.work_description =~ /online\s*leads/i
+    return true if self.work_description =~ /micro-ticket\s*leasing/i
+    return true if self.work_description =~ /no\s*application\s*fee/i
     false
   end
   

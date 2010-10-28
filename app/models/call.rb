@@ -153,7 +153,7 @@ class Call < ActiveRecord::Base
     return [] if self.caller_number.blank?
     Call.find(:all,
               :joins => "INNER JOIN activities ON calls.id = activities.activity_type_id AND activities.activity_type_type = 'Call'",
-              :conditions => ['calls.id <> ? AND caller_number = ? AND activities.review_status IN (?) AND (call_start between ? AND ?)', self.id, self.caller_number, [PENDING, SPAM, WRONG_NUMBER, OTHER, LEAD, DUPLICATE], self.call_start - 30.days, self.call_start],
+              :conditions => ['calls.id <> ? AND caller_number = ? AND phone_number_id = ? AND activities.review_status IN (?) AND (call_start between ? AND ?)', self.id, self.caller_number, self.phone_number_id, [PENDING, SPAM, WRONG_NUMBER, OTHER, LEAD, DUPLICATE], self.call_start - 30.days, self.call_start],
               :order => 'call_start DESC')
   end
   
