@@ -14,13 +14,13 @@ class Campaign < ActiveRecord::Base
   named_scope :other, :conditions => {:campaign_style_type => OtherCampaign.name}
 
   before_destroy :remove_from_many_to_many_relationships
-  
+
   attr_accessor :adopting_phone_number
-  
+
   ORPHANAGE_NAME = 'CityVoice SEM Orphaned Campaigns'
 
   # CLASS BEHAVIOR
-  
+
   def self.orphanage
     Campaign.find_by_name(ORPHANAGE_NAME)
   end
@@ -31,12 +31,12 @@ class Campaign < ActiveRecord::Base
       sf_campaigns = Salesforce::Clientcampaign.all
 
       sf_campaigns.each do |sf_campaign|
-        next if sf_campaign.campaign_type__c.blank?          
-        
+        next if sf_campaign.campaign_type__c.blank?
+
         account = Account.find_by_salesforce_id(sf_campaign.account_id__c)
         if account.present?
           existing_campaign = Campaign.find_by_salesforce_id(sf_campaign.id)
-          
+
           if sf_campaign.campaign_type__c.include? 'SEM'
             if existing_campaign.blank?
               new_sem_campaign = SemCampaign.new
@@ -45,8 +45,13 @@ class Campaign < ActiveRecord::Base
               existing_campaign.salesforce_id = sf_campaign.id
             else
               new_sem_campaign = existing_campaign.campaign_style
+              unless new_sem_campaign.instance_of?(SemCampaign)
+                logger.debug "\n\n**********************************"
+                logger.debug "Campaign Error on #{new_sem_campaign.name}"
+                logger.debug "**********************************\n\n"
+                next
+              end
             end
-
             existing_campaign.status = sf_campaign.status__c
             existing_campaign.name = sf_campaign.name
             existing_campaign.zip_code = sf_campaign.zip_code__c
@@ -74,6 +79,7 @@ class Campaign < ActiveRecord::Base
               end
             end
 
+
           elsif sf_campaign.campaign_type__c.include? 'SEO'
             sf_account = Salesforce::Account.find(account.salesforce_id)
             if existing_campaign.blank?
@@ -83,6 +89,12 @@ class Campaign < ActiveRecord::Base
               existing_campaign.salesforce_id = sf_campaign.id
             else
               new_seo_campaign = existing_campaign.campaign_style
+              unless new_seo_campaign.instance_of?(SeoCampaign)
+                logger.debug "\n\n**********************************"
+                logger.debug "Campaign Error on #{new_seo_campaign.name}"
+                logger.debug "**********************************\n\n"
+                next
+              end
             end
             new_seo_campaign.budget = sf_campaign.monthly_budget__c
             new_seo_campaign.cities = ''
@@ -105,8 +117,15 @@ class Campaign < ActiveRecord::Base
               existing_campaign = new_maps_campaign.build_campaign
               existing_campaign.account_id = account.id
               existing_campaign.salesforce_id = sf_campaign.id
+
             else
               new_maps_campaign = existing_campaign.campaign_style
+              unless new_maps_campaign.instance_of?(MapsCampaign)
+                logger.debug "\n\n**********************************"
+                logger.debug "Campaign Error on #{new_maps_campaign.name}"
+                logger.debug "**********************************\n\n"
+                next
+              end
             end
             new_maps_campaign.keywords = sf_campaign.keywords__c
             new_maps_campaign.company_name = sf_campaign.maps_company_name__c
@@ -127,6 +146,12 @@ class Campaign < ActiveRecord::Base
               existing_campaign.salesforce_id = sf_campaign.id
             else
               new_other_campaign = existing_campaign.campaign_style
+              unless new_other_campaign.instance_of?(OtherCampaign)
+                logger.debug "\n\n**********************************"
+                logger.debug "Campaign Error on #{new_other_campaign.name}"
+                logger.debug "**********************************\n\n"
+                next
+              end
             end
             existing_campaign.zip_code = sf_campaign.zip_code__c
             existing_campaign.status = sf_campaign.status__c
@@ -181,7 +206,7 @@ class Campaign < ActiveRecord::Base
   def website
     self.websites.first
   end
-  
+
   def adopting_phone_number
     @adopting_phone_number
   end
@@ -305,9 +330,8 @@ class Campaign < ActiveRecord::Base
   end
 
   def contact_form_id_string
-    self.contact_forms.collect {|x| x.id.to_s}.join(", ")
-  end       
-  
+    self.contact_forms.collect { |x| x.id.to_s }.join(", ")
+  end
 
 
   # PREDICATES

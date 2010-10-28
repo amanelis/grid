@@ -5,7 +5,7 @@ class Admin::AccountsController < ApplicationController
   # GET /accounts.xml
   def index
     @accounts = Account.active.to_a
-    #@search_accounts= Account.name_like_all(params[:search].to_s.split).ascend_by_name
+    #@search_accounts = Account.name_like_all(params[:search].to_s.split).ascend_by_name
     @accounts_data = Rails.cache.fetch("accounts_data") { Account.get_accounts_data }
 
     respond_to do |format|
