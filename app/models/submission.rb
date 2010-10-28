@@ -43,7 +43,7 @@ class Submission < ActiveRecord::Base
   end
 
   def submissions_from_same_email_over_past_30_days
-    return [] if self.from_email.blank?
+    return [] unless Utilities.is_valid_email_address?(self.from_email)
     Submission.find(:all,
               :joins => "INNER JOIN activities ON submissions.id = activities.activity_type_id AND activities.activity_type_type = 'Submission'",
               :conditions => ['submissions.id <> ? AND from_email = ? AND contact_form_id = ? AND activities.review_status IN (?) AND (time_of_submission between ? AND ?)', self.id, self.from_email, self.contact_form_id, [PENDING, SPAM, FEEDBACK, OTHER, DUPLICATE], self.time_of_submission - 30.days, self.time_of_submission],
