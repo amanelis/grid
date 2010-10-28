@@ -24,7 +24,7 @@ class SubmissionsController < ApplicationController
     @submission.time_of_submission = DateTime.now
     if @submission.save
       # HTTP 200 OK
-      Notifier.send_later(:deliver_form_submission, @submission) unless @submission.review_status_spam?
+      Notifier.send_later(:deliver_form_submission, @submission) unless @submission.review_status_spam? || @submission.contact_form.inactive?
       @submission.update_if_duplicate
       Account.send_later(:cache_results_for_accounts)
       redirect_to params[:submission][:retURL]
