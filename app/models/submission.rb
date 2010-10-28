@@ -46,7 +46,7 @@ class Submission < ActiveRecord::Base
     return [] if self.from_email.blank?
     Submission.find(:all,
               :joins => "INNER JOIN activities ON submissions.id = activities.activity_type_id AND activities.activity_type_type = 'Submission'",
-              :conditions => ['submissions.id <> ? AND from_email = ? AND activities.review_status IN (?) AND (time_of_submission between ? AND ?)', self.id, self.from_email, [PENDING, SPAM, FEEDBACK, OTHER, DUPLICATE], self.time_of_submission - 30.days, self.time_of_submission],
+              :conditions => ['submissions.id <> ? AND from_email = ? AND contact_form_id = ? AND activities.review_status IN (?) AND (time_of_submission between ? AND ?)', self.id, self.from_email, self.contact_form_id, [PENDING, SPAM, FEEDBACK, OTHER, DUPLICATE], self.time_of_submission - 30.days, self.time_of_submission],
               :order => 'time_of_submission DESC')
   end
   
