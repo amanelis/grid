@@ -38,6 +38,7 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :campaigns
     admin.resources :activities
     admin.resources :job_statuses
+    admin.resources :searches
   end
 
   map.with_options :controller => 'home' do |home|
