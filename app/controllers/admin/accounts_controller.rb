@@ -111,4 +111,5 @@ class Admin::AccountsController < ApplicationController
       format.html # show.html.erb
     end
   end
+
 end

@@ -6,7 +6,7 @@
 			=link_to "Activity", admin_activities_url
 			=link_to "Job Statuses", admin_job_statuses_url
 			=link_to "Users", admin_users_url
-			%form{:href => '/admin/accounts', :id => 'search', :method => 'GET'}
+			%form{:href => '/admin', :action => "searches", :id => 'search', :method => 'GET'}
 				%input{:type => 'text', :name => 'search'}
 				%input{:type => 'submit', :value => 'Search'}
 		-else
