@@ -22,9 +22,10 @@ class Call < ActiveRecord::Base
   WRONG_NUMBER = 'wrong number'
   OTHER = 'other'
   LEAD = 'lead'
+  FOLLOWUP = 'followup'
   DUPLICATE = 'duplicate'
 
-  REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['Unanswered', UNANSWERED], ['After Hours', AFTERHOURS], ['Spam', SPAM], ['Hangup', HANGUP], ['Wrong Number', WRONG_NUMBER], ['Other', OTHER], ['Lead', LEAD], ['Duplicate', DUPLICATE]].to_ordered_hash
+  REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['After Hours', AFTERHOURS], ['Spam', SPAM], ['Wrong Number', WRONG_NUMBER], ['Other', OTHER], ['Lead', LEAD], ['Followup', FOLLOWUP]].to_ordered_hash
 
   validates_inclusion_of :review_status, :in => REVIEW_STATUS_OPTIONS.values
 
@@ -142,7 +143,7 @@ class Call < ActiveRecord::Base
   end
   
   def update_if_duplicate
-    self.update_attribute(:review_status, DUPLICATE) if self.duplicate?
+    self.update_attribute(:duplicate, true) if self.duplicate?
   end
   
   def duplicate?
@@ -190,9 +191,9 @@ class Call < ActiveRecord::Base
     if self.call_status == CANCELED_CALL
       self.review_status = HANGUP 
     elsif self.call_status == BUSY_CALL
-      self.review_status = HANGUP
+      self.review_status = UNANSWERED
     elsif self.call_status == CONGESTION_CALL
-      self.review_status = HANGUP
+      self.review_status = UNANSWERED
     elsif self.call_status == NOANSWER_CALL
       self.review_status = UNANSWERED
     end
