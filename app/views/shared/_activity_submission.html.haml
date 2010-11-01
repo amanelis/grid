@@ -27,6 +27,8 @@
         Description:
         =activity.work_description
   .review
+    - if activity.duplicate?
+      = "Duplicate Submission"
     - semantic_remote_form_for activity, :url => admin_activity_path(activity.activity) do |f| 
       = f.semantic_errors :state
       - f.inputs do

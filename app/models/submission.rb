@@ -10,9 +10,10 @@ class Submission < ActiveRecord::Base
   FEEDBACK = 'feedback'
   OTHER = 'other'
   LEAD = 'lead'
+  FOLLOWUP = 'followup'
   DUPLICATE = 'duplicate'
 
-  REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['Spam', SPAM], ['Feedback', FEEDBACK], ['Other', OTHER], ['Lead', LEAD], ['Duplicate', DUPLICATE]].to_ordered_hash
+  REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['Spam', SPAM], ['Feedback', FEEDBACK], ['Other', OTHER], ['Lead', LEAD], ['Followup', FOLLOWUP]].to_ordered_hash
 
   validates_inclusion_of :review_status, :in => REVIEW_STATUS_OPTIONS.values
   validates_presence_of :contact_form_id
@@ -35,7 +36,7 @@ class Submission < ActiveRecord::Base
   end
   
   def update_if_duplicate
-    self.update_attribute(:review_status, DUPLICATE) if self.duplicate?
+    self.update_attribute(:duplicate, true) if self.duplicate?
   end
 
   def duplicate?
@@ -60,13 +61,18 @@ class Submission < ActiveRecord::Base
   end
   
   def is_spam?
+    return true if self.phone_number =~ /1010101010/
     return true if self.work_description =~ /http:/i
     return true if self.work_description =~ /\s*porn/i
+    return true if self.work_description =~ /\s*viagra/i
     return true if self.work_description =~ /search\s*engine/i
     return true if self.work_description =~ /internet\s*marketing/i
     return true if self.work_description =~ /increase\s*traffic/i
     return true if self.work_description =~ /online\s*leads/i
     return true if self.work_description =~ /micro-ticket\s*leasing/i
+    return true if self.work_description =~ /\swhite-hat/i
+    return true if self.work_description =~ /\sSEO/
+    return true if self.work_description =~ /\sSEM/
     return true if self.work_description =~ /no\s*application\s*fee/i
     false
   end
