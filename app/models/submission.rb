@@ -13,9 +13,11 @@ class Submission < ActiveRecord::Base
   FOLLOWUP = 'followup'
   DUPLICATE = 'duplicate'
 
-  REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['Spam', SPAM], ['Feedback', FEEDBACK], ['Other', OTHER], ['Lead', LEAD], ['Followup', FOLLOWUP]].to_ordered_hash
+  ALL_REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['Spam', SPAM], ['Feedback', FEEDBACK], ['Other', OTHER], ['Lead', LEAD], ['Followup', FOLLOWUP]].to_ordered_hash
+  UNIQUE_REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['Lead', LEAD], ['Spam', SPAM], ['Feedback', FEEDBACK], ['Other', OTHER]].to_ordered_hash
+  DUPLICATE_STATUS_OPTIONS = [['Pending', PENDING], ['Followup', FOLLOWUP], ['Spam', SPAM], ['Feedback', FEEDBACK], ['Other', OTHER]].to_ordered_hash
 
-  validates_inclusion_of :review_status, :in => REVIEW_STATUS_OPTIONS.values
+  validates_inclusion_of :review_status, :in => ALL_REVIEW_STATUS_OPTIONS.values
   validates_presence_of :contact_form_id
 
   named_scope :between, lambda { |start_date, end_date| {:conditions => ['time_of_submission between ? AND ?', start_date.to_time_in_current_zone.at_beginning_of_day.utc, end_date.to_time_in_current_zone.end_of_day.utc]} }
@@ -79,6 +81,10 @@ class Submission < ActiveRecord::Base
   
   def review_status_spam?
     self.review_status == SPAM
+  end
+
+  def review_status_options
+    self.duplicate? ? DUPLICATE_STATUS_OPTIONS : UNIQUE_REVIEW_STATUS_OPTIONS
   end
   
 end

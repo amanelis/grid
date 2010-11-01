@@ -25,9 +25,14 @@ class Call < ActiveRecord::Base
   FOLLOWUP = 'followup'
   DUPLICATE = 'duplicate'
 
-  REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['After Hours', AFTERHOURS], ['Spam', SPAM], ['Wrong Number', WRONG_NUMBER], ['Other', OTHER], ['Lead', LEAD], ['Followup', FOLLOWUP]].to_ordered_hash
+  ALL_REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['After Hours', AFTERHOURS], ['Spam', SPAM], ['Wrong Number', WRONG_NUMBER], ['Other', OTHER], ['Lead', LEAD], ['Followup', FOLLOWUP], ['Hangup', HANGUP], ['Unanswered', UNANSWERED]].to_ordered_hash
 
-  validates_inclusion_of :review_status, :in => REVIEW_STATUS_OPTIONS.values
+  UNIQUE_REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['Lead', LEAD], ['After Hours', AFTERHOURS], ['Spam', SPAM], ['Wrong Number', WRONG_NUMBER], ['Other', OTHER]].to_ordered_hash
+  DUPLICATE_REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['Followup', FOLLOWUP], ['After Hours', AFTERHOURS], ['Spam', SPAM], ['Wrong Number', WRONG_NUMBER], ['Other', OTHER]].to_ordered_hash
+  HANGUP_REVIEW_STATUS_OPTIONS = [['Hangup', HANGUP]].to_ordered_hash
+  UNANSWERED_REVIEW_STATUS_OPTIONS = [['Unanswered', UNANSWERED]].to_ordered_hash
+
+  validates_inclusion_of :review_status, :in => ALL_REVIEW_STATUS_OPTIONS.values
 
   named_scope :answered, :conditions => {:call_status => ANSWERED_CALL}
   named_scope :canceled, :conditions => {:call_status => CANCELED_CALL}
@@ -196,6 +201,18 @@ class Call < ActiveRecord::Base
       self.review_status = UNANSWERED
     elsif self.call_status == NOANSWER_CALL
       self.review_status = UNANSWERED
+    end
+  end
+  
+  def review_status_options
+    if self.review_status == HANGUP
+      return HANGUP_REVIEW_STATUS_OPTIONS
+    elsif self.review_status == UNANSWERED
+      return UNANSWERED_REVIEW_STATUS_OPTIONS
+    elsif self.duplicate?
+      return DUPLICATE_REVIEW_STATUS_OPTIONS
+    else
+      return UNIQUE_REVIEW_STATUS_OPTIONS
     end
   end
   

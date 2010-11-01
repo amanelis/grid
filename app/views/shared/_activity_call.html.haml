@@ -32,7 +32,7 @@
       = f.semantic_errors :state
       - f.inputs do
         %br
-        = f.input :review_status, :label => 'Review', :as => :select, :collection => Call::REVIEW_STATUS_OPTIONS, :include_blank => false
+        = f.input :review_status, :label => 'Review', :as => :select, :collection => activity.review_status_options, :include_blank => false
       - f.buttons do
         = f.commit_button :update, :button_html => { :class => "sexybutton sexysimple sexygreen" }
   .bottom_title
