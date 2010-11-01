@@ -147,10 +147,10 @@ class Call < ActiveRecord::Base
   end
   
   def update_if_duplicate
-    self.update_attribute(:duplicate, true) if self.duplicate?
+    self.update_attribute(:duplicate, true) if self.duplicate_calls_present?
   end
   
-  def duplicate?
+  def duplicate_calls_present?
     self.calls_from_same_number_over_past_30_days.present?
   end
 
