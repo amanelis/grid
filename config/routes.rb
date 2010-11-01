@@ -38,7 +38,7 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :campaigns
     admin.resources :activities
     admin.resources :job_statuses
-    admin.resources :searches
+    admin.resources :searches, :only => :index
   end
 
   map.with_options :controller => 'home' do |home|
@@ -50,7 +50,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resource :user_session
   map.resource :submission, :only => [:index, :create, :show]
   map.root :controller => "home", :action => "index" # optional, this just sets the root route
-
   # You can have the root of your site routed with map.root -- just remember to delete public/index.html.
   # map.root :controller => "welcome"
 

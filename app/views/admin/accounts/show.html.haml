@@ -6,6 +6,13 @@
     %h3 Account Performance
     = render :partial => "shared/timeline"
   .right
+    %script
+      $(function() {
+      $( "#datepicker" ).datepicker();
+      });
+    /%input{:id => "datepicker", :type => "text"}
+
+	
   .clear
 
 %h3

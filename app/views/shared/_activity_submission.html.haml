@@ -27,11 +27,13 @@
         Description:
         =activity.work_description
   .review
+    - if activity.duplicate?
+      = "Duplicate Submission"
     - semantic_remote_form_for activity, :url => admin_activity_path(activity.activity) do |f| 
       = f.semantic_errors :state
       - f.inputs do
         %br
-        = f.input :review_status, :label => 'Review', :as => :select, :collection => Submission::REVIEW_STATUS_OPTIONS, :include_blank => false
+        = f.input :review_status, :label => 'Review', :as => :select, :collection => activity.review_status_options, :include_blank => false
       - f.buttons do
         = f.commit_button :update, :button_html => { :class => "sexybutton sexysimple sexygreen" }
   .bottom_title

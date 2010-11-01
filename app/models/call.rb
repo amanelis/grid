@@ -22,11 +22,16 @@ class Call < ActiveRecord::Base
   WRONG_NUMBER = 'wrong number'
   OTHER = 'other'
   LEAD = 'lead'
-  DUPLICATE = 'duplicate'
+  FOLLOWUP = 'followup'
 
-  REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['Unanswered', UNANSWERED], ['After Hours', AFTERHOURS], ['Spam', SPAM], ['Hangup', HANGUP], ['Wrong Number', WRONG_NUMBER], ['Other', OTHER], ['Lead', LEAD], ['Duplicate', DUPLICATE]].to_ordered_hash
+  ALL_REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['After Hours', AFTERHOURS], ['Spam', SPAM], ['Wrong Number', WRONG_NUMBER], ['Other', OTHER], ['Lead', LEAD], ['Followup', FOLLOWUP], ['Hangup', HANGUP], ['Unanswered', UNANSWERED]].to_ordered_hash
 
-  validates_inclusion_of :review_status, :in => REVIEW_STATUS_OPTIONS.values
+  UNIQUE_REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['Lead', LEAD], ['After Hours', AFTERHOURS], ['Spam', SPAM], ['Wrong Number', WRONG_NUMBER], ['Other', OTHER]].to_ordered_hash
+  DUPLICATE_REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['Followup', FOLLOWUP], ['After Hours', AFTERHOURS], ['Spam', SPAM], ['Wrong Number', WRONG_NUMBER], ['Other', OTHER]].to_ordered_hash
+  HANGUP_REVIEW_STATUS_OPTIONS = [['Hangup', HANGUP]].to_ordered_hash
+  UNANSWERED_REVIEW_STATUS_OPTIONS = [['Unanswered', UNANSWERED]].to_ordered_hash
+
+  validates_inclusion_of :review_status, :in => ALL_REVIEW_STATUS_OPTIONS.values
 
   named_scope :answered, :conditions => {:call_status => ANSWERED_CALL}
   named_scope :canceled, :conditions => {:call_status => CANCELED_CALL}
@@ -38,7 +43,7 @@ class Call < ActiveRecord::Base
   named_scope :lead, {
     :select => "calls.*",
     :joins => "INNER JOIN activities ON calls.id = activities.activity_type_id AND activities.activity_type_type = 'Call'", 
-    :conditions => ['activities.review_status = ? OR activities.review_status = ?', PENDING, LEAD]
+    :conditions => ['activities.duplicate = FALSE AND (activities.review_status = ? OR activities.review_status = ?)', PENDING, LEAD]
   }
 
   named_scope :unanswered, {
@@ -142,10 +147,10 @@ class Call < ActiveRecord::Base
   end
   
   def update_if_duplicate
-    self.update_attribute(:review_status, DUPLICATE) if self.duplicate?
+    self.update_attribute(:duplicate, true) if self.duplicate_calls_present?
   end
   
-  def duplicate?
+  def duplicate_calls_present?
     self.calls_from_same_number_over_past_30_days.present?
   end
 
@@ -153,7 +158,7 @@ class Call < ActiveRecord::Base
     return [] if self.caller_number.blank?
     Call.find(:all,
               :joins => "INNER JOIN activities ON calls.id = activities.activity_type_id AND activities.activity_type_type = 'Call'",
-              :conditions => ['calls.id <> ? AND caller_number = ? AND phone_number_id = ? AND activities.review_status IN (?) AND (call_start between ? AND ?)', self.id, self.caller_number, self.phone_number_id, [PENDING, SPAM, WRONG_NUMBER, OTHER, LEAD, DUPLICATE], self.call_start - 30.days, self.call_start],
+              :conditions => ['calls.id <> ? AND caller_number = ? AND phone_number_id = ? AND activities.review_status IN (?) AND (call_start between ? AND ?)', self.id, self.caller_number, self.phone_number_id, [PENDING, SPAM, WRONG_NUMBER, OTHER, LEAD, FOLLOWUP], self.call_start - 30.days, self.call_start],
               :order => 'call_start DESC')
   end
   
@@ -190,11 +195,23 @@ class Call < ActiveRecord::Base
     if self.call_status == CANCELED_CALL
       self.review_status = HANGUP 
     elsif self.call_status == BUSY_CALL
-      self.review_status = HANGUP
+      self.review_status = UNANSWERED
     elsif self.call_status == CONGESTION_CALL
-      self.review_status = HANGUP
+      self.review_status = UNANSWERED
     elsif self.call_status == NOANSWER_CALL
       self.review_status = UNANSWERED
+    end
+  end
+  
+  def review_status_options
+    if self.review_status == HANGUP
+      return HANGUP_REVIEW_STATUS_OPTIONS
+    elsif self.review_status == UNANSWERED
+      return UNANSWERED_REVIEW_STATUS_OPTIONS
+    elsif self.duplicate?
+      return DUPLICATE_REVIEW_STATUS_OPTIONS
+    else
+      return UNIQUE_REVIEW_STATUS_OPTIONS
     end
   end
   

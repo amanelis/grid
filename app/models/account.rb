@@ -231,6 +231,10 @@ class Account < ActiveRecord::Base
     data
   end
 
+  def cost_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.to_a.sum { |campaign| campaign.cost_between(start_date, end_date) }
+  end
+
   def spend_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.to_a.sum { |campaign| campaign.spend_between(start_date, end_date) }
   end
