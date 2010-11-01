@@ -11,7 +11,6 @@ class Submission < ActiveRecord::Base
   OTHER = 'other'
   LEAD = 'lead'
   FOLLOWUP = 'followup'
-  DUPLICATE = 'duplicate'
 
   ALL_REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['Spam', SPAM], ['Feedback', FEEDBACK], ['Other', OTHER], ['Lead', LEAD], ['Followup', FOLLOWUP]].to_ordered_hash
   UNIQUE_REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['Lead', LEAD], ['Spam', SPAM], ['Feedback', FEEDBACK], ['Other', OTHER]].to_ordered_hash
@@ -23,6 +22,12 @@ class Submission < ActiveRecord::Base
   named_scope :between, lambda { |start_date, end_date| {:conditions => ['time_of_submission between ? AND ?', start_date.to_time_in_current_zone.at_beginning_of_day.utc, end_date.to_time_in_current_zone.end_of_day.utc]} }
   named_scope :previous_hours, lambda { |*args| {:conditions => ['time_of_submission > ?', (args.first || nil)], :order => 'time_of_submission DESC'} }
   
+  named_scope :lead, {
+    :select => "submissions.*",
+    :joins => "INNER JOIN activities ON calls.id = activities.activity_type_id AND activities.activity_type_type = 'Submission'", 
+    :conditions => ['activities.duplicate = FALSE AND (activities.review_status = ? OR activities.review_status = ?)', PENDING, LEAD]
+  }
+
   named_scope :non_spam, {
     :select => "submissions.*",
     :joins => "INNER JOIN activities ON submissions.id = activities.activity_type_id AND activities.activity_type_type = 'Submission'", 

@@ -23,7 +23,6 @@ class Call < ActiveRecord::Base
   OTHER = 'other'
   LEAD = 'lead'
   FOLLOWUP = 'followup'
-  DUPLICATE = 'duplicate'
 
   ALL_REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['After Hours', AFTERHOURS], ['Spam', SPAM], ['Wrong Number', WRONG_NUMBER], ['Other', OTHER], ['Lead', LEAD], ['Followup', FOLLOWUP], ['Hangup', HANGUP], ['Unanswered', UNANSWERED]].to_ordered_hash
 
@@ -44,7 +43,7 @@ class Call < ActiveRecord::Base
   named_scope :lead, {
     :select => "calls.*",
     :joins => "INNER JOIN activities ON calls.id = activities.activity_type_id AND activities.activity_type_type = 'Call'", 
-    :conditions => ['activities.review_status = ? OR activities.review_status = ?', PENDING, LEAD]
+    :conditions => ['activities.duplicate = FALSE AND (activities.review_status = ? OR activities.review_status = ?)', PENDING, LEAD]
   }
 
   named_scope :unanswered, {
