@@ -43,10 +43,10 @@ class Submission < ActiveRecord::Base
   end
   
   def update_if_duplicate
-    self.update_attribute(:duplicate, true) if self.duplicate?
+    self.update_attribute(:duplicate, true) if self.duplicate_submissions_present?
   end
 
-  def duplicate?
+  def duplicate_submissions_present?
     self.submissions_from_same_email_over_past_30_days.present?
   end
 
