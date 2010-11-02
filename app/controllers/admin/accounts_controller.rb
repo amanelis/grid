@@ -5,8 +5,8 @@ class Admin::AccountsController < ApplicationController
   # GET /accounts.xml
   def index
     if params[:search].nil?
-      @passed_status = params[:account_status]
-      @passed_type = params[:account_type]
+      @passed_status = params[:account_status] ||= 'Active'
+      @passed_type = params[:account_type] ||= ''
       @accounts = Account.get_accounts_by_status_and_account_type(params[:account_status], params[:account_type])
       #@accounts = Account.active.to_a if params[:accounts][:account_status] == 'Active'
       #@search_accounts= Account.name_like_all(params[:search].to_s.split).ascend_by_name
