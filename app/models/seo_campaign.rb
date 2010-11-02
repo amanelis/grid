@@ -284,38 +284,42 @@ class SeoCampaign < ActiveRecord::Base
   end
 
   def website_traffic_sources_graph(start_date = Date.today - 1.month, end_date = Date.today, height = 250, width = 750)
-    width = 1000 if width > 1000
-    height = 300 if height > 300
-    website = self.websites.first
-    source_url = ''
-    if website != nil
-      items = website.get_traffic_sources(start_date, end_date)
-      if items != nil
-        titles = Array.new()
-        values = Array.new()
-        labels = Array.new()
-        items.each do |item|
-          titles.push(item["title"])
-          values.push(item["value"].to_i)
-          labels.push(item["value_percent"] + "% (" + item["value"] + ")")
-        end
-        chart_size = width.to_s + 'x' + height.to_s
-        GoogleChart::PieChart.new(chart_size, "Web Traffic Sources", true) do |pc|
-          i = 0
-          (0..(titles.size - 1)).each do |t|
-            pc.data titles[i], values[i], CHART_COLORS[i]
-            i += 1
+   width = 1000 if width > 1000
+      height = 300 if height > 300
+      website = self.websites.first
+      source_url = ''
+      if website != nil
+        items = website.get_traffic_sources(start_date, end_date)
+        if items != nil
+          titles = Array.new()
+          values = Array.new()
+          labels = Array.new()
+          items.each do |item|
+            begin
+            titles.push(item["title"])
+            values.push(item["value"].to_i)
+            labels.push(item["value_percent"] + "% (" + item["value"] + ")")
+            rescue
+              next
+            end
           end
-          pc.show_legend = true
-          pc.show_labels = false
-          pc.axis :x, :labels => labels, :font_size => 10
-          pc.fill(:background, :solid, {:color => '65432100'})
-          pc.fill(:chart, :solid, {:color => '65432100'})
-          source_url = pc.to_escaped_url
+          chart_size = width.to_s + 'x' + height.to_s
+          GoogleChart::PieChart.new(chart_size, "Web Traffic Sources", true) do |pc|
+            i = 0
+            (0..(titles.size - 1)).each do |t|
+              pc.data titles[i], values[i], CHART_COLORS[i]
+              i += 1
+            end
+            pc.show_legend = true
+            pc.show_labels = false
+            pc.axis :x, :labels => labels, :font_size => 10
+            pc.fill(:background, :solid, {:color => '65432100'})
+            pc.fill(:chart, :solid, {:color => '65432100'})
+            source_url = pc.to_escaped_url
+          end
         end
       end
-    end
-    return source_url
+      return source_url
   end
 
   def seo_keyword_rankings_graph(height = 250, width = 1000)
