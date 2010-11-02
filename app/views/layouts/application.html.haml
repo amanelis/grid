@@ -13,7 +13,7 @@
 		%header
 			=render :partial => "layouts/nav"
 			=render :partial => "layouts/flash", :locals => { :flash => flash }
-		%section
+		%section#content
 			= yield
 		%footer
 			%small

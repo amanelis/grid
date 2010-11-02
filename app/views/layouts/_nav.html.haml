@@ -8,12 +8,13 @@
       =link_to "Users", admin_users_url
     -else
       =link_to "Dashboard", dashboard_url
-    %aside
+    %aside#search  
+      -form_tag admin_searches_url, :method => :get, :id => 'search' do
+        =text_field_tag 'search'
+        =submit_tag 'Search'    
+    %aside#account
       =link_to "My Account", person_url
       =link_to 'Logout', user_session_path, :method => :delete, :id => "logout"
-      /-form_tag admin_searches_url, :method => :get, :id => 'search' do
-      /=text_field_tag 'search'
-      /=submit_tag 'Search'
   -else
     =link_to "Home", root_path
     =link_to "Register", new_person_path
