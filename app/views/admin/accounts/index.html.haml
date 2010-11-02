@@ -1,6 +1,23 @@
+%br
 %h3
   = 'For ' + (Date.yesterday - 1.week).to_s(:long) + ' to ' + Date.yesterday.to_s(:long)
+%br
 
+%form{:href => '/admin', :action => "accounts", :id => 'index', :name => 'index', :method => 'GET'}
+  %label
+    = "Account Status: "
+  %select{:id => :account_status, :name => :account_status, :include_blank => false}
+    -@accounts_statuses.each do |status|
+      %option
+        = status
+  %label
+    = "Account Type: "
+  %select{:id => :account_type, :name => :account_type, :include_blank => false}
+    -@accounts_types.each do |account_type|
+      %option
+        = account_type
+  %input{:type => 'submit', :value => 'Filter'}
+      
 %table{:class => "pretty"}
   %thead
     %tr
