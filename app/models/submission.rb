@@ -24,7 +24,7 @@ class Submission < ActiveRecord::Base
   
   named_scope :lead, {
     :select => "submissions.*",
-    :joins => "INNER JOIN activities ON calls.id = activities.activity_type_id AND activities.activity_type_type = 'Submission'", 
+    :joins => "INNER JOIN activities ON submissions.id = activities.activity_type_id AND activities.activity_type_type = 'Submission'", 
     :conditions => ['activities.duplicate = FALSE AND (activities.review_status = ? OR activities.review_status = ?)', PENDING, LEAD]
   }
 
