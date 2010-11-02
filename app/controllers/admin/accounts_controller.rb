@@ -6,14 +6,20 @@ class Admin::AccountsController < ApplicationController
   def index
     if params[:search].nil?
       @accounts = Account.active.to_a
+      @accounts = Account.active.to_a if params[:account_status] == 'Active'
+      #@accounts = Account.active.to_a if params[:accounts][:account_status] == 'Active'
       #@search_accounts= Account.name_like_all(params[:search].to_s.split).ascend_by_name
       @accounts_data = Rails.cache.fetch("accounts_data") { Account.get_accounts_data }
+      #@accounts_statuses = Account.account_statuses
+
       respond_to do |format|
         format.html # index.html.erb
       end
     else
       @accounts = Account.name_like_all(params[:search])
+      @accounts = Account.active.to_a if params[:account_status] == 'Active'
       @accounts_data = Rails.cache.fetch("accounts_data") { Account.get_accounts_data }
+      #@accounts_statuses = Account.account_statuses
 
       respond_to do |format|
         format.html # index.html.erb

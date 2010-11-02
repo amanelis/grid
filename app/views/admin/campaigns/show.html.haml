@@ -96,7 +96,7 @@
       %th
         Work Description
   %tbody
-    -@campaign.submissions.non_spam.between(Date.today - 1.week, Date.today).each do |submission|
+    -@campaign.submissions.lead.between(Date.today - 1.week, Date.today).each do |submission|
       %tr{ :class => cycle('odd', 'even')}
         %td
           = submission.name

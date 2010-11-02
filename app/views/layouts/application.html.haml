@@ -10,18 +10,15 @@
 		= stylesheet_link_tag 'sexybuttons.css', 'ui-lightness/jquery-ui-1.8.5.custom', 'application'
 		= javascript_include_tag 'jquery-1.4.2.min' ,"http://www.google.com/jsapi", 'jquery-ui', 'modernizr', 'application'
 	%body
-		%nav
-			=render :partial => "shared/menu"
-		.content
-			%header
-				= link_to image_tag("cityvoice_logo.png"), "/"
-				=render :partial => "shared/flash", :locals => { :flash => flash }
-				%hr
-			%section
-				= yield
+		%header
+			#logo
+				=link_to image_tag("grid_logo.png"), root_path
+			=render :partial => "layouts/nav"
+		%section#content
+			=render :partial => "layouts/flash", :locals => { :flash => flash }
+			= yield
 		%footer
 			%small
-				%br
 				&copy; Copyright 2010
 				=link_to "CityVoice", "http://www.cityvoice.com"
 				.right

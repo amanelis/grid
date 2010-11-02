@@ -3,8 +3,10 @@ class Account < ActiveRecord::Base
   has_one :adwords_client, :dependent => :destroy
 
   named_scope :active, :conditions => ['status = ? OR status = ?', "Active", "Paused"], :order => "name ASC"
+  named_scope :inactive, :conditions => ['status = ?', "Inactive"], :order => "name ASC"
 
-
+  attr_accessor :account_status
+  
   # CLASS BEHAVIOR
 
   def self.pull_all_data_migrations
@@ -110,7 +112,9 @@ class Account < ActiveRecord::Base
     Activity.previous_hours(time).collect { |activity| activity.activity_type }
   end
 
-
+  def self.account_statuses
+    Account.all.collect(&:status).uniq
+  end
   # INSTANCE BEHAVIOR
 
   def number_of_visits_by_date

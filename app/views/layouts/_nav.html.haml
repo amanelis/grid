@@ -1,0 +1,21 @@
+%nav
+  -if @current_user
+    -if @current_user.admin?
+      =link_to "Dashboard", admin_url
+      =link_to "Accounts", admin_accounts_url
+      =link_to "Activity", admin_activities_url
+      =link_to "Job Statuses", admin_job_statuses_url
+      =link_to "Users", admin_users_url
+    -else
+      =link_to "Dashboard", dashboard_url
+    %aside#search  
+      -form_tag admin_searches_url, :method => :get, :id => 'search' do
+        =text_field_tag 'search'
+        =submit_tag 'Search'    
+    %aside#account
+      =link_to "My Account", person_url
+      =link_to 'Logout', user_session_path, :method => :delete, :id => "logout"
+  -else
+    =link_to "Home", root_path
+    =link_to "Register", new_person_path
+    =link_to "Login", new_user_session_path
