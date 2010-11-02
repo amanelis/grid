@@ -6,16 +6,18 @@
 %form{:href => '/admin', :action => "accounts", :id => 'index', :name => 'index', :method => 'GET'}
   %label
     = "Account Status: "
-  %select{:id => :account_status, :name => :account_status, :include_blank => false, :selected => @passed_status}
+  %select{:id => :account_status, :name => :account_status}
     - for status in @accounts_statuses
-      %option{ :selected => status == @passed_status}= h status
+      %option{ :selected => status == @passed_status}= status
 
 
   %label
     = "Account Type: "
-  %select{:id => :account_type, :name => :account_type, :include_blank => true, :selected_value => 4}
+  %select{:id => :account_type, :name => :account_type}
+    %option
+      = ''
     - for account_type in @accounts_types
-      %option{ :selected => account_type == @passed_type}= h account_type
+      %option{ :selected => account_type == @passed_type}= account_type
   %input{:type => 'submit', :value => 'Filter'}
       
 %table{:class => "pretty"}
