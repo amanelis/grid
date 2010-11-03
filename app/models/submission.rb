@@ -12,11 +12,11 @@ class Submission < ActiveRecord::Base
   LEAD = 'lead'
   FOLLOWUP = 'followup'
 
-  ALL_REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['Spam', SPAM], ['Feedback', FEEDBACK], ['Other', OTHER], ['Lead', LEAD], ['Followup', FOLLOWUP]].to_ordered_hash
+  ALL_REVIEW_STATUS_OPTIONS = [PENDING, SPAM, FEEDBACK, OTHER, LEAD, FOLLOWUP]
   UNIQUE_REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['Lead', LEAD], ['Spam', SPAM], ['Feedback', FEEDBACK], ['Other', OTHER]].to_ordered_hash
   DUPLICATE_STATUS_OPTIONS = [['Pending', PENDING], ['Followup', FOLLOWUP], ['Spam', SPAM], ['Feedback', FEEDBACK], ['Other', OTHER]].to_ordered_hash
 
-  validates_inclusion_of :review_status, :in => ALL_REVIEW_STATUS_OPTIONS.values
+  validates_inclusion_of :review_status, :in => ALL_REVIEW_STATUS_OPTIONS
   validates_presence_of :contact_form_id
 
   named_scope :between, lambda { |start_date, end_date| {:conditions => ['time_of_submission between ? AND ?', start_date.to_time_in_current_zone.at_beginning_of_day.utc, end_date.to_time_in_current_zone.end_of_day.utc]} }
@@ -32,6 +32,18 @@ class Submission < ActiveRecord::Base
     :select => "submissions.*",
     :joins => "INNER JOIN activities ON submissions.id = activities.activity_type_id AND activities.activity_type_type = 'Submission'", 
     :conditions => "activities.review_status <> 'spam'"
+  }
+
+  named_scope :pending, {
+    :select => "submissions.*",
+    :joins => "INNER JOIN activities ON submissions.id = activities.activity_type_id AND activities.activity_type_type = 'Submission'", 
+    :conditions => ['activities.review_status = ?', PENDING]
+  }
+
+  named_scope :reviewed, {
+    :select => "submissions.*",
+    :joins => "INNER JOIN activities ON submissions.id = activities.activity_type_id AND activities.activity_type_type = 'Submission'", 
+    :conditions => ['activities.review_status in (?)', [SPAM, FEEDBACK, OTHER, LEAD, FOLLOWUP]]
   }
 
 
