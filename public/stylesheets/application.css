@@ -182,6 +182,13 @@ padding:10px;
         border-radius: 10px;
 }
 
+.boxshadow article{
+-webkit-box-shadow: 0 0 10px #989898;
+   -moz-box-shadow: 0 0 10px #989898;
+     -o-box-shadow: 0 0 10px #989898;
+        box-shadow: 0 0 10px #989898;
+}
+
 .single{
 width:264px;
 }
