@@ -24,14 +24,14 @@ class Call < ActiveRecord::Base
   LEAD = 'lead'
   FOLLOWUP = 'followup'
 
-  ALL_REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['After Hours', AFTERHOURS], ['Spam', SPAM], ['Wrong Number', WRONG_NUMBER], ['Other', OTHER], ['Lead', LEAD], ['Followup', FOLLOWUP], ['Hangup', HANGUP], ['Unanswered', UNANSWERED]].to_ordered_hash
+  ALL_REVIEW_STATUS_OPTIONS = [PENDING, UNANSWERED, AFTERHOURS, SPAM, HANGUP, WRONG_NUMBER, OTHER, LEAD, FOLLOWUP]
 
   UNIQUE_REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['Lead', LEAD], ['After Hours', AFTERHOURS], ['Spam', SPAM], ['Wrong Number', WRONG_NUMBER], ['Other', OTHER]].to_ordered_hash
   DUPLICATE_REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['Followup', FOLLOWUP], ['After Hours', AFTERHOURS], ['Spam', SPAM], ['Wrong Number', WRONG_NUMBER], ['Other', OTHER]].to_ordered_hash
   HANGUP_REVIEW_STATUS_OPTIONS = [['Hangup', HANGUP]].to_ordered_hash
   UNANSWERED_REVIEW_STATUS_OPTIONS = [['Unanswered', UNANSWERED]].to_ordered_hash
 
-  validates_inclusion_of :review_status, :in => ALL_REVIEW_STATUS_OPTIONS.values
+  validates_inclusion_of :review_status, :in => ALL_REVIEW_STATUS_OPTIONS
 
   named_scope :answered, :conditions => {:call_status => ANSWERED_CALL}
   named_scope :canceled, :conditions => {:call_status => CANCELED_CALL}
@@ -46,10 +46,22 @@ class Call < ActiveRecord::Base
     :conditions => ['activities.duplicate = FALSE AND (activities.review_status = ? OR activities.review_status = ?)', PENDING, LEAD]
   }
 
+  named_scope :pending, {
+    :select => "calls.*",
+    :joins => "INNER JOIN activities ON calls.id = activities.activity_type_id AND activities.activity_type_type = 'Call'", 
+    :conditions => ['activities.review_status = ?', PENDING]
+  }
+
   named_scope :unanswered, {
     :select => "calls.*",
     :joins => "INNER JOIN activities ON calls.id = activities.activity_type_id AND activities.activity_type_type = 'Call'", 
     :conditions => ['activities.review_status = ?', UNANSWERED]
+  }
+
+  named_scope :reviewed, {
+    :select => "calls.*",
+    :joins => "INNER JOIN activities ON calls.id = activities.activity_type_id AND activities.activity_type_type = 'Call'", 
+    :conditions => ['activities.review_status in (?)', [AFTERHOURS, SPAM, WRONG_NUMBER, OTHER, LEAD, FOLLOWUP]]
   }
 
   named_scope :between, lambda { |start_date, end_date| {:conditions => ['call_start between ? AND ?', start_date.to_time_in_current_zone.at_beginning_of_day.utc, end_date.to_time_in_current_zone.end_of_day.utc]} }

@@ -333,6 +333,10 @@ class Campaign < ActiveRecord::Base
     self.contact_forms.collect { |x| x.id.to_s }.join(", ")
   end
 
+  def contact_form_emails_string
+    self.contact_forms.collect { |x| x.forwarding_email }.join(", ")
+  end
+
 
   # PREDICATES
 

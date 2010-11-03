@@ -75,7 +75,7 @@
     - f.buttons do
       = f.commit_button :update, :button_html => { :class => "sexybutton sexysimple sexygreen" }
 %h3
-  = "Submission Log (ID = #{@campaign.contact_form_id_string})"
+  = "Submission Log (ID = #{@campaign.contact_form_id_string}, Emails: #{@campaign.contact_form_emails_string})"
   %h5
     = @campaign.account.time_zone
 %table{:class => "pretty"}

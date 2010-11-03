@@ -5,21 +5,30 @@ class Admin::AccountsController < ApplicationController
   # GET /accounts.xml
   def index
     if params[:search].nil?
-      @accounts = Account.active.to_a
-      @accounts = Account.active.to_a if params[:account_status] == 'Active'
+      @passed_status = params[:account_status] ||= 'Active'
+      @passed_type = params[:account_type] ||= ''
+      @accounts = Account.get_accounts_by_status_and_account_type(params[:account_status], params[:account_type])
       #@accounts = Account.active.to_a if params[:accounts][:account_status] == 'Active'
       #@search_accounts= Account.name_like_all(params[:search].to_s.split).ascend_by_name
       @accounts_data = Rails.cache.fetch("accounts_data") { Account.get_accounts_data }
-      #@accounts_statuses = Account.account_statuses
-
+      @accounts_statuses = Account.account_statuses
+      @accounts_types = Account.account_types
       respond_to do |format|
         format.html # index.html.erb
       end
     else
+      @passed_status = params[:account_status]
+      @passed_type = params[:account_type]
       @accounts = Account.name_like_all(params[:search])
       @accounts = Account.active.to_a if params[:account_status] == 'Active'
+      @accounts = Account.active.to_a if params[:account_status] == 'Inactive'
+
       @accounts_data = Rails.cache.fetch("accounts_data") { Account.get_accounts_data }
-      #@accounts_statuses = Account.account_statuses
+      @accounts_statuses = Account.account_statuses
+      @accounts_types = Account.account_types
+      @accounts = Account.active.to_a if @passed_status == 'Active'
+      @accounts = Account.inactive.to_a if @passed_status == 'Inactive'
+
 
       respond_to do |format|
         format.html # index.html.erb
