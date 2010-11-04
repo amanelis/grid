@@ -1,7 +1,9 @@
 class Account < ActiveRecord::Base
+	belongs_to :reseller, :class_name => "Account", :foreign_key => "reseller_id"
   has_many :campaigns, :dependent => :destroy
+	has_many :clients, :class_name => "Account", :foreign_key => "reseller_id"
   has_one :adwords_client, :dependent => :destroy
-
+	
   named_scope :active, :conditions => ['status = ? OR status = ?', "Active", "Paused"], :order => "name ASC"
   named_scope :inactive, :conditions => ['status = ?', "Inactive"], :order => "name ASC"
 
