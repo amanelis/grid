@@ -43,7 +43,7 @@ class Submission < ActiveRecord::Base
   named_scope :reviewed, {
     :select => "submissions.*",
     :joins => "INNER JOIN activities ON submissions.id = activities.activity_type_id AND activities.activity_type_type = 'Submission'", 
-    :conditions => ['activities.review_status in (?)', [SPAM, FEEDBACK, OTHER, LEAD, FOLLOWUP]]
+    :conditions => ['activities.review_status <> ?', PENDING]
   }
 
 

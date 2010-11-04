@@ -61,7 +61,7 @@ class Call < ActiveRecord::Base
   named_scope :reviewed, {
     :select => "calls.*",
     :joins => "INNER JOIN activities ON calls.id = activities.activity_type_id AND activities.activity_type_type = 'Call'", 
-    :conditions => ['activities.review_status in (?)', [AFTERHOURS, SPAM, WRONG_NUMBER, OTHER, LEAD, FOLLOWUP]]
+    :conditions => ['activities.review_status <> ?', PENDING]
   }
 
   named_scope :between, lambda { |start_date, end_date| {:conditions => ['call_start between ? AND ?', start_date.to_time_in_current_zone.at_beginning_of_day.utc, end_date.to_time_in_current_zone.end_of_day.utc]} }
