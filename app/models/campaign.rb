@@ -76,6 +76,10 @@ class Campaign < ActiveRecord::Base
               elsif google_sem_campaign.sem_campaign.name == ORPHANAGE_NAME
                 google_sem_campaign.sem_campaign_id = new_sem_campaign.id
                 google_sem_campaign.save
+              elsif google_sem_campaign.sem_campaign_id != new_sem_campaign.id
+                google_sem_campaign.sem_campaign_id = new_sem_campaign.id
+                google_sem_campaign.save
+                puts "#{google_sem_campaign.name} reassigned from #{google_sem_campaign.sem_campaign.name} to #{new_sem_campaign.name}"
               end
             end
 
