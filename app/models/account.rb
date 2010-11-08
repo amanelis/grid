@@ -53,6 +53,7 @@ class Account < ActiveRecord::Base
   def self.pull_salesforce_accounts
     job_status = JobStatus.create(:name => "Account.pull_salesforce_accounts")
     begin
+      cityvoice_account = Account.find_by_name("CityVoice")
       sf_accounts = Salesforce::Account.find(:all, :conditions => ['account_status__c != ?', ''])
       sf_accounts.each do |sf_account|
         existing_account = Account.find_by_salesforce_id(sf_account.id)
@@ -77,6 +78,10 @@ class Account < ActiveRecord::Base
         existing_account.website = sf_account.website
         existing_account.industry = sf_account.industry
         existing_account.main_contact = sf_account.main_contact__c
+        
+        reseller = sf_account.parent_id.present? ? Account.find_by_salesforce_id(sf_account.parent_id) : cityvoice_account
+        existing_account.reseller_id = reseller.id if reseller.present?
+        
         existing_account.save
       end
     rescue Exception => ex
