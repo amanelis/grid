@@ -164,6 +164,15 @@ nav a{
 
 }
 
+a{
+color:gray;
+text-decoration:none;
+}
+
+a:hover{
+color:black;
+}
+
 /*
 	Block System
 	------------------
