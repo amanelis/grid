@@ -1,26 +1,7 @@
 %section
-  %article.triple#container
+  %article.full#container
     -if params[:search]
       /Do nothing
     -else
       %h4 Overall Performance
       = render :partial => "shared/timeline"
-%section
-  %article.single
-    %h4 Worst by CTR
-    -@sorted_by_ctr.each do |account|
-      %p#worst
-        =link_to account[1][:name], admin_account_path(account[0])
-        ="(#{sprintf("%.2f", account[1][:ctr]) + '%'})"
-  %article.single
-    %h4 Worst by Lead Count
-    -@sorted_by_leads.each do |account|
-      %p#worst
-        =link_to account[1][:name], admin_account_path(account[0])
-        ="(#{account[1][:leads]})"
-  %article.single
-    %h4 Worst by CPCONV
-    -@sorted_by_cpconv.each do |account|
-      %p#worst 
-        =link_to account[1][:name], admin_account_path(account[0])
-        ="(#{ActionController::Base.helpers.number_to_currency(account[1][:cpconv])})"
