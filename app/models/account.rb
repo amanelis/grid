@@ -4,10 +4,13 @@ class Account < ActiveRecord::Base
 	has_many :clients, :class_name => "Account", :foreign_key => "reseller_id"
   has_one :adwords_client, :dependent => :destroy
 	
-  named_scope :active, :conditions => ['status = ? OR status = ?', "Active", "Paused"], :order => "name ASC"
-  named_scope :inactive, :conditions => ['status = ?', "Inactive"], :order => "name ASC"
+  named_scope :active, :conditions => ['LCASE(status) = ? OR LCASE(status) = ?', "active", "paused"], :order => "name ASC"
+  named_scope :inactive, :conditions => ['LCASE(status) = ?', "inactive"], :order => "name ASC"
+  named_scope :reseller, :conditions => ['LCASE(account_type) LIKE ?', "%reseller%"]
 
   attr_accessor :account_status
+  
+  validates_uniqueness_of :name, :case_sensitive => false
   
   # CLASS BEHAVIOR
 
