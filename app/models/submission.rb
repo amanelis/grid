@@ -82,17 +82,22 @@ class Submission < ActiveRecord::Base
   def is_spam?
     return true if self.phone_number =~ /1010101010/
     return true if self.work_description =~ /http:/i
-    return true if self.work_description =~ /\s*porn/i
-    return true if self.work_description =~ /\s*viagra/i
-    return true if self.work_description =~ /search\s*engine/i
-    return true if self.work_description =~ /internet\s*marketing/i
-    return true if self.work_description =~ /increase\s*traffic/i
-    return true if self.work_description =~ /online\s*leads/i
-    return true if self.work_description =~ /micro-ticket\s*leasing/i
-    return true if self.work_description =~ /\swhite-hat/i
-    return true if self.work_description =~ /\sSEO/
-    return true if self.work_description =~ /\sSEM/
-    return true if self.work_description =~ /no\s*application\s*fee/i
+    return true if self.work_description =~ /\bporn\b/i
+    return true if self.work_description =~ /\bviagra\b/i
+    return true if self.work_description =~ /\bsex\b/i
+    return true if self.work_description =~ /\bsexual\b/i
+    return true if self.work_description =~ /\banime\b/i
+    return true if self.work_description =~ /\bsearch\s*engine\b/i
+    return true if self.work_description =~ /\binternet\s*marketing\b/i
+    return true if self.work_description =~ /\bincrease\s*traffic\b/i
+    return true if self.work_description =~ /\bonline\s*leads\b/i
+    return true if self.work_description =~ /\bmicro-ticket\s*leasing\b/i
+    return true if self.work_description =~ /\bwhite-hat\b/i
+    return true if self.work_description =~ /\bSEO\b/
+    return true if self.work_description =~ /\bSEM\b/
+    return true if self.work_description =~ /\bno\s*application\s*fee\b/i
+    return true if self.work_description =~ /\bdear\s*business\s*owner\b/i
+    return true if self.work_description =~ /\bdear\s*head\b/i
     false
   end
   
