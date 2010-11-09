@@ -164,6 +164,15 @@ nav a{
 
 }
 
+a{
+color:gray;
+text-decoration:none;
+}
+
+a:hover{
+color:black;
+}
+
 /*
 	Block System
 	------------------
@@ -171,7 +180,7 @@ nav a{
 article{
 background-color:#fff;
 float:left;
-margin:15px 15px 15px 0;
+margin:15px 24px 15px 0;
 overflow:hidden;
 padding:10px;
 }
@@ -190,15 +199,19 @@ padding:10px;
 }
 
 .single{
-width:264px;
+width:224px;
 }
 
 .double{
-width:552px;
+width:496px;
 }
 
 .triple{
 width:840px;
+}
+
+.full{
+width:100%;
 }
 article h4{
 text-transform: capitalize;
