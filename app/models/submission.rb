@@ -59,7 +59,7 @@ class Submission < ActiveRecord::Base
   end
 
   def duplicate_submissions_present?
-    self.submissions_from_same_email_over_past_30_days.present?
+    self.submissions_from_same_email_or_phone_number_over_past_30_days.present?
   end
 
   def submissions_from_same_email_over_past_30_days
@@ -90,7 +90,7 @@ class Submission < ActiveRecord::Base
   end
   
   def duplicate_submission_chain(chain = [])
-    (submissions = self.submissions_from_same_email_over_past_30_days).empty? ? chain << self : submissions.pop.duplicate_submission_chain(chain.concat(submissions))
+    (submissions = self.submissions_from_same_email_or_phone_number_over_past_30_days).empty? ? chain << self : submissions.pop.duplicate_submission_chain(chain.concat(submissions))
   end
   
   def time_of_submission= the_time_of_submission
