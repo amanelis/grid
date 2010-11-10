@@ -66,8 +66,27 @@ class Submission < ActiveRecord::Base
     return [] unless Utilities.is_valid_email_address?(self.from_email)
     Submission.find(:all,
               :joins => "INNER JOIN activities ON submissions.id = activities.activity_type_id AND activities.activity_type_type = 'Submission'",
-              :conditions => ['submissions.id <> ? AND from_email = ? AND contact_form_id = ? AND activities.review_status IN (?) AND (time_of_submission between ? AND ?)', self.id, self.from_email, self.contact_form_id, [PENDING, SPAM, FEEDBACK, OTHER, LEAD, FOLLOWUP], self.time_of_submission - 30.days, self.time_of_submission],
+              :conditions => ['submissions.id <> ? AND LCASE(from_email) = ? AND contact_form_id = ? AND activities.review_status IN (?) AND (time_of_submission between ? AND ?)', self.id, self.from_email.downcase, self.contact_form_id, [PENDING, SPAM, FEEDBACK, OTHER, LEAD, FOLLOWUP], self.time_of_submission - 30.days, self.time_of_submission],
               :order => 'time_of_submission DESC')
+  end
+  
+  def submissions_from_same_email_or_phone_number_over_past_30_days
+    Submission.find(:all,
+              :joins => "INNER JOIN activities ON submissions.id = activities.activity_type_id AND activities.activity_type_type = 'Submission'",
+              :conditions => ['submissions.id <> ? AND contact_form_id = ? AND activities.review_status IN (?) AND (time_of_submission between ? AND ?)', self.id, self.contact_form_id, [PENDING, SPAM, FEEDBACK, OTHER, LEAD, FOLLOWUP], self.time_of_submission - 30.days, self.time_of_submission],
+              :order => 'time_of_submission DESC').select { |submission| self.has_same_email_or_phone_number?(submission) }
+  end
+  
+  def has_same_email_or_phone_number?(submission)
+    self.has_same_email?(submission) || self.has_same_phone_number?(submission)
+  end
+  
+  def has_same_email?(submission)
+    Utilities.is_valid_email_address?(self.from_email) && Utilities.is_valid_email_address?(submission.from_email) ? self.from_email == submission.from_email : false
+  end
+
+  def has_same_phone_number?(submission)
+    Utilities.is_valid_phone_number?(self.phone_number) && Utilities.is_valid_phone_number?(submission.phone_number) ? self.phone_number.gsub(/\D/, '') == submission.phone_number.gsub(/\D/, '') : false
   end
   
   def duplicate_submission_chain(chain = [])
