@@ -17,9 +17,11 @@ class Admin::AccountsController < ApplicationController
       end
   end
   
+  # Simple method to reload salesforce data, accounts/campaigns
   def refresh_accounts
     Account.pull_salesforce_accounts
     Campaign.pull_salesforce_campaigns
+    flash[:notice] = "Accounts reloaded!"
     redirect_to :action => "index"
   end
 
