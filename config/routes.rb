@@ -32,6 +32,7 @@ ActionController::Routing::Routes.draw do |map|
 
   # Administration
   map.admin "/admin", :controller => 'admin_area', :action => 'index'
+  map.refresh_accounts "/admin/accounts/refresh_accounts", :controller => "admin/accounts", :action => :refresh_accounts
   map.namespace :admin do |admin|
     admin.resources :accounts, :member => {:report => :get}
     admin.resources :users

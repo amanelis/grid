@@ -1,5 +1,5 @@
 %h1 Accounts
-= submit_tag "Refresh", :class => "submit", :name => "submit", :class => "button right", :disabled => false, :disable_with => "Please wait..."
+= link_to 'Refresh', refresh_accounts_path, :class => "submit", :name => "submit", :class => "button right"
 %h3
   = 'For ' + (Date.yesterday - 1.week).to_s(:long) + ' to ' + Date.yesterday.to_s(:long)
 %br
