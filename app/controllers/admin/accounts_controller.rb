@@ -16,10 +16,16 @@ class Admin::AccountsController < ApplicationController
         format.html # index.html.erb
       end
   end
+  
+  def refresh_accounts
+    Account.pull_salesforce_accounts
+    Campaign.pull_salesforce_campaigns
+    redirect_to :action => "index"
+  end
 
   # GET /accounts/1
   # GET /accounts/1.xml
-  def show
+  def show    
     @account = Account.find(params[:id])
     Time.zone = @account.time_zone
     @timeline = @account.combined_timeline_data
