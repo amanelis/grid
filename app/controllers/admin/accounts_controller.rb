@@ -10,6 +10,7 @@ class Admin::AccountsController < ApplicationController
       #@accounts = Account.active.to_a if params[:accounts][:account_status] == 'Active'
       #@search_accounts= Account.name_like_all(params[:search].to_s.split).ascend_by_name
       @accounts_data = Rails.cache.fetch("accounts_data") { Account.get_accounts_data }
+      # @accounts_data = Account.get_accounts_data
       @accounts_statuses = Account.account_statuses
       @accounts_types = Account.account_types
       respond_to do |format|

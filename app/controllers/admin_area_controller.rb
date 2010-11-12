@@ -9,6 +9,7 @@ class AdminAreaController < ApplicationController
     @title = "CityVoice"
     
     @accounts_data = Rails.cache.fetch("accounts_data") { Account.get_accounts_data }
+    # @accounts_data = Account.get_accounts_data
     
     @sorted_by_ctr = @accounts_data.reject { |k, v| v[:account_type] !~ /SEM|Mobile/i }
     @sorted_by_ctr = @sorted_by_ctr.to_a.sort {|x, y| x[1][:ctr] <=> y[1][:ctr]}
