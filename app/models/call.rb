@@ -30,6 +30,8 @@ class Call < ActiveRecord::Base
   DUPLICATE_REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['Followup', FOLLOWUP], ['After Hours', AFTERHOURS], ['Spam', SPAM], ['Wrong Number', WRONG_NUMBER], ['Other', OTHER]].to_ordered_hash
   HANGUP_REVIEW_STATUS_OPTIONS = [['Hangup', HANGUP]].to_ordered_hash
   UNANSWERED_REVIEW_STATUS_OPTIONS = [['Unanswered', UNANSWERED]].to_ordered_hash
+  
+  DAYS_UNTIL_UNIQUE = 15.days
 
   validates_inclusion_of :review_status, :in => ALL_REVIEW_STATUS_OPTIONS
 
@@ -163,19 +165,19 @@ class Call < ActiveRecord::Base
   end
   
   def duplicate_calls_present?
-    self.calls_from_same_number_over_past_30_days.present?
+    self.calls_from_same_number_over_past_days_until_unique.present?
   end
 
-  def calls_from_same_number_over_past_30_days
+  def calls_from_same_number_over_past_days_until_unique
     return [] if self.caller_number.blank?
     Call.find(:all,
               :joins => "INNER JOIN activities ON calls.id = activities.activity_type_id AND activities.activity_type_type = 'Call'",
-              :conditions => ['calls.id <> ? AND caller_number = ? AND phone_number_id = ? AND activities.review_status IN (?) AND (call_start between ? AND ?)', self.id, self.caller_number, self.phone_number_id, [PENDING, SPAM, WRONG_NUMBER, OTHER, LEAD, FOLLOWUP], self.call_start - 30.days, self.call_start],
+              :conditions => ['calls.id <> ? AND caller_number = ? AND phone_number_id = ? AND activities.review_status IN (?) AND (call_start between ? AND ?)', self.id, self.caller_number, self.phone_number_id, [PENDING, SPAM, WRONG_NUMBER, OTHER, LEAD, FOLLOWUP], self.call_start - DAYS_UNTIL_UNIQUE, self.call_start],
               :order => 'call_start DESC')
   end
   
   def duplicate_call_chain(chain = [])
-    (calls = self.calls_from_same_number_over_past_30_days).empty? ? chain << self : calls.pop.duplicate_call_chain(chain.concat(calls))
+    (calls = self.calls_from_same_number_over_past_days_until_unique).empty? ? chain << self : calls.pop.duplicate_call_chain(chain.concat(calls))
   end
   
   def fetch_call_recording(hard_update = false)
