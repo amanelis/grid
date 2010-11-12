@@ -3,7 +3,19 @@ class Account < ActiveRecord::Base
   has_many :campaigns, :dependent => :destroy
 	has_many :clients, :class_name => "Account", :foreign_key => "reseller_id"
   has_one :adwords_client, :dependent => :destroy
+  
+  has_many :phone_numbers, :through => :campaigns do
+    def calls
+      @calls ||= Call.find_all_by_phone_number_id(self.collect(&:id))
+    end
+  end
 	
+  has_many :contact_forms, :through => :campaigns do
+    def submissions
+      @submissions ||= Submission.find_all_by_contact_form_id(self.collect(&:id))
+    end
+  end
+  
   named_scope :active, :conditions => ['LCASE(status) = ? OR LCASE(status) = ?', "active", "paused"], :order => "name ASC"
   named_scope :inactive, :conditions => ['LCASE(status) = ?', "inactive"], :order => "name ASC"
   named_scope :reseller, :conditions => ['LCASE(account_type) LIKE ?', "%reseller%"]
@@ -241,9 +253,13 @@ class Account < ActiveRecord::Base
   def total_spend_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.sem_cost_between(start_date, end_date) + self.sem_spend_between(start_date, end_date)
   end
-
+  
   def number_of_total_leads_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.to_a.sum { |campaign| campaign.number_of_total_leads_between(start_date, end_date) }
+  end
+
+  def number_of_total_contacts_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.to_a.sum { |campaign| campaign.number_of_total_contacts_between(start_date, end_date) }
   end
 
   def number_of_total_leads_by_day_between(start_date = Date.yesterday, end_date = Date.yesterday)
@@ -264,6 +280,10 @@ class Account < ActiveRecord::Base
 
   def cost_per_lead_between(start_date = Date.yesterday, end_date = Date.yesterday)
     (total_leads = self.number_of_total_leads_between(start_date, end_date)) > 0 ? self.spend_between(start_date, end_date) / total_leads : 0.0
+  end
+
+  def cost_per_contact_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    (total_contacts = self.number_of_total_contacts_between(start_date, end_date)) > 0 ? self.spend_between(start_date, end_date) / total_contacts : 0.0
   end
 
   # NOTE...these methods don't really make sense at this level in the hierarchy.
@@ -288,8 +308,8 @@ class Account < ActiveRecord::Base
     self.campaigns.to_a.sum { |campaign| campaign.number_of_all_calls_between(start_date, end_date) }
   end
 
-  def number_of_submissions_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.to_a.sum { |campaign| campaign.number_of_submissions_between(start_date, end_date) }
+  def number_of_lead_submissions_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.to_a.sum { |campaign| campaign.number_of_lead_submissions_between(start_date, end_date) }
   end
 
 end

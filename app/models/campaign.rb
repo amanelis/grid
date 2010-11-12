@@ -216,7 +216,11 @@ class Campaign < ActiveRecord::Base
   end
 
   def number_of_total_leads_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.number_of_lead_calls_between(start_date, end_date) + self.number_of_submissions_between(start_date, end_date)
+    self.number_of_lead_calls_between(start_date, end_date) + self.number_of_lead_submissions_between(start_date, end_date)
+  end
+
+  def number_of_total_contacts_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.number_of_all_calls_between(start_date, end_date) + self.number_of_all_submissions_between(start_date, end_date)
   end
 
   def spend_between(start_date = Date.yesterday, end_date = Date.yesterday)
@@ -229,6 +233,10 @@ class Campaign < ActiveRecord::Base
 
   def cost_per_lead_between(start_date = Date.yesterday, end_date = Date.yesterday)
     (total_leads = self.number_of_total_leads_between(start_date, end_date)) > 0 ? self.spend_between(start_date, end_date) / total_leads : 0.0
+  end
+
+  def cost_per_contact_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    (total_contacts = self.number_of_total_contacts_between(start_date, end_date)) > 0 ? self.spend_between(start_date, end_date) / total_contacts : 0.0
   end
 
   def number_of_answered_calls_between(start_date = Date.yesterday, end_date = Date.yesterday)
@@ -255,8 +263,12 @@ class Campaign < ActiveRecord::Base
     self.calls.between(start_date, end_date).count
   end
 
-  def number_of_submissions_between(start_date = Date.yesterday, end_date = Date.yesterday)
+  def number_of_lead_submissions_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.submissions.lead.between(start_date, end_date).count
+  end
+
+  def number_of_all_submissions_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.submissions.between(start_date, end_date).count
   end
 
   def number_of_visits_between(start_date = Date.yesterday, end_date = Date.yesterday)
@@ -307,7 +319,7 @@ class Campaign < ActiveRecord::Base
     specific_calls.count(:group => "date(call_start)", :order =>"call_start ASC").inject({}) { |data, (key, value)| data[key.to_date] = {label => value}; data }
   end
 
-  def number_of_submissions_by_date
+  def number_of_lead_submissions_by_date
     self.number_of_specific_submissions_labeled_by_date(self.submissions.lead, :submissions)
   end
 

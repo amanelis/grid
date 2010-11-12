@@ -26,7 +26,7 @@
             %td
               = account.number_of_lead_calls_between(Date.yesterday - 1.week, Date.yesterday).to_s
             %td
-              = account.number_of_submissions_between(Date.yesterday - 1.week, Date.yesterday).to_s
+              = account.number_of_lead_submissions_between(Date.yesterday - 1.week, Date.yesterday).to_s
             %td
               = account.number_of_total_leads_between(Date.yesterday - 1.week, Date.yesterday).to_s
             %td
@@ -67,7 +67,7 @@
             %td
               = campaign.number_of_lead_calls_between(Date.yesterday - 1.week, Date.yesterday).to_s
             %td
-              = campaign.number_of_submissions_between(Date.yesterday - 1.week, Date.yesterday).to_s
+              = campaign.number_of_lead_submissions_between(Date.yesterday - 1.week, Date.yesterday).to_s
             %td
               = campaign.number_of_total_leads_between(Date.yesterday - 1.week, Date.yesterday).to_s
             %td
