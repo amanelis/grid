@@ -23,17 +23,21 @@
       %th
         Campaign Name (Click for Details)
       %th
-        Calls
+        Lead Calls
       %th
-        Forms
+        Lead Forms
       %th
         Total Leads
       %th
         Cost
       %th
-        Spend(Marked Up)
+        Spend (Marked-Up)
       %th
         Cost Per Lead
+      %th
+        Total Contacts
+      %th
+        Cost Per Contact
   %tbody
     -@account.campaigns.each do |campaign|
       %tr{ :class => cycle('odd', 'even')}
@@ -51,6 +55,10 @@
           = ActionController::Base.helpers.number_to_currency(campaign.spend_between(Date.yesterday - 1.week, Date.yesterday))
         %td
           = ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(Date.yesterday - 1.week, Date.yesterday))
+        %td
+          = campaign.number_of_total_contacts_between(Date.yesterday - 1.week, Date.yesterday).to_s
+        %td
+          = ActionController::Base.helpers.number_to_currency(campaign.cost_per_contact_between(Date.yesterday - 1.week, Date.yesterday))
         /%td= link_to "Details", admin_campaign_path(campaign)
 
 %h3
