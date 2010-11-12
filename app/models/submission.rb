@@ -16,6 +16,8 @@ class Submission < ActiveRecord::Base
   UNIQUE_REVIEW_STATUS_OPTIONS = [['Pending', PENDING], ['Lead', LEAD], ['Spam', SPAM], ['Feedback', FEEDBACK], ['Other', OTHER]].to_ordered_hash
   DUPLICATE_STATUS_OPTIONS = [['Pending', PENDING], ['Followup', FOLLOWUP], ['Spam', SPAM], ['Feedback', FEEDBACK], ['Other', OTHER]].to_ordered_hash
 
+  DAYS_UNTIL_UNIQUE = 15.days
+  
   validates_inclusion_of :review_status, :in => ALL_REVIEW_STATUS_OPTIONS
   validates_presence_of :contact_form_id
 
@@ -59,18 +61,10 @@ class Submission < ActiveRecord::Base
   end
 
   def duplicate_submissions_present?
-    self.submissions_from_same_email_or_phone_number_over_past_30_days.present?
-  end
-
-  def submissions_from_same_email_over_past_30_days
-    return [] unless Utilities.is_valid_email_address?(self.from_email)
-    Submission.find(:all,
-              :joins => "INNER JOIN activities ON submissions.id = activities.activity_type_id AND activities.activity_type_type = 'Submission'",
-              :conditions => ['submissions.id <> ? AND LCASE(from_email) = ? AND contact_form_id = ? AND activities.review_status IN (?) AND (time_of_submission between ? AND ?)', self.id, self.from_email.downcase, self.contact_form_id, [PENDING, SPAM, FEEDBACK, OTHER, LEAD, FOLLOWUP], self.time_of_submission - 30.days, self.time_of_submission],
-              :order => 'time_of_submission DESC')
+    self.submissions_from_same_email_or_phone_number_over_past_days_until_unique.present?
   end
   
-  def submissions_from_same_email_or_phone_number_over_past_30_days
+  def submissions_from_same_email_or_phone_number_over_past_days_until_unique
     Submission.find(:all,
               :joins => "INNER JOIN activities ON submissions.id = activities.activity_type_id AND activities.activity_type_type = 'Submission'",
               :conditions => ['submissions.id <> ? AND contact_form_id = ? AND activities.review_status IN (?) AND (time_of_submission between ? AND ?)', self.id, self.contact_form_id, [PENDING, SPAM, FEEDBACK, OTHER, LEAD, FOLLOWUP], self.time_of_submission - 30.days, self.time_of_submission],
@@ -90,7 +84,7 @@ class Submission < ActiveRecord::Base
   end
   
   def duplicate_submission_chain(chain = [])
-    (submissions = self.submissions_from_same_email_or_phone_number_over_past_30_days).empty? ? chain << self : submissions.pop.duplicate_submission_chain(chain.concat(submissions))
+    (submissions = self.submissions_from_same_email_or_phone_number_over_past_days_until_unique).empty? ? chain << self : submissions.pop.duplicate_submission_chain(chain.concat(submissions))
   end
   
   def time_of_submission= the_time_of_submission
