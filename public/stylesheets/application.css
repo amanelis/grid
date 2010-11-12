@@ -1,78 +1,3 @@
-/* 
-	Resets
-	------
-*/
-
-html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, 
-p, blockquote, pre, a, abbr, address, cite, code, del, dfn, em, 
-img, ins, q, small, strong, sub, sup, dl, dt, dd, ol, ul, li, 
-fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
-	margin: 0;
-	padding: 0;
-	border: 0;
-}
-
-article, aside, figure, figure img, figcaption, hgroup,
-footer, header, nav, section, video, object {
-	display: block;
-}
-
-a img {border: 0;}
-
-figure {position: relative;}
-figure img {width: 100%;}
-
-::selection 	 {background: rgb(255,255,0);}
-::-moz-selection {background: rgb(255,255,0);}
-
-/*
-	Default 5-column, 768 px layout for iPads, netbooks, and IE
-	(All other layouts inherit styles from this layout)
-	-----------------------------------------------------------
-	1      2      3      4      5     
-	120px  264px  408px  552px  696px   (24px gutters)
-*/
-
-	header, section#content, footer{
-	padding: 10px 25px;
-	overflow:hidden;
-	}
-
-
-
-/* 
-	2-column, 320 px layout for smartphones
-	---------------------------------------
-	1      2
-	120px  264px   (24px gutters)
-*/
-
-@media only screen and (max-width: 767px) {
-	
-	header, section#content, footer{
-	width:767px;
-	padding:10px 0;
-	}
-	
-}
-
-
-
-/* 
-	8-column, 1224 px layout for desktops and laptops
-	------------------------------------------------------------------------
-	1      2      3      4      5      6      7      8
-	120px  264px  408px  552px  696px  840px  984px  1128px   (24px gutters)
-*/
-
-@media only screen and (min-width: 1224px) {
-	
-	header, section#content, footer{
-	padding: 10px 100px;
-	}
-	
-}
-
 /*
 	Layout / Backgrounds
 	------------------
@@ -89,27 +14,32 @@ filter:alpha(opacity=80);
 }
 
 header{
-height:20px;
+padding:10px;
 color:white;
 background:#333;
-border-bottom: 2px solid black;
 }
 
-section#content{
-background:repeat scroll -70% 0 #F0F0F0;
+body{
+background-image: url("http://thankyoueconomybook.com/images/chart-bg.png");
 }
 
 section, footer{
 clear:both;
 }
 
-footer{
-background:#fff;
-border-top: 2px solid black;
-}
-
 nav aside{
 float:right;
+}
+
+section#content{
+padding:10px;
+background:white;
+margin-top:10px;
+border: 1px solid #C3C3C3;
+}
+
+footer{
+margin-top:10px;
 }
 
 /*
@@ -173,50 +103,6 @@ a:hover{
 color:black;
 }
 
-/*
-	Block System
-	------------------
-*/
-article{
-background-color:#fff;
-float:left;
-margin:15px 24px 15px 0;
-overflow:hidden;
-padding:10px;
-}
-
-.borderradius article{
--webkit-border-radius: 10px;
-   -moz-border-radius: 10px;
-        border-radius: 10px;
-}
-
-.boxshadow article{
--webkit-box-shadow: 0 0 10px #989898;
-   -moz-box-shadow: 0 0 10px #989898;
-     -o-box-shadow: 0 0 10px #989898;
-        box-shadow: 0 0 10px #989898;
-}
-
-.single{
-width:224px;
-}
-
-.double{
-width:496px;
-}
-
-.triple{
-width:840px;
-}
-
-.full{
-width:100%;
-}
-article h4{
-text-transform: capitalize;
-border-bottom: 2px solid #000;
-}
 
 /*
 	Buttons
