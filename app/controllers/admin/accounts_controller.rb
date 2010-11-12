@@ -22,6 +22,7 @@ class Admin::AccountsController < ApplicationController
   def refresh_accounts
     Account.pull_salesforce_accounts
     Campaign.pull_salesforce_campaigns
+    Account.cache_results_for_accounts
     flash[:notice] = "Accounts reloaded!"
     redirect_to :action => "index"
   end
