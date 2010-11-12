@@ -282,6 +282,10 @@ class Account < ActiveRecord::Base
     (total_leads = self.number_of_total_leads_between(start_date, end_date)) > 0 ? self.spend_between(start_date, end_date) / total_leads : 0.0
   end
 
+  def cost_per_contact_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    (total_contacts = self.number_of_total_contacts_between(start_date, end_date)) > 0 ? self.spend_between(start_date, end_date) / total_contacts : 0.0
+  end
+
   # NOTE...these methods don't really make sense at this level in the hierarchy.
 
   def number_of_answered_calls_between(start_date = Date.yesterday, end_date = Date.yesterday)
