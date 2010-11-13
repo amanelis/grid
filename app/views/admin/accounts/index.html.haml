@@ -1,5 +1,8 @@
 %header
-  = link_to 'Refresh', refresh_accounts_path, :class => "submit", :name => "submit", :class => "right"
+  %p.right
+    = link_to 'Refresh', refresh_accounts_path, :class => "submit", :name => "submit"
+    |
+    = link_to 'Export', refresh_accounts_path, :class => "submit", :name => "submit"
   %h3 Accounts
 %article
   %h3

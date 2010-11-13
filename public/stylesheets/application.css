@@ -2,6 +2,10 @@
 	Layout / Backgrounds
 	------------------
 */
+body{
+background-image: url("http://thankyoueconomybook.com/images/chart-bg.png");
+}
+
 #logo{
 float:left;
 margin-right:10px;
@@ -18,10 +22,6 @@ color:white;
 background:#333;
 }
 
-body{
-background-image: url("http://thankyoueconomybook.com/images/chart-bg.png");
-}
-
 nav aside{
 float:right;
 }
@@ -33,13 +33,14 @@ border: 1px solid #C3C3C3;
 }
 
 header{
-background:#D9F0FF;
+background:#C3D9FF;
 }
 
 header, article, footer{
 padding:10px;
 clear:both;
 }
+
 /*
 	Navigation
 	------------------
@@ -224,22 +225,10 @@ form.inline p { margin-bottom:0; }
   border: solid 1px #C66;
 }
 
-.section { /* For a horizontal section of content */
-    width: 940px; /* content - 20 (borders) */
-    padding: 0 0px;
-}
-
 div.pagination{
 	margin: 5px 0px;
 	padding: 0px;
 	text-align: center ; 
-}
-
-div.activity { /* For a horizontal section of content */
-    width: 940px; /* content - 20 (borders) */
-    padding: 0 0px;
-    margin: 0 auto;
-    color:#444444;
 }
 
 div.activity_item {
