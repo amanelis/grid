@@ -2,7 +2,9 @@
 	Layout / Backgrounds
 	------------------
 */
-body{
+body.container{
+width:974px;
+margin:0 auto;
 background-image: url("http://thankyoueconomybook.com/images/chart-bg.png");
 }
 
@@ -45,7 +47,11 @@ background:#C3D9FF;
 
 header, article, footer{
 padding:12px;
+}
+
+header, article, section, footer{
 clear:both;
+overflow:hidden;
 }
 
 /*
@@ -100,8 +106,7 @@ nav a, header h3{
 }
 
 nav a{
-text-transform:uppercase;
-font-weight:500;
+font-weight:bold;
 font-size:1em;
 }
 
@@ -113,13 +118,23 @@ a:hover{
 text-decoration:underline;
 }
 
-header h2{
-margin-bottom:0;
+header h3{
+text-transform:uppercase;
 }
 
-header h3{
-margin-bottom:0;
-text-transform:uppercase;
+header p, header input[type="text"], header input[type="password"], header input.text, header input.title, header h3, header h2, header p, header h1{
+margin: 0;
+}
+
+header input{
+margin:0;
+}
+
+/*
+	Highcharts
+	------------------
+*/
+#highcharts{
 }
 
 /*
