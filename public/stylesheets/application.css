@@ -80,8 +80,11 @@ margin-right:5px;
 	Typography
 	------------------
 */
-.fontface body{
-font-family: "Helvetica Nueue", helvetica, sans-serif;
+body{
+font-family:"Lucida Grande", "Helvetica Nueue", helvetica, sans-serif;
+}
+
+nav a, header h3{
 }
 
 .no-fontface body {
@@ -89,19 +92,24 @@ font-family: "Helvetica Nueue", helvetica, sans-serif;
 }
 
 nav a{
-
+text-transform:uppercase;
+font-weight:500;
+font-size:1em;
 }
 
 a{
-color:gray;
 text-decoration:none;
 }
 
 a:hover{
-color:black;
+text-decoration:underline;
 }
 
 header h3{
+font-weight:800;
+font-size:2em;
+line-height:1;
+letter-spacing:-1px;
 margin-bottom:0;
 text-transform:uppercase;
 }
