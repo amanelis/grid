@@ -3,13 +3,16 @@
 	$(document).ready(function() {
 		chart = new Highcharts.Chart({
 			chart: {
-				renderTo: 'container', 
+				renderTo: 'highcharts', 
 				defaultSeriesType: 'area'
 			},
 			title: {
 				text: 'CityVoice Total Leads'
 			},
 			xAxis: {
+			  title : {
+			    text: '# blah blah'
+			  }
 			},
 			yAxis: {
 				title: {

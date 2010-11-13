@@ -1,5 +1,6 @@
 class Admin::AccountsController < ApplicationController
   before_filter :require_admin
+  require 'fastercsv'
   
   # GET /accounts
   # GET /accounts.xml
@@ -16,14 +17,6 @@ class Admin::AccountsController < ApplicationController
       respond_to do |format|
         format.html # index.html.erb
       end
-  end
-  
-  # Simple method to reload salesforce data, accounts/campaigns
-  def refresh_accounts
-    Account.pull_salesforce_accounts
-    Campaign.pull_salesforce_campaigns
-    flash[:notice] = "Accounts reloaded!"
-    redirect_to :action => "index"
   end
 
   # GET /accounts/1
@@ -116,5 +109,52 @@ class Admin::AccountsController < ApplicationController
       format.html # show.html.erb
     end
   end
+  
+  # Simple method to reload salesforce data, accounts/campaigns
+  def refresh_accounts
+    Account.pull_salesforce_accounts
+    Campaign.pull_salesforce_campaigns
+    Account.cache_results_for_accounts
+    flash[:notice] = "Accounts reloaded!"
+    redirect_to :action => "index"
+  end
+  
+  
+  # This function right now is VERY BASIC feature of exporting data to csv
+  # for account managers, more options and sorting will be implemented as 
+  # dev continues
+  def export
+    @accounts = Account.find(:all, :order => "name")
+    @outfile  = "accounts_" + Time.now.strftime("%m-%d-%Y") + ".csv"
+    
+    csv_data = FasterCSV.generate do |csv|
+      csv << [
+        "Name",
+        "Account Type",
+        "Salesforce ID"
+      ]
+      @accounts.each do |account|
+        csv << [
+          account.name,
+          account.account_type,
+          account.salesforce_id
+        ]
+      end # @accounts
+    end # csv_array
+    
+    send_data csv_data,
+      :type => 'text/csv; charset=iso-8859-1; header=present',
+      :disposition => "attachment; filename=#{@outfile}"
+  end # def export
 
 end
+
+
+
+
+
+
+
+
+
+

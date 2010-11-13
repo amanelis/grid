@@ -1,82 +1,13 @@
-/* 
-	Resets
-	------
-*/
-
-html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, 
-p, blockquote, pre, a, abbr, address, cite, code, del, dfn, em, 
-img, ins, q, small, strong, sub, sup, dl, dt, dd, ol, ul, li, 
-fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
-	margin: 0;
-	padding: 0;
-	border: 0;
-}
-
-article, aside, figure, figure img, figcaption, hgroup,
-footer, header, nav, section, video, object {
-	display: block;
-}
-
-a img {border: 0;}
-
-figure {position: relative;}
-figure img {width: 100%;}
-
-::selection 	 {background: rgb(255,255,0);}
-::-moz-selection {background: rgb(255,255,0);}
-
-/*
-	Default 5-column, 768 px layout for iPads, netbooks, and IE
-	(All other layouts inherit styles from this layout)
-	-----------------------------------------------------------
-	1      2      3      4      5     
-	120px  264px  408px  552px  696px   (24px gutters)
-*/
-
-	header, section#content, footer{
-	padding: 10px 25px;
-	overflow:hidden;
-	}
-
-
-
-/* 
-	2-column, 320 px layout for smartphones
-	---------------------------------------
-	1      2
-	120px  264px   (24px gutters)
-*/
-
-@media only screen and (max-width: 767px) {
-	
-	header, section#content, footer{
-	width:767px;
-	padding:10px 0;
-	}
-	
-}
-
-
-
-/* 
-	8-column, 1224 px layout for desktops and laptops
-	------------------------------------------------------------------------
-	1      2      3      4      5      6      7      8
-	120px  264px  408px  552px  696px  840px  984px  1128px   (24px gutters)
-*/
-
-@media only screen and (min-width: 1224px) {
-	
-	header, section#content, footer{
-	padding: 10px 100px;
-	}
-	
-}
-
 /*
 	Layout / Backgrounds
 	------------------
 */
+body.container{
+width:974px;
+margin:0 auto;
+background-image: url("http://thankyoueconomybook.com/images/chart-bg.png");
+}
+
 #logo{
 float:left;
 margin-right:10px;
@@ -88,28 +19,39 @@ opacity: 0.8;
 filter:alpha(opacity=80);
 }
 
-header{
-height:20px;
+header#nav{
 color:white;
 background:#333;
-border-bottom: 2px solid black;
-}
-
-section#content{
-background:repeat scroll -70% 0 #F0F0F0;
-}
-
-section, footer{
-clear:both;
-}
-
-footer{
-background:#fff;
-border-top: 2px solid black;
 }
 
 nav aside{
 float:right;
+}
+
+section#content{
+background:white;
+margin-top:12px;
+border: 1px solid #C3C3C3;
+}
+
+.boxshadow section#content{
+-webkit-box-shadow: 2px 2px 2px #efefef;
+   -moz-box-shadow: 2px 2px 2px #efefef;
+     -o-box-shadow: 2px 2px 2px #efefef;
+        box-shadow: 2px 2px 2px #efefef;
+}
+
+header{
+background:#C3D9FF;
+}
+
+header, article, footer{
+padding:12px;
+}
+
+header, article, section, footer{
+clear:both;
+overflow:hidden;
 }
 
 /*
@@ -152,8 +94,11 @@ margin-right:5px;
 	Typography
 	------------------
 */
-.fontface body{
-font-family: "Helvetica Nueue", helvetica, sans-serif;
+body{
+font-family:"Lucida Grande", "Helvetica Nueue", helvetica, sans-serif;
+}
+
+nav a, header h3{
 }
 
 .no-fontface body {
@@ -161,61 +106,35 @@ font-family: "Helvetica Nueue", helvetica, sans-serif;
 }
 
 nav a{
-
+font-weight:bold;
+font-size:1em;
 }
 
 a{
-color:gray;
 text-decoration:none;
 }
 
 a:hover{
-color:black;
+text-decoration:underline;
+}
+
+header h3{
+text-transform:uppercase;
+}
+
+header p, header input[type="text"], header input[type="password"], header input.text, header input.title, header h3, header h2, header p, header h1{
+margin: 0;
+}
+
+header input{
+margin:0;
 }
 
 /*
-	Block System
+	Highcharts
 	------------------
 */
-article{
-background-color:#fff;
-float:left;
-margin:15px 24px 15px 0;
-overflow:hidden;
-padding:10px;
-}
-
-.borderradius article{
--webkit-border-radius: 10px;
-   -moz-border-radius: 10px;
-        border-radius: 10px;
-}
-
-.boxshadow article{
--webkit-box-shadow: 0 0 10px #989898;
-   -moz-box-shadow: 0 0 10px #989898;
-     -o-box-shadow: 0 0 10px #989898;
-        box-shadow: 0 0 10px #989898;
-}
-
-.single{
-width:224px;
-}
-
-.double{
-width:496px;
-}
-
-.triple{
-width:840px;
-}
-
-.full{
-width:100%;
-}
-article h4{
-text-transform: capitalize;
-border-bottom: 2px solid #000;
+#highcharts{
 }
 
 /*
@@ -328,22 +247,10 @@ form.inline p { margin-bottom:0; }
   border: solid 1px #C66;
 }
 
-.section { /* For a horizontal section of content */
-    width: 940px; /* content - 20 (borders) */
-    padding: 0 0px;
-}
-
 div.pagination{
 	margin: 5px 0px;
 	padding: 0px;
 	text-align: center ; 
-}
-
-div.activity { /* For a horizontal section of content */
-    width: 940px; /* content - 20 (borders) */
-    padding: 0 0px;
-    margin: 0 auto;
-    color:#444444;
 }
 
 div.activity_item {
@@ -502,139 +409,3 @@ iframe.wikiframe {
     border: 5px solid #CCC;
 }
 
-/* Table */
-
-table {
-    width: 620px; /* Left column width */
-}
-
-th {
-    color: #585858 ;
-    padding: 0 5px 5px 5px;
-    font-size: 100%;
-    text-transform: uppercase;
-}
-
-td {
-    color: #666;
-    padding: 5px 5px;
-}
-
-td.people {
-  padding-right: 0px;
-  text-align: center;  
-  
-}
-
-tr.peoplerow { 
-    BORDER-BOTTOM: 1px solid #000000;  
-  
-}
-
-td.pageviews {
-    text-align: right;
-    padding-right: 10px;
-}
-
-td.risingtitle {
-     font-size: 75%; 
-}
-
-table#brands {
-    width: 440px;
-}
-
-table#rising {
-    width: 300px;
-}
-
-/* Links */
-a img {
-    border: 0px;
-}
-
-#rising-articles a {
-    color: #1B6D03;
-}
-
-#dropping-articles a {
-    color: #890000;
-}
-
-a.articlelink {
-    font-size: 110%;
-    font-weight: bold;
-}
-
-a.wikilink {
-    font-weight: bold;
-    color: #0088A5;
-    font-size: 110%;
-}
-
-
-/* Forms */
-
-input#search_query {
-    border: 10px solid #DDD;
-    font-size: 120%;
-}
-
-.searchbutton {
-  width: 84px;
-  height: 30px;  
-}
-
-
-/* Generic */
-.left { float: left; }
-.right { float: right; }
-.clear { clear: both; }
-.grey { color: #888; }
-.textright { text-align: right; }
-.center { text-align: center; }
-
-/* Pretty Tables */
-table.pretty {
-  border-collapse: collapse;
-  margin: 20px 0;
-  width: 100%;
-}
-
-table.pretty td, table.pretty th {
-  padding: 3px 8px;
-  border: solid 1px #CCC;
-  text-align:left;
-}
-
-table.pretty .odd{
-  background-color: #F1EDE0 !important;
-  color: #333333 !important;
-}
-table.pretty td.price {
-  text-align: right;
-}
-
-table.pretty .green-back{
-  background-color: #339900 !important;
-}
-
-table.pretty .yellow-back{
-  background-color: #ffcc33 !important;
-}
-
-table.pretty .red-back{
-  background-color: #ff3300 !important;
-}
-
-table.pretty .green-font{
-  color: #339900 !important;
-}
-
-table.pretty .yellow-font{
-  color: #ffcc33 !important;
-}
-
-table.pretty .red-font{
-  color: #ff3300 !important;
-}

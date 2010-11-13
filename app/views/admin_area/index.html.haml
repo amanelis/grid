@@ -1,7 +1,8 @@
-%section
+%header
+  %h3 Dashboard
+%article
   %article.full#container
     -if params[:search]
       /Do nothing
     -else
-      %h4 Overall Performance
       = render :partial => "shared/timeline"
