@@ -1,9 +1,11 @@
-.activity
-  = will_paginate(@activities)
-  -@activities.each do |activity|
-    -if activity.is_call?
-      = render :partial => "shared/activity_call", :locals => { :activity => activity.activity_type }
-    -if activity.is_submission?
-      = render :partial => "shared/activity_submission", :locals => { :activity => activity.activity_type }
-  = will_paginate(@activities)
-  .clear
+%header
+  %h3 Activity
+%article
+  .activity
+    = will_paginate(@activities)
+    -@activities.each do |activity|
+      -if activity.is_call?
+        = render :partial => "shared/activity_call", :locals => { :activity => activity.activity_type }
+      -if activity.is_submission?
+        = render :partial => "shared/activity_submission", :locals => { :activity => activity.activity_type }
+    = will_paginate(@activities)
