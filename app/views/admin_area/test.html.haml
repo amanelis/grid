@@ -1,33 +1,3 @@
-:javascript
-	$(function(){
-		  $('input').daterangepicker({arrows:true}); 
-	 });
-%h1 Dummy Page
-%section
-	%article.single
-		%h3 Single
-		%p Dummy Text
-		%input{:type => "text", :value => "4/23/99", :id => "datepicker"}
-	%article.single
-		%h3 Single
-		%p Dummy Text
-	%article.single
-		%h3 Single
-		%p Dummy Text
-	%article.single
-		%h3 Single
-		%p Dummy Text
-%section
-	%article.double
-		%h3 Double
-		%p Dummy Text
-	%article.double
-		%h3 Double
-		%p Dummy Text
-%section
-	%article.full#container
-		-if params[:search]
-			/Do nothing
-		-else
-			%h4 Overall Performance
-			= render :partial => "shared/highcharts"
+%header
+  %h3 Testing page
+%article
