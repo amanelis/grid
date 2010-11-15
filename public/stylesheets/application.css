@@ -35,14 +35,14 @@ border: 1px solid #C3C3C3;
 }
 
 .boxshadow section#content{
--webkit-box-shadow: 2px 2px 2px #efefef;
-   -moz-box-shadow: 2px 2px 2px #efefef;
-     -o-box-shadow: 2px 2px 2px #efefef;
-        box-shadow: 2px 2px 2px #efefef;
+-webkit-box-shadow: 2px 2px 2px #5D5D5D;
+   -moz-box-shadow: 2px 2px 2px #5D5D5D;
+     -o-box-shadow: 2px 2px 2px #5D5D5D;
+        box-shadow: 2px 2px 2px #5D5D5D;
 }
 
 header{
-background:#C3D9FF;
+background:#81A3FF;
 }
 
 header, article, footer{
@@ -137,6 +137,18 @@ margin:0;
 #highcharts{
 }
 
+/*
+	Tables
+	------------------
+*/
+td a{
+color:#000;
+font-weight:bold;
+}
+
+td a:hover{
+color:#464646;
+}
 /*
 	Buttons
 	------------------
