@@ -1,0 +1,24 @@
+%html{ :lang => "en"}
+  %head
+    %title= @browser_title || 'CityVoice Grid'
+
+    %meta{'http-equiv' => "content-type", :content => "text/html;charset=UTF-8"}
+    %link{:rel => "shortcut icon", :href => "images/favicon.png" }
+    %meta{:name => "description", :content => "The Grid helps you manage and measure your marketing campaigns - online or offline." }
+
+    = stylesheet_link_tag 'sexybuttons.css', 'ui-lightness/jquery-ui-1.8.5.custom', 'ui.daterangepicker', 'ie', 'screen', 'application'
+    = javascript_include_tag 'jquery-1.4.2.min' ,"http://www.google.com/jsapi", 'jquery-ui', 'daterangepicker.jQuery', 'modernizr', 'highcharts', 'application'
+
+  %body.container
+    %header#nav
+      #logo
+        =link_to image_tag("grid_logo.png"), root_path
+    =render :partial => "layouts/flash", :locals => { :flash => flash }
+    %section#content
+      = yield
+    %footer
+      %small
+        &copy; Copyright 2010
+        =link_to "CityVoice", "http://www.cityvoice.com"
+        .right
+          =link_to "Feedback/Support", "http://snatch.wufoo.com/forms/cityvoice-grid-feedback/"
