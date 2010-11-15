@@ -90,6 +90,10 @@ nav aside a{
 margin-right:5px;
 }
 
+#search{
+margin-left:5px;
+}
+
 /*
 	Typography
 	------------------
@@ -122,7 +126,7 @@ header h3{
 text-transform:uppercase;
 }
 
-header p, header input[type="text"], header input[type="password"], header input.text, header input.title, header h3, header h2, header p, header h1{
+header p, header input[type="text"], header input[type="password"], header input.text, header input.title, header h3, header h2, header p, header h1, header h4{
 margin: 0;
 }
 
