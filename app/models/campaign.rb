@@ -55,6 +55,7 @@ class Campaign < ActiveRecord::Base
             existing_campaign.status = sf_campaign.status__c
             existing_campaign.name = sf_campaign.name
             existing_campaign.zip_code = sf_campaign.zip_code__c
+            new_sem_campaign.mobile = true if sf_campaign.campaign_type__c.include? 'Mobile'
             new_sem_campaign.monthly_budget = sf_campaign.monthly_budget__c
             new_sem_campaign.rake = sf_campaign.campaign_rake__c
             new_sem_campaign.developer_token = 'HC3GEwJ4LqgyVNeNTenIVw'

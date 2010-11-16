@@ -99,7 +99,10 @@ class Admin::AccountsController < ApplicationController
     respond_to do |format|
       format.html # show.html.erb
     end
-    
+  end
+  
+  def report_client
+    render :layout => 'report'
   end
 
   def weekly_perf_report
