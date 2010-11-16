@@ -1,6 +1,4 @@
 --- 
-- :version: = 1.5.3
-  :name: fastercsv
 - :version: = 0.8.2
   :name: hpricot
 - :version: = 0.6.1
