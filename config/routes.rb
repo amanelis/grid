@@ -2,6 +2,7 @@ ActionController::Routing::Routes.draw do |map|
   # Custom Routes
   map.admin "/admin", :controller => 'admin_area', :action => 'index'
   map.refresh_accounts "/admin/accounts/refresh_accounts", :controller => "admin/accounts", :action => :refresh_accounts
+  map.report_client "/admin/accounts/:id/report/client", :controller => "admin/accounts", :action => :report_client
   map.export "/admin/accounts/export", :controller => "admin/accounts", :action => :export
   
   
