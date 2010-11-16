@@ -2,10 +2,10 @@
   .right
     %p Date Range
     %script
-      $(function() {
-      $( "#datepicker" ).datepicker();
+      $(function(){
+      $('#daterangepicker').daterangepicker({arrows:true}); 
       });
-    %input{:id => "datepicker", :type => "text"}
+    %input{:id => "daterangepicker", :type => "text"}
   %h3 #{@account.name}
   %h4 Summary
 
