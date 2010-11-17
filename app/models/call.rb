@@ -153,6 +153,16 @@ class Call < ActiveRecord::Base
     call.fetch_call_recording
   end
   
+  def self.total_revenue(calls)
+    calls.to_a.sum { |call| call.revenue.to_f }
+  end
+  
+  def self.average_ratings_per_disposition(calls)
+    dispositions = calls.collect(&:disposition).uniq.inject({}) { |dispositions, disposition| dispositions[disposition] = [] ; dispositions }
+    calls.each { |call| dispositions[call.disposition] << call.rating.to_f }
+    dispositions.inject({}) { |averages, (key, value)| averages[key] = (value.empty? ? 0.0 : value.sum / value.size) ; averages }
+  end
+  
 
   # INSTANCE BEHAVIOR
   

@@ -2,7 +2,10 @@ class SemCampaign < ActiveRecord::Base
   include CampaignStyleMixin
   has_many :google_sem_campaigns, :dependent => :destroy
   has_many :sem_campaign_report_statuses, :dependent => :destroy
-
+  
+  named_scope :basic, :conditions => {:mobile => false}
+  named_scope :mobile, :conditions => {:mobile => true}
+  
   CAMPAIGN_REPORT_TYPE = "Campaign"
   AD_REPORT_TYPE = "Ad"
   ALL_AD_REPORT_TYPE = "All Ad"
