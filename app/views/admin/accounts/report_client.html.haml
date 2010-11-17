@@ -1,8 +1,4 @@
 /Begin Monthly Report
-/Yes I know these two lines are not rails efficient, but I was getting
-/an error so for now for testing purposes, just leave. Will change soon
--@account = Account.find(params[:id])
--Time.zone = @account.time_zone
 -@month_start = (Date.today - 1.month).beginning_of_month
 -@month_end = (Date.today - 1.month).end_of_month
 -if @account.campaigns.present?
