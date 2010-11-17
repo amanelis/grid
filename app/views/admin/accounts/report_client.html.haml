@@ -220,57 +220,6 @@
 
 /Begin of PPC Detailed Reports
 
--if @account.campaigns.sem.present?
-  -@account.campaigns.sem.each_index do |index|
-    %table{:class => "pretty"}
-      %thead
-        %th
-          = @account.campaigns.sem[index].name + ' Detailed Report'
-      %tbody
-        %tr
-          %td
-            /
-            /-if @sem_campaign_timelines[index].empty?
-            /  No Data
-            /-else
-            /   = render inline_annotated_timeline(@sem_campaign_timelines[index], 620, 280, 'div_id_to_create', {:zoomEndTime => @sem_campaign_timelines[index].keys.sort[-1], :zoomStartTime  => @sem_campaign_timelines[index].keys.sort[-30] })
-            %br
-            -@keywords = @account.campaigns.sem[index].websites.first.try(:keywords_searched_between, @month_start, @month_end)
-            -if @keywords.present?
-              %table{:class => "pretty"}
-                %thead
-                  %th
-                    Keyword
-                  %th
-                    Count
-                  %th
-                  %th
-                    Keyword
-                  %th
-                    Count
-                %tbody
-                  -@keywords.each_index  do |index2|
-                    -if index2.even?
-                      %tr{ :class => cycle('odd', 'even')}
-                        %td
-                          = @keywords[index2][0]
-                        %td
-                          = @keywords[index2][1]
-                        %td
-                        %td
-                          = @keywords[index2 + 1][0] if @keywords[index2 + 1].present?
-                        %td
-                          = @keywords[index2 + 1][1] if @keywords[index2 + 1].present?
-            -@url_link = @account.campaigns.sem[index].websites.first.try(:visitors_by_location_graph, @month_start, @month_end)
-            -if @url_link.present?
-              %br
-              .center
-              Visitors by Location
-              %br
-              = link_to image_tag(@url_link, :alt => 'Visitors By Location'), @url_link
-            -if @keywords.blank? && @url_link.blank?
-              .center
-              There is currently no data for this report.
 
 
 /Begin of SEO Detailed Reports
