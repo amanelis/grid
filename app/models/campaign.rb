@@ -272,6 +272,10 @@ class Campaign < ActiveRecord::Base
     self.submissions.between(start_date, end_date).count
   end
 
+  def total_revenue_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    Call.total_revenue(self.calls.between(start_date, end_date))
+  end
+
   def number_of_visits_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.website.try(:visits_between, start_date, end_date) || 0
   end
