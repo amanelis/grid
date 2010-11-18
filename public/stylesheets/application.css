@@ -42,7 +42,7 @@ border: 1px solid #C3C3C3;
 }
 
 header{
-background:#81A3FF;
+background:#BBE1F7;
 }
 
 header, article, footer{
@@ -52,6 +52,10 @@ padding:12px;
 header, article, section, footer{
 clear:both;
 overflow:hidden;
+}
+
+.right{
+text-align:right;
 }
 
 /*
@@ -66,7 +70,7 @@ nav a{
 font-size:.8em;
 color:gray;
 padding:5px;
-margin-left:5px;
+margin:5px 0 0 5px;
 }
 
 nav a:hover{
@@ -79,6 +83,7 @@ background:gray;
 header nav a, nav aside a{
 color:gray;
 text-decoration:none;	
+font-weight:300;
 }
 
 header nav a:hover, nav aside a:hover{
@@ -90,8 +95,12 @@ nav aside a{
 margin-right:5px;
 }
 
-#search{
+#search input[type="text"]{
 margin-left:5px;
+background-image: url("/images/search.png");
+background-position: left center;
+background-repeat: no-repeat;
+padding-left:16px;
 }
 
 /*
@@ -99,14 +108,7 @@ margin-left:5px;
 	------------------
 */
 body{
-font-family:"Lucida Grande", "Helvetica Nueue", helvetica, sans-serif;
-}
-
-nav a, header h3{
-}
-
-.no-fontface body {
-
+font-family: "proxima-nova-1","proxima-nova-2","Lucida Grande", "Helvetica Nueue", helvetica, sans-serif;
 }
 
 nav a{
@@ -120,6 +122,10 @@ text-decoration:none;
 
 a:hover{
 text-decoration:underline;
+}
+
+header h1{
+font-weight:700;
 }
 
 header h3{
@@ -209,6 +215,14 @@ background:-webkit-gradient(linear,0% 0%,0% 100%,from(#FF8B00),to(#FFC100));
 background:-moz-linear-gradient(top, #FF8B00, #FFC100);
 }
 
+/*
+	Reports
+	------------------
+*/
+
+.data{width:710px;}
+
+.chart{width:150px;margin-right:0;}
 /*-------------------------------------------------------------- */
 /* Forms */
 label       { font-weight: bold;}
@@ -264,13 +278,6 @@ form.inline p { margin-bottom:0; }
   background-color: #FCC;
   border: solid 1px #C66;
 }
-
-div.pagination{
-	margin: 5px 0px;
-	padding: 0px;
-	text-align: center ; 
-}
-
 div.activity_item {
   background-color:#FFF;
   border:1px dotted #EEE;
@@ -370,60 +377,3 @@ div.activity_item .tinybox {
   text-align:left;
   width:260px;
 }
-
-div.shortbox {
-  background-color:#FFFFFF;
-  /*border:1px solid #999999;*/
-  float:left;
-  height:270px;
-  margin:15px;
-  padding:10px;
-  text-align:center;
-  width:260px;
-}
-
-p#worst {
-    padding-bottom: 4px;
-    color: #ff3300;
-}
-
-p#worst a {
-  color:#444;
-  text-decoration:none;
-}
-
-p#worst a:hover {
-    text-decoration: underline;
-}
-
-.peoplesection { /* For a horizontal section of content */
-    width: 640px; /* content - 20 (borders) */
-    padding: 0 0px;
-}
-
-
-#timeline_chart {}
-#download {
-      text-align: right;
-}
-#news {
-}
-#biggest-movers {}
-#rising-articles {
-    margin-bottom: 30px;
-}
-
-
-#chart table {
-	width: 100%;
-}
-
-
-#dropping-articles {}
-
-iframe.wikiframe {
-    width: 928px;  /* section - 10 (borders) - 2 (padding)*/
-    padding: 1px;
-    border: 5px solid #CCC;
-}
-

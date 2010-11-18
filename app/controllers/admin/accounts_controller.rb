@@ -102,7 +102,11 @@ class Admin::AccountsController < ApplicationController
   end
   
   def report_client
-    render :layout => 'report'
+    @account = Account.find(params[:id])
+    Time.zone = @account.time_zone
+    respond_to do |format|
+      format.html {render :layout => 'report'}
+    end
   end
 
   def weekly_perf_report
