@@ -254,6 +254,10 @@ class Account < ActiveRecord::Base
     self.sem_cost_between(start_date, end_date) + self.sem_spend_between(start_date, end_date)
   end
   
+  def total_revenue_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.to_a.sum { |campaign| campaign.total_revenue_between(start_date, end_date) }
+  end
+  
   def number_of_total_leads_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.to_a.sum { |campaign| campaign.number_of_total_leads_between(start_date, end_date) }
   end
