@@ -53,7 +53,7 @@
           %td
             %b= account_data.present? ? account_data[:leads] : 0
             - if account_data.present?
-              =image_tag(Gchart.sparkline(:data => account_data[:leads_by_day], :size => '80x15', :line_colors => '0077CC', :background => "#{ current_cycle == 'even' ? 'F0F0F0' : 'FFFFFF'}"))
+              =image_tag(Gchart.sparkline(:data => account_data[:leads_by_day], :size => '80x15', :line_colors => '0077CC', :background => "#{ current_cycle == 'even' ? 'E5ECF9' : 'FFFFFF'}"))
           -cpconv = account_data.present? ? account_data[:cpconv] : 0.0
           -if cpconv > 75
             %td{:class => 'red-font'}
