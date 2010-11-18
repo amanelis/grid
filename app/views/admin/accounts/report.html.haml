@@ -4,7 +4,7 @@
 -if @account.campaigns.present?
   %h3
     = 'Last Month Report (' + @month_start.to_s(:long) + ' to ' + @month_end.to_s(:long) + ')' 
-  = link_to "Export Client", report_client_path, :popup => true
+  = link_to "Export Client", report_client_path(params[:id]), :popup => true
   %table{:class => "pretty"}
     %thead
       %th
