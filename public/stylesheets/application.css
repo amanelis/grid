@@ -54,6 +54,10 @@ clear:both;
 overflow:hidden;
 }
 
+.right{
+text-align:right;
+}
+
 /*
 	Navigation
 	------------------
