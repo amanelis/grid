@@ -41,12 +41,9 @@ Rails::Initializer.run do |config|
   config.gem 'paperclip', :version => '2.3.3'
   config.gem 'facets', :version => '2.8.1'
   config.gem 'searchlogic', :version => '2.4.27'
-<<<<<<< HEAD
   config.gem 'pdfkit', :version => '0.4.6'
   config.gem 'wkhtmltopdf', :version => '0.1.2'
-=======
   config.gem 'fastercsv', :version => '1.5.3'
->>>>>>> e6caef5196f54e08332638bc515911a0b7a599f9
 
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named
