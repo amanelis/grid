@@ -5,7 +5,7 @@ class MapsCampaign < ActiveRecord::Base
   has_many :bing_maps_campaigns, :dependent => :destroy
   has_many :map_keywords, :dependent => :destroy
 
-  GOOGLE_MAPS_API_KEY = 'ABQIAAAAzr2EBOXUKnm_jVnk0OJI7xSosDVG8KKPE1-m51RBrvYughuyMxQ-i1QfUnH94QxWIa6N4U6MouMmBA'
+  GOOGLE_MAPS_API_KEY = 'ABQIAAAALQRqYHHjSnLmL7zwbG0n-BQkiq2IPuxpcd6yKI6maifg0dbT5RQMwn92qd1fSdzERnpNoeonkmJ_Cw'
   CHART_COLORS = ["66ccff", "669966", "666666", "cc3366", "ff6633", "ffff33", "000000"]
 
   # INSTANCE BEHAVIOR
@@ -25,7 +25,7 @@ class MapsCampaign < ActiveRecord::Base
 
   def google_keyword_rankings_graph(height = 150, width = 900)
     height = 300 if height > 300
-    width = 1000 if width > 1000
+    width = 900 if width > 900
     month_date = Date.today
     map_keywords = Array.new
     rankings = Array.new
@@ -90,7 +90,7 @@ class MapsCampaign < ActiveRecord::Base
 
   def google_map_data_counts_graph(height = 150, width = 900)
     height = 300 if height > 300
-    width = 1000 if width > 1000
+    width = 900 if width > 900
     month_date = Date.today
     rankings = Array.new
     citations = Array.new
@@ -156,7 +156,7 @@ class MapsCampaign < ActiveRecord::Base
 
   def google_map_website_clicks_graph(height = 150, width = 900)
     height = 300 if height > 300
-    width = 1000 if width > 1000
+    width = 900 if width > 900
     month_date = Date.today
     slabels = Array.new
     searches = Array.new

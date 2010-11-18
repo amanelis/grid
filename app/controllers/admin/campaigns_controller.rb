@@ -44,5 +44,10 @@ class Admin::CampaignsController < ApplicationController
     
     redirect_to admin_campaign_path(@campaign)
   end
+  
+  def create
+    @campaign = Campaign.new
+    create if request.post?
+  end
 
 end
