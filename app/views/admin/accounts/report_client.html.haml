@@ -1,16 +1,24 @@
 -@month_start = (Date.today - 1.month).beginning_of_month
 -@month_end = (Date.today - 1.month).end_of_month
+
 %header
   .right
-    %p= @month_start.to_s(:long) + ' to ' + @month_end.to_s(:long)
-    %h3 $REVENUE
-    %h4 TOTAL CALLS
-    %h4 TOTAL LEADS
+    %h2
+      $
+      %span= @account.total_revenue_between(@month_start, @month_end)
+      in Revenue
+    %h3
+      %span= @account.number_of_total_contacts_between(@month_start, @month_end)
+      Contacts
+    %h3
+      %span= @account.number_of_total_leads_between(@month_start, @month_end)
+      Leads
   %h1= @account.name
-  %h2 Last Month Report
+  %h2 CityVoice Monthly Report
+  %p= @month_start.to_s(:long) + ' to ' + @month_end.to_s(:long)
 %article
   -if @account.campaigns.present?
-    %section#cost_per_lead
+    .span-15
       %h3 Cost Per Lead Summary
       %table
         %thead
@@ -36,6 +44,9 @@
           %th= @account.number_of_total_leads_between(@month_start, @month_end)
           %th= ActionController::Base.helpers.number_to_currency(@account.spend_between(@month_start, @month_end))
           %th= ActionController::Base.helpers.number_to_currency(@account.cost_per_lead_between(@month_start, @month_end))
+    .span-8.last
+      
+        
 
   -if @account.campaigns.sem.present?
     %section#pay_per_click
