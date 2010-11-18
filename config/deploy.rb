@@ -7,6 +7,7 @@ set :scm, :git
 # Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`
 
 before "deploy", "delayed_job:stop"
+before "deploy:cleanup", "pdfkit:ensure_wkhtmltopdf_installed"
 after "deploy:cleanup", "delayed_job:start"
 
 # If you are using Passenger mod_rails uncomment this:
@@ -30,6 +31,12 @@ namespace :moonshine do
   end
 end
 
+namespace :pdfkit do
+  desc "Brute force attempt at ensuring that wkhtmltopdf is installed on the target machines."
+  task :ensure_wkhtmltopdf_installed, :roles => :app do
+    run "sudo pdfkit --install-wkhtmltopdf"
+  end
+end
 
 namespace :delayed_job do
   desc "Stop the delayed_job process"

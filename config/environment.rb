@@ -42,7 +42,6 @@ Rails::Initializer.run do |config|
   config.gem 'facets', :version => '2.8.1'
   config.gem 'searchlogic', :version => '2.4.27'
   config.gem 'pdfkit', :version => '0.4.6'
-  config.gem 'wkhtmltopdf', :version => '0.1.2'
   config.gem 'fastercsv', :version => '1.5.3'
 
   # Only load the plugins named here, in the order given (default is alphabetical).
