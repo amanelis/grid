@@ -262,7 +262,7 @@
                           = @keywords[index2 + 1][0] if @keywords[index2 + 1].present?
                         %td
                           = @keywords[index2 + 1][1] if @keywords[index2 + 1].present?
-            -@url_link = @account.campaigns.sem[index].websites.first.try(:visitors_by_location_graph, @month_start, @month_end)
+            -@url_link = @account.campaigns.sem[index].websites.first.try(:visitors_by_location_graph, @month_start, @month_end) if @account.campaigns.sem[index].websites.present?
             -if @url_link.present?
               %br
               .center
