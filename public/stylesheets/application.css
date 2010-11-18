@@ -42,7 +42,7 @@ border: 1px solid #C3C3C3;
 }
 
 header{
-background:#81A3FF;
+background:#BBE1F7;
 }
 
 header, article, footer{
@@ -124,9 +124,12 @@ a:hover{
 text-decoration:underline;
 }
 
+header h1{
+font-weight:700;
+}
+
 header h3{
 text-transform:uppercase;
-font-weight:500;
 }
 
 header p, header input[type="text"], header input[type="password"], header input.text, header input.title, header h3, header h2, header p, header h1, header h4, header div{
@@ -267,13 +270,6 @@ form.inline p { margin-bottom:0; }
   background-color: #FCC;
   border: solid 1px #C66;
 }
-
-div.pagination{
-	margin: 5px 0px;
-	padding: 0px;
-	text-align: center ; 
-}
-
 div.activity_item {
   background-color:#FFF;
   border:1px dotted #EEE;
@@ -373,60 +369,3 @@ div.activity_item .tinybox {
   text-align:left;
   width:260px;
 }
-
-div.shortbox {
-  background-color:#FFFFFF;
-  /*border:1px solid #999999;*/
-  float:left;
-  height:270px;
-  margin:15px;
-  padding:10px;
-  text-align:center;
-  width:260px;
-}
-
-p#worst {
-    padding-bottom: 4px;
-    color: #ff3300;
-}
-
-p#worst a {
-  color:#444;
-  text-decoration:none;
-}
-
-p#worst a:hover {
-    text-decoration: underline;
-}
-
-.peoplesection { /* For a horizontal section of content */
-    width: 640px; /* content - 20 (borders) */
-    padding: 0 0px;
-}
-
-
-#timeline_chart {}
-#download {
-      text-align: right;
-}
-#news {
-}
-#biggest-movers {}
-#rising-articles {
-    margin-bottom: 30px;
-}
-
-
-#chart table {
-	width: 100%;
-}
-
-
-#dropping-articles {}
-
-iframe.wikiframe {
-    width: 928px;  /* section - 10 (borders) - 2 (padding)*/
-    padding: 1px;
-    border: 5px solid #CCC;
-}
-
