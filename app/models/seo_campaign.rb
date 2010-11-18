@@ -283,8 +283,8 @@ class SeoCampaign < ActiveRecord::Base
     Utilities.massage_timeline(raw_data, [:visits, :leads])
   end
 
-  def website_traffic_sources_graph(start_date = Date.today - 1.month, end_date = Date.today, height = 250, width = 750)
-   width = 1000 if width > 1000
+  def website_traffic_sources_graph(start_date = Date.today - 1.month, end_date = Date.today, height = 250, width = 900)
+   width = 900 if width > 900
       height = 300 if height > 300
       website = self.websites.first
       source_url = ''
@@ -322,8 +322,8 @@ class SeoCampaign < ActiveRecord::Base
       return source_url
   end
 
-  def seo_keyword_rankings_graph(height = 250, width = 1000)
-    width = 1000 if width > 1000
+  def seo_keyword_rankings_graph(height = 250, width = 900)
+    width = 900 if width > 900
     height = 300 if height > 300
     days_url = ''
     google_array = Array.new

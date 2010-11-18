@@ -230,11 +230,6 @@
       %tbody
         %tr
           %td
-            /
-            /-if @sem_campaign_timelines[index].empty?
-            /  No Data
-            /-else
-            /   = render inline_annotated_timeline(@sem_campaign_timelines[index], 620, 280, 'div_id_to_create', {:zoomEndTime => @sem_campaign_timelines[index].keys.sort[-1], :zoomStartTime  => @sem_campaign_timelines[index].keys.sort[-30] })
             %br
             -@keywords = @account.campaigns.sem[index].websites.first.try(:keywords_searched_between, @month_start, @month_end)
             -if @keywords.present?
@@ -285,11 +280,6 @@
       %tbody
         %tr
           %td
-            /
-            /-if @seo_campaign_timelines[index].empty?
-            /  No Data
-            /-else
-            /  = render inline_annotated_timeline(@seo_campaign_timelines[index], 620, 280, 'div_id_to_create', {:zoomEndTime => @seo_campaign_timelines[index].keys.sort[-1], :zoomStartTime  => @seo_campaign_timelines[index].keys.sort[-30] })
             -@sources_link = @account.campaigns.seo[index].campaign_style.website_traffic_sources_graph(@month_start, @month_end)
             -if @sources_link.present?
               %br
