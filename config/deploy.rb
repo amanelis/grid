@@ -58,7 +58,7 @@ namespace :pdfkit do
     
       puts "Installing #{download} to /usr/local/bin"
       if download =~ /.tar.lzma$/
-        run "tar -xf #{download}"
+        run "tar --lzma -xf #{download}"
         run "mv wkhtmltopdf-i386 /usr/local/bin"
       elsif download =~ /.tar.bz2$/
         run "tar xjvf #{download}"
