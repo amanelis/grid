@@ -40,8 +40,8 @@ namespace :pdfkit do
     Dir.chdir '/tmp'
     
     puts "Cleaning up any existing wkhtmltopdf installation..."
-    run "rm -rf /usr/local/bin/wkhtmltopdf*"
-    run "rm -rf /tmp/wkhtmltopdf*"
+    run "sudo rm -rf /usr/local/bin/wkhtmltopdf*"
+    run "sudo rm -rf /tmp/wkhtmltopdf*"
     
     puts "Downloading latest wkhtmltopdf binary..."
     page = open("http://code.google.com/p/wkhtmltopdf/downloads/list").read
@@ -51,7 +51,6 @@ namespace :pdfkit do
     puts "Downloading #{download} from #{url}"
 
     run "curl #{url} > #{download}"
-    download
     
     puts "Installing #{download} to /usr/local/bin"
     if download =~ /.tar.bz2$/
