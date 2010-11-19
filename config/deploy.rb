@@ -35,6 +35,7 @@ namespace :pdfkit do
   desc "Brute force attempt at ensuring that wkhtmltopdf is installed on the target machines."
   task :ensure_wkhtmltopdf_installed, :roles => :app do
     #run "sudo pdfkit --install-wkhtmltopdf"
+    require 'open-uri'
     
     puts "Installing wkhtmltopdf binaries to /usr/local/bin with ARCHITECTURE=i386"
     Dir.chdir '/tmp'
