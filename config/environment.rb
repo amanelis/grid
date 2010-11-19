@@ -7,6 +7,7 @@ RAILS_GEM_VERSION = '2.3.9' unless defined? RAILS_GEM_VERSION
 require File.join(File.dirname(__FILE__), 'boot')
 
 Rails::Initializer.run do |config|
+  
   # Settings in config/environments/* take precedence over those specified here.
   # Application configuration should go into files in config/initializers
   # -- all .rb files in that directory are automatically loaded.
@@ -40,6 +41,8 @@ Rails::Initializer.run do |config|
   config.gem 'paperclip', :version => '2.3.3'
   config.gem 'facets', :version => '2.8.1'
   config.gem 'searchlogic', :version => '2.4.27'
+  config.gem 'pdfkit', :version => '0.4.6'
+  config.gem 'fastercsv', :version => '1.5.3'
 
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named
@@ -55,6 +58,9 @@ Rails::Initializer.run do |config|
   # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
   # Run "rake -D time" for a list of tasks for finding time zone names.
   config.time_zone = 'UTC'
+  
+  # Set the middleware for PDFKit
+  config.middleware.use "PDFKit::Middleware", :print_media_type => true
 
   # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
   # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}')]
