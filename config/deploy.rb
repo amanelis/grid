@@ -48,24 +48,28 @@ namespace :pdfkit do
       run "sudo rm -rf /tmp/wkhtmltopdf*"
     
       puts "Downloading latest wkhtmltopdf binary..."
-      page = open("http://code.google.com/p/wkhtmltopdf/downloads/list").read
-      download = page.match(/href=".*name=(.*wkhtmltopdf-.*i386.*?)&/) || raise("File not found..")
-      download = download[1]
+      #page = open("http://code.google.com/p/wkhtmltopdf/downloads/list").read
+      #download = page.match(/href=".*name=(.*wkhtmltopdf-.*i386.*?)&/) || raise("File not found..")
+      #download = download[1]
+      
+      download = "wkhtmltopdf-0.9.9-static-i386.tar.bz2"
       url = "http://wkhtmltopdf.googlecode.com/files/#{download}"
+      
       puts "Downloading #{download} from #{url}"
 
       run "curl #{url} > #{download}"
     
       puts "Installing #{download} to /usr/local/bin"
-      if download =~ /.tar.lzma$/
-        run "tar --lzma -xf #{download}"
-        run "mv wkhtmltopdf-i386 /usr/local/bin"
-      elsif download =~ /.tar.bz2$/
+      if download =~ /.tar.bz2$/
         run "tar xjvf #{download}"
+        run "mv wkhtmltopdf-i386 /usr/local/bin"
+      elsif download =~ /.tar.lzma$/
+        run "tar --lzma -xf #{download}"
         run "mv wkhtmltopdf-i386 /usr/local/bin"
       else
         run "mv #{download} /usr/local/bin"
       end
+      run "mv /usr/local/bin/wkhtmltopdf-i386 wkhtmltopdf"
       run "sudo chmod +x /usr/local/bin/wkhtmltopdf"
     end
   end
