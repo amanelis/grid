@@ -58,7 +58,6 @@ namespace :pdfkit do
     
       puts "Installing #{download} to /usr/local/bin"
       if download =~ /.tar.lzma$/
-        raise "couldn't extract archive: lzcat not found" unless system("which lzcat > /dev/null 2>/dev/null")
         run "tar -xvf #{download}"
         run "mv wkhtmltopdf-i386 /usr/local/bin"
       elsif download =~ /.tar.bz2$/
