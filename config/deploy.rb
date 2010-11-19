@@ -37,14 +37,12 @@ namespace :pdfkit do
     #run "sudo pdfkit --install-wkhtmltopdf"
     require 'open-uri'
     
-    if File.exists?("/usr/local/bin/wkhtmltopdf")
+    if capture("if [ -e /usr/local/bin/wkhtmltopdf ]; then echo 'true'; fi").strip
       puts "wkhtmltopdf is already installed -- skipping"
     else
       puts "Installing wkhtmltopdf binaries to /usr/local/bin with ARCHITECTURE=i386"
       Dir.chdir '/tmp'
     
-      puts "Cleaning up any existing wkhtmltopdf installation..."
-      run "sudo rm -rf /usr/local/bin/wkhtmltopdf*"
       run "sudo rm -rf /tmp/wkhtmltopdf*"
     
       puts "Downloading latest wkhtmltopdf binary..."
@@ -69,6 +67,7 @@ namespace :pdfkit do
       else
         run "sudo mv #{download} /usr/local/bin"
       end
+      run "sudo rm -rf /usr/local/bin/wkhtmltopdf*"
       run "sudo mv /usr/local/bin/wkhtmltopdf-i386 /usr/local/bin/wkhtmltopdf"
       run "sudo chmod +x /usr/local/bin/wkhtmltopdf"
     end
