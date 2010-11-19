@@ -69,7 +69,7 @@ namespace :pdfkit do
       else
         run "sudo mv #{download} /usr/local/bin"
       end
-      run "sudo mv /usr/local/bin/wkhtmltopdf-i386 wkhtmltopdf"
+      run "sudo mv /usr/local/bin/wkhtmltopdf-i386 /usr/local/bin/wkhtmltopdf"
       run "sudo chmod +x /usr/local/bin/wkhtmltopdf"
     end
   end
