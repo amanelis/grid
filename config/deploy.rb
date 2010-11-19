@@ -56,8 +56,9 @@ namespace :pdfkit do
       url = "http://wkhtmltopdf.googlecode.com/files/#{download}"
       
       puts "Downloading #{download} from #{url}"
-
       run "curl #{url} > #{download}"
+    
+      run "sudo rm -rf /usr/local/bin/wkhtmltopdf*"
     
       puts "Installing #{download} to /usr/local/bin"
       if download =~ /.tar.bz2$/
@@ -69,7 +70,6 @@ namespace :pdfkit do
       else
         run "sudo mv #{download} /usr/local/bin"
       end
-      run "sudo rm -rf /usr/local/bin/wkhtmltopdf*"
       run "sudo mv /usr/local/bin/wkhtmltopdf-i386 /usr/local/bin/wkhtmltopdf"
       run "sudo chmod +x /usr/local/bin/wkhtmltopdf"
     end
