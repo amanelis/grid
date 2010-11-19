@@ -37,7 +37,9 @@ namespace :pdfkit do
     #run "sudo pdfkit --install-wkhtmltopdf"
     require 'open-uri'
     
-    if capture("if [ -e /usr/local/bin/wkhtmltopdf ]; then echo 'true'; fi").strip
+    file_exists = capture("if [ -e /usr/local/bin/wkhtmltopdf ]; then echo 'true'; fi").strip
+    
+    if file_exists == "true"
       puts "wkhtmltopdf is already installed -- skipping"
     else
       puts "Installing wkhtmltopdf binaries to /usr/local/bin with ARCHITECTURE=i386"
