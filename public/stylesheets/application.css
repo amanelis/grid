@@ -1,6 +1,5 @@
-/*
-	Layout / Backgrounds
-	------------------
+/* 
+	PDF Generation Styling
 */
 @media print {
   body {
@@ -22,7 +21,15 @@
     display: none;
   }
 }
+/* 	
+	PDF Generation END
+*/
 
+
+/*
+	Layout / Backgrounds
+	------------------
+*/
 body.container{
 width:974px;
 margin:0 auto;
