@@ -79,7 +79,7 @@ background:gray;
 header nav a, nav aside a{
 color:gray;
 text-decoration:none;	
-font-weight:300;
+font-weight:bold;
 }
 
 header nav a:hover, nav aside a:hover{
