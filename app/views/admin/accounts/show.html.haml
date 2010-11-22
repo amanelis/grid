@@ -1,10 +1,9 @@
+%script
+  $(function(){
+  $('#daterangepicker').daterangepicker({arrows:true}); 
+  });
 %header
   .right
-    %p Date Range
-    %script
-      $(function(){
-      $('#daterangepicker').daterangepicker({arrows:true}); 
-      });
     %input{:id => "daterangepicker", :type => "text"}
   %h3 #{@account.name}
   %h4 Summary

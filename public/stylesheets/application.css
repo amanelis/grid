@@ -1,31 +1,3 @@
-/* 
-	PDF Generation Styling
-*/
-@media print {
-  body {
-    background-color: #FFF;
-  }
-
-  #container {
-    width: auto;
-    margin: 0;
-    padding: 0;
-    border: none;
-  }
-  
-  #line_items {
-    page-break-before: always;
-  }
-  
-  #pdf_link {
-    display: none;
-  }
-}
-/* 	
-	PDF Generation END
-*/
-
-
 /*
 	Layout / Backgrounds
 	------------------
@@ -80,10 +52,6 @@ padding:12px;
 header, article, section, footer{
 clear:both;
 overflow:hidden;
-}
-
-.right{
-text-align:right;
 }
 
 /*
@@ -285,6 +253,31 @@ input.checkbox, input.radio {
 
 form.inline { line-height:3; }
 form.inline p { margin-bottom:0; }
+
+/* 
+	PDF Generation Styling
+*/
+@media print {
+  body {
+    background-color: #FFF;
+  }
+
+  #container {
+    width: auto;
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+  
+  #line_items {
+    page-break-before: always;
+  }
+  
+  #pdf_link {
+    display: none;
+  }
+}
+
 /*-------------------------------------------------------------- */
 /* Old Stuff */
 
