@@ -4,7 +4,12 @@
   });
 %header
   .right
-    %input{:id => "daterangepicker", :type => "text"}
+    -form_for(admin_accounts_path(@account)) do |f|
+      %input{:id => "daterangepicker", :type => "text"}
+      =#f.text_field :daterangepicker, :onchange => "alert('Input collected!')"
+      
+      
+
   %h3 #{@account.name}
   %h4 Summary
 
