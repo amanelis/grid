@@ -61,7 +61,26 @@
         = ActionController::Base.helpers.number_to_currency(@campaign.cost_per_lead_between(Date.today - 1.week, Date.today))
       %td
         = ActionController::Base.helpers.number_to_currency(@campaign.cost_per_contact_between(Date.today - 1.week, Date.today))
-      
+-if @campaign.is_seo?
+  %h3 Keywords
+  %article
+    %table{:class => "pretty"}
+      %thead
+        %tr
+          %th Keyword (Click for History)
+          %th Last Updated
+          %th Google
+          %th Yahoo
+          %th Bing
+      %tbody
+        - (@campaign.campaign_style.keywords.sort { |a,b| a.descriptor <=> b.descriptor }).each do |keyword|
+          %tr{:class => cycle('odd', 'even')}
+            %td= link_to keyword.descriptor, admin_keyword_path(keyword)
+            %td= keyword.most_recent_ranking().created_at.to_s(:long)
+            %td= keyword.most_recent_google_ranking()
+            %td= keyword.most_recent_yahoo_ranking()
+            %td= keyword.most_recent_bing_ranking()   
+		   
 %h3
   Phone Numbers On Campaign
 %table{:class => "pretty"}

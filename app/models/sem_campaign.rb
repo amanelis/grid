@@ -10,7 +10,7 @@ class SemCampaign < ActiveRecord::Base
   AD_REPORT_TYPE = "Ad"
   ALL_AD_REPORT_TYPE = "All Ad"
   ALL_CAMPAIGN_REPORT_TYPE = "All Campaign"
-  GOOGLE_MAPS_API_KEY = 'ABQIAAAAzr2EBOXUKnm_jVnk0OJI7xSosDVG8KKPE1-m51RBrvYughuyMxQ-i1QfUnH94QxWIa6N4U6MouMmBA'
+  GOOGLE_MAPS_API_KEY = 'ABQIAAAALQRqYHHjSnLmL7zwbG0n-BQkiq2IPuxpcd6yKI6maifg0dbT5RQMwn92qd1fSdzERnpNoeonkmJ_Cw'
   CHART_COLORS = ["66ccff", "669966", "666666", "cc3366", "ff6633", "ffff33", "000000"]
 
 

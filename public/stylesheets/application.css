@@ -54,10 +54,6 @@ clear:both;
 overflow:hidden;
 }
 
-.right{
-text-align:right;
-}
-
 /*
 	Navigation
 	------------------
@@ -83,7 +79,7 @@ background:gray;
 header nav a, nav aside a{
 color:gray;
 text-decoration:none;	
-font-weight:300;
+font-weight:bold;
 }
 
 header nav a:hover, nav aside a:hover{
@@ -257,6 +253,31 @@ input.checkbox, input.radio {
 
 form.inline { line-height:3; }
 form.inline p { margin-bottom:0; }
+
+/* 
+	PDF Generation Styling
+*/
+@media print {
+  body {
+    background-color: #FFF;
+  }
+
+  #container {
+    width: auto;
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+  
+  #line_items {
+    page-break-before: always;
+  }
+  
+  #pdf_link {
+    display: none;
+  }
+}
+
 /*-------------------------------------------------------------- */
 /* Old Stuff */
 

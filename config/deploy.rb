@@ -4,7 +4,7 @@ set :default_stage, "development"
 set :stages, %w(production staging development)
 
 set :scm, :git
-# Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`
+# Or: "accurev", "bzr", "cvs", "darcs", "git", "mercurial", "perforce", "subversion" or "none"
 
 before "deploy", "delayed_job:stop"
 before "deploy:cleanup", "pdfkit:ensure_wkhtmltopdf_installed"
@@ -34,7 +34,45 @@ end
 namespace :pdfkit do
   desc "Brute force attempt at ensuring that wkhtmltopdf is installed on the target machines."
   task :ensure_wkhtmltopdf_installed, :roles => :app do
-    run "sudo pdfkit --install-wkhtmltopdf"
+    #run "sudo pdfkit --install-wkhtmltopdf"
+    require 'open-uri'
+    
+    file_exists = capture("if [ -e /usr/local/bin/wkhtmltopdf ]; then echo 'true'; fi").strip
+    
+    if file_exists == "true"
+      puts "wkhtmltopdf is already installed -- skipping"
+    else
+      puts "Installing wkhtmltopdf binaries to /usr/local/bin with ARCHITECTURE=i386"
+      Dir.chdir '/tmp'
+    
+      run "sudo rm -rf /tmp/wkhtmltopdf*"
+    
+      puts "Downloading latest wkhtmltopdf binary..."
+      #page = open("http://code.google.com/p/wkhtmltopdf/downloads/list").read
+      #download = page.match(/href=".*name=(.*wkhtmltopdf-.*i386.*?)&/) || raise("File not found..")
+      #download = download[1]
+      
+      download = "wkhtmltopdf-0.9.9-static-i386.tar.bz2"
+      url = "http://wkhtmltopdf.googlecode.com/files/#{download}"
+      
+      puts "Downloading #{download} from #{url}"
+      run "curl #{url} > #{download}"
+    
+      run "sudo rm -rf /usr/local/bin/wkhtmltopdf*"
+    
+      puts "Installing #{download} to /usr/local/bin"
+      if download =~ /.tar.bz2$/
+        run "tar xjvf #{download}"
+        run "sudo mv wkhtmltopdf-i386 /usr/local/bin"
+      elsif download =~ /.tar.lzma$/
+        run "tar --lzma -xf #{download}"
+        run "sudo mv wkhtmltopdf-i386 /usr/local/bin"
+      else
+        run "sudo mv #{download} /usr/local/bin"
+      end
+      run "sudo mv /usr/local/bin/wkhtmltopdf-i386 /usr/local/bin/wkhtmltopdf"
+      run "sudo chmod +x /usr/local/bin/wkhtmltopdf"
+    end
   end
 end
 
