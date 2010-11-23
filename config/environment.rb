@@ -60,12 +60,8 @@ Rails::Initializer.run do |config|
   config.time_zone = 'UTC'
   
   # Set the middleware for PDFKit
-  config.middleware.use "PDFKit::Middleware", :print_media_type => true
-
-  # Trying this odd fix for errors
-  PDFKit.configure do |config|
-    config.default_options[:ignore_load_errors] = true
-  end
+  config.middleware.use "PDFKit::Middleware"
+  #config.middleware.use "PDFKit::Middleware", :print_media_type => true
 
 
   # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
