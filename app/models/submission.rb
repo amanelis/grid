@@ -111,6 +111,12 @@ class Submission < ActiveRecord::Base
     return true if self.work_description =~ /\bno\s*application\s*fee\b/i
     return true if self.work_description =~ /\bdear\s*business\s*owner\b/i
     return true if self.work_description =~ /\bdear\s*head\b/i
+    return true if self.work_description =~ /\brelevant\s*traffic\b/i
+    return true if self.work_description =~ /\bгруди\b/i
+    return true if self.work_description =~ /\bсисечки\b/i
+    return true if self.work_description =~ /\bпроституток\b/i
+    return true if self.work_description =~ /\bтелок\b/i
+    return true if self.work_description =~ /\bблондиночк\b/i
     false
   end
   
