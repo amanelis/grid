@@ -2,7 +2,7 @@ class Website < ActiveRecord::Base
   has_and_belongs_to_many :campaigns, :uniq => true
   has_many :website_visits, :dependent => :destroy
 
-  GOOGLE_MAPS_API_KEY = 'ABQIAAAAU2DhWAoQ76ku3zRokt1DnRQX-pfkEHFxdgQJJn1KX_braIcbexTk-gFyApGHhSC0zwacV0-kZeHAzg'
+  GOOGLE_MAPS_API_KEY = 'ABQIAAAALQRqYHHjSnLmL7zwbG0n-BQkiq2IPuxpcd6yKI6maifg0dbT5RQMwn92qd1fSdzERnpNoeonkmJ_Cw'
 
 
   # CLASS BEHAVIOR
