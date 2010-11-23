@@ -62,6 +62,12 @@ Rails::Initializer.run do |config|
   # Set the middleware for PDFKit
   config.middleware.use "PDFKit::Middleware", :print_media_type => true
 
+  # Trying this odd fix for errors
+  PDFKit.configure do |config|
+    config.default_options[:ignore_load_errors] = true
+  end
+
+
   # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
   # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}')]
   # config.i18n.default_locale = :de
