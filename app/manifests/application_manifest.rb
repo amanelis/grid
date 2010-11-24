@@ -72,12 +72,12 @@ class ApplicationManifest < Moonshine::Manifest::Rails
       cron 'update_calls', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} Call.update_calls", :user => configuration[:user], :minute => '*/15', :hour => '*'
       cron 'add_websites', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} Website.add_websites", :user => configuration[:user], :minute => 1, :hour => 23
       cron 'data_pull_websites_visits', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} WebsiteVisit.data_pull_websites_visits", :user => configuration[:user], :minute => 45, :hour => '*/8'
-      cron 'update_keywords_from_salesforce', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} Keyword.update_keywords_from_salesforce", :user => configuration[:user], :minute => 31, :hour => 23
+      cron 'update_keywords_from_salesforce', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} Keyword.update_keywords_from_salesforce", :user => configuration[:user], :minute => 31, :hour => 22
       cron 'update_keyword_rankings', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} Keyword.update_keyword_rankings", :user => configuration[:user], :minute => 1, :hour => 1
       cron 'update_inbound_links', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} SeoCampaign.update_inbound_links", :user => configuration[:user], :minute => 1, :hour => 2
       cron 'clean_up_inbound_links', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} SeoCampaign.clean_up_inbound_links", :user => configuration[:user], :minute => 31, :hour => 2
       cron 'update_website_analyses', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} SeoCampaign.update_website_analyses", :user => configuration[:user], :minute => 1, :hour => 3
-      cron 'update_keywords_from_salesforce', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} MapKeyword.update_keywords_from_salesforce", :user => configuration[:user], :minute => 1, :hour => 4
+      cron 'update_map_keywords_from_salesforce', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} MapKeyword.update_keywords_from_salesforce", :user => configuration[:user], :minute => 1, :hour => 4
       cron 'update_map_rankings', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} MapKeyword.update_map_rankings", :user => configuration[:user], :minute => 1, :hour => 5
       cron 'remove_old_statuses', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} JobStatus.remove_old_statuses", :user => configuration[:user], :minute => 1, :hour => 6
     
