@@ -22,17 +22,21 @@ class Admin::AccountsController < ApplicationController
   # GET /accounts/1
   # GET /accounts/1.xml
   def show    
-    @account = Account.find(params[:id])
-    Time.zone = @account.time_zone
-    @timeline = @account.combined_timeline_data
-    @sorted_dates = @timeline.keys.sort
-    @title = @account.name
-    @seo_campaign_timelines = @account.campaign_seo_combined_timeline_data
-    @sem_campaign_timelines = @account.campaign_sem_combined_timeline_data
-    @map_campaign_timelines = @account.campaign_map_combined_timeline_data
+    if params[:daterangepicker].blank?
+      @account = Account.find(params[:id])
+      Time.zone = @account.time_zone
+      @timeline = @account.combined_timeline_data
+      @sorted_dates = @timeline.keys.sort
+      @title = @account.name
+      @seo_campaign_timelines = @account.campaign_seo_combined_timeline_data
+      @sem_campaign_timelines = @account.campaign_sem_combined_timeline_data
+      @map_campaign_timelines = @account.campaign_map_combined_timeline_data
 
-    respond_to do |format|
-      format.html # show.html.erb
+      respond_to do |format|
+        format.html # show.html.erb
+      end
+    else
+      
     end
   end
 
@@ -106,6 +110,14 @@ class Admin::AccountsController < ApplicationController
     Time.zone = @account.time_zone
     respond_to do |format|
       format.html {render :layout => 'report'}
+      # format.pdf  { render :text => PDFKit.new( report_client_pdf(@account) ).to_pdf }
+      format.pdf {
+        html = render_to_string(:layout => 'report' , :action => "report_client.html.haml")
+        kit = PDFKit.new(html)
+        kit.stylesheets << "#{Rails.root}/public/stylesheets/application.css"
+        send_data(kit.to_pdf, :filename => "client_#{@account.name}_report.pdf", :type => 'application/pdf')
+        return # to avoid double render call
+      }
     end
   end
 

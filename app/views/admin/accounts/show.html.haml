@@ -1,15 +1,14 @@
 %script
   $(function(){
-  $('#daterangepicker').daterangepicker({arrows:true}); 
+  $('#daterangepicker').daterangepicker({arrows:false}); 
   });
 %header
   .right
-    -form_for(admin_accounts_path(@account)) do |f|
-      %input{:id => "daterangepicker", :type => "text"}
-      =#f.text_field :daterangepicker, :onchange => "alert('Input collected!')"
+    -form_for(admin_accounts_path, :html => {:method => "get", :onchange => "alert('hello')"}) do |f|
+      = f.text_field :daterangepicker, :name => "daterangepicker", :id => "daterangepicker"
       
       
-
+      
   %h3 #{@account.name}
   %h4 Summary
 
