@@ -3,23 +3,11 @@
   $('#daterangepicker').daterangepicker({arrows:false}); 
   });
 %header
-<<<<<<< HEAD
-  .right
-    -form_for(admin_accounts_path, :html => {:method => "get", :onchange => "alert('hello')"}) do |f|
-      = f.text_field :daterangepicker, :name => "daterangepicker", :id => "daterangepicker"
-      = f.submit "Submit"
-      
-      
-      
-  %h3 #{@account.name}
-  %h4 Summary
-
-=======
   .right 
     = link_to "Export Client", report_client_path(params[:id]), :popup => true
   %h1 #{@account.name}
   %h2 Summary
->>>>>>> 266bd98f275e9113a575c545d7962861511c6997
+
 %article
   %h3
     Last Week (#{(Date.yesterday - 1.week).to_s(:long) + ' to ' + Date.yesterday.to_s(:long)})
