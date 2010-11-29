@@ -144,15 +144,15 @@ class Keyword < ActiveRecord::Base
   end
   
   def most_recent_google_ranking()
-    self.most_recent_ranking().google
+    self.most_recent_ranking().google if self.most_recent_ranking().present?
   end
 
   def most_recent_yahoo_ranking()
-    self.most_recent_ranking().yahoo
+    self.most_recent_ranking().yahoo if self.most_recent_ranking().present?
   end
 
   def most_recent_bing_ranking()
-    self.most_recent_ranking().bing
+    self.most_recent_ranking().bing if self.most_recent_ranking().present?
   end
 
   def most_recent_ranking()

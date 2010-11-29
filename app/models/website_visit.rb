@@ -39,7 +39,7 @@ class WebsiteVisit < ActiveRecord::Base
     exception = nil
     website = Website.find(website_id)
     if website.present?
-      type = 'visitors-list&visitor-details=time,time_pretty,time_total,ip_address,session_id,actions,web_browser,operating_system,screen_resolution,javascript,language,referrer_url,referrer_domain,referrer_search,geolocation,longitude,latitude,hostname,organization,campaign,custom,clicky_url,goals'
+      type = 'visitors-list&visitor-details'
 
       time_begin = start.to_time.utc.at_beginning_of_day
       time_end = fend.to_time.utc.end_of_day
@@ -83,6 +83,9 @@ class WebsiteVisit < ActiveRecord::Base
                                                                                 :campaign => visit["campaign"],
                                                                                 :goals => visit["goals"],
                                                                                 :custom => visit["custom"],
+                                                                                :landing_page => visit["landing_page"],
+                                                                                :referrer_type => visit["referrer_type"],
+                                                                                :visitor_id => visit["uid"],
                                                                                 :time_of_visit => Time.at(visit["time"].to_i))
                 puts "Saved visit from #{nurl.geolocation}" if verbose
               rescue Exception => ex
