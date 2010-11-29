@@ -5,7 +5,7 @@
 %header
   .right 
     = link_to "Export Client", report_client_path(params[:id]), :popup => true
-  %h1 #{@account.name}
+  
   %h2 Summary
 %article
   -form_for(admin_accounts_path, :html => {:method => "get", :onchange => "alert('hello')"}) do |f|

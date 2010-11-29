@@ -33,7 +33,7 @@ class Admin::AccountsController < ApplicationController
       @map_campaign_timelines = @account.campaign_map_combined_timeline_data
       
       @start_date = Date.yesterday - 1.week
-      @end_date = Date.yesturday
+      @end_date = Date.yesterday
 
       respond_to do |format|
         format.html # show.html.erb
