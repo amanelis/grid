@@ -11,7 +11,7 @@
   -form_for(admin_accounts_path, :html => {:method => "get", :onchange => "alert('hello')"}) do |f|
     = f.text_field :daterangepicker, :name => "daterangepicker", :id => "daterangepicker"
     = f.submit "Filter Dates"
-  %h3 Last Week (#{(Date.yesterday - 1.week).to_s(:long) + ' to ' + Date.yesterday.to_s(:long)})
+  %h3 Last Week (#{(@start_date).to_s(:long) + ' to ' + @end_date.to_s(:long)})
   %table
     %thead
       %tr
@@ -30,14 +30,14 @@
       -@account.campaigns.each do |campaign|
         %tr
           %td= link_to campaign.name, admin_campaign_path(campaign)
-          %td= campaign.number_of_lead_calls_between(Date.yesterday - 1.week, Date.yesterday).to_s
-          %td= campaign.number_of_all_calls_between(Date.yesterday - 1.week, Date.yesterday).to_s
-          %td= campaign.number_of_lead_submissions_between(Date.yesterday - 1.week, Date.yesterday).to_s
-          %td= campaign.number_of_all_submissions_between(Date.yesterday - 1.week, Date.yesterday).to_s
-          %td= campaign.number_of_total_leads_between(Date.yesterday - 1.week, Date.yesterday).to_s
-          %td= campaign.number_of_total_contacts_between(Date.yesterday - 1.week, Date.yesterday).to_s
-          %td= ActionController::Base.helpers.number_to_currency(campaign.cost_between(Date.yesterday - 1.week, Date.yesterday))
-          %td= ActionController::Base.helpers.number_to_currency(campaign.spend_between(Date.yesterday - 1.week, Date.yesterday))
-          %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(Date.yesterday - 1.week, Date.yesterday))
-          %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_contact_between(Date.yesterday - 1.week, Date.yesterday))
+          %td= campaign.number_of_lead_calls_between(@start_date, @end_date).to_s
+          %td= campaign.number_of_all_calls_between(@start_date, @end_date).to_s
+          %td= campaign.number_of_lead_submissions_between(@start_date, @end_date).to_s
+          %td= campaign.number_of_all_submissions_between(@start_date, @end_date).to_s
+          %td= campaign.number_of_total_leads_between(@start_date, @end_date).to_s
+          %td= campaign.number_of_total_contacts_between(@start_date, @end_date).to_s
+          %td= ActionController::Base.helpers.number_to_currency(campaign.cost_between(@start_date, @end_date))
+          %td= ActionController::Base.helpers.number_to_currency(campaign.spend_between(@start_date, @end_date))
+          %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(@start_date, @end_date))
+          %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_contact_between(@start_date, @end_date))
           /%td= link_to "Details", admin_campaign_path(campaign)
