@@ -3,18 +3,14 @@
   $('#daterangepicker').daterangepicker({arrows:false}); 
   });
 %header
-  .right
-    -form_for(admin_accounts_path, :html => {:method => "get", :onchange => "alert('hello')"}) do |f|
-      = f.text_field :daterangepicker, :name => "daterangepicker", :id => "daterangepicker"
-      
-      
-      
+  .right 
+    = link_to "Export Client", report_client_path(params[:id]), :popup => true
   %h3 #{@account.name}
   %h4 Summary
-
 %article
-  %h3
-    Last Week (#{(Date.yesterday - 1.week).to_s(:long) + ' to ' + Date.yesterday.to_s(:long)})
+  -form_for(admin_accounts_path, :html => {:method => "get", :onchange => "alert('hello')"}) do |f|
+    = f.text_field :daterangepicker, :name => "daterangepicker", :id => "daterangepicker"
+  %h3 Last Week (#{(Date.yesterday - 1.week).to_s(:long) + ' to ' + Date.yesterday.to_s(:long)})
   %table
     %thead
       %tr
@@ -66,8 +62,5 @@
           %td
             = ActionController::Base.helpers.number_to_currency(campaign.cost_per_contact_between(Date.yesterday - 1.week, Date.yesterday))
           /%td= link_to "Details", admin_campaign_path(campaign)
-
-  %h3
-    = link_to "Click Here for Monthly Report", report_admin_account_path(@account)
 
 
