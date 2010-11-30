@@ -55,6 +55,8 @@ class Admin::AccountsController < ApplicationController
         @start_date = Date.parse(dates[0])
         @end_date = Date.parse(dates[1])
       rescue ArgumentError
+        @start_date = Date.yesterday - 1.week
+        @end_date = Date.yesterday
       end
 
       respond_to do |format|
