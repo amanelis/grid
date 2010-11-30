@@ -61,7 +61,7 @@ Rails::Initializer.run do |config|
   
   # Set the middleware for PDFKit
   # require 'pdfkit'
-  # config.middleware.use "PDFKit::Middleware", :print_media_type => true
+  config.middleware.use "PDFKit::Middleware", :print_media_type => true
   # config.middleware.use "PDFKit::Middleware"
   
 
