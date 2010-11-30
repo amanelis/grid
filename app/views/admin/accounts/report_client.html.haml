@@ -20,7 +20,7 @@
   -if @account.campaigns.present?
     .span-15
       %h3 Cost Per Lead Summary
-      %table
+      %table#cpl
         %thead
           %th Campaign Name
           %th Calls
@@ -44,7 +44,7 @@
           %th= @account.number_of_total_leads_between(@month_start, @month_end)
           %th= ActionController::Base.helpers.number_to_currency(@account.spend_between(@month_start, @month_end))
           %th= ActionController::Base.helpers.number_to_currency(@account.cost_per_lead_between(@month_start, @month_end))
-    .span-8.last
+    .span-8.last#cpl_visual
       :javascript
         /**
          * Visualize an HTML table using Highcharts. The top (horizontal) header 
@@ -56,7 +56,7 @@
         Highcharts.visualize = function(table, options) {
            // the categories
            options.xAxis.categories = [];
-           $('tbody th', table).each( function(i) {
+           $('thead th', table).each( function(i) {
               options.xAxis.categories.push(this.innerHTML);
            });
 
@@ -64,7 +64,7 @@
            options.series = [];
            $('tr', table).each( function(i) {
               var tr = this;
-              $('th, td', tr).each( function(j) {
+              $('tbody, td', tr).each( function(j) {
                  if (j > 0) { // skip first column
                     if (i == 0) { // get the name and init the series
                        options.series[j - 1] = { 
@@ -83,10 +83,10 @@
 
         // On document ready, call visualize on the datatable.
         $(document).ready(function() {         
-           var table = document.getElementById('datatable'),
+           var table = document.getElementById('cpl'),
            options = {
                  chart: {
-                    renderTo: 'container',
+                    renderTo: 'cpl_visual',
                     defaultSeriesType: 'column'
                  },
                  title: {
@@ -110,7 +110,6 @@
 
            Highcharts.visualize(table, options);
         });
-        
   -if @account.campaigns.sem.present?
     %section#pay_per_click
       %h3 Pay Per Click Summary
