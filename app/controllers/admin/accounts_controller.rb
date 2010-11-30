@@ -31,12 +31,32 @@ class Admin::AccountsController < ApplicationController
       @seo_campaign_timelines = @account.campaign_seo_combined_timeline_data
       @sem_campaign_timelines = @account.campaign_sem_combined_timeline_data
       @map_campaign_timelines = @account.campaign_map_combined_timeline_data
+      
+      @start_date = Date.yesterday - 1.week
+      @end_date = Date.yesterday
 
       respond_to do |format|
         format.html # show.html.erb
       end
     else
-      
+      @account = Account.find(params[:id])
+      Time.zone = @account.time_zone
+      @timeline = @account.combined_timeline_data
+      @sorted_dates = @timeline.keys.sort
+      @title = @account.name
+      @seo_campaign_timelines = @account.campaign_seo_combined_timeline_data
+      @sem_campaign_timelines = @account.campaign_sem_combined_timeline_data
+      @map_campaign_timelines = @account.campaign_map_combined_timeline_data
+
+      # Parse the date the GET request has received
+      dates = params[:daterangepicker].split(' - ')
+
+      @start_date = Date.parse(dates[0])
+      @end_date = Date.parse(dates[1])
+
+      respond_to do |format|
+        format.html # show.html.erb
+      end
     end
   end
 
