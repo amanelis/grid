@@ -99,6 +99,11 @@
                        text: 'Units'
                     }
                  },
+                 plotOptions: {
+                  column: {
+                    stacking: 'normal'
+                      }
+                    },
                  tooltip: {
                     formatter: function() {
                        return '<b>'+ this.series.name +'</b><br/>'+
