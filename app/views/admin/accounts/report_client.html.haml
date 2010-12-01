@@ -28,6 +28,7 @@
           %th Total Leads
           %th Spend
           %th Cost Per Lead
+          %th Cost Per Contact
         %tbody
           -@account.campaigns.each do |campaign|
             %tr
@@ -37,6 +38,7 @@
               %td= campaign.number_of_total_leads_between(@month_start, @month_end).to_s
               %td= ActionController::Base.helpers.number_to_currency(campaign.spend_between(@month_start, @month_end))
               %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(@month_start, @month_end))
+              %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_contact_between(@month_start, @month_end))
         %tfoot
           %th Totals
           %th= @account.number_of_lead_calls_between(@month_start, @month_end)
@@ -44,6 +46,7 @@
           %th= @account.number_of_total_leads_between(@month_start, @month_end)
           %th= ActionController::Base.helpers.number_to_currency(@account.spend_between(@month_start, @month_end))
           %th= ActionController::Base.helpers.number_to_currency(@account.cost_per_lead_between(@month_start, @month_end))
+          %th= ActionController::Base.helpers.number_to_currency(@account.cost_per_contact_between(@month_start, @month_end))
     .span-8.last#cpl_visual
       :javascript
         /**
