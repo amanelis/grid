@@ -18,7 +18,7 @@
   %p= @month_start.to_s(:long) + ' to ' + @month_end.to_s(:long)
 %article
   -if @account.campaigns.present?
-    .span-15
+    .span-24.last
       %h3 Cost Per Lead Summary
       %table#cpl
         %thead
@@ -50,8 +50,8 @@
           %th= ActionController::Base.helpers.number_to_currency(@account.spend_between(@month_start, @month_end))
           %th= ActionController::Base.helpers.number_to_currency(@account.cost_per_lead_between(@month_start, @month_end))
           %th= ActionController::Base.helpers.number_to_currency(@account.cost_per_contact_between(@month_start, @month_end))
-    .span-8.last#cpl_visual
-      :javascript
+    -#.span-8.last#cpl_visual
+      -#:javascript
         /**
          * Visualize an HTML table using Highcharts. The top (horizontal) header 
          * is used for series names, and the left (vertical) header is used 
