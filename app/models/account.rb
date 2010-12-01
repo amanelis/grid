@@ -90,6 +90,8 @@ class Account < ActiveRecord::Base
         existing_account.website = sf_account.website
         existing_account.industry = sf_account.industry
         existing_account.main_contact = sf_account.main_contact__c
+        existing_account.receive_weekly_report = sf_account.receive_weekly_report__c
+        existing_account.reporting_emails = sf_account.email_reports_to__c
         
         reseller = sf_account.parent_id.present? ? Account.find_by_salesforce_id(sf_account.parent_id) : cityvoice_account
         existing_account.reseller_id = reseller.id if reseller.present?
