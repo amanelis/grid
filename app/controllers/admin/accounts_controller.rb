@@ -1,4 +1,4 @@
-number_of_lead_submissions_by_dateclass Admin::AccountsController < ApplicationController
+class Admin::AccountsController < ApplicationController
   before_filter :require_admin
   require 'fastercsv'
   
