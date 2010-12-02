@@ -1,4 +1,4 @@
-class Admin::AccountsController < ApplicationController
+number_of_lead_submissions_by_dateclass Admin::AccountsController < ApplicationController
   before_filter :require_admin
   require 'fastercsv'
   
@@ -54,7 +54,7 @@ class Admin::AccountsController < ApplicationController
       begin
         @start_date = Date.parse(dates[0])
         @end_date = Date.parse(dates[1])
-      rescue ArgumentError
+      rescue Exception
         @start_date = Date.yesterday - 1.week
         @end_date = Date.yesterday
       end
