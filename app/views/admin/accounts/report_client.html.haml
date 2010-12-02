@@ -51,7 +51,7 @@
           %th= ActionController::Base.helpers.number_to_currency(@account.cost_per_lead_between(@month_start, @month_end))
           %th= ActionController::Base.helpers.number_to_currency(@account.cost_per_contact_between(@month_start, @month_end))
     -#.span-8.last#cpl_visual
-      -#:javascript
+      :javascript
         /**
          * Visualize an HTML table using Highcharts. The top (horizontal) header 
          * is used for series names, and the left (vertical) header is used 
