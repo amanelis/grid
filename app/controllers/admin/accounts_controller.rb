@@ -51,8 +51,13 @@ class Admin::AccountsController < ApplicationController
       # Parse the date the GET request has received
       dates = params[:daterangepicker].split(' - ')
 
-      @start_date = Date.parse(dates[0])
-      @end_date = Date.parse(dates[1])
+      begin
+        @start_date = Date.parse(dates[0])
+        @end_date = Date.parse(dates[1])
+      rescue Exception
+        @start_date = Date.yesterday - 1.week
+        @end_date = Date.yesterday
+      end
 
       respond_to do |format|
         format.html # show.html.erb
