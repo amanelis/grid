@@ -8,6 +8,7 @@ class Campaign < ActiveRecord::Base
   has_and_belongs_to_many :websites, :uniq => true
   has_and_belongs_to_many :industries
 
+  named_scope :active, :conditions => ['LCASE(status) = ? OR LCASE(status) = ?', "active", "paused"], :order => "name ASC"
   named_scope :seo, :conditions => {:campaign_style_type => SeoCampaign.name}
   named_scope :sem, :conditions => {:campaign_style_type => SemCampaign.name}
   named_scope :maps, :conditions => {:campaign_style_type => MapsCampaign.name}
