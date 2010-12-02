@@ -293,7 +293,7 @@
   -@account.campaigns.each do |campaign|
     -if campaign.calls.between(@month_start, @month_end).present?
       %h3
-        = "Calls for #{campaign.name} (#{@account.time_zone})"
+        = "Calls for " + campaign.name + " " + "(#{@account.time_zone})"
       %article
         %table
           %thead
