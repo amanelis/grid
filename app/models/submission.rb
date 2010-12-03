@@ -119,6 +119,11 @@ class Submission < ActiveRecord::Base
     return true if self.work_description =~ /проституток/i
     return true if self.work_description =~ /телок/i
     return true if self.work_description =~ /блондиночк/i
+    return true if self.work_description =~ /закаж/i
+    return true if self.work_description =~ /куп/i
+    return true if self.work_description =~ /вел/i
+    return true if self.work_description =~ /приказ/i
+    return true if self.work_description =~ /предпи/i
     false
   end
   
