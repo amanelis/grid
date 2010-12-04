@@ -57,6 +57,17 @@ class MapKeyword < ActiveRecord::Base
                                :google_review_count => google_result[2],
                                :google_citation_count => google_result[3],
                                :google_user_content_count => google_result[4],
+                               :google_places_ranking => google_result[5],
+                               :google_insiderpages_review_count => google_result[6],
+                               :google_customerlobby_review_count => google_result[7],
+                               :google_citysearch_review_count => google_result[8],
+                               :google_judysbook_review_count => google_result[9],
+                               :google_yahoo_review_count => google_result[10],
+                               :google_insiderpages_rating => google_result[11],
+                               :google_customerlobby_rating => google_result[12],
+                               :google_citysearch_rating => google_result[13],
+                               :google_judysbook_rating => google_result[14],
+                               :google_yahoo_rating => google_result[15],
                                :bing_review_count => bing_result[2],
                                :yahoo_review_count => yahoo_result[5],
                                :yahoo_review_rating => yahoo_result[8],
@@ -90,7 +101,8 @@ class MapKeyword < ActiveRecord::Base
     end
   end
 
-  #Returns result = { "result" => 1000, "company_name" => "NA", "address" => "NA", "phone" => "NA", "page" => "NA", "review_count" => 0, "coupon_count" => 0, "citation_count" => 0, "user_content_count" => 0 }
+  #Returns result = { "result" => 1000, "company_name" => "NA", "address" => "NA", "phone" => "NA", "page" => "NA", "review_count" => 0, "coupon_count" => 0, "citation_count" => 0, "user_content_count" => 0, google_places_ranking, google_insiderpages_review_count
+
   def get_google_ranking
     begin
       search_keyword = self.descriptor.gsub(" ", "+")
@@ -106,61 +118,40 @@ class MapKeyword < ActiveRecord::Base
       coupon_count = 0
       citation_count = 0
       user_content_count = 0
+      google_places_ranking = 0
+      google_insiderpages_review_count = 0
+      google_customerlobby_review_count = 0
+      google_citysearch_review_count = 0
+      google_judysbook_review_count = 0
+      google_yahoo_review_count = 0
+      google_insiderpages_rating = 0
+      google_customerlobby_rating = 0
+      google_citysearch_rating = 0
+      google_judysbook_rating = 0
+      google_yahoo_rating = 0
       company = self.maps_campaign.company_name.present? ? self.maps_campaign.company_name : self.campaign.account.name
       place_url = 'NA'
-
-      #Check the 7 pack first
-      pack_check_url = 'http://www.google.com/search?q=' + search_keyword
-      pack_source = HTTParty.get(pack_check_url)
-      if pack_source.present?
-        pack_start = pack_source.index("Local business results")
-        pack_stop = pack_source.index("More results near")
-        if pack_start.present? and pack_stop.present?
-          pack_block = pack_source[pack_start..pack_stop]
-          pack_block = pack_block.gsub("<b>", "").gsub("</b>", "").gsub("&amp;", "&").gsub("&#39;", "'")
-          if pack_block.include? company
-            pack_items = pack_block.split('<tr>')
-            pack_items.slice!(0..1)
-            pack_count = 1
-            pack_items.each do |pack_item|
-              pack_item_block = pack_item.gsub("<b>", "").gsub("</b>", "").gsub("&amp;", "&").gsub("&#39;", "'")
-              if pack_item_block.include? company
-                result = pack_count
-                place_start = pack_item.index('class=fl')
-                place_block = pack_item[place_start..(pack_item.length - 1)]
-                place_end = place_block.index("&ei")
-                block = place_block[16..(place_end - 1)]
-                cid = block.index('cid')
-                mapsid = block[cid..block.length]
-                page = 'http://maps.google.com/maps/place?' + mapsid
-                break
-              end
-              pack_count += 1
-            end
-          end
-        end
-      end
 
       #If not in the 7 Pack....find the ranking!
       if result == 1000
         20.times do
           source = HTTParty.get(google_url)
           begin
-            results_start = source.index("id=title")
+            results_start = source.index("text vcard indent block")
             results_stop = source.index("pw res")
             results = source[results_start..results_stop]
             results = results.gsub("<b>", "").gsub("</b>", "").gsub("&amp;", "&").gsub("&#39;", "'")
             if results.include? company
-              whole_page = results.split("id=title")
+              whole_page = results.split("text vcard indent block")
               whole_page.delete_at(0)
               whole_page.each do |result_item|
                 result_item_block = result_item.gsub("<b>", "").gsub("</b>", "").gsub("&amp;", "&").gsub("&#39;", "'")
                 if result_item_block.include? company
-                  page_start = result_item.index("href=/maps")
+                  page_start = result_item.index("href=\"/maps")
                   page_stop = result_item.index("&q")
                   if page_start.present? && page_stop.present?
                     page = result_item[page_start..page_stop]
-                    page = "http://maps.google.com" + page[5..(page.length - 2)]
+                    page = "http://maps.google.com" + page[6..(page.length - 2)]
                     result = page_num + (whole_page.index(result_item) + 1)
                     break
                   end
@@ -181,22 +172,30 @@ class MapKeyword < ActiveRecord::Base
         page_source = page_source.gsub("<b>", "").gsub("</b>", "").gsub("&amp;", "&").gsub("&#39;", "'")
         owner_start = page_source.index('From the owner')
         if page_source.present? and owner_start.present?
+          other_source = page_source[0..owner_start]
           page_source = page_source[owner_start..page_source.length]
 
+          #Get Places Rating
+          
+          rating_start = page_source.index('g:rating_override')
+          rating_end = page_source.index('rsw-stars')
+          if rating_start.present? && rating_end.present?
+            google_places_ranking = page_source[(rating_start + 19)..(rating_end - 10)]
+          end
           #Get Company Name
-          company_start = page_source.index("place-title>")
+          company_start = page_source.index("pp-place-title")
           company_block = page_source[company_start..page_source.length]
           company_stop = company_block.index("</span>")
-          company_name = company_block[12..(company_stop - 1)]
+          company_name = company_block[22..(company_stop - 1)]
 
           #Get Address
           address = "None"
-          address_start = company_block.index("address")
+          address_start = company_block.index("pp-headline-address")
           address_big_block = company_block[address_start..company_block.length]
           address_stop = address_big_block.index("</span>")
           if address_start.present? && address_stop.present?
             address_block = address_big_block[0..address_stop]
-            address = address_block[9..(address_block.length - 2)]
+            address = address_block[27..(address_block.length - 2)]
           end
           address = address
 
@@ -211,17 +210,17 @@ class MapKeyword < ActiveRecord::Base
 
           #Get Number of reviews
           review = 0
-          if company_block.include? 'More reviews'
-            review_start = company_block.index('More reviews')
+          if company_block.include? 'More reviews by Google users'
+            review_start = company_block.index('More reviews by Google users')
             review_block = company_block[review_start..company_block.length]
             review_stop = review_block.index(')')
             if review_stop.present?
-              final_block = review_block[14..(review_stop - 1)]
-              review = 5 + final_block.to_i
+              final_block = review_block[43..(review_stop - 8)]
+              review = 2 + final_block.to_i
             end
           else
-            review_start = company_block.index("pp-story-item")
-            review_stop = company_block.index('Nearby places you might like')
+            review_start = company_block.index("Reviews by Google users")
+            review_stop = company_block.index('Related places')
             if review_start.present? && review_stop.present?
               review_block = company_block[review_start..review_stop]
               reviews = review_block.split('pp-story-item')
@@ -233,20 +232,20 @@ class MapKeyword < ActiveRecord::Base
 
           #Get Number of coupons
           coupons = 0
-          if company_block.include? 'More coupons'
-            coupon_start = company_block.index('More coupons')
+          if company_block.include? 'More offers'
+            coupon_start = company_block.index('More offers')
             coupon_block = company_block[coupon_start..company_block.length]
             coupon_stop = coupon_block.index(')')
             if coupon_stop.present?
-              final_block = coupon_block[14..(coupon_stop - 1)]
+              final_block = coupon_block[13..(coupon_stop - 1)]
               coupons = 3 + final_block.to_i
             end
           else
-            coupon_start = company_block.index("pp-coupons-img>")
-            coupon_stop = company_block.index('>Reviews<')
+            coupon_start = company_block.index("Offers")
+            coupon_stop = company_block.index('Reviews')
             if coupon_start.present? || coupon_stop.present?
               coupon_block = company_block[coupon_start..coupon_stop]
-              num_coupons = coupon_block.split('pp-coupons-img>')
+              num_coupons = coupon_block.split('pp-coupons-img')
               num_coupons.delete_at(0)
               coupons = num_coupons.size
             end
@@ -258,7 +257,7 @@ class MapKeyword < ActiveRecord::Base
           citation_start = company_block.index("More about this place")
           if citation_start.present?
             first_block = company_block[citation_start..company_block.length]
-            citation_stop = first_block.index('class=pp-story-bar')
+            citation_stop = first_block.index('pp-footer-links pp-footer-line')
             citation_stop = first_block.index('pp-footer') if !citation_stop.present?
             citation_block = first_block[0..citation_stop] if citation_stop.present?
             if citation_block.present?
@@ -269,7 +268,7 @@ class MapKeyword < ActiveRecord::Base
                   citations = 5 + citation_block[(count_start + 7)..(count_stop - 1)].to_i
                 end
               else
-                citation_count = citation_block.split('pp-attribution>')
+                citation_count = citation_block.split('pp-attribution')
                 citations = citation_count.size - 1
               end
             end
@@ -278,29 +277,83 @@ class MapKeyword < ActiveRecord::Base
 
           #Get User Content
           user_content = 0
-          content_start = company_block.index("User Content")
-          content_stop = company_block.index('pp-footer>')
-          if content_start.present? && content_stop.present?
-            first_block = company_block[content_start, content_stop]
-            if first_block.include? 'More user content ('
-              count_start = first_block.index('More user content (')
-              count_block = first_block[count_start..first_block.length]
-              count_end = count_block.index('&raquo;<')
-              content_count_block = count_block[0..count_end]
-              user_content = 4 + content_count_block[19..(content_count_block.length - 4)].to_i
-            else
-              counts = first_block.split('pp-story-item')
-              user_content = counts.size - 1
-            end
+          content_start = other_source.index("Related Maps")
+          if content_start.present?
+            first_block = other_source[content_start..(other_source.length - 1)]
+            user_content = (first_block.split('ugc-attribution').count - 1).to_i
           end
           user_content_count = user_content.to_i if user_content.present?
         end
+        
+        review_page = page + '&view=feature&mcsrc=provider_blocks&num=10&start=0&ved=0COABELUF&sa=X&ei=rU35TN-oKJOwywW_irGMBA'
+        review_source = HTTParty.get(review_page)
+        review_source = review_source.gsub("<b>", "").gsub("</b>", "").gsub("&amp;", "&").gsub("&#39;", "'")
+        #Get InsiderPages Info
+        insider_start = review_source.index('<span>insiderpages.com</span>')
+        if insider_start.present?
+          insider_block = review_source[insider_start..(review_source.length - 1)]
+          insider_stop = (insider_block.index('</span> reviews') - 1)
+          google_insiderpages_review_count = insider_block[38..insider_stop].to_i
+          
+          insider_star_end = insider_block.index('webreview')
+          insider_star_block = insider_block[0..insider_star_end]
+          google_insiderpages_rating = (insider_star_block.split('rsw-starred').count - 1)
+        end
+        
+        #Get CustomerLobby Info
+        lobby_start = review_source.index('<span>customerlobby.com</span>')
+        if lobby_start.present?
+          lobby_block = review_source[lobby_start..(review_source.length - 1)]
+          lobby_stop = (lobby_block.index('</span> reviews') - 1)
+          google_customerlobby_review_count = lobby_block[39..lobby_stop].to_i
+          
+          lobby_star_end = lobby_block.index('webreview')
+          lobby_star_block = lobby_block[0..lobby_star_end]
+          google_customerlobby_rating = (lobby_star_block.split('rsw-starred').count - 1)
+        end
+        
+        #Get CitySearch Info
+        citysearch_start = review_source.index('citysearch.com</span>')
+        if citysearch_start.present?
+          citysearch_block = review_source[citysearch_start..(review_source.length - 1)]
+          citysearch_stop = (citysearch_block.index('</span> reviews') - 1)
+          google_citysearch_review_count = citysearch_block[30..citysearch_stop].to_i
+          
+          citysearch_star_end = citysearch_block.index('webreview')
+          citysearch_star_block = citysearch_block[0..citysearch_star_end]
+          google_citysearch_rating = (citysearch_star_block.split('rsw-starred').count - 1)
+        end
+        
+        #Get Yahoo Info yahoo.com - 3 reviews
+        yahoo_start = review_source.index('yahoo.com</span>')
+        if yahoo_start.present?
+          yahoo_block = review_source[yahoo_start..(review_source.length - 1)]
+          yahoo_stop = (yahoo_block.index('</span> reviews') - 1)
+          google_yahoo_review_count = yahoo_block[25..yahoo_stop].to_i
+          
+          yahoo_star_end = yahoo_block.index('webreview')
+          yahoo_star_block = yahoo_block[0..yahoo_star_end]
+          google_yahoo_rating = (yahoo_star_block.split('rsw-starred').count - 1)
+        end
+        
+        #Get Judysbook Info yahoo.com - 3 reviews
+        judysbook_start = review_source.index('judysbook.com</span>')
+        if judysbook_start.present?
+          judysbook_block = review_source[judysbook_start..(review_source.length - 1)]
+          judysbook_stop = (judysbook_block.index('</span> reviews') - 1)
+          google_judysbook_review_count = judysbook_block[29..judysbook_stop].to_i
+          
+          judysbook_star_end = judysbook_block.index('webreview')
+          judysbook_star_block = judysbook_block[0..judysbook_star_end]
+          google_judysbook_rating = (judysbook_star_block.split('rsw-starred').count - 1)
+        end
+        
       end
     rescue Exception => e
       puts "#{ e } : #{ e.backtrace }"
-      return [result, coupon_count, review_count, citation_count, user_content_count]
+      return [result, coupon_count, review_count, citation_count, user_content_count, google_places_ranking, google_insiderpages_review_count, google_customerlobby_review_count, google_citysearch_review_count, google_judysbook_review_count, google_yahoo_review_count, google_insiderpages_rating, google_customerlobby_rating, google_citysearch_rating, google_judysbook_rating, google_yahoo_rating]
     end
-    return [result, coupon_count, review_count, citation_count, user_content_count]
+    return [result, coupon_count, review_count, citation_count, user_content_count, google_places_ranking, google_insiderpages_review_count, google_customerlobby_review_count, google_citysearch_review_count, google_judysbook_review_count, google_yahoo_review_count, google_insiderpages_rating, google_customerlobby_rating, google_citysearch_rating, google_judysbook_rating, google_yahoo_rating]
   end
 
   def get_yahoo_ranking
