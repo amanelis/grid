@@ -105,6 +105,7 @@ class Submission < ActiveRecord::Base
     return true if self.work_description =~ /\binternet\s*marketing\b/i
     return true if self.work_description =~ /\bincrease\s*traffic\b/i
     return true if self.work_description =~ /\bonline\s*leads\b/i
+    return true if self.work_description =~ /\bneighborhood\s*network\b/i
     return true if self.work_description =~ /\bmicro-ticket\s*leasing\b/i
     return true if self.work_description =~ /\bwhite-hat\b/i
     return true if self.work_description =~ /\bSEO\b/
@@ -118,6 +119,11 @@ class Submission < ActiveRecord::Base
     return true if self.work_description =~ /проституток/i
     return true if self.work_description =~ /телок/i
     return true if self.work_description =~ /блондиночк/i
+    return true if self.work_description =~ /закаж/i
+    return true if self.work_description =~ /куп/i
+    return true if self.work_description =~ /вел/i
+    return true if self.work_description =~ /приказ/i
+    return true if self.work_description =~ /предпи/i
     false
   end
   
