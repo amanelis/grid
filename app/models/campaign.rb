@@ -1,11 +1,11 @@
 class Campaign < ActiveRecord::Base
   belongs_to :account
   belongs_to :campaign_style, :polymorphic => true
+  belongs_to :website
   has_many :phone_numbers, :dependent => :destroy
   has_many :calls, :through => :phone_numbers, :order => "call_start DESC"
   has_many :contact_forms, :dependent => :destroy
   has_many :submissions, :through => :contact_forms, :order => "time_of_submission DESC"
-  has_and_belongs_to_many :websites, :uniq => true
   has_and_belongs_to_many :industries
 
   named_scope :active, :conditions => ['LCASE(status) = ? OR LCASE(status) = ?', "active", "paused"], :order => "name ASC"
@@ -208,10 +208,6 @@ class Campaign < ActiveRecord::Base
   end
 
   # INSTANCE BEHAVIOR
-
-  def website
-    self.websites.first
-  end
 
   def adopting_phone_number
     @adopting_phone_number
