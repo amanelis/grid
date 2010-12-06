@@ -40,7 +40,7 @@
       %th Keyword
       %th Time Spent
     %tbody
-      - (@website.website_visits.sort { |a,b| b.time_of_visit <=> a.time_of_visit }).each do |website_visit|
+      - (@website.website_visits.between(Date.today - 1.week, Date.today).sort { |a,b| b.time_of_visit <=> a.time_of_visit }).each do |website_visit|
         %tr{:class => cycle('odd', 'even')}
           %td=website_visit.visitor_id
           %td=website_visit.time_of_visit.to_s(:long)
