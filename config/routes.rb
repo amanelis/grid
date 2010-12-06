@@ -14,6 +14,7 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :activities
     admin.resources :keywords
     admin.resources :job_statuses
+    admin.resources :websites
     admin.resources :searches, :only => :index
   end
 
