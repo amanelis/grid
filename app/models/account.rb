@@ -149,6 +149,15 @@ class Account < ActiveRecord::Base
   end
   
   # INSTANCE BEHAVIOR
+  
+  def weeky_report_sent_this_week?
+    self.last_weekly_report_sent.present? ? self.last_weekly_report_sent.beginning_of_week == DateTime.now.beginning_of_week : false
+  end
+  
+  def previous_days_report_data(date = Date.today.beginning_of_week, previous = 7)
+    end_date = date - 1.day
+    start_date = end_date - previous.days
+  end
 
   def number_of_visits_by_date
     Utilities.merge_and_sum_timeline_data(self.campaigns.collect { |campaign| campaign.campaign_style.number_of_visits_by_date }, :visits)
