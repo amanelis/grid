@@ -42,7 +42,11 @@
     %tbody
       - (@website.website_visits.between(Date.today - 1.month, Date.today).sort { |a,b| b.time_of_visit <=> a.time_of_visit }).each do |website_visit|
         %tr{:class => cycle('odd', 'even')}
-          %td=link_to (website_visit.visitor_id.present? ? website_visit.visitor_id.to_s : "NA"), admin_website_visit_path(website_visit) 
+          %td
+            -temp_string = "NA"
+            -if website_visit.visitor_id.present?
+              temp_string = website_visit.visitor_id.to_s
+            link_to temp_string, admin_website_visit_path(website_visit) 
           %td=website_visit.time_of_visit.to_s(:long)
           %td=website_visit.ip_address
           %td=website_visit.geolocation
