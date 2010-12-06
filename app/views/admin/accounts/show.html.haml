@@ -4,14 +4,15 @@
   });
 %header
   .right 
-    = link_to "Export Client", report_client_path(params[:id]), :popup => true
+    = link_to "Monthly Report", report_client_path(params[:id]), :popup => true
   
-  %h2 Summary
+  %h1= @account.name
+  %h2 Account Summary
 %article
   -form_for(admin_accounts_path, :html => {:method => "get", :onchange => "alert('hello')"}) do |f|
     = f.text_field :daterangepicker, :name => "daterangepicker", :id => "daterangepicker"
     = f.submit "Filter Dates"
-  %h3 Last Week (#{(@start_date).to_s(:long) + ' to ' + @end_date.to_s(:long)})
+  %h3 #{(@start_date).to_s(:long) + ' to ' + @end_date.to_s(:long)}
   %table
     %thead
       %tr
