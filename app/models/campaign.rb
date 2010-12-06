@@ -297,6 +297,10 @@ class Campaign < ActiveRecord::Base
     self.website.try(:average_total_time_spent_between, start_date, end_date) || 0.0
   end
 
+  def number_of_bounces_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.website.try(:bounces_between, start_date, end_date) || 0
+  end
+
   def bounce_rate_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.website.try(:bounce_rate_between, start_date, end_date) || 0.0
   end

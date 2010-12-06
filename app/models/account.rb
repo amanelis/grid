@@ -245,8 +245,12 @@ class Account < ActiveRecord::Base
     self.campaigns.seo.to_a.sum { |campaign| campaign.average_total_time_spent_between(start_date, end_date) }
   end
 
+  def seo_number_of_bounces_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.seo.to_a.sum { |campaign| campaign.number_of_bounces_between(start_date, end_date) }
+  end
+
   def seo_bounce_rate_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.seo.to_a.sum { |campaign| campaign.bounce_rate_between(start_date, end_date) }
+    (visits = self.seo_number_of_visits_between(start_date, end_date)) > 0 ? self.seo_number_of_bounces_between(start_date, end_date).to_f / visits : 0.0
   end
 
   def maps_number_of_visits_between(start_date = Date.yesterday, end_date = Date.yesterday)
