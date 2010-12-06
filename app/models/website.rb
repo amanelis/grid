@@ -1,5 +1,5 @@
 class Website < ActiveRecord::Base
-  has_and_belongs_to_many :campaigns, :uniq => true
+  has_many :campaigns
   has_many :website_visits, :dependent => :destroy
 
   GOOGLE_MAPS_API_KEY = 'ABQIAAAALQRqYHHjSnLmL7zwbG0n-BQkiq2IPuxpcd6yKI6maifg0dbT5RQMwn92qd1fSdzERnpNoeonkmJ_Cw'
