@@ -378,7 +378,6 @@ class Campaign < ActiveRecord::Base
   private
 
   def remove_from_many_to_many_relationships
-    self.websites.each { |website| website.campaigns.delete(self) }
     self.industries.each { |industry| industry.campaigns.delete(self) }
   end
 

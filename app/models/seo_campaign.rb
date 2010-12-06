@@ -17,7 +17,7 @@ class SeoCampaign < ActiveRecord::Base
     begin
       seo_campaigns = SeoCampaign.all
       seo_campaigns.each do |seo_campaign|
-        websites = seo_campaign.websites
+        websites = seo_campaign.website
         if websites.present?
           websites.each do |website|
             begin
@@ -79,7 +79,7 @@ class SeoCampaign < ActiveRecord::Base
     begin
       seo_campaigns = SeoCampaign.all
       seo_campaigns.each do |seo_campaign|
-        websites = seo_campaign.websites
+        websites = seo_campaign.website
         if websites.present?
           websites.each do |website|
             freshness = seo_campaign.website_analyses.find(:all, :conditions => ['created_at > ?', 1.day.ago])
@@ -286,7 +286,7 @@ class SeoCampaign < ActiveRecord::Base
   def website_traffic_sources_graph(start_date = Date.today - 1.month, end_date = Date.today, height = 250, width = 900)
    width = 900 if width > 900
       height = 300 if height > 300
-      website = self.websites.first
+      website = self.website
       source_url = ''
       if website != nil
         items = website.get_traffic_sources(start_date, end_date)
