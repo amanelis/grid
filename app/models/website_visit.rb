@@ -106,4 +106,9 @@ class WebsiteVisit < ActiveRecord::Base
     #Eventually make a difference between the two....hard will overwrite data or something
   end
 
+  # INSTANCE BEHAVIOR
+  def all_visits_from_visitor()
+    self.class.find_all_by_visitor_id(self.visitor_id)
+  end
+  
 end
