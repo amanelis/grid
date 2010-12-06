@@ -37,6 +37,7 @@ class Website < ActiveRecord::Base
           if local_campaign.present?
             local_campaign.website = website
             #website.campaigns << local_campaign unless local_campaign.websites.first.present?   website.campaigns.include?(local_campaign)
+            local_campaign.save
             website.save
           end
         end
