@@ -15,7 +15,7 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :keywords
     admin.resources :job_statuses
     admin.resources :websites
-    admin.resources :website_visits
+    admin.resources :website_visits, :member => {:global_visitor => :get}
     admin.resources :searches, :only => :index
   end
 
