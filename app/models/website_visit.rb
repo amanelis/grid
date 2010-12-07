@@ -9,6 +9,7 @@ class WebsiteVisit < ActiveRecord::Base
   named_scope :from_maps, :conditions => ['referrer_url like ? OR referrer_url like ? OR referrer_url like ?', '%maps.google.com%', '%local.yahoo.com%', '%bing.com/local%']
   named_scope :between, lambda { |start_date, end_date| {:conditions => ['time_of_visit between ? AND ?', start_date.to_time_in_current_zone.at_beginning_of_day.utc, end_date.to_time_in_current_zone.end_of_day.utc]} }
   named_scope :for_date, lambda { |date| {:conditions => ['time_of_visit between ? AND ?', date.to_time_in_current_zone.at_beginning_of_day.utc, date.to_time_in_current_zone.end_of_day.utc]} }
+  named_scope :for_visitor, lambda { |visitor| {:conditions => ['visitor_id = ?', visitor]} }
 
 
   # CLASS BEHAVIOR

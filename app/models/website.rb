@@ -48,7 +48,7 @@ class Website < ActiveRecord::Base
     end
     job_status.finish_with_no_errors
   end
-
+  
 
   # INSTANCE BEHAVIOR
 
@@ -82,6 +82,34 @@ class Website < ActiveRecord::Base
 
   def bounce_rate_between(start_date = Date.yesterday, end_date = Date.yesterday)
     (visits = self.visits_between(start_date, end_date)) > 0 ? self.bounces_between(start_date, end_date).to_f / visits : 0.0
+  end
+
+  def visitor_visits_between(visitor_id, start_date = Date.yesterday, end_date = Date.yesterday)
+    self.website_visits.between(start_date, end_date).for_visitor(visitor_id).count
+  end
+
+  def visitor_actions_between(visitor_id, start_date = Date.yesterday, end_date = Date.yesterday)
+    self.website_visits.between(start_date, end_date).for_visitor(visitor_id).sum(:actions).to_i
+  end
+
+  def visitor_average_actions_between(visitor_id, start_date = Date.yesterday, end_date = Date.yesterday)
+    (visits = self.visitor_visits_between(visitor_id, start_date, end_date)) > 0 ? self.visitor_actions_between(visitor_id, start_date, end_date).to_f / visits : 0.0
+  end
+
+  def visitor_total_time_spent_between(visitor_id, start_date = Date.yesterday, end_date = Date.yesterday)
+    self.website_visits.between(start_date, end_date).for_visitor(visitor_id).sum(:time_total).to_i
+  end
+
+  def visitor_average_total_time_spent_between(visitor_id, start_date = Date.yesterday, end_date = Date.yesterday)
+    (visits = self.visitor_visits_between(visitor_id, start_date, end_date)) > 0 ? self.visitor_total_time_spent_between(visitor_id, start_date, end_date).to_f / visits : 0.0
+  end
+
+  def visitor_bounces_between(visitor_id, start_date = Date.yesterday, end_date = Date.yesterday)
+    self.website_visits.between(start_date, end_date).for_visitor(visitor_id).bounce.count
+  end
+
+  def visitor_bounce_rate_between(visitor_id, start_date = Date.yesterday, end_date = Date.yesterday)
+    (visits = self.visitor_visits_between(visitor_id, start_date, end_date)) > 0 ? self.visitor_bounces_between(visitor_id, start_date, end_date).to_f / visits : 0.0
   end
 
   def keywords_searched_between(start_date = Date.yesterday, end_date = Date.yesterday)
@@ -157,7 +185,5 @@ class Website < ActiveRecord::Base
     return map_url
   end
 
-
-  
 end
 
