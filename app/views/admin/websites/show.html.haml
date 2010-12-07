@@ -1,8 +1,16 @@
-%h1
-  #{@website.nickname} Visits
-%h3
-  Website Statistics
+%script
+  $(function(){
+  $('#daterangepicker').daterangepicker({arrows:false}); 
+  });
+%header
+  %h1= #{@website.nickname} Visits
+  %h2 Website Statistics
 %article
+  -form_for(admin_websites_path, :html => {:method => "get", :onchange => "alert('hello')"}) do |f|
+    = f.text_field :daterangepicker, :name => "daterangepicker", :id => "daterangepicker"
+    = f.submit "Filter Dates"
+  %h3 #{(@start_date).to_s(:long) + ' to ' + @end_date.to_s(:long)}
+  
   %table{:class => "pretty"}
     %thead
       %th Website
@@ -14,19 +22,19 @@
       %th Bounce Rate
     %tbody
       %tr{:class => cycle('odd', 'even')}
-        %td= @website.nickname%td= @website.visits_between(Date.today - 1.week, Date.today).to_s
-        %td= @website.actions_between(Date.today - 1.week, Date.today).to_s
-        %td= '%.2f' % @website.average_actions_between(Date.today - 1.week, Date.today).to_s
+        %td= @website.nickname%td= @website.visits_between(@start_date, @end_date).to_s
+        %td= @website.actions_between(@start_date, @end_date).to_s
+        %td= '%.2f' % @website.average_actions_between(@start_date, @end_date).to_s
         %td
-          - @total_time = @website.total_time_spent_between(Date.today - 1.week, Date.today)
+          - @total_time = @website.total_time_spent_between(@start_date, @end_date)
           = [(@total_time/3600).to_s + 'h', (@total_time/60 % 60).to_s + 'm', (@total_time % 60).to_s + 's'].map{|t| t.to_s.rjust(2,'0')}.join(':')
         %td
-          - @avg_time = @website.average_total_time_spent_between(Date.today - 1.week, Date.today).to_i
+          - @avg_time = @website.average_total_time_spent_between(@start_date, @end_date).to_i
           = [(@avg_time/3600).to_s + 'h', (@avg_time/60 % 60).to_s + 'm', (@avg_time % 60).to_s + 's'].map{|t| t.to_s.rjust(2,'0')}.join(':')
-        %td= (sprintf("%.2f", (@website.bounce_rate_between(Date.today - 1.week, Date.today) * 100)) + '%')
+        %td= (sprintf("%.2f", (@website.bounce_rate_between(@start_date, Date.today) * 100)) + '%')
 
 %h3
-  Website Visits....from 1 week back
+  Website Visits(#{@start_date} - #{@end_date}
 %article
   %table{:class => "pretty"}
     %thead
@@ -40,13 +48,13 @@
       %th Keyword
       %th Time Spent
     %tbody
-      - (@website.website_visits.between(Date.today - 1.month, Date.today).sort { |a,b| b.time_of_visit <=> a.time_of_visit }).each do |website_visit|
+      - (@website.website_visits.between(@start_date, @end_date).sort { |a,b| b.time_of_visit <=> a.time_of_visit }).each do |website_visit|
         %tr{:class => cycle('odd', 'even')}
           %td
             -temp_string = "NA"
             -if website_visit.visitor_id.present?
-              temp_string = website_visit.visitor_id.to_s
-            link_to temp_string, admin_website_visit_path(website_visit) 
+              -temp_string = website_visit.visitor_id.to_s
+            =link_to temp_string, admin_website_visit_path(website_visit) 
           %td=website_visit.time_of_visit.to_s(:long)
           %td=website_visit.ip_address
           %td=website_visit.geolocation
