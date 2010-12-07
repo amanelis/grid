@@ -88,9 +88,23 @@ class Keyword < ActiveRecord::Base
 
   def get_new_search_positions(nickname)
     begin
+      google = 99999
+      bing = 99999
+      yahoo = 99999
+      #rankings with www.
       url = 'http://perl.pearanalytics.com/v2/keyword/position?keyword=' + self.descriptor.gsub(' ', '+') + '&url=' + nickname.gsub('www.', '')
+      #rankings without www.
+      url2 = 'http://perl.pearanalytics.com/v2/keyword/position?keyword=' + self.descriptor.gsub(' ', '+') + '&url=' + nickname
       response = HTTParty.get(url)
-      JSON.parse(response)['result'].to_a.first.second if JSON.parse(response)['result'].to_a.present?
+      response2 = HTTParty.get(url)
+      results = JSON.parse(response)['result'].to_a + JSON.parse(response2)['result'].to_a
+      results.each do |result|
+        yahoo = result.second["Yahoo"].to_i if result.second["Yahoo"].present? && result.second["Yahoo"].to_i > 0 && result.second["Yahoo"].to_i < yahoo
+        google = result.second["Google"].to_i if result.second["Google"].present? && result.second["Google"].to_i > 0 && result.second["Google"].to_i < google
+        bing = result.second["Bing"].to_i if result.second["Bing"].present? && result.second["Bing"].to_i > 0 && result.second["Bing"].to_i < bing    
+      end
+      
+      rankings = {"Google" => google, "Bing" => bing, "Yahoo" => yahoo}
     rescue
       puts "Error in Keyword.get_new_search_positions"
     end

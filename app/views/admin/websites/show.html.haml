@@ -34,7 +34,7 @@
         %td= (sprintf("%.2f", (@website.bounce_rate_between(@start_date, Date.today) * 100)) + '%')
 
 %h3
-  Website Visits(#{@start_date} - #{@end_date}
+  Website Visits(#{@start_date} - #{@end_date})
 %article
   %table{:class => "pretty"}
     %thead
@@ -55,7 +55,7 @@
             -if website_visit.visitor_id.present?
               -temp_string = website_visit.visitor_id.to_s
             =link_to temp_string, admin_website_visit_path(website_visit) 
-          %td=website_visit.time_of_visit.to_s(:long)
+          %td=website_visit.time_of_visit.strftime("%m/%d/%y %I:%M %p")
           %td=website_visit.ip_address
           %td=website_visit.geolocation
           %td=website_visit.actions
