@@ -231,7 +231,7 @@
         %tr
           %td
             %br
-            -@keywords = @account.campaigns.sem[index].websites.first.try(:keywords_searched_between, @month_start, @month_end)
+            -@keywords = @account.campaigns.sem[index].website.try(:keywords_searched_between, @month_start, @month_end)
             -if @keywords.present?
               %table{:class => "pretty"}
                 %thead
@@ -257,7 +257,7 @@
                           = @keywords[index2 + 1][0] if @keywords[index2 + 1].present?
                         %td
                           = @keywords[index2 + 1][1] if @keywords[index2 + 1].present?
-            -@url_link = @account.campaigns.sem[index].websites.first.try(:visitors_by_location_graph, @month_start, @month_end) if @account.campaigns.sem[index].websites.present?
+            -@url_link = @account.campaigns.sem[index].website.try(:visitors_by_location_graph, @month_start, @month_end) if @account.campaigns.sem[index].website.present?
             -if @url_link.present?
               %br
               .center
@@ -289,7 +289,7 @@
               %br
               = link_to image_tag(@keyword_link, :alt => 'Keyword Rankings By Month'), @keyword_link
               %br
-            -@location_link = @account.campaigns.seo[index].websites.first.try(:visitors_by_location_graph, @month_start, @month_end)
+            -@location_link = @account.campaigns.seo[index].website.try(:visitors_by_location_graph, @month_start, @month_end)
             -if @location_link.present?
               %br
               .center

@@ -1,0 +1,45 @@
+
+%h1
+  Visitor: #{@website_visit.visitor_id} 
+%h3
+  Visitor Statistics
+%article
+  %table{:class => "pretty"}
+    %thead
+      %th Total Visits
+      %th Location
+      %th Total Actions
+      %th Avg Actions/Visit
+      %th Total Time Spent
+      %th Avg Time Spent
+      %th Avg Bounce Rate
+    %tbody
+      %tr{:class => cycle('odd', 'even')}
+        %td= @website_visit.all_visits_from_visitor.count.to_s
+        %td= @website_visit.geolocation
+        %td
+        %td
+        %td
+        %td
+        %td
+
+%h3
+  All Visits by this visitor
+%article
+  %table{:class => "pretty"}
+    %thead
+      %th Time Of Visit
+      %th Actions
+      %th Source
+      %th Referrer
+      %th Keyword
+      %th Time Spent
+    %tbody
+      - (@website_visit.all_visits_from_visitor.sort { |a,b| b.time_of_visit <=> a.time_of_visit }).each do |website_visit|
+        %tr{:class => cycle('odd', 'even')}
+          %td=website_visit.time_of_visit.to_s(:long)
+          %td=website_visit.actions
+          %td=website_visit.referrer_type
+          %td=website_visit.referrer_domain
+          %td=website_visit.referrer_search
+          %td=website_visit.time_total

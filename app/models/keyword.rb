@@ -58,7 +58,7 @@ class Keyword < ActiveRecord::Base
       cpc = 0.0
 
       begin
-        nickname = self.seo_campaign.websites.first.nickname
+        nickname = self.seo_campaign.website.nickname
         if nickname.present?
           search_positions = get_new_search_positions(nickname)
           google = search_positions["Google"] if search_positions["Google"].present?
@@ -80,7 +80,7 @@ class Keyword < ActiveRecord::Base
     # HACK: The rails belongs_to method seems to have a bug. self.url.url should give me the URL string, but it doesn't
     #Changed to Use Account instead of URL@url_obj = URL.find url_id
     begin
-      url = self.build_pear_url("keyword/getsearchposition", {"url" => self.seo_campaign.websites.first.nickname, "query" => self.descriptor, "format" => "json"})
+      url = self.build_pear_url("keyword/getsearchposition", {"url" => self.seo_campaign.website.nickname, "query" => self.descriptor, "format" => "json"})
       HTTParty.get(url)
     rescue
     end
@@ -99,7 +99,7 @@ class Keyword < ActiveRecord::Base
   def get_relevancy
     # HACK: The rails belongs_to method seems to have a bug. self.url.url should give me the URL string, but it doesn't
     begin
-      url = self.build_pear_url("keyword/getrelevancy", {"url" => self.seo_campaign.websites.first.nickname, "keyword" => self.descriptor, "format" => "json"})
+      url = self.build_pear_url("keyword/getrelevancy", {"url" => self.seo_campaign.website.nickname, "keyword" => self.descriptor, "format" => "json"})
       response = HTTParty.get(url)
       response["relevancy"].to_f
     rescue

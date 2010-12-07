@@ -1,5 +1,5 @@
 class Website < ActiveRecord::Base
-  has_and_belongs_to_many :campaigns, :uniq => true
+  has_many :campaigns
   has_many :website_visits, :dependent => :destroy
 
   GOOGLE_MAPS_API_KEY = 'ABQIAAAALQRqYHHjSnLmL7zwbG0n-BQkiq2IPuxpcd6yKI6maifg0dbT5RQMwn92qd1fSdzERnpNoeonkmJ_Cw'
@@ -35,7 +35,9 @@ class Website < ActiveRecord::Base
         if website.present?
           local_campaign = Campaign.find_by_salesforce_id(sf_campaign.id)
           if local_campaign.present?
-            website.campaigns << local_campaign unless website.campaigns.include?(local_campaign)
+            local_campaign.website = website
+            #website.campaigns << local_campaign unless local_campaign.website.present?   website.campaigns.include?(local_campaign)
+            local_campaign.save
             website.save
           end
         end

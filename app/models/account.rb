@@ -149,6 +149,15 @@ class Account < ActiveRecord::Base
   end
   
   # INSTANCE BEHAVIOR
+  
+  def weeky_report_sent_this_week?
+    self.last_weekly_report_sent.present? ? self.last_weekly_report_sent.beginning_of_week == DateTime.now.beginning_of_week : false
+  end
+  
+  def previous_days_report_data(date = Date.today.beginning_of_week, previous = 7)
+    end_date = date - 1.day
+    start_date = end_date - previous.days
+  end
 
   def number_of_visits_by_date
     Utilities.merge_and_sum_timeline_data(self.campaigns.collect { |campaign| campaign.campaign_style.number_of_visits_by_date }, :visits)
@@ -236,8 +245,12 @@ class Account < ActiveRecord::Base
     self.campaigns.seo.to_a.sum { |campaign| campaign.average_total_time_spent_between(start_date, end_date) }
   end
 
+  def seo_number_of_bounces_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.seo.to_a.sum { |campaign| campaign.number_of_bounces_between(start_date, end_date) }
+  end
+
   def seo_bounce_rate_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.seo.to_a.sum { |campaign| campaign.bounce_rate_between(start_date, end_date) }
+    (visits = self.seo_number_of_visits_between(start_date, end_date)) > 0 ? self.seo_number_of_bounces_between(start_date, end_date).to_f / visits : 0.0
   end
 
   def maps_number_of_visits_between(start_date = Date.yesterday, end_date = Date.yesterday)

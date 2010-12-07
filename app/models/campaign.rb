@@ -1,11 +1,11 @@
 class Campaign < ActiveRecord::Base
   belongs_to :account
   belongs_to :campaign_style, :polymorphic => true
+  belongs_to :website
   has_many :phone_numbers, :dependent => :destroy
   has_many :calls, :through => :phone_numbers, :order => "call_start DESC"
   has_many :contact_forms, :dependent => :destroy
   has_many :submissions, :through => :contact_forms, :order => "time_of_submission DESC"
-  has_and_belongs_to_many :websites, :uniq => true
   has_and_belongs_to_many :industries
 
   named_scope :active, :conditions => ['LCASE(status) = ? OR LCASE(status) = ?', "active", "paused"], :order => "name ASC"
@@ -209,10 +209,6 @@ class Campaign < ActiveRecord::Base
 
   # INSTANCE BEHAVIOR
 
-  def website
-    self.websites.first
-  end
-
   def adopting_phone_number
     @adopting_phone_number
   end
@@ -301,6 +297,10 @@ class Campaign < ActiveRecord::Base
     self.website.try(:average_total_time_spent_between, start_date, end_date) || 0.0
   end
 
+  def number_of_bounces_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.website.try(:bounces_between, start_date, end_date) || 0
+  end
+
   def bounce_rate_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.website.try(:bounce_rate_between, start_date, end_date) || 0.0
   end
@@ -382,7 +382,6 @@ class Campaign < ActiveRecord::Base
   private
 
   def remove_from_many_to_many_relationships
-    self.websites.each { |website| website.campaigns.delete(self) }
     self.industries.each { |industry| industry.campaigns.delete(self) }
   end
 

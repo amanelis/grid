@@ -236,7 +236,7 @@
                 %br
                 = link_to image_tag(@keyword_link, :alt => 'Keyword Rankings By Month'), @keyword_link
                 %br
-              -@location_link = @account.campaigns.seo[index].websites.first.try(:visitors_by_location_graph, @month_start, @month_end)
+              -@location_link = @account.campaigns.seo[index].website.try(:visitors_by_location_graph, @month_start, @month_end)
               -if @location_link.present?
                 %br
                 .center
