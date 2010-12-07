@@ -17,36 +17,34 @@ class SeoCampaign < ActiveRecord::Base
     begin
       seo_campaigns = SeoCampaign.all
       seo_campaigns.each do |seo_campaign|
-        websites = seo_campaign.website
-        if websites.present?
-          websites.each do |website|
-            begin
-              freshness = seo_campaign.inbound_links.find(:all, :conditions => ['created_at > ?', 1.day.ago])
-              if freshness.empty? && website.nickname.present?
-                url = 'http://perl.pearanalytics.com/v2/domain/get/linklist?url=http://' + website.nickname.gsub('http://', '')
-                response = HTTParty.get(url)
-                links = JSON.parse(response)['result']
-                if links.present?
-                  links.each do |link|
-                    begin
-                      existing_link = InboundLink.find_by_link_url_and_seo_campaign_id(link, seo_campaign.id)
-                      if existing_link.present?
-                        existing_link.last_date_found = Date.today
-                        existing_link.save
-                      else
-                        InboundLink.create(:link_url => link, :seo_campaign_id => seo_campaign.id, :last_date_found => Date.today, :is_active => true)
-                      end
-                    rescue Exception => ex
-                      exception = ex
-                      next
+        website = seo_campaign.website
+        if website.present?
+          begin
+            freshness = seo_campaign.inbound_links.find(:all, :conditions => ['created_at > ?', 1.day.ago])
+            if freshness.empty? && website.nickname.present?
+              url = 'http://perl.pearanalytics.com/v2/domain/get/linklist?url=http://' + website.nickname.gsub('http://', '')
+              response = HTTParty.get(url)
+              links = JSON.parse(response)['result']
+              if links.present?
+                links.each do |link|
+                  begin
+                    existing_link = InboundLink.find_by_link_url_and_seo_campaign_id(link, seo_campaign.id)
+                    if existing_link.present?
+                      existing_link.last_date_found = Date.today
+                      existing_link.save
+                    else
+                      InboundLink.create(:link_url => link, :seo_campaign_id => seo_campaign.id, :last_date_found => Date.today, :is_active => true)
                     end
+                  rescue Exception => ex
+                    exception = ex
+                    next
                   end
                 end
               end
-            rescue Exception => ex
-              exception = ex
-              next
             end
+          rescue Exception => ex
+            exception = ex
+            next
           end
         end
       end
@@ -79,18 +77,16 @@ class SeoCampaign < ActiveRecord::Base
     begin
       seo_campaigns = SeoCampaign.all
       seo_campaigns.each do |seo_campaign|
-        websites = seo_campaign.website
-        if websites.present?
-          websites.each do |website|
-            freshness = seo_campaign.website_analyses.find(:all, :conditions => ['created_at > ?', 1.day.ago])
-            if freshness.empty? && website.nickname.present?
-              pearscore = seo_campaign.getpearscore(website.nickname)
-              google_pagerank = seo_campaign.getgooglepagerank(website.nickname)
-              alexa_rank = seo_campaign.getalexarank(website.nickname)
-              sitewide_inbound_link_count = seo_campaign.get_sitewide_inbound_link_count(website.nickname)
-              page_specific_inbound_link_count = seo_campaign.get_page_specific_inbound_link_count(website.nickname)
-              WebsiteAnalysis.create(:seo_campaign_id => seo_campaign.id, :pear_score => pearscore, :google_pagerank => google_pagerank, :alexa_rank => alexa_rank, :sitewide_inbound_link_count => sitewide_inbound_link_count, :page_specific_inbound_link_count => page_specific_inbound_link_count)
-            end
+        website = seo_campaign.website
+        if website.present?
+          freshness = seo_campaign.website_analyses.find(:all, :conditions => ['created_at > ?', 1.day.ago])
+          if freshness.empty? && website.nickname.present?
+            pearscore = seo_campaign.getpearscore(website.nickname)
+            google_pagerank = seo_campaign.getgooglepagerank(website.nickname)
+            alexa_rank = seo_campaign.getalexarank(website.nickname)
+            sitewide_inbound_link_count = seo_campaign.get_sitewide_inbound_link_count(website.nickname)
+            page_specific_inbound_link_count = seo_campaign.get_page_specific_inbound_link_count(website.nickname)
+            WebsiteAnalysis.create(:seo_campaign_id => seo_campaign.id, :pear_score => pearscore, :google_pagerank => google_pagerank, :alexa_rank => alexa_rank, :sitewide_inbound_link_count => sitewide_inbound_link_count, :page_specific_inbound_link_count => page_specific_inbound_link_count)
           end
         end
       end
@@ -284,42 +280,42 @@ class SeoCampaign < ActiveRecord::Base
   end
 
   def website_traffic_sources_graph(start_date = Date.today - 1.month, end_date = Date.today, height = 250, width = 900)
-   width = 900 if width > 900
-      height = 300 if height > 300
-      website = self.website
-      source_url = ''
-      if website != nil
-        items = website.get_traffic_sources(start_date, end_date)
-        if items != nil
-          titles = Array.new()
-          values = Array.new()
-          labels = Array.new()
-          items.each do |item|
-            begin
+    width = 900 if width > 900
+    height = 300 if height > 300
+    website = self.website
+    source_url = ''
+    if website != nil
+      items = website.get_traffic_sources(start_date, end_date)
+      if items != nil
+        titles = Array.new()
+        values = Array.new()
+        labels = Array.new()
+        items.each do |item|
+          begin
             titles.push(item["title"])
             values.push(item["value"].to_i)
             labels.push(item["value_percent"] + "% (" + item["value"] + ")")
-            rescue
-              next
-            end
-          end
-          chart_size = width.to_s + 'x' + height.to_s
-          GoogleChart::PieChart.new(chart_size, "Web Traffic Sources", true) do |pc|
-            i = 0
-            (0..(titles.size - 1)).each do |t|
-              pc.data titles[i], values[i], CHART_COLORS[i]
-              i += 1
-            end
-            pc.show_legend = true
-            pc.show_labels = false
-            pc.axis :x, :labels => labels, :font_size => 10
-            pc.fill(:background, :solid, {:color => '65432100'})
-            pc.fill(:chart, :solid, {:color => '65432100'})
-            source_url = pc.to_escaped_url
+          rescue
+            next
           end
         end
+        chart_size = width.to_s + 'x' + height.to_s
+        GoogleChart::PieChart.new(chart_size, "Web Traffic Sources", true) do |pc|
+          i = 0
+          (0..(titles.size - 1)).each do |t|
+            pc.data titles[i], values[i], CHART_COLORS[i]
+            i += 1
+          end
+          pc.show_legend = true
+          pc.show_labels = false
+          pc.axis :x, :labels => labels, :font_size => 10
+          pc.fill(:background, :solid, {:color => '65432100'})
+          pc.fill(:chart, :solid, {:color => '65432100'})
+          source_url = pc.to_escaped_url
+        end
       end
-      return source_url
+    end
+    return source_url
   end
 
   def seo_keyword_rankings_graph(height = 250, width = 900)
