@@ -158,16 +158,21 @@ class Keyword < ActiveRecord::Base
   end
   
   def most_recent_google_ranking()
-    self.most_recent_ranking().google if self.most_recent_ranking().present?
+    if self.most_recent_ranking().present?
+      (ranking = self.most_recent_ranking().google) > 50 ? '>50' : ranking
+    end
   end
 
   def most_recent_yahoo_ranking()
-    self.most_recent_ranking().yahoo if self.most_recent_ranking().present?
+    if self.most_recent_ranking().present?
+      (ranking = self.most_recent_ranking().yahoo) > 50 ? '>50' : ranking
+    end
   end
 
   def most_recent_bing_ranking()
-    ranking = self.most_recent_ranking().bing if self.most_recent_ranking().present?
-    ranking = '>50'
+    if self.most_recent_ranking().present?
+      (ranking = self.most_recent_ranking().bing) > 50 ? '>50' : ranking
+    end
   end
 
   def google_ranking_change_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
