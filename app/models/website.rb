@@ -63,6 +63,10 @@ class Website < ActiveRecord::Base
   def actions_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.website_visits.between(start_date, end_date).sum(:actions).to_i
   end
+  
+  def bounces_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.website_visits.bounce.between(start_date, end_date).count
+  end
 
   def average_actions_between(start_date = Date.yesterday, end_date = Date.yesterday)
     (visits = self.visits_between(start_date, end_date)) > 0 ? self.actions_between(start_date, end_date).to_f / visits : 0.0
@@ -110,6 +114,10 @@ class Website < ActiveRecord::Base
 
   def visitor_bounce_rate_between(visitor_id, start_date = Date.yesterday, end_date = Date.yesterday)
     (visits = self.visitor_visits_between(visitor_id, start_date, end_date)) > 0 ? self.visitor_bounces_between(visitor_id, start_date, end_date).to_f / visits : 0.0
+  end
+  
+  def visits_by_visitor(visitor_id, start_date = Date.yesterday, end_date = Date.yesterday)
+    self.website_visits.between(start_date, end_date).for_visitor(visitor_id)
   end
 
   def first_visit_date_by_visitor(visitor_id)

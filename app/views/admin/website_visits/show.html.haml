@@ -48,7 +48,7 @@
       %th Keyword
       %th Time Spent
     %tbody
-      - (@website_visit.all_visits_from_visitor.sort { |a,b| b.time_of_visit <=> a.time_of_visit }).each do |website_visit|
+      - (@website_visit.website.visits_by_visitor(@website_visit.visitor_id, @start_date, @end_date).sort { |a,b| b.time_of_visit <=> a.time_of_visit }).each do |website_visit|
         %tr{:class => cycle('odd', 'even')}
           %td=website_visit.time_of_visit.strftime("%m/%d/%y %I:%M %p")
           %td=website_visit.actions
