@@ -45,6 +45,31 @@ class Admin::CampaignsController < ApplicationController
     redirect_to admin_campaign_path(@campaign)
   end
   
+  def matrix
+    
+    if params[:daterangepicker].blank?
+      @campaign = Campaign.find(params[:id])
+      Time.zone = @campaign.account.time_zone
+       
+      @date_selected = Date.yesterday
+
+      respond_to do |format|
+        format.html # show.html.erb
+      end
+    else
+       @campaign = Campaign.find(params[:id])
+        Time.zone = @campaign.account.time_zone
+      # Parse the date the GET request has received
+      dates = params[:daterangepicker].split(' - ')
+
+      begin
+        @date_selected = Date.parse(dates[0])
+      rescue Exception
+        @date_selected = Date.yesterday
+      end
+    end
+  end
+  
   def create
     @campaign = Campaign.new
     create if request.post?

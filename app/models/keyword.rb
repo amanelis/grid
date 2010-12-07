@@ -88,9 +88,23 @@ class Keyword < ActiveRecord::Base
 
   def get_new_search_positions(nickname)
     begin
+      google = 99999
+      bing = 99999
+      yahoo = 99999
+      #rankings with www.
       url = 'http://perl.pearanalytics.com/v2/keyword/position?keyword=' + self.descriptor.gsub(' ', '+') + '&url=' + nickname.gsub('www.', '')
+      #rankings without www.
+      url2 = 'http://perl.pearanalytics.com/v2/keyword/position?keyword=' + self.descriptor.gsub(' ', '+') + '&url=' + nickname
       response = HTTParty.get(url)
-      JSON.parse(response)['result'].to_a.first.second if JSON.parse(response)['result'].to_a.present?
+      response2 = HTTParty.get(url)
+      results = JSON.parse(response)['result'].to_a + JSON.parse(response2)['result'].to_a
+      results.each do |result|
+        yahoo = result.second["Yahoo"].to_i if result.second["Yahoo"].present? && result.second["Yahoo"].to_i > 0 && result.second["Yahoo"].to_i < yahoo
+        google = result.second["Google"].to_i if result.second["Google"].present? && result.second["Google"].to_i > 0 && result.second["Google"].to_i < google
+        bing = result.second["Bing"].to_i if result.second["Bing"].present? && result.second["Bing"].to_i > 0 && result.second["Bing"].to_i < bing    
+      end
+      
+      rankings = {"Google" => google, "Bing" => bing, "Yahoo" => yahoo}
     rescue
       puts "Error in Keyword.get_new_search_positions"
     end
@@ -152,9 +166,46 @@ class Keyword < ActiveRecord::Base
   end
 
   def most_recent_bing_ranking()
-    self.most_recent_ranking().bing if self.most_recent_ranking().present?
+    ranking = self.most_recent_ranking().bing if self.most_recent_ranking().present?
+    ranking = '>50'
   end
 
+  def google_ranking_change_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
+    first = 0
+    last = 0
+    first = ((value = self.keyword_rankings.between(start_date, end_date).first.google) == 99999 ? 50 : value) if self.keyword_rankings.between(start_date, end_date).present?
+    last = ((value = self.keyword_rankings.between(start_date, end_date).last.google) == 99999 ? 50 : value) if self.keyword_rankings.between(start_date, end_date).present?
+    if (first - last) > 0
+      "+" + (first - last).to_s
+    else
+      (first - last).to_s
+    end
+  end
+
+  def yahoo_ranking_change_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
+    first = 0
+    last = 0
+    first = ((value = self.keyword_rankings.between(start_date, end_date).first.yahoo) == 99999 ? 50 : value) if self.keyword_rankings.between(start_date, end_date).present?
+    last = ((value = self.keyword_rankings.between(start_date, end_date).last.yahoo) == 99999 ? 50 : value) if self.keyword_rankings.between(start_date, end_date).present?
+    if (first - last) > 0
+      "+" + (first - last).to_s
+    else
+      (first - last).to_s
+    end
+  end
+
+  def bing_ranking_change_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
+    first = 0
+    last = 0
+    first = ((value = self.keyword_rankings.between(start_date, end_date).first.bing) == 99999 ? 50 : value) if self.keyword_rankings.between(start_date, end_date).present?
+    last = ((value = self.keyword_rankings.between(start_date, end_date).last.bing) == 99999 ? 50 : value) if self.keyword_rankings.between(start_date, end_date).present?
+    if (first - last) > 0
+      "+" + (first - last).to_s
+    else
+      (first - last).to_s
+    end
+  end
+  
   def most_recent_ranking()
     self.keyword_rankings.last
   end
