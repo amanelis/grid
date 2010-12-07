@@ -1,8 +1,17 @@
+%script
+  $(function(){
+  $('#daterangepicker').daterangepicker({arrows:false}); 
+  });
+%header
+  %h1 Visitor: #{@website_visit.visitor_id} 
+  %h2 Visitor Statistics
+%article
+  -form_for(admin_website_visits_path, :html => {:method => "get", :onchange => "alert('hello')"}) do |f|
+    = f.text_field :daterangepicker, :name => "daterangepicker", :id => "daterangepicker"
+    = f.submit "Filter Dates"
+  %h3 #{(@start_date).to_s(:long) + ' to ' + @end_date.to_s(:long)}
+  
 
-%h1
-  Visitor: #{@website_visit.visitor_id} 
-%h3
-  Visitor Statistics
 %article
   %table{:class => "pretty"}
     %thead
@@ -12,16 +21,19 @@
       %th Avg Actions/Visit
       %th Total Time Spent
       %th Avg Time Spent
-      %th Avg Bounce Rate
+      %th Bounce Rate
     %tbody
       %tr{:class => cycle('odd', 'even')}
-        %td= @website_visit.all_visits_from_visitor.count.to_s
+        %td= @website_visit.website.visitor_visits_between(@website_visit.visitor_id, @start_date, @end_date).to_s
         %td= @website_visit.geolocation
+        %td= @website_visit.website.visitor_actions_between(@website_visit.visitor_id, @start_date, @end_date)
+        %td= @website_visit.website.visitor_average_actions_between(@website_visit.visitor_id, @start_date, @end_date)
         %td
-        %td
-        %td
-        %td
-        %td
+          - @avg_time = @website_visit.website.visitor_total_time_spent_between(@website_visit.visitor_id, @start_date, @end_date).to_i
+          = [(((@avg_time/3600) != 0 ? (@avg_time/3600).to_s + 'h' : nil)), (((@avg_time/60 % 60) != 0 ? ((@avg_time/60 % 60).to_s + 'm').rjust(2,'0') : nil)), (((@avg_time % 60) != 0 ? ((@avg_time % 60).to_s + 's').rjust(2,'0') : nil))].compact.join(':')
+        @website_visit.website.visitor_total_time_spent_between(@website_visit.visitor_id, @start_date, @end_date)
+        %td= @website_visit.website.visitor_average_total_time_spent_between(@website_visit.visitor_id, @start_date, @end_date)
+        %td= @website_visit.website.visitor_bounce_rate_between(@website_visit.visitor_id, @start_date, @end_date)
 
 %h3
   All Visits by this visitor
@@ -37,9 +49,12 @@
     %tbody
       - (@website_visit.all_visits_from_visitor.sort { |a,b| b.time_of_visit <=> a.time_of_visit }).each do |website_visit|
         %tr{:class => cycle('odd', 'even')}
-          %td=website_visit.time_of_visit.to_s(:long)
+          %td=website_visit.time_of_visit.strftime("%m/%d/%y %I:%M %p")
           %td=website_visit.actions
           %td=website_visit.referrer_type
           %td=website_visit.referrer_domain
           %td=website_visit.referrer_search
-          %td=website_visit.time_total
+          %td
+            - @avg_time = website_visit.time_total.to_i
+            = [(((@avg_time/3600) != 0 ? (@avg_time/3600).to_s + 'h' : nil)), (((@avg_time/60 % 60) != 0 ? ((@avg_time/60 % 60).to_s + 'm').rjust(2,'0') : nil)), (((@avg_time % 60) != 0 ? ((@avg_time % 60).to_s + 's').rjust(2,'0') : nil))].compact.join(':')
+          

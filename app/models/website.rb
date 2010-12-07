@@ -112,6 +112,14 @@ class Website < ActiveRecord::Base
     (visits = self.visitor_visits_between(visitor_id, start_date, end_date)) > 0 ? self.visitor_bounces_between(visitor_id, start_date, end_date).to_f / visits : 0.0
   end
 
+  def first_visit_date_by_visitor(visitor_id)
+    visit_date = Date.yesterday
+    if self.website_visits.for_visitor(visitor_id).present?
+      first_visit = self.website_visits.for_visitor(visitor_id).first.time_of_visit 
+      visit_date = Date.new(first_visit.year, first_visit.month, first_visit.day)
+    end
+  end
+  
   def keywords_searched_between(start_date = Date.yesterday, end_date = Date.yesterday)
     search_keywords = Hash.new
     self.website_visits.between(start_date, end_date).referred.each do |visit|

@@ -166,9 +166,46 @@ class Keyword < ActiveRecord::Base
   end
 
   def most_recent_bing_ranking()
-    self.most_recent_ranking().bing if self.most_recent_ranking().present?
+    ranking = self.most_recent_ranking().bing if self.most_recent_ranking().present?
+    ranking = '>50'
   end
 
+  def google_ranking_change_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
+    first = 0
+    last = 0
+    first = ((value = self.keyword_rankings.between(start_date, end_date).first.google) == 99999 ? 50 : value) if self.keyword_rankings.between(start_date, end_date).present?
+    last = ((value = self.keyword_rankings.between(start_date, end_date).last.google) == 99999 ? 50 : value) if self.keyword_rankings.between(start_date, end_date).present?
+    if (first - last) > 0
+      "+" + (first - last).to_s
+    else
+      (first - last).to_s
+    end
+  end
+
+  def yahoo_ranking_change_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
+    first = 0
+    last = 0
+    first = ((value = self.keyword_rankings.between(start_date, end_date).first.yahoo) == 99999 ? 50 : value) if self.keyword_rankings.between(start_date, end_date).present?
+    last = ((value = self.keyword_rankings.between(start_date, end_date).last.yahoo) == 99999 ? 50 : value) if self.keyword_rankings.between(start_date, end_date).present?
+    if (first - last) > 0
+      "+" + (first - last).to_s
+    else
+      (first - last).to_s
+    end
+  end
+
+  def bing_ranking_change_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
+    first = 0
+    last = 0
+    first = ((value = self.keyword_rankings.between(start_date, end_date).first.bing) == 99999 ? 50 : value) if self.keyword_rankings.between(start_date, end_date).present?
+    last = ((value = self.keyword_rankings.between(start_date, end_date).last.bing) == 99999 ? 50 : value) if self.keyword_rankings.between(start_date, end_date).present?
+    if (first - last) > 0
+      "+" + (first - last).to_s
+    else
+      (first - last).to_s
+    end
+  end
+  
   def most_recent_ranking()
     self.keyword_rankings.last
   end
