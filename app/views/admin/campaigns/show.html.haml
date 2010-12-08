@@ -2,8 +2,9 @@
   %h1 #{@campaign.name}
   %h4= @campaign.account.time_zone
 %article
-  - if @campaign.is_sem?
-    = render :partial => "shared/gauge"
+  #timeline_chart
+    - if @campaign.is_sem?
+      = render :partial => "shared/gauge"
   %h3 Last Week
   %table
     %thead
