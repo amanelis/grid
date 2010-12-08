@@ -78,7 +78,7 @@
         %th Bounce Rate
         %th Spend
       %tbody
-        %tr{:class => cycle('odd', 'even')}
+        %tr
           %td= link_to @campaign.website.nickname, admin_website_path(@campaign.website) 
           %td= @campaign.number_of_total_leads_between(Date.today - 1.week, Date.today).to_s
           %td= @campaign.number_of_visits_between(Date.today - 1.week, Date.today).to_s
@@ -109,7 +109,7 @@
           %th Month Change
       %tbody
         - (@campaign.campaign_style.keywords.sort { |a,b| a.descriptor <=> b.descriptor }).each do |keyword|
-          %tr{:class => cycle('odd', 'even')}
+          %tr
             %td= link_to keyword.descriptor, admin_keyword_path(keyword)
             %td= keyword.most_recent_ranking().created_at.strftime("%m/%d/%y %I:%M %p") if keyword.most_recent_ranking().present?
             %td= keyword.most_recent_google_ranking() 
@@ -171,7 +171,7 @@
         Work Description
   %tbody
     -@campaign.submissions.lead.between(Date.today - 1.week, Date.today).each do |submission|
-      %tr{ :class => cycle('odd', 'even')}
+      %tr
         %td
           = submission.name
         %td
@@ -210,7 +210,7 @@
         Recording
   %tbody
     -@campaign.calls.between(Date.today - 1.week, Date.today).each do |call|
-      %tr{ :class => cycle('odd', 'even')}
+      %tr
         %td
           = call.caller_name
         %td
