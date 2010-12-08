@@ -714,7 +714,7 @@ class SemCampaign < ActiveRecord::Base
 
   def calls_per_visit_on(date)
     data = {}
-    visits = self.campaign.websites.first.website_visits.for_date(date)
+    visits = self.campaign.website.website_visits.for_date(date)
     visits.each do |visit|
       data[visit] = self.campaign.calls.snapshot(visit.time_of_visit, 60)
     end

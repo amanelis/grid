@@ -36,7 +36,7 @@ class Website < ActiveRecord::Base
           local_campaign = Campaign.find_by_salesforce_id(sf_campaign.id)
           if local_campaign.present?
             local_campaign.website = website
-            #website.campaigns << local_campaign unless local_campaign.websites.first.present?   website.campaigns.include?(local_campaign)
+            #website.campaigns << local_campaign unless local_campaign.website.present?   website.campaigns.include?(local_campaign)
             local_campaign.save
             website.save
           end
@@ -48,7 +48,7 @@ class Website < ActiveRecord::Base
     end
     job_status.finish_with_no_errors
   end
-
+  
 
   # INSTANCE BEHAVIOR
 
@@ -62,6 +62,10 @@ class Website < ActiveRecord::Base
 
   def actions_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.website_visits.between(start_date, end_date).sum(:actions).to_i
+  end
+  
+  def bounces_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.website_visits.bounce.between(start_date, end_date).count
   end
 
   def average_actions_between(start_date = Date.yesterday, end_date = Date.yesterday)
@@ -84,6 +88,46 @@ class Website < ActiveRecord::Base
     (visits = self.visits_between(start_date, end_date)) > 0 ? self.bounces_between(start_date, end_date).to_f / visits : 0.0
   end
 
+  def visitor_visits_between(visitor_id, start_date = Date.yesterday, end_date = Date.yesterday)
+    self.website_visits.between(start_date, end_date).for_visitor(visitor_id).count
+  end
+
+  def visitor_actions_between(visitor_id, start_date = Date.yesterday, end_date = Date.yesterday)
+    self.website_visits.between(start_date, end_date).for_visitor(visitor_id).sum(:actions).to_i
+  end
+
+  def visitor_average_actions_between(visitor_id, start_date = Date.yesterday, end_date = Date.yesterday)
+    (visits = self.visitor_visits_between(visitor_id, start_date, end_date)) > 0 ? self.visitor_actions_between(visitor_id, start_date, end_date).to_f / visits : 0.0
+  end
+
+  def visitor_total_time_spent_between(visitor_id, start_date = Date.yesterday, end_date = Date.yesterday)
+    self.website_visits.between(start_date, end_date).for_visitor(visitor_id).sum(:time_total).to_i
+  end
+
+  def visitor_average_total_time_spent_between(visitor_id, start_date = Date.yesterday, end_date = Date.yesterday)
+    (visits = self.visitor_visits_between(visitor_id, start_date, end_date)) > 0 ? self.visitor_total_time_spent_between(visitor_id, start_date, end_date).to_f / visits : 0.0
+  end
+
+  def visitor_bounces_between(visitor_id, start_date = Date.yesterday, end_date = Date.yesterday)
+    self.website_visits.between(start_date, end_date).for_visitor(visitor_id).bounce.count
+  end
+
+  def visitor_bounce_rate_between(visitor_id, start_date = Date.yesterday, end_date = Date.yesterday)
+    (visits = self.visitor_visits_between(visitor_id, start_date, end_date)) > 0 ? self.visitor_bounces_between(visitor_id, start_date, end_date).to_f / visits : 0.0
+  end
+  
+  def visits_by_visitor(visitor_id, start_date = Date.yesterday, end_date = Date.yesterday)
+    self.website_visits.between(start_date, end_date).for_visitor(visitor_id)
+  end
+
+  def first_visit_date_by_visitor(visitor_id)
+    visit_date = Date.yesterday
+    if self.website_visits.for_visitor(visitor_id).present?
+      first_visit = self.website_visits.for_visitor(visitor_id).first.time_of_visit 
+      visit_date = Date.new(first_visit.year, first_visit.month, first_visit.day)
+    end
+  end
+  
   def keywords_searched_between(start_date = Date.yesterday, end_date = Date.yesterday)
     search_keywords = Hash.new
     self.website_visits.between(start_date, end_date).referred.each do |visit|
@@ -157,7 +201,5 @@ class Website < ActiveRecord::Base
     return map_url
   end
 
-
-  
 end
 
