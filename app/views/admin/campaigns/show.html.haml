@@ -1,70 +1,53 @@
-%h1
-  Summary for #{@campaign.name}
-
-- if @campaign.is_sem?
-  .section#first-section
-    .left#timeline_chart
-      %h3 Campaign Performance
-      = render :partial => "shared/timeline"
-    .right
-      = render :partial => "shared/gauge"
-  .clear
--else
-  .section#first-section
-    .left#timeline_chart
-      %h3 Campaign Performance
-      = render :partial => "shared/timeline"
-    .right
-      = render :partial => "shared/news_results"
-  .clear     
-
-%h3
-  Last Week
-%table{:class => "pretty"}
-  %thead
-    %tr
-      %th
-        Lead Calls
-      %th
-        All Calls
-      %th
-        Lead Forms
-      %th
-        All Forms
-      %th
-        Total Leads
-      %th
-        Total Contacts
-      %th
-        Spend
-      %th
-        Cost Per Lead
-      %th
-        Cost Per Contact
-  %tbody
-    %tr
-      %td
-        = @campaign.number_of_lead_calls_between(Date.today - 1.week, Date.today).to_s
-      %td
-        = @campaign.number_of_all_calls_between(Date.today - 1.week, Date.today).to_s
-      %td
-        = @campaign.number_of_lead_submissions_between(Date.today - 1.week, Date.today).to_s
-      %td
-        = @campaign.number_of_all_submissions_between(Date.today - 1.week, Date.today).to_s
-      %td
-        = @campaign.number_of_total_leads_between(Date.today - 1.week, Date.today).to_s
-      %td
-        = @campaign.number_of_total_contacts_between(Date.today - 1.week, Date.today).to_s
-      %td
-        = ActionController::Base.helpers.number_to_currency(@campaign.spend_between(Date.today - 1.week, Date.today))
-      %td
-        = ActionController::Base.helpers.number_to_currency(@campaign.cost_per_lead_between(Date.today - 1.week, Date.today))
-      %td
-        = ActionController::Base.helpers.number_to_currency(@campaign.cost_per_contact_between(Date.today - 1.week, Date.today))
--if @campaign.is_seo?
-  %h3 Keywords
-  %article
-    %table{:class => "pretty"}
+%header
+  %h1
+    #{@campaign.name}
+  %h3
+    Last Week 
+    %em
+      Results in
+      = @campaign.account.time_zone
+%article
+  - if @campaign.is_sem?
+    .section#first-section
+      .left#timeline_chart
+        %h3 Campaign Performance
+        = render :partial => "shared/timeline"
+      .right
+        = render :partial => "shared/gauge"
+    .clear
+  -else
+    .section#first-section
+      .left#timeline_chart
+        %h3 Campaign Performance
+        = render :partial => "shared/timeline"
+      .right
+        = render :partial => "shared/news_results"
+  %table
+    %thead
+      %tr
+        %th Lead Calls
+        %th All Calls
+        %th Lead Forms
+        %th All Forms
+        %th Total Leads
+        %th Total Contacts
+        %th Spend
+        %th Cost Per Lead
+        %th Cost Per Contact
+    %tbody
+      %tr
+        %td= @campaign.number_of_lead_calls_between(Date.today - 1.week, Date.today).to_s
+        %td= @campaign.number_of_all_calls_between(Date.today - 1.week, Date.today).to_s
+        %td= @campaign.number_of_lead_submissions_between(Date.today - 1.week, Date.today).to_s
+        %td= @campaign.number_of_all_submissions_between(Date.today - 1.week, Date.today).to_s
+        %td= @campaign.number_of_total_leads_between(Date.today - 1.week, Date.today).to_s
+        %td= @campaign.number_of_total_contacts_between(Date.today - 1.week, Date.today).to_s
+        %td= ActionController::Base.helpers.number_to_currency(@campaign.spend_between(Date.today - 1.week, Date.today))
+        %td= ActionController::Base.helpers.number_to_currency(@campaign.cost_per_lead_between(Date.today - 1.week, Date.today))
+        %td= ActionController::Base.helpers.number_to_currency(@campaign.cost_per_contact_between(Date.today - 1.week, Date.today))
+  -if @campaign.is_seo?
+    %h3 Keywords
+    %table
       %thead
         %tr
           %th Keyword (Click for History)
@@ -74,123 +57,85 @@
           %th Bing
       %tbody
         - (@campaign.campaign_style.keywords.sort { |a,b| a.descriptor <=> b.descriptor }).each do |keyword|
-          %tr{:class => cycle('odd', 'even')}
+          %tr
             %td= link_to keyword.descriptor, admin_keyword_path(keyword)
             %td= keyword.most_recent_ranking().created_at.to_s(:long) if keyword.most_recent_ranking().present?
             %td= keyword.most_recent_google_ranking() 
             %td= keyword.most_recent_yahoo_ranking() 
             %td= keyword.most_recent_bing_ranking() 
 		   
-%h3
-  Phone Numbers On Campaign
-%table{:class => "pretty"}
-  %thead
-    %tr
-      %th
-        Name
-      %th
-        Description
-      %th
-        Number
-  %tbdoy
-    -@campaign.phone_numbers.each do |number|
+  %h3 Phone Numbers On Campaign
+  %table
+    %thead
       %tr
-        %td
-          = number.name
-        %td
-          = number.descript
-        %td
-          = number.inboundno
+        %th Name
+        %th Description
+        %th Number
+    %tbdoy
+      -@campaign.phone_numbers.each do |number|
+        %tr
+          %td= number.name
+          %td= number.descript
+          %td= number.inboundno
 
-%h5
-  - semantic_form_for @campaign, :url => admin_campaign_path(@campaign) do |f| 
-    = f.semantic_errors :state
-    - f.inputs do
-      %br
-      = f.input :adopting_phone_number, :label => 'Add Orphaned Phone Number', :as => :select, :collection => PhoneNumber.selectable_oprhaned_phone_numbers, :include_blank => true
-    - f.buttons do
-      = f.commit_button :update, :button_html => { :class => "sexybutton sexysimple sexygreen" }
-%h3
-  = "Submission Log (ID = #{@campaign.contact_form_id_string}, Emails: #{@campaign.contact_form_emails_string})"
   %h5
-    = @campaign.account.time_zone
-%table{:class => "pretty"}
-  %thead
-    %tr
-      %th
-        Name
-      %th
-        Email
-      %th
-        Phone Number
-      %th
-        Submission Time
-      %th
-        Date Requested
-      %th
-        Time Requested
-      %th
-        Work Description
-  %tbody
-    -@campaign.submissions.lead.between(Date.today - 1.week, Date.today).each do |submission|
-      %tr{ :class => cycle('odd', 'even')}
-        %td
-          = submission.name
-        %td
-          = submission.from_email
-        %td
-          = submission.phone_number
-        %td
-          = submission.time_of_submission.in_time_zone.to_s(:short)
-        %td
-          = submission.date_requested
-        %td
-          = submission.time_requested
-        %td
-          = submission.work_description
+    - semantic_form_for @campaign, :url => admin_campaign_path(@campaign) do |f| 
+      = f.semantic_errors :state
+      - f.inputs do
+        %br
+        = f.input :adopting_phone_number, :label => 'Add Orphaned Phone Number', :as => :select, :collection => PhoneNumber.selectable_oprhaned_phone_numbers, :include_blank => true
+      - f.buttons do
+        = f.commit_button :update, :button_html => { :class => "button" }
+  %h3
+    = "Submission Log (ID = #{@campaign.contact_form_id_string}, Emails: #{@campaign.contact_form_emails_string})"
+  %table
+    %thead
+      %tr
+        %th Name
+        %th Email
+        %th Phone Number
+        %th Submission Time
+        %th Date Requested
+        %th Time Requested
+        %th Work Description
+    %tbody
+      -@campaign.submissions.lead.between(Date.today - 1.week, Date.today).each do |submission|
+        %tr
+          %td= submission.name
+          %td= submission.from_email
+          %td= submission.phone_number
+          %td= submission.time_of_submission.in_time_zone.to_s(:short)
+          %td= submission.date_requested
+          %td= submission.time_requested
+          %td= submission.work_description
 
-%h3
-  = "Call Log"
-%h5
-  = @campaign.account.time_zone
-%table{:class => "pretty"}
-  %thead
-    %tr
-      %th
-        Caller
-      %th
-        Caller #
-      %th
-        Inbound #
-      %th
-        Time of Call
-      %th
-        Duration
-      %th
-        Result
-      %th
-        Recording
-  %tbody
-    -@campaign.calls.between(Date.today - 1.week, Date.today).each do |call|
-      %tr{ :class => cycle('odd', 'even')}
-        %td
-          = call.caller_name
-        %td
-          = number_to_phone(call.caller_number)
-        %td
-          = number_to_phone(call.inboundno)
-        %td
-          = call.call_start.in_time_zone.to_s(:short)
-        %td
-          = call.duration
-        %td
-          = call.call_status
-        %td
-          -if call.recorded? && call.recording?
-            = mp3_player "#{call.recording.expiring_url(14400)}", :bg => "EEEEEE", :track => "EEEEEE", :slider => "222222", :loader => "EEEEEE"
-          -else
-            =image_tag("sound.png", :height => "14", :width => "14")
-            Call Recording Unavailable
+  %h3
+    Call Log
+  %table
+    %thead
+      %tr
+        %th Caller
+        %th Caller #
+        %th Inbound #
+        %th Time of Call
+        %th Duration
+        %th Result
+        %th Recording
+    %tbody
+      -@campaign.calls.between(Date.today - 1.week, Date.today).each do |call|
+        %tr
+          %td= call.caller_name
+          %td= number_to_phone(call.caller_number)
+          %td= number_to_phone(call.inboundno)
+          %td= call.call_start.in_time_zone.to_s(:short)
+          %td= call.duration
+          %td= call.call_status
+          %td
+            -if call.recorded? && call.recording?
+              = mp3_player "#{call.recording.expiring_url(14400)}", :bg => "EEEEEE", :track => "EEEEEE", :slider => "222222", :loader => "EEEEEE"
+            -else
+              =image_tag("sound.png", :height => "14", :width => "14")
+              Call Recording Unavailable
 
 
 
