@@ -16,4 +16,14 @@ class Notifier < ActionMailer::Base
     sent_on       Time.now
   end
 
+  def weekly_report(account, date = Date.today.beginning_of_week)
+    the_recipients = account.reporting_emails.split(/, \s*/)
+
+    recipients    the_recipients
+    subject       "Weekly Report"  
+    from          "CityVoice <no-reply@cityvoice.com>"
+    body          :account_report_data => account.previous_days_report_data(date, 7)
+    sent_on       Time.now
+  end
+
 end
