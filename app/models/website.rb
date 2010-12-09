@@ -97,11 +97,11 @@ class Website < ActiveRecord::Base
   end
   
   def overall_conversion_rate_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    (visits = self.visits_between(start_date, end_date)) > 0 ? self.unique_conversion_rate_between(start_date, end_date).to_f / visits : 0.0
+    (visits = self.visits_between(start_date, end_date)) > 0 ? self.unique_contacts_between(start_date, end_date).to_f / visits : 0.0
   end
   
   def unique_conversion_rate_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    (unique_visits = self.unique_visits_between(start_date, end_date)) > 0 ? self.unique_conversion_rate_between(start_date, end_date).to_f / unique_visits : 0.0
+    (unique_visits = self.unique_visits_between(start_date, end_date)) > 0 ? self.unique_contacts_between(start_date, end_date).to_f / unique_visits : 0.0
   end
   
   def visitor_visits_between(visitor_id, start_date = Date.yesterday, end_date = Date.yesterday)
