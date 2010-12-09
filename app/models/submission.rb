@@ -48,6 +48,12 @@ class Submission < ActiveRecord::Base
     :conditions => ['activities.review_status <> ?', PENDING]
   }
 
+  named_scope :unique, {
+    :select => "submissions.*",
+    :joins => "INNER JOIN activities ON submissions.id = activities.activity_type_id AND activities.activity_type_type = 'Submission'", 
+    :conditions => ['activities.duplicate = FALSE']
+  }
+
 
   # INSTANCE BEHAVIOR
   
