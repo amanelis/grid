@@ -66,6 +66,12 @@ class Call < ActiveRecord::Base
     :conditions => ['activities.review_status <> ?', PENDING]
   }
 
+  named_scope :unique, {
+    :select => "calls.*",
+    :joins => "INNER JOIN activities ON calls.id = activities.activity_type_id AND activities.activity_type_type = 'Call'", 
+    :conditions => ['activities.duplicate = FALSE']
+  }
+
   named_scope :between, lambda { |start_date, end_date| {:conditions => ['call_start between ? AND ?', start_date.to_time_in_current_zone.at_beginning_of_day.utc, end_date.to_time_in_current_zone.end_of_day.utc]} }
   named_scope :snapshot, lambda { |start_datetime, duration| {:conditions => ['call_start between ? AND ?', start_datetime.in_time_zone, start_datetime.in_time_zone + duration.minutes]} }
   named_scope :previous_hours, lambda { |*args| {:conditions => ['call_start > ?', (args.first || nil)], :order => 'call_start DESC'} }
