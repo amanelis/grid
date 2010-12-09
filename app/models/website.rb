@@ -93,7 +93,7 @@ class Website < ActiveRecord::Base
   end
   
   def unique_contacts_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.active.to_a.sum {|campaign| campaign.number_of_unique_calls_between(start_date, end_date) + campaign.number_of_unique_submissions_between(start_date, end_date)}
+    self.campaigns.active.to_a.sum {|campaign| campaign.number_of_unique_calls_between(start_date, end_date) + campaign.number_of_non_spam_submissions_between(start_date, end_date)}
   end
   
   def overall_conversion_rate_between(start_date = Date.yesterday, end_date = Date.yesterday)
