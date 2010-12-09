@@ -93,11 +93,11 @@ class Website < ActiveRecord::Base
   end
   
   def overall_conversion_rate_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    (self.campaigns.active.sum {|campaign| campaign.number_of_unique_calls_between(start_date, end_date) + campaign.number_of_unique_submissions_between(start_date, end_date)}) / self.visits_between(start_date, end_date).to_f
+    (self.campaigns.active.to_a.sum {|campaign| campaign.number_of_unique_calls_between(start_date, end_date) + campaign.number_of_unique_submissions_between(start_date, end_date)}) / self.visits_between(start_date, end_date).to_f
   end
   
   def unique_conversion_rate_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    (self.campaigns.active.sum {|campaign| campaign.number_of_unique_calls_between(start_date, end_date) + campaign.number_of_unique_submissions_between(start_date, end_date)}) / self.unique_visits_between(start_date, end_date).to_f
+    (self.campaigns.active.to_a.sum {|campaign| campaign.number_of_unique_calls_between(start_date, end_date) + campaign.number_of_unique_submissions_between(start_date, end_date)}) / self.unique_visits_between(start_date, end_date).to_f
   end
   
   def visitor_visits_between(visitor_id, start_date = Date.yesterday, end_date = Date.yesterday)
