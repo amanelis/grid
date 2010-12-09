@@ -1,7 +1,7 @@
 class WebsiteVisit < ActiveRecord::Base
   belongs_to :website
 
-  named_scope :bounce, :conditions => ['actions = ? AND time_total < ?', 1, 30]
+  named_scope :bounce, :conditions => ['actions = ? AND time_total <= ?', 1, 15]
   named_scope :referred, :conditions => ['referrer_search IS NOT NULL']
   named_scope :from_google_maps, :conditions => ['referrer_url like ?', '%maps.google.com%']
   named_scope :from_yahoo_maps, :conditions => ['referrer_url like ?', '%local.yahoo.com%']
