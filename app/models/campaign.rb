@@ -207,6 +207,7 @@ class Campaign < ActiveRecord::Base
     end
   end
 
+
   # INSTANCE BEHAVIOR
 
   def adopting_phone_number
@@ -261,12 +262,20 @@ class Campaign < ActiveRecord::Base
     self.calls.between(start_date, end_date).count
   end
 
+  def number_of_unique_calls_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.calls.unique.between(start_date, end_date).count
+  end
+
   def number_of_lead_submissions_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.submissions.lead.between(start_date, end_date).count
   end
 
   def number_of_all_submissions_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.submissions.between(start_date, end_date).count
+  end
+
+  def number_of_non_spam_submissions_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.submissions.non_spam.between(start_date, end_date).count
   end
 
   def total_revenue_between(start_date = Date.yesterday, end_date = Date.yesterday)

@@ -157,14 +157,15 @@ class Account < ActiveRecord::Base
   def previous_days_report_data(date = Date.today.beginning_of_week, previous = 7)
     end_date = date - 1.day
     start_date = end_date - previous.days
+    [self.number_of_all_calls_between(start_date, end_date), self.number_of_lead_calls_between(start_date, end_date), self.number_of_all_submissions_between(start_date, end_date), self.number_of_lead_submissions_between(start_date, end_date)]
   end
 
   def number_of_visits_by_date
-    Utilities.merge_and_sum_timeline_data(self.campaigns.collect { |campaign| campaign.campaign_style.number_of_visits_by_date }, :visits)
+    Utilities.merge_and_sum_timeline_data(self.campaigns.active.collect { |campaign| campaign.campaign_style.number_of_visits_by_date }, :visits)
   end
 
   def number_of_leads_by_date
-    Utilities.merge_and_sum_timeline_data(self.campaigns.collect { |campaign| campaign.campaign_style.number_of_leads_by_date }, :leads)
+    Utilities.merge_and_sum_timeline_data(self.campaigns.active.collect { |campaign| campaign.campaign_style.number_of_leads_by_date }, :leads)
   end
 
   #def combined_timeline_data
@@ -178,75 +179,75 @@ class Account < ActiveRecord::Base
   end
 
   def campaign_seo_combined_timeline_data
-    self.campaigns.seo.collect { |campaign| campaign.campaign_style.combined_timeline_data }
+    self.campaigns.active.seo.collect { |campaign| campaign.campaign_style.combined_timeline_data }
   end
 
   def campaign_sem_combined_timeline_data
-    self.campaigns.sem.collect { |campaign| campaign.campaign_style.combined_timeline_data }
+    self.campaigns.active.sem.collect { |campaign| campaign.campaign_style.combined_timeline_data }
   end
 
   def campaign_map_combined_timeline_data
-    self.campaigns.map.collect { |campaign| campaign.campaign_style.combined_timeline_data }
+    self.campaigns.active.map.collect { |campaign| campaign.campaign_style.combined_timeline_data }
   end
 
   def sem_number_of_total_leads_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.sem.to_a.sum { |campaign| campaign.number_of_total_leads_between(start_date, end_date) }
+    self.campaigns.active.sem.to_a.sum { |campaign| campaign.number_of_total_leads_between(start_date, end_date) }
   end
 
   def sem_clicks_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.sem.to_a.sum { |campaign| campaign.campaign_style.clicks_between(start_date, end_date) }
+    self.campaigns.active.sem.to_a.sum { |campaign| campaign.campaign_style.clicks_between(start_date, end_date) }
   end
 
   def sem_impressions_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.sem.to_a.sum { |campaign| campaign.campaign_style.impressions_between(start_date, end_date) }
+    self.campaigns.active.sem.to_a.sum { |campaign| campaign.campaign_style.impressions_between(start_date, end_date) }
   end
 
   def sem_click_through_rate_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    (impressions = self.campaigns.sem.to_a.sum { |campaign| campaign.campaign_style.impressions_between(start_date, end_date) }) > 0 ? self.campaigns.sem.to_a.sum { |campaign| campaign.campaign_style.clicks_between(start_date, end_date) } / impressions.to_f : 0.0
+    (impressions = self.campaigns.active.sem.to_a.sum { |campaign| campaign.campaign_style.impressions_between(start_date, end_date) }) > 0 ? self.campaigns.active.sem.to_a.sum { |campaign| campaign.campaign_style.clicks_between(start_date, end_date) } / impressions.to_f : 0.0
   end
 
   def sem_average_position_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    (count = self.campaigns.sem.count) > 0 ? self.campaigns.sem.to_a.sum { |campaign| campaign.campaign_style.average_position_between(start_date, end_date) } / count : 0.0
+    (count = self.campaigns.active.sem.count) > 0 ? self.campaigns.active.sem.to_a.sum { |campaign| campaign.campaign_style.average_position_between(start_date, end_date) } / count : 0.0
   end
 
   def sem_spend_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.sem.to_a.sum { |campaign| campaign.spend_between(start_date, end_date) }
+    self.campaigns.active.sem.to_a.sum { |campaign| campaign.spend_between(start_date, end_date) }
   end
 
   def sem_cost_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.sem.to_a.sum { |campaign| campaign.cost_between(start_date, end_date) }
+    self.campaigns.active.sem.to_a.sum { |campaign| campaign.cost_between(start_date, end_date) }
   end
 
   def seo_spend_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.seo.to_a.sum { |campaign| campaign.spend_between(start_date, end_date) }
+    self.campaigns.active.seo.to_a.sum { |campaign| campaign.spend_between(start_date, end_date) }
   end
 
   def seo_number_of_total_leads_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.seo.to_a.sum { |campaign| campaign.number_of_total_leads_between(start_date, end_date) }
+    self.campaigns.active.seo.to_a.sum { |campaign| campaign.number_of_total_leads_between(start_date, end_date) }
   end
 
   def seo_number_of_actions_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.seo.to_a.sum { |campaign| campaign.number_of_actions_between(start_date, end_date) }
+    self.campaigns.active.seo.to_a.sum { |campaign| campaign.number_of_actions_between(start_date, end_date) }
   end
 
   def seo_number_of_average_actions_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.seo.to_a.sum { |campaign| campaign.number_of_average_actions_between(start_date, end_date) }
+    self.campaigns.active.seo.to_a.sum { |campaign| campaign.number_of_average_actions_between(start_date, end_date) }
   end
 
   def seo_number_of_visits_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.seo.to_a.sum { |campaign| campaign.number_of_visits_between(start_date, end_date) }
+    self.campaigns.active.seo.to_a.sum { |campaign| campaign.number_of_visits_between(start_date, end_date) }
   end
 
   def seo_total_time_spent_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.seo.to_a.sum { |campaign| campaign.total_time_spent_between(start_date, end_date) }
+    self.campaigns.active.seo.to_a.sum { |campaign| campaign.total_time_spent_between(start_date, end_date) }
   end
 
   def seo_average_total_time_spent_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.seo.to_a.sum { |campaign| campaign.average_total_time_spent_between(start_date, end_date) }
+    self.campaigns.active.seo.to_a.sum { |campaign| campaign.average_total_time_spent_between(start_date, end_date) }
   end
 
   def seo_number_of_bounces_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.seo.to_a.sum { |campaign| campaign.number_of_bounces_between(start_date, end_date) }
+    self.campaigns.active.seo.to_a.sum { |campaign| campaign.number_of_bounces_between(start_date, end_date) }
   end
 
   def seo_bounce_rate_between(start_date = Date.yesterday, end_date = Date.yesterday)
@@ -254,11 +255,23 @@ class Account < ActiveRecord::Base
   end
 
   def maps_number_of_visits_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.maps.to_a.sum { |campaign| campaign.number_of_map_visits_between(start_date, end_date) }
+    self.campaigns.active.maps.to_a.sum { |campaign| campaign.number_of_map_visits_between(start_date, end_date) }
+  end
+
+  def number_of_all_calls_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.to_a.sum { |campaign| campaign.number_of_all_calls_between(start_date, end_date) }
   end
 
   def number_of_lead_calls_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.to_a.sum { |campaign| campaign.number_of_lead_calls_between(start_date, end_date) }
+    self.campaigns.active.to_a.sum { |campaign| campaign.number_of_lead_calls_between(start_date, end_date) }
+  end
+
+  def number_of_all_submissions_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.to_a.sum { |campaign| campaign.number_of_all_submissions_between(start_date, end_date) }
+  end
+
+  def number_of_lead_submissions_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.to_a.sum { |campaign| campaign.number_of_lead_submissions_between(start_date, end_date) }
   end
 
   def sem_cost_per_click_between(start_date = Date.yesterday, end_date = Date.yesterday)
@@ -270,31 +283,31 @@ class Account < ActiveRecord::Base
   end
   
   def total_revenue_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.to_a.sum { |campaign| campaign.total_revenue_between(start_date, end_date) }
+    self.campaigns.active.to_a.sum { |campaign| campaign.total_revenue_between(start_date, end_date) }
   end
   
   def number_of_total_leads_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.to_a.sum { |campaign| campaign.number_of_total_leads_between(start_date, end_date) }
+    self.campaigns.active.to_a.sum { |campaign| campaign.number_of_total_leads_between(start_date, end_date) }
   end
 
   def number_of_total_contacts_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.to_a.sum { |campaign| campaign.number_of_total_contacts_between(start_date, end_date) }
+    self.campaigns.active.to_a.sum { |campaign| campaign.number_of_total_contacts_between(start_date, end_date) }
   end
 
   def number_of_total_leads_by_day_between(start_date = Date.yesterday, end_date = Date.yesterday)
     data = []
     start_date.upto(end_date) do |date|
-      data << self.campaigns.to_a.sum { |campaign| campaign.number_of_total_leads_between(date, date) }
+      data << self.campaigns.active.to_a.sum { |campaign| campaign.number_of_total_leads_between(date, date) }
     end
     data
   end
 
   def cost_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.to_a.sum { |campaign| campaign.cost_between(start_date, end_date) }
+    self.campaigns.active.to_a.sum { |campaign| campaign.cost_between(start_date, end_date) }
   end
 
   def spend_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.to_a.sum { |campaign| campaign.spend_between(start_date, end_date) }
+    self.campaigns.active.to_a.sum { |campaign| campaign.spend_between(start_date, end_date) }
   end
 
   def cost_per_lead_between(start_date = Date.yesterday, end_date = Date.yesterday)
@@ -308,27 +321,19 @@ class Account < ActiveRecord::Base
   # NOTE...these methods don't really make sense at this level in the hierarchy.
 
   def number_of_answered_calls_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.to_a.sum { |campaign| campaign.number_of_answered_calls_between(start_date, end_date) }
+    self.campaigns.active.to_a.sum { |campaign| campaign.number_of_answered_calls_between(start_date, end_date) }
   end
 
   def number_of_canceled_calls_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.to_a.sum { |campaign| campaign.number_of_canceled_calls_between(start_date, end_date) }
+    self.campaigns.active.to_a.sum { |campaign| campaign.number_of_canceled_calls_between(start_date, end_date) }
   end
 
   def number_of_voicemail_calls_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.to_a.sum { |campaign| campaign.number_of_voicemail_calls_between(start_date, end_date) }
+    self.campaigns.active.to_a.sum { |campaign| campaign.number_of_voicemail_calls_between(start_date, end_date) }
   end
 
   def number_of_other_calls_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.to_a.sum { |campaign| campaign.number_of_other_calls_between(start_date, end_date) }
-  end
-
-  def number_of_all_calls_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.to_a.sum { |campaign| campaign.number_of_all_calls_between(start_date, end_date) }
-  end
-
-  def number_of_lead_submissions_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.to_a.sum { |campaign| campaign.number_of_lead_submissions_between(start_date, end_date) }
+    self.campaigns.active.to_a.sum { |campaign| campaign.number_of_other_calls_between(start_date, end_date) }
   end
 
 end
