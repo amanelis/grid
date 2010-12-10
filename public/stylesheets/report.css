@@ -1,0 +1,15 @@
+body.container{
+	background-image:none;
+	background:white;
+}
+
+section#content{
+border: none;
+}
+
+.boxshadow section#content{
+	-webkit-box-shadow: none;
+	   -moz-box-shadow: none;
+	     -o-box-shadow: none;
+	        box-shadow: none;
+}
