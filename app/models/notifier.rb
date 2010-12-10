@@ -16,8 +16,8 @@ class Notifier < ActionMailer::Base
     sent_on       Time.now
   end
 
-  def weekly_report(account, date = Date.today.beginning_of_week)
-    the_recipients = account.reporting_emails.split(/, \s*/)
+  def weekly_report(account, email_list = account.reporting_emails, date = Date.today.beginning_of_week)
+    the_recipients = email_list.split(/, \s*/)
 
     recipients    the_recipients
     subject       "Weekly Report"  
