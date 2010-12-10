@@ -56,6 +56,10 @@ class Website < ActiveRecord::Base
     self.website_visits.between(start_date, end_date).count
   end
 
+  def unique_visits_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.website_visits.between(start_date, end_date).count('visitor_id', :distinct => true)
+  end
+
   def map_visits_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.website_visits.from_maps.between(start_date, end_date).count
   end
@@ -87,7 +91,19 @@ class Website < ActiveRecord::Base
   def bounce_rate_between(start_date = Date.yesterday, end_date = Date.yesterday)
     (visits = self.visits_between(start_date, end_date)) > 0 ? self.bounces_between(start_date, end_date).to_f / visits : 0.0
   end
-
+  
+  def unique_contacts_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.to_a.sum {|campaign| campaign.number_of_unique_calls_between(start_date, end_date) + campaign.number_of_non_spam_submissions_between(start_date, end_date)}
+  end
+  
+  def overall_conversion_rate_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    (visits = self.visits_between(start_date, end_date)) > 0 ? self.unique_contacts_between(start_date, end_date).to_f / visits : 0.0
+  end
+  
+  def unique_conversion_rate_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    (unique_visits = self.unique_visits_between(start_date, end_date)) > 0 ? self.unique_contacts_between(start_date, end_date).to_f / unique_visits : 0.0
+  end
+  
   def visitor_visits_between(visitor_id, start_date = Date.yesterday, end_date = Date.yesterday)
     self.website_visits.between(start_date, end_date).for_visitor(visitor_id).count
   end
