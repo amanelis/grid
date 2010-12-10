@@ -135,16 +135,6 @@ class Admin::AccountsController < ApplicationController
     Time.zone = @account.time_zone
     respond_to do |format|
       format.html {render :layout => 'report'}
-=begin
-      format.pdf  { render :text => PDFKit.new( report_client_pdf(@account) ).to_pdf }
-      format.pdf {
-        html = render_to_string(:layout => 'report' , :action => "report_client.html.haml")
-        kit = PDFKit.new(html)
-        kit.stylesheets << "#{Rails.root}/public/stylesheets/application.css"
-        send_data(kit.to_pdf, :filename => "client_#{@account.name}_report.pdf", :type => 'application/pdf')
-        return # to avoid double render call
-      }
-=end
     end
   end
 
