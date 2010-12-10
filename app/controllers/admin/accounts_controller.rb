@@ -22,7 +22,7 @@ class Admin::AccountsController < ApplicationController
   # GET /accounts/1
   # GET /accounts/1.xml
   def show    
-    if params[:daterangepicker].blank?
+    if params[:daterange].blank?
       @account = Account.find(params[:id])
       Time.zone = @account.time_zone
       @timeline = @account.combined_timeline_data
@@ -49,7 +49,7 @@ class Admin::AccountsController < ApplicationController
       @map_campaign_timelines = @account.campaign_map_combined_timeline_data
 
       # Parse the date the GET request has received
-      dates = params[:daterangepicker].split(' - ')
+      dates = params[:daterange].split(' - ')
 
       begin
         @start_date = Date.parse(dates[0])
