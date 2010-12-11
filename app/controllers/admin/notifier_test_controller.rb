@@ -1,4 +1,4 @@
-class Admin::AccountsController < ApplicationController
+class Admin::NotifierTestController < ApplicationController
   
   def index
     render :layout => 'email'
