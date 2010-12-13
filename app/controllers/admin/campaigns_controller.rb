@@ -46,6 +46,15 @@ class Admin::CampaignsController < ApplicationController
   end
   
   def matrix
+    if params[:minutepicker].blank?
+      @date_selected = 2
+    else
+      begin
+        @minute_selected = params[:minutepicker]
+      rescue Exception
+        @minute_selected = 2
+      end
+    end
     
     if params[:daterangepicker].blank?
       @campaign = Campaign.find(params[:id])

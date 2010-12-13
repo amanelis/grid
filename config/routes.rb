@@ -10,7 +10,7 @@ ActionController::Routing::Routes.draw do |map|
   map.namespace :admin do |admin|
     admin.resources :accounts, :member => {:report => :get}
     admin.resources :users
-    admin.resources :campaigns
+    admin.resources :campaigns, :member => {:lead_matrix => :get}
     admin.resources :activities
     admin.resources :keywords
     admin.resources :job_statuses
