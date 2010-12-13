@@ -132,7 +132,7 @@ class Account < ActiveRecord::Base
     end
   end
 
-  def self.leads_in_previous_hours(time=nil)
+  def self.leads_in_previous_hours(time = nil)
     Activity.previous_hours(time).collect { |activity| activity.activity_type }
   end
 
@@ -148,8 +148,25 @@ class Account < ActiveRecord::Base
     Account.find(:all, :conditions => ['status = ? AND account_type LIKE ?', status, ('%' + account_type + '%')]).sort! { |a,b| a.name.downcase <=> b.name.downcase }
   end
   
+  def self.send_weekly_reports
+    accounts = self.accounts_receiving_weekly_reports
+  end
+
+  def self.resend_weekly_reports
+    accounts = self.accounts_receiving_weekly_reports.reject { |account| account.weeky_report_sent_this_week? }
+  end
+
+  def self.accounts_receiving_weekly_reports
+    self.active.to_a select { |account| account.receive_weekly_report? && account.reporting_emails.present? }
+  end
+  
+    
   # INSTANCE BEHAVIOR
   
+  def send_weekly_report(date = Date.today.beginning_of_week)
+    Notifier.send_later(:deliver_weekly_report, self, nil, date)
+  end
+
   def weeky_report_sent_this_week?
     self.last_weekly_report_sent.present? ? self.last_weekly_report_sent.beginning_of_week == DateTime.now.beginning_of_week : false
   end
@@ -159,7 +176,7 @@ class Account < ActiveRecord::Base
     start_date = end_date - previous.days
     [self.number_of_all_calls_between(start_date, end_date), self.number_of_lead_calls_between(start_date, end_date), self.number_of_all_submissions_between(start_date, end_date), self.number_of_lead_submissions_between(start_date, end_date)]
   end
-
+  
   def number_of_visits_by_date
     Utilities.merge_and_sum_timeline_data(self.campaigns.active.collect { |campaign| campaign.campaign_style.number_of_visits_by_date }, :visits)
   end
@@ -167,11 +184,6 @@ class Account < ActiveRecord::Base
   def number_of_leads_by_date
     Utilities.merge_and_sum_timeline_data(self.campaigns.active.collect { |campaign| campaign.campaign_style.number_of_leads_by_date }, :leads)
   end
-
-  #def combined_timeline_data
-  #  raw_data = self.number_of_visits_by_date
-  #  Utilities.massage_timeline(raw_data, [:visits])
-  #end
 
   def combined_timeline_data
     raw_data = Utilities.merge_timeline_data(self.number_of_leads_by_date, self.number_of_visits_by_date)
@@ -335,5 +347,15 @@ class Account < ActiveRecord::Base
   def number_of_other_calls_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.active.to_a.sum { |campaign| campaign.number_of_other_calls_between(start_date, end_date) }
   end
+  
+  
+  # PRIVATE BEHAVRIOR
+  
+  private
+  
+  def self.send_weekly_reports_to(accounts)
+    accounts.each { |account| account.send_weekly_report }
+  end
+  
 
 end
