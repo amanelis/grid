@@ -184,7 +184,6 @@ class WebsiteVisit < ActiveRecord::Base
                                                                                 :visitor_id => visit["uid"],
                                                                                 :time_of_visit => Time.at(visit["time"].to_i))
                 end
-                puts "Saved visit from #{nurl.geolocation}"
               rescue Exception => ex
                 exception = ex
                 next
@@ -204,8 +203,12 @@ class WebsiteVisit < ActiveRecord::Base
     self.class.find_all_by_visitor_id(self.visitor_id)
   end
   
-  def possible_calls(time_span = 2.minutes)
-    self.campaign.calls.between(self.time_of_visit, (self.time_of_visit - time_span))
+  def possible_calls(time_span = 2000)
+    possible_calls = Array.new
+    self.website.campaigns.each do |campaign|
+      possible_calls = possible_calls + campaign.calls.snapshot(self.time_of_visit, time_span)
+    end
+    possible_calls
   end
   
 end
