@@ -22,7 +22,9 @@ class SubmissionsController < ApplicationController
     @submission.ip_address = request.remote_ip
     @submission.user_agent = request.user_agent
     @submission.time_of_submission = DateTime.now
-    if @submission.save
+    if @submission.blank?
+      redirect_to params[:submission][:retURL]
+    elsif @submission.save
       # HTTP 200 OK
       Notifier.send_later(:deliver_form_submission, @submission) unless @submission.review_status_spam? || @submission.contact_form.inactive?
       @submission.update_if_duplicate
