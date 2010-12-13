@@ -1,2 +1,7 @@
-= "Number of calls: #{@account_report_data[0]}, Number of submissions: #{@account_report_data[1]}."
-
+%section
+  %article#greeting
+    %p Your Weekly CityVoice update,
+  %article#results= "Number of all calls: #{@account_report_data[0]}, Number of lead calls: #{@account_report_data[1]}, Number of all submissions: #{@account_report_data[2]}, Number of lead submissions: #{@account_report_data[3]}."
+  %article#definitions
+    %p *Lead: True, potential customers: first conversation or voicemail and spam free forms. 
+    %p *Contact: Anytime your phone rings or your email dings.

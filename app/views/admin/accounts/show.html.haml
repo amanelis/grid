@@ -4,13 +4,15 @@
   });
 %header
   .right 
-    = link_to "Monthly Report", report_client_path(params[:id]), :popup => true
+    = link_to "Export Report", report_client_pdf_path(params[:id]), :popup => true
+    |
+    = link_to "View Report", report_client_path(params[:id]), :popup => true
   
   %h1= @account.name
   %h2 Account Summary
 %article
   -form_for(admin_accounts_path, :html => {:method => "get", :onchange => "alert('hello')"}) do |f|
-    = f.text_field :daterangepicker, :name => "daterangepicker", :id => "daterangepicker"
+    = f.text_field :daterangepicker, :name => "daterange", :id => "daterangepicker"
     = f.submit "Filter Dates"
   %h3 #{(@start_date).to_s(:long) + ' to ' + @end_date.to_s(:long)}
   %table
@@ -30,7 +32,7 @@
     %tbody
       -@account.campaigns.each do |campaign|
         %tr
-          %td= link_to campaign.name, admin_campaign_path(campaign)
+          %td= link_to campaign.name, admin_campaign_path(campaign, :daterange => params[:daterange])
           %td= campaign.number_of_lead_calls_between(@start_date, @end_date).to_s
           %td= campaign.number_of_all_calls_between(@start_date, @end_date).to_s
           %td= campaign.number_of_lead_submissions_between(@start_date, @end_date).to_s

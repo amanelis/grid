@@ -274,8 +274,8 @@ class Campaign < ActiveRecord::Base
     self.submissions.between(start_date, end_date).count
   end
 
-  def number_of_unique_submissions_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.submissions.unique.non_spam.between(start_date, end_date).count
+  def number_of_non_spam_submissions_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.submissions.non_spam.between(start_date, end_date).count
   end
 
   def total_revenue_between(start_date = Date.yesterday, end_date = Date.yesterday)

@@ -2,8 +2,9 @@
   %h1 #{@campaign.name}
   %h4= @campaign.account.time_zone
 %article
-  - if @campaign.is_sem?
-    = render :partial => "shared/gauge"
+  #timeline_chart
+    - if @campaign.is_sem?
+      = render :partial => "shared/gauge"
   %h3 Last Week
   %table
     %thead
@@ -34,20 +35,21 @@
       %table
         %thead
           %th Website
-          %th Leads
           %th Visits
           %th Actions
-          %th Avg Actions/Visit
+          %th Bounces
+          %th Avg Actions per Visit
           %th Total Time Spent
           %th Avg Time Spent
           %th Bounce Rate
-          %th Spend
+          %th Overall Conversion Rate
+          %th Unique Conversion Rate
         %tbody
           %tr
             %td= link_to @campaign.website.nickname, admin_website_path(@campaign.website) 
-            %td= @campaign.number_of_total_leads_between(Date.today - 1.week, Date.today).to_s
             %td= @campaign.number_of_visits_between(Date.today - 1.week, Date.today).to_s
             %td= @campaign.number_of_actions_between(Date.today - 1.week, Date.today).to_s
+            %td= @campaign.number_of_bounces_between(Date.today - 1.week, Date.today).to_s
             %td= '%.2f' % @campaign.number_of_average_actions_between(Date.today - 1.week, Date.today).to_s
             %td
               - @total_time = @campaign.total_time_spent_between(Date.today - 1.week, Date.today)
@@ -56,7 +58,8 @@
               - @avg_time = @campaign.average_total_time_spent_between(Date.today - 1.week, Date.today).to_i
               = [(@avg_time/3600).to_s + 'h', (@avg_time/60 % 60).to_s + 'm', (@avg_time % 60).to_s + 's'].map{|t| t.to_s.rjust(2,'0')}.join(':')
             %td= (sprintf("%.2f", (@campaign.bounce_rate_between(Date.today - 1.week, Date.today) * 100)) + '%')
-            %td= ActionController::Base.helpers.number_to_currency(@campaign.spend_between(Date.today - 1.week, Date.today))
+            %td= (sprintf("%.2f", (@campaign.website.overall_conversion_rate_between(Date.today - 1.week, Date.today) * 100)) + '%')
+            %td= (sprintf("%.2f", (@campaign.website.unique_conversion_rate_between(Date.today - 1.week, Date.today) * 100)) + '%')
 	       
   -if @campaign.is_seo?
     %h3 Keywords
