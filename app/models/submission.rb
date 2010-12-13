@@ -142,4 +142,21 @@ class Submission < ActiveRecord::Base
     self.duplicate? ? DUPLICATE_STATUS_OPTIONS : UNIQUE_REVIEW_STATUS_OPTIONS
   end
   
+  def empty?
+    return false if self.from_email.present?
+    return false if self.name.present?
+    return false if self.home_address.present?
+    return false if self.work_category.present?
+    return false if self.work_description.present?
+    return false if self.other_information.present?
+    return false if self.custom1_value.present?
+    return false if self.custom2_value.present?
+    return false if self.custom3_value.present?
+    return false if self.custom4_value.present?
+    return false if self.date_requested.present?
+    return false if self.time_requested.present?
+    return false if self.phone_number.present?
+    true
+  end
+  
 end
