@@ -23,6 +23,7 @@ class Submission < ActiveRecord::Base
 
   named_scope :between, lambda { |start_date, end_date| {:conditions => ['time_of_submission between ? AND ?', start_date.to_time_in_current_zone.at_beginning_of_day.utc, end_date.to_time_in_current_zone.end_of_day.utc]} }
   named_scope :previous_hours, lambda { |*args| {:conditions => ['time_of_submission > ?', (args.first || nil)], :order => 'time_of_submission DESC'} }
+  named_scope :snapshot, lambda { |start_datetime, duration| {:conditions => ['time_of_submission between ? AND ?', start_datetime.in_time_zone, start_datetime.in_time_zone + duration.minutes]} }
   
   named_scope :lead, {
     :select => "submissions.*",

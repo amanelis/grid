@@ -211,4 +211,14 @@ class WebsiteVisit < ActiveRecord::Base
     possible_calls
   end
   
+  def possible_submissions(time_span = 2)
+    possible_submissions = Array.new
+    self.website.campaigns.each do |campaign|
+      campaign.contact_forms.each do |form|
+        possible_submissions = possible_submissions + form.submissions.snapshot(self.time_of_visit, time_span) if time_span.present?
+      end  
+    end
+    possible_submissions
+  end
+  
 end

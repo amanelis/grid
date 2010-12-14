@@ -73,7 +73,8 @@ class Admin::CampaignsController < ApplicationController
       @minutes_selected = 2
     else
       begin
-        @minutes_selected = params[:minutepicker]
+        #Default it to a number!
+        @minutes_selected = (params[:minutepicker].to_i if Float(params[:minutepicker]) rescue 2)
       rescue Exception
         @minutes_selected = 2
       end
