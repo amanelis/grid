@@ -161,7 +161,7 @@ class Account < ActiveRecord::Base
   end
 
   def self.accounts_receiving_weekly_reports
-    self.active.to_a select { |account| account.receive_weekly_report? && account.reporting_emails.present? }
+    self.active.to_a.select { |account| account.receive_weekly_report? && account.reporting_emails.present? }
   end
   
     
