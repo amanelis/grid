@@ -156,7 +156,7 @@ class Account < ActiveRecord::Base
 
   def self.resend_weekly_reports
     job_status = JobStatus.create(:name => "Account.resend_weekly_reports")
-    exception = self.send_weekly_reports_to(self.accounts_receiving_weekly_reports.reject { |account| account.weeky_report_sent_this_week? })
+    exception = self.send_weekly_reports_to(self.accounts_receiving_weekly_reports.reject { |account| account.weekly_report_sent_this_week? })
     exception.present? ? job_status.finish_with_errors(exception) : job_status.finish_with_no_errors
   end
 
@@ -172,7 +172,7 @@ class Account < ActiveRecord::Base
     self.update_attribute(:last_weekly_report_sent, DateTime.now)
   end
 
-  def weeky_report_sent_this_week?
+  def weekly_report_sent_this_week?
     self.last_weekly_report_sent.present? ? self.last_weekly_report_sent.beginning_of_week == DateTime.now.beginning_of_week : false
   end
   
