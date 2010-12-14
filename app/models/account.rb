@@ -358,6 +358,7 @@ class Account < ActiveRecord::Base
   private
   
   def self.send_weekly_reports_to(accounts)
+    exception = nil
     accounts.each do |account|
       begin
         account.send_weekly_report
