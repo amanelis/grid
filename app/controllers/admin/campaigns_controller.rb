@@ -93,7 +93,9 @@ class Admin::CampaignsController < ApplicationController
       @campaign = Campaign.find(params[:id])
       Time.zone = @campaign.account.time_zone
       begin
-        @date_selected = params[:datepicker]
+        #@date_selected = Date.strptime(params[:datepicker], '%Y/%d/%m')
+        dates = params[:datepicker].split("/")
+        @date_selected = Date.new(dates[2].to_i, dates[0].to_i, dates[1].to_i)
       rescue Exception
         @date_selected = Date.yesterday
       end

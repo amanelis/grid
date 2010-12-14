@@ -7,13 +7,13 @@
   
 %article
   -form_for(lead_matrix_admin_campaign_path, :html => {:method => "get"}) do |f|
-    = f.text_field :datepicker, :name => "datepicker", :id => "datepicker"
-    = f.submit "Date Evaluated"
+    = f.text_field :datepicker, :name => "datepicker", :id => "datepicker", :value => @date_selected.strftime("%m/%d/%Y")
+    = f.submit "Date to Evaluate"
 %article
   -form_for(lead_matrix_admin_campaign_path, :html => {:method => "get"}) do |f|
-    = f.text_field :minutepicker, :name => "minutepicker", :id => "minutepicker"
+    = f.text_field :minutepicker, :name => "minutepicker", :id => "minutepicker", :value => "#{@minutes_selected}"
     = f.submit "Minutes Past Visit"
-  %h3= @date_selected.to_s(:long) + ' : ' + @minutes_selected.to_s + ' Minutes Past the Visit'
+  %h3= @date_selected.strftime("%m/%d/%Y") + ' : ' + @minutes_selected.to_s + ' Minutes Past the Visit'
 -if @campaign.website.present?  
   %table
     %thead
