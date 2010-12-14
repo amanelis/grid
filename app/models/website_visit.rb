@@ -206,7 +206,7 @@ class WebsiteVisit < ActiveRecord::Base
   def possible_calls(time_span = 2)
     possible_calls = Array.new
     self.website.campaigns.each do |campaign|
-      possible_calls = possible_calls + campaign.calls.snapshot(self.time_of_visit, time_span)
+      possible_calls = possible_calls + campaign.calls.snapshot(self.time_of_visit, time_span) if time_span.present?
     end
     possible_calls
   end
