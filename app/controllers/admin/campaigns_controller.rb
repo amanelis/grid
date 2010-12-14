@@ -80,7 +80,7 @@ class Admin::CampaignsController < ApplicationController
       end
     end
     
-    if params[:daterangepicker].blank?
+    if params[:datepicker].blank?
       @campaign = Campaign.find(params[:id])
       Time.zone = @campaign.account.time_zone
        
@@ -90,13 +90,10 @@ class Admin::CampaignsController < ApplicationController
         format.html # show.html.erb
       end
     else
-       @campaign = Campaign.find(params[:id])
-        Time.zone = @campaign.account.time_zone
-      # Parse the date the GET request has received
-      dates = params[:daterangepicker].split(' - ')
-
+      @campaign = Campaign.find(params[:id])
+      Time.zone = @campaign.account.time_zone
       begin
-        @date_selected = Date.parse(dates[0])
+        @date_selected = params[:datepicker]
       rescue Exception
         @date_selected = Date.yesterday
       end
