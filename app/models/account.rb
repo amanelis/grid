@@ -149,11 +149,15 @@ class Account < ActiveRecord::Base
   end
   
   def self.send_weekly_reports
-    accounts = self.accounts_receiving_weekly_reports
+    job_status = JobStatus.create(:name => "Account.send_weekly_reports")
+    exception = self.send_weekly_reports_to(self.accounts_receiving_weekly_reports)
+    exception.present? ? job_status.finish_with_errors(exception) : job_status.finish_with_no_errors
   end
 
   def self.resend_weekly_reports
-    accounts = self.accounts_receiving_weekly_reports.reject { |account| account.weeky_report_sent_this_week? }
+    job_status = JobStatus.create(:name => "Account.resend_weekly_reports")
+    exception = self.send_weekly_reports_to(self.accounts_receiving_weekly_reports.reject { |account| account.weeky_report_sent_this_week? })
+    exception.present? ? job_status.finish_with_errors(exception) : job_status.finish_with_no_errors
   end
 
   def self.accounts_receiving_weekly_reports
@@ -354,7 +358,15 @@ class Account < ActiveRecord::Base
   private
   
   def self.send_weekly_reports_to(accounts)
-    accounts.each { |account| account.send_weekly_report }
+    accounts.each do |account|
+      begin
+        account.send_weekly_report
+      rescue Exception => ex
+        exception = ex
+        next
+      end
+    end
+    exception
   end
   
 
