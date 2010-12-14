@@ -32,6 +32,29 @@ class Admin::CampaignsController < ApplicationController
       @chart.width  = 250
 	    @chart.height = 250
     end
+    if params[:daterange].blank?
+      @start_date = Date.yesterday - 1.week
+      @end_date = Date.yesterday
+
+      respond_to do |format|
+        format.html # show.html.erb
+      end
+    else
+      # Parse the date the GET request has received
+      dates = params[:daterange].split(' - ')
+
+      begin
+        @start_date = Date.parse(dates[0])
+        @end_date = Date.parse(dates[1])
+      rescue Exception
+        @start_date = Date.yesterday - 1.week
+        @end_date = Date.yesterday
+      end
+
+      respond_to do |format|
+        format.html # show.html.erb
+      end
+    end
   end
   
   def update
@@ -45,7 +68,16 @@ class Admin::CampaignsController < ApplicationController
     redirect_to admin_campaign_path(@campaign)
   end
   
-  def matrix
+  def lead_matrix
+    if params[:minutepicker].blank?
+      @minutes_selected = 2
+    else
+      begin
+        @minutes_selected = params[:minutepicker]
+      rescue Exception
+        @minutes_selected = 2
+      end
+    end
     
     if params[:daterangepicker].blank?
       @campaign = Campaign.find(params[:id])
