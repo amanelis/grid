@@ -1,0 +1,40 @@
+%script
+  $(function(){
+  $('#daterangepicker').daterangepicker({arrows:false}); 
+  });
+%header
+  %h2 Lead Matrix for #{@campaign.name}
+  
+%article
+  -form_for(lead_matrix_admin_campaign_path, :html => {:method => "get", :onchange => "alert('hello')"}) do |f|
+    = f.text_field :daterangepicker, :name => "daterangepicker", :id => "daterangepicker"
+    = f.submit "Date Evaluated"
+%article
+  -form_for(lead_matrix_admin_campaign_path, :html => {:method => "get", :onchange => "alert('hello')"}) do |f|
+    = f.text_field :minutepicker, :name => "minutepicker", :id => "minutepicker"
+    = f.submit "Minutes Past Visit"
+  %h3= @date_selected.to_s(:long) + ' : ' + @minutes_selected.to_s + ' Minutes Past the Visit'
+  
+  %table
+    %thead
+      %th Visit Time
+      %th Location
+      %th Keyword
+      %th Calls
+    %tbody
+      - @campaign.website.website_visits.between(@date_selected, @date_selected).each do |web_visit|
+        %tr
+          %td= web_visit.time_of_visit.strftime("%m/%d/%y %I:%M %p")
+          %td= web_visit.geolocation
+          %td= web_visit.referrer_search
+          %td
+            %table
+              %thead
+                %th Call Time
+                %th Caller
+              %tbody
+                -web_visit.possible_calls(@minutes_selected.to_i).each do |call|
+                  %tr
+                    %td= call.call_start.strftime("%m/%d/%y %I:%M %p")
+                    %td= call.caller_name
+         
