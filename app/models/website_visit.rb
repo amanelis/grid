@@ -208,6 +208,7 @@ class WebsiteVisit < ActiveRecord::Base
     self.website.campaigns.each do |campaign|
       possible_calls = possible_calls + campaign.calls.snapshot(self.time_of_visit, time_span) if time_span.present?
     end
+    possible_calls = possible_calls.sort! {|a,b| a.call_start <=> b.call_start } if possible_calls.present?
     possible_calls
   end
   
@@ -218,6 +219,7 @@ class WebsiteVisit < ActiveRecord::Base
         possible_submissions = possible_submissions + form.submissions.snapshot(self.time_of_visit, time_span) if time_span.present?
       end  
     end
+    possible_submissions = possible_submissions.sort! {|a,b| a.time_of_submission <=> b.time_of_submission} if possible_submissions.present?
     possible_submissions
   end
   

@@ -7,13 +7,14 @@
   
 %article
   -form_for(lead_matrix_admin_campaign_path, :html => {:method => "get"}) do |f|
+    = f.label "Date to Evaluate:"
     = f.text_field :datepicker, :name => "datepicker", :id => "datepicker", :value => @date_selected.strftime("%m/%d/%Y")
-    = f.submit "Date to Evaluate"
-%article
-  -form_for(lead_matrix_admin_campaign_path, :html => {:method => "get"}) do |f|
+    %br
+    = f.label "Minutes Past Visit:"
     = f.text_field :minutepicker, :name => "minutepicker", :id => "minutepicker", :value => "#{@minutes_selected}"
-    = f.submit "Minutes Past Visit"
-  %h3= @date_selected.strftime("%m/%d/%Y") + ' : ' + @minutes_selected.to_s + ' Minutes Past the Visit'
+    %br
+    = f.submit "Create Matrix!"
+    
 -if @campaign.website.present?  
   %table
     %thead
@@ -24,7 +25,7 @@
     %tbody
       - @campaign.website.website_visits.between(@date_selected, @date_selected).each do |web_visit|
         %tr
-          %td= web_visit.time_of_visit.strftime("%m/%d/%y %I:%M %p")
+          %td= web_visit.time_of_visit.strftime("%I:%M %p")
           %td= web_visit.geolocation
           %td= web_visit.referrer_search
           %td
@@ -32,14 +33,21 @@
               %thead
                 %th Time
                 %th Name
-                %th Description
+                %th Description/Recording
               %tbody
                 -leads = web_visit.possible_calls(@minutes_selected.to_i) + web_visit.possible_submissions(@minutes_selected.to_i)
                 -leads.each do |lead|
                   %tr
                     %td= (lead.class == Call ? lead.call_start.strftime("%m/%d/%y %I:%M %p") : lead.time_of_submission.strftime("%m/%d/%y %I:%M %p"))
                     %td= (lead.class == Call ? lead.caller_name : lead.name)
-                    %td= (lead.class == Call ? '' : lead.work_description)
+                    %td
+                      -if lead.class == Call 
+                        -if lead.recorded? && lead.recording?
+                          = mp3_player "#{lead.recording.expiring_url(14400)}"
+                        -else
+                          =image_tag("sound.png")
+                      -else
+                        lead.work_description
 -else
   %h4 There is no website associated with this campaign. Please add one to view the lead matrix.
          
