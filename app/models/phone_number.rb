@@ -95,7 +95,7 @@ class PhoneNumber < ActiveRecord::Base
     Campaign.orphanage.phone_numbers
   end
   
-  def self.selectable_oprhaned_phone_numbers
+  def self.selectable_orphaned_phone_numbers
     self.orphaned_phone_numbers.collect { |orphan| ["#{orphan.name} - #{orphan.inboundno}", orphan.id] }.sort { |x, y| x.first.downcase <=> y.first.downcase }
   end
 
@@ -106,7 +106,6 @@ class PhoneNumber < ActiveRecord::Base
     self.campaign_id = Campaign.orphanage.id
     self.save
   end
-  
 
   def number_of_answered_calls_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.calls.answered.between(start_date, end_date).count
