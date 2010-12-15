@@ -113,13 +113,9 @@
             %td= number.inboundno
 
     %h5
-      - semantic_form_for @campaign, :url => admin_campaign_path(@campaign) do |f| 
-        = f.semantic_errors :state
-        - f.inputs do
-          %br
-          = f.input :adopting_phone_number, :label => 'Add Orphaned Phone Number', :as => :select, :collection => PhoneNumber.selectable_oprhaned_phone_numbers, :include_blank => true
-        - f.buttons do
-          = f.commit_button :update, :button_html => { :class => "button" }
+      - form_for @campaign, :url => admin_campaign_path(@campaign) do |f| 
+        = f.select :adopting_phone_number, PhoneNumber.selectable_oprhaned_phone_numbers, :include_blank => true
+        = f.submit :Update
     %h3= "Submission Log (ID = #{@campaign.contact_form_id_string}, Emails: #{@campaign.contact_form_emails_string})"
     %table
       %thead
