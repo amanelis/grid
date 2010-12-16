@@ -133,18 +133,19 @@ class Admin::AccountsController < ApplicationController
   def report_client
     @account = Account.find(params[:id])
     Time.zone = @account.time_zone
+    
+    @h = HighChart.new('graph') do |f|
+      f.options[:chart][:defaultSeriesType] = "area"
+      f.options[:chart][:inverted] = true
+      f.options[:legend][:layout] = "horizontal"
+      f.options[:x_axis][:categories] = ["uno" ,"dos" , "tres" , "cuatro"]
+      
+      f.series(:name => 'John', :data => [3, 20, 3, 5, 4, 10, 12 ,3, 5,6,7,7,80,9,9])
+      f.series(:name => 'Alex', :data => [1, 3, 4, 3, 3, 5, 4,15,7,8,8,9,9,0,0,9] )
+    end
+    
     respond_to do |format|
       format.html {render :layout => 'report'}
-=begin
-      format.pdf  { render :text => PDFKit.new( report_client_pdf(@account) ).to_pdf }
-      format.pdf {
-        html = render_to_string(:layout => 'report' , :action => "report_client.html.haml")
-        kit = PDFKit.new(html)
-        kit.stylesheets << "#{Rails.root}/public/stylesheets/application.css"
-        send_data(kit.to_pdf, :filename => "client_#{@account.name}_report.pdf", :type => 'application/pdf')
-        return # to avoid double render call
-      }
-=end
     end
   end
 
