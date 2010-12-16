@@ -133,15 +133,20 @@ class Admin::AccountsController < ApplicationController
   def report_client
     @account = Account.find(params[:id])
     Time.zone = @account.time_zone
+    @month_start = (Date.today - 1.month).beginning_of_month
+    @month_end = (Date.today - 1.month).end_of_month
+    
     
     @h = HighChart.new('graph') do |f|
-      f.options[:chart][:defaultSeriesType] = "area"
-      f.options[:chart][:inverted] = true
-      f.options[:legend][:layout] = "horizontal"
-      f.options[:x_axis][:categories] = ["uno" ,"dos" , "tres" , "cuatro"]
+      f.title({:text=>"Campaign Data Graph"})      
+      f.options[:x_axis][:categories] = @account.campaigns.active.collect(&:name)
+      f.labels(:items=>[:style=>{:left=>"40px", :top=>"8px", :color=>"black", :align => 'right'} ])
       
-      f.series(:name => 'John', :data => [3, 20, 3, 5, 4, 10, 12 ,3, 5,6,7,7,80,9,9])
-      f.series(:name => 'Alex', :data => [1, 3, 4, 3, 3, 5, 4,15,7,8,8,9,9,0,0,9] )
+      f.series(:type=> 'column',:name=> 'Calls',          :data => @account.campaigns.active.collect {|campaign| campaign.number_of_lead_calls_between(@month_start, @month_end) })
+      f.series(:type=> 'column',:name=> 'Forms',          :data => @account.campaigns.active.collect {|campaign| campaign.number_of_lead_submissions_between(@month_start, @month_end) })
+      f.series(:type=> 'column', :name=> 'Total Leads',   :data => @account.campaigns.active.collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
+      f.series(:type=> 'column', :name=> 'Total Contacts',:data => @account.campaigns.active.collect {|campaign| campaign.number_of_total_contacts_between(@month_start, @month_end) })
+
     end
     
     respond_to do |format|
