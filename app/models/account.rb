@@ -161,14 +161,14 @@ class Account < ActiveRecord::Base
   end
 
   def self.accounts_receiving_weekly_reports
-    self.active.to_a.select { |account| account.receive_weekly_report? && account.reporting_emails.present? }
+    self.active.to_a.select { |account| account.receive_weekly_report? && account.valid_reporting_emails.present? }
   end
   
     
   # INSTANCE BEHAVIOR
   
   def send_weekly_report(date = Date.today.beginning_of_week)
-    Notifier.send_later(:deliver_weekly_report, self, nil, date)
+    Notifier.send_later(:deliver_weekly_report, self, self.valid_reporting_emails, date) unless valid_reporting_emails.blank?
     self.update_attribute(:last_weekly_report_sent, DateTime.now)
   end
 
@@ -180,6 +180,10 @@ class Account < ActiveRecord::Base
     end_date = date - 1.day
     start_date = end_date - previous.days
     [self.number_of_all_calls_between(start_date, end_date), self.number_of_lead_calls_between(start_date, end_date), self.number_of_all_submissions_between(start_date, end_date), self.number_of_lead_submissions_between(start_date, end_date), start_date, end_date]
+  end
+  
+  def valid_reporting_emails
+    self.reporting_emails.split(/, \s*/).select { |email_address| Utilities.is_valid_email_address?(email_address) }
   end
   
   def number_of_visits_by_date
