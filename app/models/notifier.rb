@@ -17,12 +17,10 @@ class Notifier < ActionMailer::Base
   end
 
   def weekly_report(account, email_list = nil, date = nil)
-    email_list ||= account.reporting_emails
     date ||= Date.today.beginning_of_week
-    
-    the_recipients = email_list.split(/, \s*/)
+    email_list ||= account.reporting_emails.split(/, \s*/)
 
-    recipients    the_recipients
+    recipients    email_list
     subject       "Weekly Report"  
     from          "CityVoice <no-reply@cityvoice.com>"
     body          :account_report_data => account.previous_days_report_data(date, 7)
