@@ -3,7 +3,12 @@
 The main app can be found at http://grid.cityvoice.com as well as the staging environment http://staging.cityvoice.com
 
 == Installation
-To configure this app you must first run: `rake gems:install` this will install all dependent gems for Grid so you can get going. Possible errors you will encounter are issues with two gems we have seen so far. The first Gem being daemons, you must be sure on your system that there is NO other version of daemons installed except for the version we have specified in the config/environment.rb for that gem. Be sure to `rake db:create && rake db:migrate` to setup your database and migrations. If your migrations fail try switching to SQLite3 or standard database debugging or adding `RAILS_ENV=development` onto your migration string (I have seen very few cases when app defaults to production or test, but it can happen and appending the RAILS_ENV to migration string usually works).
+To configure this app you must first run: 
+  rake gems:install
+this will install all dependent gems for Grid so you can get going. Possible errors you will encounter are issues with two gems we have seen so far. The first Gem being daemons, you must be sure on your system that there is NO other version of daemons installed except for the version we have specified in the config/environment.rb for that gem. Be sure to: 
+  rake db:create 
+  rake db:migrate
+to setup your database and migrations. If your migrations fail try switching to SQLite3 or standard database debugging or adding RAILS_ENV=development onto your migration string (I have seen very few cases when app defaults to production or test, but it can happen and appending the RAILS_ENV to migration string usually works).
 
 == Pulling Data
 After you fully get setup and you can run the server and/or console and get NO error messages on either after startup. If so you are ready to pull some data for your database. Don't forget to run your migrations, but remember these cannot fail or you cannot continue with proper functionality of the application. At this point go ahead and startup the console for the Grid application and you can start a giant data pull from salesforce by executing this command:
