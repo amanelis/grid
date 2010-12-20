@@ -197,7 +197,14 @@ class Admin::AccountsController < ApplicationController
     send_data csv_data,
       :type => 'text/csv; charset=iso-8859-1; header=present',
       :disposition => "attachment; filename=#{@outfile}"
-  end # def export
+  end 
+  
+  def send_weekly_email
+    @account = Account.first(params[:id])
+    @account.send_weekly_report_now
+    flash[:notice] = "Weekly email sent!"
+    redirect_to admin_accounts_path(@account)
+  end
 
 end
 
