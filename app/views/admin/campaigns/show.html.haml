@@ -13,9 +13,8 @@
   %h1 #{@campaign.name}
   %h4= @campaign.account.time_zone
 %article
-  #timeline_chart
-    - if @campaign.is_sem?
-      = render :partial => "shared/gauge"
+  - if @campaign.is_sem?
+    = render :partial => "shared/gauge"
 %article
   -form_for(admin_accounts_path, :html => {:method => "get", :onchange => "alert('hello')"}) do |f|
     = f.text_field :daterangepicker, :name => "daterange", :id => "daterangepicker"
