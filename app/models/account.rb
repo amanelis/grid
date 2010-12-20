@@ -187,7 +187,7 @@ class Account < ActiveRecord::Base
     (self.reporting_emails || "").split(/, \s*/).select { |email_address| Utilities.is_valid_email_address?(email_address) }
   end
   
-  def send_weekly_report_now
+  def send_weekly_report_now(date = Date.today.beginning_of_week)
     return unless valid_reporting_emails.can_send_weekly_report_now?
     Notifierdeliver_weekly_report(self, self.valid_reporting_emails, date)
     self.update_attribute(:last_weekly_report_sent, DateTime.now)
