@@ -203,7 +203,7 @@ class Admin::AccountsController < ApplicationController
     @account = Account.first(params[:id])
     @account.send_weekly_report_now
     flash[:notice] = "Weekly email sent!"
-    redirect_to admin_accounts_path(@account)
+    redirect_to :action => "index"
   end
 
 end
