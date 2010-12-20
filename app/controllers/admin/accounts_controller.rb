@@ -163,7 +163,7 @@ class Admin::AccountsController < ApplicationController
   end
   
   def send_weekly_email
-    @account = Account.first(params[:id])
+    @account = Account.find(params[:id])
     @account.send_weekly_report_now
     flash[:notice] = "You have successfully sent an email!"
     redirect_to admin_account_path(params[:id])
