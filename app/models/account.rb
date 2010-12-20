@@ -183,7 +183,7 @@ class Account < ActiveRecord::Base
   end
   
   def valid_reporting_emails
-    self.reporting_emails.split(/, \s*/).select { |email_address| Utilities.is_valid_email_address?(email_address) }
+    (self.reporting_emails || "").split(/, \s*/).select { |email_address| Utilities.is_valid_email_address?(email_address) }
   end
   
   def number_of_visits_by_date
