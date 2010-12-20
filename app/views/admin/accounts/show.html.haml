@@ -7,6 +7,9 @@
     = link_to "Export Report", report_client_pdf_path(params[:id]), :popup => true
     |
     = link_to "View Report", report_client_path(params[:id]), :popup => true
+    |
+    - if @account.can_send_weekly_report_now?
+      = link_to "Send Email", send_weekly_path(params[:id])
   
   %h1= @account.name
   %h2 Account Summary

@@ -162,6 +162,13 @@ class Admin::AccountsController < ApplicationController
     end
   end
   
+  def send_weekly_email
+    @account = Account.first(params[:id])
+    @account.send_weekly_report_now
+    flash[:notice] = "You have successfully sent an email!"
+    redirect_to admin_account_path(params[:id])
+  end
+  
   # Simple method to reload salesforce data, accounts/campaigns
   def refresh_accounts
     Account.pull_salesforce_accounts
@@ -197,7 +204,7 @@ class Admin::AccountsController < ApplicationController
     send_data csv_data,
       :type => 'text/csv; charset=iso-8859-1; header=present',
       :disposition => "attachment; filename=#{@outfile}"
-  end # def export
+  end 
 
 end
 

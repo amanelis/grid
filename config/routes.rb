@@ -5,7 +5,8 @@ ActionController::Routing::Routes.draw do |map|
   map.report_client "/admin/accounts/:id/report/client", :controller => "admin/accounts", :action => :report_client
   map.report_client_pdf "/admin/accounts/:id/report/client.pdf", :controller => "admin/accounts", :action => :report_client, :as => :client
   map.export "/admin/accounts/export", :controller => "admin/accounts", :action => :export
-  
+  # map.weekly_report "/admin/notifiers/weekly_report/:id", :controller => "admin/notifiers", :action => :weekly_report
+  map.send_weekly "/admin/accounts/send_weekly_email/:id", :controller => "admin/accounts", :action => :send_weekly_email
   
   map.namespace :admin do |admin|
     admin.resources :accounts, :member => {:report => :get}
