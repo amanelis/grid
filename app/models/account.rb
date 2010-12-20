@@ -168,7 +168,8 @@ class Account < ActiveRecord::Base
   # INSTANCE BEHAVIOR
   
   def send_weekly_report(date = Date.today.beginning_of_week)
-    Notifier.send_later(:deliver_weekly_report, self, self.valid_reporting_emails, date) unless valid_reporting_emails.blank?
+    return if valid_reporting_emails.blank?
+    Notifier.send_later(:deliver_weekly_report, self, self.valid_reporting_emails, date)
     self.update_attribute(:last_weekly_report_sent, DateTime.now)
   end
 
@@ -184,6 +185,16 @@ class Account < ActiveRecord::Base
   
   def valid_reporting_emails
     (self.reporting_emails || "").split(/, \s*/).select { |email_address| Utilities.is_valid_email_address?(email_address) }
+  end
+  
+  def send_weekly_report_now
+    return unless valid_reporting_emails.can_send_weekly_report_now?
+    Notifierdeliver_weekly_report(self, self.valid_reporting_emails, date)
+    self.update_attribute(:last_weekly_report_sent, DateTime.now)
+  end
+  
+  def can_send_weekly_report_now?
+    self == Account.find_by_name("CityVoice")
   end
   
   def number_of_visits_by_date
