@@ -84,7 +84,7 @@ class ApplicationManifest < Moonshine::Manifest::Rails
       cron 'update_sem_campaign_reports_by_campaign', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} SemCampaign.update_sem_campaign_reports_by_campaign", :user => configuration[:user], :minute => 1, :hour => 9
       cron 'update_sem_campaign_reports_by_ad', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} SemCampaign.update_sem_campaign_reports_by_ad", :user => configuration[:user], :minute => 1, :hour => 11
 
-      cron 'send_weekly_report', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} Account.send_weekly_reports", :user => configuration[:user], :minute => 1, :hour => 14, :weekday => 'mon'
+      cron 'send_weekly_report', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} Account.send_weekly_reports", :user => configuration[:user], :minute => 1, :hour => 16, :weekday => 'mon'
     end
     
     on_stage 'staging' do
