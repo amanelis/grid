@@ -16,7 +16,7 @@ class Account < ActiveRecord::Base
     end
   end
   
-  named_scope :active, :conditions => ['LCASE(status) = ? OR LCASE(status) = ?', "active", "paused"], :order => "name ASC"
+  named_scope :active, :conditions => ['LCASE(status) = ? OR LCASE(status) = ?', "active", "paused", "pending setup"], :order => "name ASC"
   named_scope :inactive, :conditions => ['LCASE(status) = ?', "inactive"], :order => "name ASC"
   named_scope :reseller, :conditions => ['LCASE(account_type) LIKE ?', "%reseller%"]
 
