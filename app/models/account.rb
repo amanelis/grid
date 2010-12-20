@@ -189,7 +189,7 @@ class Account < ActiveRecord::Base
   
   def send_weekly_report_now(date = Date.today.beginning_of_week)
     return unless self.can_send_weekly_report_now?
-    Notifierdeliver_weekly_report(self, self.valid_reporting_emails, date)
+    Notifier.deliver_weekly_report(self, self.valid_reporting_emails, date)
     self.update_attribute(:last_weekly_report_sent, DateTime.now)
   end
   
