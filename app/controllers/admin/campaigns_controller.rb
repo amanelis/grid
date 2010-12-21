@@ -7,13 +7,14 @@ class Admin::CampaignsController < ApplicationController
     @timeline = @campaign.campaign_style.combined_timeline_data
     @sorted_dates = @timeline.keys.sort
     @title = @campaign.account.name
+    
     if @campaign.is_sem?
       @chart = GoogleVisualr::Gauge.new
       @chart.add_column('string' , 'Label')
-	  @chart.add_column('number' , 'Value')
+	    @chart.add_column('number' , 'Value')
 
-	  # Add Rows and Values
-	  @chart.add_rows(1)
+	    # Add Rows and Values
+	    @chart.add_rows(1)
       @chart.set_value(0, 0, 'PPC Spend')
       if @campaign.campaign_style.monthly_budget.present?
         @budget = @campaign.campaign_style.monthly_budget
