@@ -1,0 +1,247 @@
+<html lang="en">
+<head>
+
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Versatile Newsletter v2 - Base File no. 2</title>
+	
+	<style type="text/css">
+		
+		/* general styling */
+		
+		table   /* this is the default font size, family and color for the whole newsletter  */
+		{ 	
+			color:#666666; 					
+			font-family:Arial, sans-serif; 
+			font-size:12px; 
+			line-height:20px; 
+		}
+		
+		h1{ font-family:Arial, sans-serif; color:#000; font-size:22px; }
+		h2{ font-family:Arial, sans-serif; color:#000; font-size:18px; }
+		h3{ font-family:Arial, sans-serif; color:#000; font-size:16px; }
+		h4{ font-family:Arial, sans-serif; color:#000; font-size:14px; }
+		
+		a{ color:#2A5DB0; }
+		b{ color:#333333; }
+		i{}
+		
+		ul{ margin-left:0; padding-left:0; padding-left:16px; }
+		ol{ margin-left:0; padding-left:0; padding-left:25px; }
+		
+		/* custom classes */
+		
+		.shout{ color:#FF0000; }
+		.silence{ color:#666666; font-weight:400; }
+		
+		.text-align-center{ text-align:center; }
+		.text-align-right{ text-align:right; }
+		
+		.img-left-aligned{ margin-right:20px; margin-top:0px; margin-bottom:5px; margin-top:5px; }
+		.img-right-aligned{ margin-left:20px; margin-top:0px; margin-bottom:5px; margin-top:5px; }
+		
+		.bordered-bottom{ border-bottom:1px solid #d6d6d6; }
+		.bordered-bottom-left{ border-bottom:1px solid #d6d6d6; border-left:1px solid #d6d6d6; }
+		
+		/* top */
+		
+		.view-mobile-browser{ line-height:14px; font-size:11px; }
+			.view-mobile-browser a{ color:#3a3a3a; }
+	
+		.ourwebsite{ line-height:14px; font-size:11px; }
+			.ourwebsite a{ font-weight:bold; }
+		
+		.logo{}
+		
+		.menu-or-slogan{}
+			.menu-or-slogan a{ color:#3a3a3a; text-decoration:underline; }
+		
+		/* content */
+		
+		.main-content-wrap{ border-width: 1px 1px 1px 1px; border-spacing: 0px; border-style: solid solid solid solid; 
+		border-color: #d6d6d6 #d6d6d6 #d6d6d6 #d6d6d6; border-collapse: collapse; background-color: #ffffff; }
+		
+		/* bottom */
+		
+		.companyinfo{}
+			.companyinfo a{}
+		
+		.subscription{}
+			.subscription a{}
+		
+		.social{ border-top:1px solid #D0D0D0; border-bottom:1px solid #D0D0D0; }
+			.social a{ color:#3a3a3a; text-decoration:none; }
+		
+		.copyright{}
+			.copyright a{ color:#565656; text-decoration:none; }
+		
+	</style>
+
+</head>
+<body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0" bgcolor="#E3E3E3" background="images/bg.png">
+
+<!-- wrapper table - needed as some readers strip the <html>, <head> and <body> tags -->	
+<table cellpadding="0" cellspacing="0" width="100%"  bgcolor="#E3E3E3" background="images/bg.png"><tr><td>
+<!-- ///////////////////////////////////// Newsletter Content  ///////////////////////////////////// -->
+	
+	<br>	
+		
+	<table cellpadding="0" cellspacing="0" width="600" border="0" rules="none" align="center" ><tr><td>
+	
+	<!-- START HEADER CONTENT -->
+		
+		<br><br>
+		
+		<table cellpadding="0" cellspacing="0" width="560" align="center"><tr>
+			<td width="160" valign="top" class="logo">
+			
+				<a href="http://www.cityvoice.com/"><img src="images/cityvoice_logo.png" width="100" height="54" border="0" alt="CityVoice Logo"></a>
+	
+			</td>
+			<td width="400" valign="middle" align="right" class="menu-or-slogan">
+			
+				<p>
+				  Weekly Report for CUSTOMER NAME
+				  <br>12/1/2010 - 12/8/2010
+				  
+				<h2>VARIABLES: <%= "Number of all calls: #{@account_report_data[0]}, Number of lead calls: #{@account_report_data[1]}, Number of all submissions: #{@account_report_data[2]}, Number of lead submissions: #{@account_report_data[3]}."%></h2>
+				</p>  
+			
+			</td>	
+		</tr></table>
+		
+	<!-- END HEADER CONTENT -->
+	
+	</td></tr></table>
+		
+	<br>
+		
+	<table cellpadding="0" cellspacing="0" width="600" bgcolor="#ffffff" bordercolor="#d6d6d6"   
+	border="1" rules="none" frame="border"  align="center" class="main-content-wrap"><tr><td>
+	
+	<img src="images/module-divider-3.gif" width="600" height="30" alt="">
+	
+	<!-- START MAIN CONTENT. ADD MODULES BELOW -->	
+
+	<!-- Module #1 | 1 col, 540px -->
+  <table cellpadding="0" cellspacing="0" width="540" align="center">
+  	<tr>
+
+  		<td valign="top">
+
+  			<table cellpadding="0" cellspacing="0" width="540" align="center">
+
+        	<tr>
+        		<td align="left" class="bordered-bottom" width="250"> <h2>Weekly Leads</h2></p>
+        		<td align="left" class="bordered-bottom"> <p></p></td>
+        		<td align="right" class="bordered-bottom"> <h2> 74*</h2></td> 
+        	</tr>
+        	<tr>
+        		<td align="left" class="bordered-bottom" width="250"> <img src="images/phone.gif" width="40" height="40" alt=""></td>
+        		<td align="left" class="bordered-bottom"> <p><b>CALLS</b><br>Leads<br>Total</p></td>
+        		<td align="right" class="bordered-bottom"> <p><br>12*<br>46*</p></td>
+        	</tr>
+        	<tr>
+        		<td align="left" class="bordered-bottom" width="250"> <img src="images/form.gif" width="40" height="40" alt=""></td>
+        		<td align="left" class="bordered-bottom"> <p><b>FORMS</b><br>Leads<br>Total</p></td>
+        		<td align="right" class="bordered-bottom"> <p><br>42*<br>108*</p></td>
+        	</tr>
+
+        </table>
+        
+
+  		</td>
+
+  	</tr>	
+  </table>
+  <!-- End Module #1 -->
+  
+  <!-- Module #1 | 1 col, 540px -->
+  <table cellpadding="0" cellspacing="0" width="540" align="center">
+  	<tr>
+
+  		<td valign="top">
+
+  	    <p><i>
+          <br>Leads: True, potential customers: first conversation or voicemail and spam free forms.
+          <br>Total: Anytime your phone rings or your email dings.
+        </i></p>
+  		</td>
+
+  	</tr>	
+  </table>
+  <!-- End Module #1 -->
+  
+	<!-- END MAIN CONTENT -->
+	<!-- START SOCIAL + COMPANY INFO + SUBSCRIPTION -->				
+		
+		<img src="images/module-divider-3.gif" width="600" height="40" alt="">
+		
+		<table cellpadding="0" cellspacing="0" bgcolor="#efefef" class="social">
+			<tr>
+				
+				<td width="600" height="15">&nbsp;</td>
+
+			</tr>
+		</table>
+
+		<img src="images/module-divider-3.gif" width="600" height="25" alt="">
+		
+		<table cellpadding="0" cellspacing="0" width="540" align="center">
+			<tr>
+			
+				<td width="265" valign="top" class="companyinfo">
+				
+					<p>
+						<b>CityVoice</b>
+						<br>84 Northeast Loop 410, Suite 325
+						<br>San Antonio, Texas 78216
+						<br>T: (800) 685-7502
+						<br>E: <a href="mailto:info@cityvoice.com">info@cityvoice.com</a>
+					</p>
+		
+				</td>
+				<td width="20"><img src="images/spacer20x20.gif" width="20" height="20" alt=""></td><!-- spacer column -->
+				<td width="255" valign="top" align="left" class="subscription">
+				
+				  <p>
+				    For questions, contact Shaunay or Shelton
+				    PHONE #
+				    EMAIL
+				  </p>
+					<!--<p>
+					   This newsletter was sent to CUSTOMER@EMAIL.COM
+					   <br>from CityVoice because you are a customer.
+					   <br><a href="#">Unsubscribe</a>
+					</p>-->
+					
+				</td>
+				
+			</tr>
+		</table>
+		
+		<img src="images/module-divider-3.gif" width="600" height="30" alt="">
+			
+	<!-- END SOCIAL + COMPANY INFO + SUBSCRIPTION -->
+			
+	</td></tr></table>
+	
+	<br>
+	
+	<table cellpadding="0" cellspacing="0" width="560" align="center">
+	<tr><td valign="top" align="left"  class="copyright">
+	
+	<!-- START FOOTER CONTENT -->
+		
+		<p>&copy; 2010 <b>CityVoice</b>. All rights reserved, powered by Grid.</p>
+	
+	<!-- END FOOTER CONTENT -->
+	
+	</td></tr></table>
+	
+	<br>
+		
+<!-- ///////////////////////////////////// End Newsletter Content  ///////////////////////////////////// -->
+</td></tr></table><!-- end wrapper table-->	
+
+</body>
+</html> 
