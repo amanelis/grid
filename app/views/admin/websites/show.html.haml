@@ -2,6 +2,17 @@
   $(function(){
   $('#daterangepicker').daterangepicker({arrows:false}); 
   });
+%script
+  $(function() {
+  $( "#accordion" ).accordion({autoHeight: false, active: 0, collapsible: true});
+  });
+%script
+  function() { 
+  // call the tablesorter plugin 
+  $("visit_table").tablesorter({widthFixed: true, widgets: ['zebra']}).tablesorterPager({container: $("#pager")});
+  }); 
+  
+  
 %header
   %h1= #{@website.nickname} Visits
   %h2 Website Statistics
@@ -40,66 +51,68 @@
         %td= (sprintf("%.2f", (@website.overall_conversion_rate_between(@start_date, @end_date) * 100)) + '%')
         %td= (sprintf("%.2f", (@website.unique_conversion_rate_between(@start_date, @end_date) * 100)) + '%')
 
-%h3
-  Website Visits(#{@start_date} - #{@end_date})
-%article
-  %table{:class => "pretty"}
-    %thead
-      %th Visitor ID
-      %th Time Of Visit
-      %th IP Address
-      %th Location
-      %th Actions
-      %th Source
-      %th Referrer
-      %th Keyword
-      %th Time Spent
-    %tbody
-      - (@website.website_visits.between(@start_date, @end_date).sort { |a,b| b.time_of_visit <=> a.time_of_visit }).each do |website_visit|
-        %tr
-          %td
-            -temp_string = "NA"
-            -if website_visit.visitor_id.present?
-              -temp_string = website_visit.visitor_id.to_s
-            =link_to temp_string, admin_website_visit_path(website_visit) 
-          %td=website_visit.time_of_visit.strftime("%m/%d/%y %I:%M %p")
-          %td=website_visit.ip_address
-          %td=website_visit.geolocation
-          %td=website_visit.actions
-          %td=website_visit.referrer_type
-          %td=website_visit.referrer_domain
-          %td=website_visit.referrer_search
-          %td
-            - @total_time = website_visit.time_total.to_i
-            = [(((@total_time/3600) != 0 ? (@total_time/3600).to_s + 'h' : nil)), (((@total_time/60 % 60) != 0 ? ((@total_time/60 % 60).to_s + 'm').rjust(2,'0') : nil)), (((@total_time % 60) != 0 ? ((@total_time % 60).to_s + 's').rjust(2,'0') : nil))].compact.join(':')
-            
-%h3
-  Website Bounces(#{@start_date} - #{@end_date})
-%article
-  %table{:class => "pretty"}
-    %thead
-      %th Visitor ID
-      %th Time Of Visit
-      %th Location
-      %th Actions
-      %th Source
-      %th Keyword
-      %th Time Spent
-    %tbody
-      - (@website.website_visits.between(@start_date, @end_date).sort { |a,b| b.time_of_visit <=> a.time_of_visit }).each do |website_visit|
-        %tr
-          %td
-            -temp_string = "NA"
-            -if website_visit.visitor_id.present?
-              -temp_string = website_visit.visitor_id.to_s
-            =link_to temp_string, admin_website_visit_path(website_visit) 
-          %td=website_visit.time_of_visit.strftime("%m/%d/%y %I:%M %p")
-          %td=website_visit.ip_address
-          %td=website_visit.geolocation
-          %td=website_visit.actions
-          %td=website_visit.referrer_type
-          %td=website_visit.referrer_domain
-          %td=website_visit.referrer_search
-          %td
-            - @total_time = website_visit.time_total.to_i
-            = [(((@total_time/3600) != 0 ? (@total_time/3600).to_s + 'h' : nil)), (((@total_time/60 % 60) != 0 ? ((@total_time/60 % 60).to_s + 'm').rjust(2,'0') : nil)), (((@total_time % 60) != 0 ? ((@total_time % 60).to_s + 's').rjust(2,'0') : nil))].compact.join(':')
+
+#accordion
+  %h3=link_to "Website Visits(#{@start_date} - #{@end_date})", :href => "#"
+  #first_rung
+    %article
+      %table{:id => "visit_table", :class => "tablesorter", :name => "visit_table"}
+        %thead
+          %th Visitor ID
+          %th Time Of Visit
+          %th IP Address
+          %th Location
+          %th Actions
+          %th Source
+          %th Referrer
+          %th Keyword
+          %th Time Spent
+        %tbody
+          - @visits.each do |website_visit|
+            %tr
+              %td
+                -temp_string = "NA"
+                -if website_visit.visitor_id.present?
+                  -temp_string = website_visit.visitor_id.to_s
+                =link_to temp_string, admin_website_visit_path(website_visit) 
+              %td=website_visit.time_of_visit.strftime("%m/%d/%y %I:%M %p")
+              %td=website_visit.ip_address
+              %td=website_visit.geolocation
+              %td=website_visit.actions
+              %td=website_visit.referrer_type
+              %td=website_visit.referrer_domain
+              %td=website_visit.referrer_search
+              %td
+                - @total_time = website_visit.time_total.to_i
+                = [(((@total_time/3600) != 0 ? (@total_time/3600).to_s + 'h' : nil)), (((@total_time/60 % 60) != 0 ? ((@total_time/60 % 60).to_s + 'm').rjust(2,'0') : nil)), (((@total_time % 60) != 0 ? ((@total_time % 60).to_s + 's').rjust(2,'0') : nil))].compact.join(':')
+  %h3=link_to "Website Bounces(#{@start_date} - #{@end_date})", :href => "#"
+  #second_rung
+    %article          
+      %table{:class => "pretty"}
+        %thead
+          %th Visitor ID
+          %th Time Of Visit
+          %th IP Address
+          %th Location
+          %th Actions
+          %th Source
+          %th Keyword
+          %th Time Spent
+        %tbody
+          - @bounces.each do |website_visit|
+            %tr
+              %td
+                -temp_string = "NA"
+                -if website_visit.visitor_id.present?
+                  -temp_string = website_visit.visitor_id.to_s
+                =link_to temp_string, admin_website_visit_path(website_visit) 
+              %td=website_visit.time_of_visit.strftime("%m/%d/%y %I:%M %p")
+              %td=website_visit.ip_address
+              %td=website_visit.geolocation
+              %td=website_visit.actions
+              %td=website_visit.referrer_type
+              %td=website_visit.referrer_domain
+              %td=website_visit.referrer_search
+              %td
+                - @total_time = website_visit.time_total.to_i
+                = [(((@total_time/3600) != 0 ? (@total_time/3600).to_s + 'h' : nil)), (((@total_time/60 % 60) != 0 ? ((@total_time/60 % 60).to_s + 'm').rjust(2,'0') : nil)), (((@total_time % 60) != 0 ? ((@total_time % 60).to_s + 's').rjust(2,'0') : nil))].compact.join(':')

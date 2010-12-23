@@ -12,7 +12,8 @@ class Admin::WebsitesController < ApplicationController
       Time.zone = @website.campaigns.first.account.time_zone
       @start_date = Date.yesterday - 1.week
       @end_date = Date.yesterday
-
+      @visits = @website.website_visits.between(@start_date, @end_date).sort { |a,b| b.time_of_visit <=> a.time_of_visit }
+      @bounces = @website.website_visits.between(@start_date, @end_date).sort { |a,b| b.time_of_visit <=> a.time_of_visit }
       respond_to do |format|
         format.html # show.html.erb
       end
@@ -29,11 +30,14 @@ class Admin::WebsitesController < ApplicationController
         @start_date = Date.yesterday - 1.week
         @end_date = Date.yesterday
       end
-
+      @visits = @website.website_visits.between(@start_date, @end_date).sort { |a,b| b.time_of_visit <=> a.time_of_visit }
+      @bounces = @website.website_visits.between(@start_date, @end_date).sort { |a,b| b.time_of_visit <=> a.time_of_visit }
       respond_to do |format|
         format.html # show.html.erb
       end
     end
+  
+    
   end
   
   def update

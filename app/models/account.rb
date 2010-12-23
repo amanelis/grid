@@ -92,7 +92,10 @@ class Account < ActiveRecord::Base
         existing_account.main_contact = sf_account.main_contact__c
         existing_account.receive_weekly_report = sf_account.receive_weekly_report__c
         existing_account.reporting_emails = sf_account.email_reports_to__c
-        
+        if sf_account.owner_id.present?
+          account_manager = Salesforce::User.find(sf_account.owner_id)
+          existing_account.account_manager = account_manager.name if account_manager.present?
+        end
         reseller = sf_account.parent_id.present? ? Account.find_by_salesforce_id(sf_account.parent_id) : cityvoice_account
         existing_account.reseller_id = reseller.id if reseller.present?
         

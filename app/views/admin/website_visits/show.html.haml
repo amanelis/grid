@@ -2,6 +2,12 @@
   $(function(){
   $('#daterangepicker').daterangepicker({arrows:false}); 
   });
+  
+%script
+  $(function(){
+  $('#myTable').tablesorter(); 
+  });
+  
 %header
   
   %h1 Visitor: #{@website_visit.visitor_id} 
@@ -16,7 +22,7 @@
   
 
 %article
-  %table{:class => "pretty"}
+  %table
     %thead
       %th Total Visits
       %th Location
@@ -42,7 +48,7 @@
 %h3
   All Visits by this visitor
 %article
-  %table{:class => "pretty"}
+  %table{:class => "tablesorter", :id => "myTable"}
     %thead
       %th Time Of Visit
       %th Actions

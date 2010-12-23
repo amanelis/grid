@@ -18,6 +18,7 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :websites
     admin.resources :website_visits, :member => {:global_visitor => :get}
     admin.resources :searches, :only => :index
+    admin.resources :contact_forms
   end
 
   map.with_options :controller => 'home' do |home|
