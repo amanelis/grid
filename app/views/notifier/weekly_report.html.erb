@@ -100,10 +100,8 @@
 			<td width="400" valign="middle" align="right" class="menu-or-slogan">
 			
 				<p>
-				  Weekly Report for CUSTOMER NAME
-				  <br>12/1/2010 - 12/8/2010
-				  
-				<h2>VARIABLES: <%= "Number of all calls: #{@account_report_data[0]}, Number of lead calls: #{@account_report_data[1]}, Number of all submissions: #{@account_report_data[2]}, Number of lead submissions: #{@account_report_data[3]}."%></h2>
+				  Weekly Report for <%= @submission.name %>
+				  <br><%= Date.today - 1.week %> - <%= Date.today %>
 				</p>  
 			
 			</td>	
@@ -133,17 +131,17 @@
         	<tr>
         		<td align="left" class="bordered-bottom" width="250"> <h2>Weekly Leads</h2></p>
         		<td align="left" class="bordered-bottom"> <p></p></td>
-        		<td align="right" class="bordered-bottom"> <h2> 74*</h2></td> 
+        		<td align="right" class="bordered-bottom"> <h2></h2></td> 
         	</tr>
         	<tr>
         		<td align="left" class="bordered-bottom" width="250"> <img src="images/phone.gif" width="40" height="40" alt=""></td>
         		<td align="left" class="bordered-bottom"> <p><b>CALLS</b><br>Leads<br>Total</p></td>
-        		<td align="right" class="bordered-bottom"> <p><br>12*<br>46*</p></td>
+        		<td align="right" class="bordered-bottom"> <p><br><%= @account_report_data[1] %><br><%= @account_report_data[0] %></p></td>
         	</tr>
         	<tr>
         		<td align="left" class="bordered-bottom" width="250"> <img src="images/form.gif" width="40" height="40" alt=""></td>
         		<td align="left" class="bordered-bottom"> <p><b>FORMS</b><br>Leads<br>Total</p></td>
-        		<td align="right" class="bordered-bottom"> <p><br>42*<br>108*</p></td>
+        		<td align="right" class="bordered-bottom"> <p><br><%= @account_report_data[2] %><br><%= @account_report_data[3] %></p></td>
         	</tr>
 
         </table>
