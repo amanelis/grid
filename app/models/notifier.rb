@@ -23,9 +23,10 @@ class Notifier < ActionMailer::Base
     recipients    email_list
     subject       "Weekly Report"  
     from          "CityVoice <no-reply@cityvoice.com>"
-    body          :account_report_data => account.previous_days_report_data(date, 6)
     sent_on       Time.now
     content_type  "multipart/alternative"
+    part :content_type => "text/html", :body => render_message("report-as-html", :account_report_data => account.previous_days_report_data(date, 6))
+    part :content_type => "text/plain", :body => render_message("report-as-text", :account_report_data => account.previous_days_report_data(date, 6))
   end
 
 end
