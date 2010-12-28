@@ -25,8 +25,7 @@ class Notifier < ActionMailer::Base
     from          "CityVoice <no-reply@cityvoice.com>"
     sent_on       Time.now
     content_type  "multipart/alternative"
-    part :content_type => "text/plain", :body => render_message("weekly_report", :account_report_data => account.previous_days_report_data(date, 6))
-    part :content_type => "text/html", :body => render_message("weekly_report", :account_report_data => account.previous_days_report_data(date, 6))
+    body          :account_report_data => account.previous_days_report_data(date, 6)
   end
 
 end
