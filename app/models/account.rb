@@ -183,7 +183,7 @@ class Account < ActiveRecord::Base
   def previous_days_report_data(date = Date.today.beginning_of_week, previous = 6)
     end_date = date - 1.day
     start_date = end_date - previous.days
-    [self.number_of_all_calls_between(start_date, end_date), self.number_of_lead_calls_between(start_date, end_date), self.number_of_all_submissions_between(start_date, end_date), self.number_of_lead_submissions_between(start_date, end_date), start_date, end_date]
+    [self.number_of_all_calls_between(start_date, end_date), self.number_of_lead_calls_between(start_date, end_date), self.number_of_all_submissions_between(start_date, end_date), self.number_of_lead_submissions_between(start_date, end_date), start_date, end_date, self.name]
   end
   
   def valid_reporting_emails
