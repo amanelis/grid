@@ -18,7 +18,7 @@
       = render :partial => "shared/gauge"
 %article
   -form_for(admin_accounts_path, :html => {:method => "get", :onchange => "alert('hello')"}) do |f|
-    = f.text_field :daterangepicker, :name => "daterange", :id => "daterangepicker"
+    = f.text_field :daterangepicker, :name => "daterange", :id => "daterangepicker", :autocomplete => "off"
     = f.submit "Filter Dates"
   %h3 Campaign Summary For #{@start_date} - #{@end_date}
   %table
