@@ -140,6 +140,8 @@ class Admin::AccountsController < ApplicationController
     @h = HighChart.new('graph') do |f|
       f.title({:text=>"Campaign Data Graph"})      
       f.options[:x_axis][:categories] = @account.campaigns.active.collect(&:name)
+      f.y_axis({:title=> {:text=> ''}, :labels=>{:align=>'right'} })
+      
       f.labels(:items=>[:style=>{:left=>"40px", :top=>"8px", :color=>"black", :align => 'center'} ])
       
       f.series(:type=> 'column',:name=> 'Calls',          :data => @account.campaigns.active.collect {|campaign| campaign.number_of_lead_calls_between(@month_start, @month_end) })
