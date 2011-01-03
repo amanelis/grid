@@ -11,8 +11,8 @@
       |
       = link_to "Send Email", send_weekly_path(params[:id])
   
-  %h1= @account.name
-  %h2 Account Summary
+  %h2= @account.name
+  %h3 Account Summary
 %article
   -form_for(admin_accounts_path, :html => {:method => "get", :onchange => "alert('hello')"}) do |f|
     = f.text_field :daterangepicker, :name => "daterange", :id => "daterangepicker", :autocomplete => "off"
