@@ -91,6 +91,11 @@ nav aside a{
 margin-right:5px;
 }
 
+#account a{
+	text-decoration:underline;
+	font-size:.5em;
+}
+
 #search input[type="text"]{
 margin-left:5px;
 background-image: url("/images/search.png");
