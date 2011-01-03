@@ -34,7 +34,7 @@ class Admin::AccountsController < ApplicationController
       
       @start_date = Date.yesterday - 1.week
       @end_date = Date.yesterday
-
+      @campaigns = @account.campaigns.sort! { |a,b| a.name <=> b.name}
       respond_to do |format|
         format.html # show.html.erb
       end
@@ -58,11 +58,12 @@ class Admin::AccountsController < ApplicationController
         @start_date = Date.yesterday - 1.week
         @end_date = Date.yesterday
       end
-
+      @campaigns = @account.campaigns.sort! { |a,b| a.name <=> b.name}
       respond_to do |format|
         format.html # show.html.erb
       end
     end
+    
   end
 
   # GET /accounts/new

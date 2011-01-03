@@ -76,6 +76,10 @@ background:gray;
         border-radius: 4px;
 }
 
+.active{
+	color:#fff;
+}
+
 header nav a, nav aside a{
 color:gray;
 text-decoration:none;	
@@ -89,6 +93,11 @@ text-decoration:none;
 
 nav aside a{
 margin-right:5px;
+}
+
+#account a{
+	text-decoration:underline;
+	font-size:.5em;
 }
 
 #search input[type="text"]{
@@ -248,7 +257,7 @@ textarea      { width: 390px; height: 250px; padding:5px; }
 
 input[type=checkbox], input[type=radio],
 input.checkbox, input.radio {
-  position:relative; top:.25em;
+  position:relative; top:0;
 }
 
 form.inline { line-height:3; }

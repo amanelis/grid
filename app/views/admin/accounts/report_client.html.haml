@@ -49,7 +49,7 @@
           %th= ActionController::Base.helpers.number_to_currency(@account.cost_per_lead_between(@month_start, @month_end))
           %th= ActionController::Base.helpers.number_to_currency(@account.cost_per_contact_between(@month_start, @month_end))
       .span-24.last#highcharts
-      =high_chart("highcharts", @h)
+        =high_chart("highcharts", @h)
   
   -if @account.campaigns.sem.present?
     %section#pay_per_click
