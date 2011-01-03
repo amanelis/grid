@@ -76,6 +76,10 @@ background:gray;
         border-radius: 4px;
 }
 
+.active{
+	color:#fff;
+}
+
 header nav a, nav aside a{
 color:gray;
 text-decoration:none;	
