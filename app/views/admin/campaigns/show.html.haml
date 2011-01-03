@@ -10,7 +10,7 @@
 %header
   %p.right
     = link_to 'Lead Matrix', lead_matrix_admin_campaign_path, :class => "submit", :name => "submit"
-  %h1 #{@campaign.name}
+  %h2 #{@campaign.name}
   %h4= @campaign.account.time_zone
 %article
   #timeline_chart
@@ -127,7 +127,7 @@
               %br
               = f.input :adopting_phone_number, :label => 'Add Orphaned Phone Number', :as => :select, :collection => PhoneNumber.selectable_orphaned_phone_numbers, :include_blank => true
             - f.buttons do
-              = f.commit_button :update, :button_html => { :class => "button" }
+              = f.commit_button :update
     %h3=link_to "Submission Log (ID = #{@campaign.contact_form_id_string}, Emails: #{@campaign.contact_form_emails_string})", :href => "#"
     #fourth_rung  
       %article
