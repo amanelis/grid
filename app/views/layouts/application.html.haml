@@ -15,7 +15,7 @@
   %body.container
     %header#nav
       #logo
-        =link_to image_tag("grid_logo.png"), root_path
+        =link_to image_tag("grid_logo.png"), dashboard_url
       =render :partial => "layouts/nav"
     =render :partial => "layouts/flash", :locals => { :flash => flash }
     %section#content
@@ -25,4 +25,4 @@
         &copy; Copyright 2010
         =link_to "CityVoice", "http://www.cityvoice.com"
         .right
-          =link_to "Feedback/Support", "http://snatch.wufoo.com/forms/cityvoice-grid-feedback/"
+          =mail_to "alex.baldwin@cityvoice.com", "Feedback/Support", :subject => "Grid Feedback/Support"
