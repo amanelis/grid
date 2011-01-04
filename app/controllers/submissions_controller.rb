@@ -28,6 +28,7 @@ class SubmissionsController < ApplicationController
       # HTTP 200 OK
       if @submission.from_email == "alex.baldwin@cityvoice.com"
         Notifier.send_later(:deliver_new_form_submission, @submission)
+        return
       else        
         Notifier.send_later(:deliver_form_submission, @submission) unless @submission.review_status_spam? || @submission.contact_form.inactive?
       end
