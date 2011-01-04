@@ -29,4 +29,17 @@ class Notifier < ActionMailer::Base
     body          :account_report_data => account.previous_days_report_data(date, 6)
   end
 
+  def new_form_submission(submission)
+    the_recipients = ["alex.baldwin@cityvoice.com"]
+    sender = submission.name + ' <' + submission.from_email + '>'
+
+    recipients    the_recipients
+    subject       "New CityVoice Lead!"  
+    from          "CityVoice <no-reply@cityvoice.com>"
+    reply_to      sender
+    body          :submission => submission
+    sent_on       Time.now
+  end
+
+
 end

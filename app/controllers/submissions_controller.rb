@@ -26,7 +26,12 @@ class SubmissionsController < ApplicationController
       redirect_to params[:submission][:retURL]
     elsif @submission.save
       # HTTP 200 OK
-      Notifier.send_later(:deliver_form_submission, @submission) unless @submission.review_status_spam? || @submission.contact_form.inactive?
+      if @submission.from_email == "alex.baldwin@cityvoice.com"
+        Notifier.send_later(:deliver_new_form_submission, @submission)
+        return
+      else        
+        Notifier.send_later(:deliver_form_submission, @submission) unless @submission.review_status_spam? || @submission.contact_form.inactive?
+      end
       @submission.update_if_duplicate
       Account.send_later(:cache_results_for_accounts)
       redirect_to params[:submission][:retURL]
