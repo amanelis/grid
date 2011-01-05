@@ -21,12 +21,25 @@ class Notifier < ActionMailer::Base
     email_list ||= account.reporting_emails.split(/, \s*/)
 
     recipients    email_list
-    bcc           ["dev@cityvoice.com"]
+    bcc           ["dev@cityvoice.com", "reporting@cityvoice.com"]
     subject       "Weekly Report"  
     from          "CityVoice <support@cityvoice.com>"
     sent_on       Time.now
     content_type  "multipart/alternative"
     body          :account_report_data => account.previous_days_report_data(date, 6)
   end
+
+  def new_form_submission(submission)
+    the_recipients = ["alex.baldwin@cityvoice.com"]
+    sender = submission.name + ' <' + submission.from_email + '>'
+
+    recipients    the_recipients
+    subject       "New CityVoice Lead!"  
+    from          "CityVoice <no-reply@cityvoice.com>"
+    reply_to      sender
+    body          :submission => submission
+    sent_on       Time.now
+  end
+
 
 end

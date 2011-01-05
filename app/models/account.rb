@@ -1,4 +1,5 @@
 class Account < ActiveRecord::Base
+  belongs_to :group_account
 	belongs_to :reseller, :class_name => "Account", :foreign_key => "reseller_id"
   has_many :campaigns, :dependent => :destroy
 	has_many :clients, :class_name => "Account", :foreign_key => "reseller_id"
