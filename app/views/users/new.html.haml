@@ -1,19 +1,19 @@
 %header
-	%h3 Register
+  %h3 Register
 %article
-	- form_for @user, :url => person_path do |f| 
-		= f.label :email
-		%br
-		= f.text_field :email, :class => 'title'
-		%br
-		= f.label :password
-		%br
-		= f.password_field :password, :class => 'title'
-		%br
-		%label Confirm Password
-		%br
-		= f.password_field :password_confirmation, :class => 'title'
-		%br
-		= f.submit "Register", :class => 'button'
+  - form_for @user, :url => person_path do |f| 
+    = f.label :email
+    %br
+    = f.text_field :email, :class => 'title'
+    %br
+    = f.label :password
+    %br
+    = f.password_field :password, :class => 'title'
+    %br
+    %label Confirm Password
+    %br
+    = f.password_field :password_confirmation, :class => 'title'
+    %br
+    = f.submit "Register", :class => 'button'
 
 

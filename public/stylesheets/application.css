@@ -166,15 +166,21 @@ text-decoration:none;
 	Buttons
 	------------------
 */
+
+#input{
+	margin:0 0 15px;
+}
+
+#forgot{
+	margin:15px 0 0 0;
+}
 a.button, input.button,	.button {
 text-decoration:none;
-margin: 15px 0;
 color:#373737;
 background:-webkit-gradient(linear,0% 0%,0% 100%,from(#E8E7E7),to(#BEBFC2));
 background:-moz-linear-gradient(top, #E8E7E7, #BEBFC2);
 display: inline-block;
 padding:5px;
-font-size:24px;
 font-weight:bold;
 text-shadow: 1px 1px 1px rgba(255,255,255,0.5);
 border:1px solid rgba(0,0,0,0.4);
