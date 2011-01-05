@@ -22,7 +22,7 @@ class SubmissionsController < ApplicationController
     @submission.ip_address = request.remote_ip
     @submission.user_agent = request.user_agent
     @submission.time_of_submission = DateTime.now
-    if @submission.blank?
+    if @submission.empty?
       redirect_to params[:submission][:retURL]
     elsif @submission.save
       # HTTP 200 OK
