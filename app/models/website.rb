@@ -217,5 +217,6 @@ class Website < ActiveRecord::Base
     return map_url
   end
 
+  
 end
 

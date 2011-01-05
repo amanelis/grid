@@ -368,7 +368,93 @@ class Campaign < ActiveRecord::Base
     self.contact_forms.collect { |x| x.forwarding_email }.join(", ")
   end
 
+  def create_website(website, mirrors = '', time_zone = "-6")
+    result = "Website was not added due to errors"
+    if self.website.present?
+      result = "This Campaign already has a website!\nClicky Code:<script src=\"http://stats.cityvoice.com/js\" type=\"text/javascript\"></script><script type=\"text/javascript\">citystats.init(#{self.website.site_id});</script><noscript><p><img alt=\"CityStats\" width=\"1\" height=\"1\" src=\"http://stats.cityvoice.com/#{self.website.site_id}ns.gif\" /></p></noscript>"
+    else  
+      website = website.gsub("http://",  "").gsub("https://", "")
+      existing_website = Website.find_by_nickname(website)
+      if existing_website.blank?
+        #Need to check to see if the website exists in Clicky and create a new website in Grid
+        exists = false
+        url = "https://api.getclicky.com/api/account/sites?username=cityvoicesa&password=C1tyv01c3&output=json"
+        response = HTTParty.get(url)
+        confirmed = false
+        site_id = ''
+        sitekey = ''
+        database_server = ''
+        admin_sitekey = ''
+        response.each do |site|
+          if site["nickname"] == website
+            exists = true
+            confirmed = true
+            site_id = site["site_id"] 
+            sitekey = site["sitekey"]
+            database_server = ''
+            admin_sitekey = site["sitekey_admin"]
+          end
+        end
+        
+        if !exists
+          url = "http://stats.cityvoice.com.re.getclicky.com/api/whitelabel/?auth=de8f1bae61c60eb0&type=site&user_id=134255&domain=#{website}&nickname=#{website}&timezone=#{time_zone}&dst=usa"
+          if mirrors.present?
+            url = url + "&mirrors=#{mirrors}"
+          end
+          response2 = HTTParty.get(url)
+          info = response2.parsed_response.split("\n")
+          confirmed = true if info.first == 'OK'
+          site_id = info[1]
+          sitekey = info[2]
+          database_server = info[3]
+          admin_sitekey = info[4]
+        end
+        
+        if confirmed
+          new_website = Website.new
+          new_website.is_active = true
+          new_website.nickname = website
+          new_website.domain = website
+          new_website.site_id = site_id
+          new_website.sitekey = sitekey
+          new_website.database_server = database_server
+          new_website.admin_sitekey = admin_sitekey
+          new_website.timezone = time_zone
+          new_website.mirrors = mirrors
+          new_website.dst = "dst"
+          new_website.save
+          self.website_id = new_website.id
+          self.save!
+          result = "Website was created!\nClick Code: <script src=\"http://stats.cityvoice.com/js\" type=\"text/javascript\"></script><script type=\"text/javascript\">citystats.init(#{site_id});</script><noscript><p><img alt=\"CityStats\" width=\"1\" height=\"1\" src=\"http://stats.cityvoice.com/#{site_id}ns.gif\" /></p></noscript>"
+        end
+      else
+        self.website_id = existing_website.id
+        self.save
+        result = "Website already exists on another campaign!\nClick Code: <script src=\"http://stats.cityvoice.com/js\" type=\"text/javascript\"></script><script type=\"text/javascript\">citystats.init(#{existing_website.site_id});</script><noscript><p><img alt=\"CityStats\" width=\"1\" height=\"1\" src=\"http://stats.cityvoice.com/#{existing_website.site_id}ns.gif\" /></p></noscript>"
+      end
+    end
+    result
+  end
 
+  def delete_website()
+    camps = self.website.campaigns
+    result = "There was an error deleting your site."
+    if camps.count != 1
+      self.website_id = nil
+      self.save
+      result = "Your site was deleted."
+    else
+      #Delete from Clicky
+      url = "http://stats.cityvoice.com.re.getclicky.com/api/whitelabel/?auth=de8f1bae61c60eb0&type=site&site_id=#{self.website.site_id}&delete=1"
+      response = HTTParty.get(url)
+      if response.parsed_response.split("\n").first == 'OK'
+        self.website_id = nil
+        self.save
+        result = "Your site was deleted."
+      end
+      result
+    end
+  end
   # PREDICATES
 
   def is_seo?
