@@ -60,6 +60,16 @@ class GroupAccount < ActiveRecord::Base
     begin
       cityvoice_account = Account.find_by_name("CityVoice")
       cityvoice_group_account = GroupAccount.find_by_name("CityVoice")
+      
+      if cityvoice_group_account.blank?
+        cityvoice_account = Salesforce::Account.find(:all, :conditions => ['name = ?', 'CityVoice']).first
+        cityvoice_group_account = GroupAccount.new
+        cityvoice_group_account.salesforce_id = cityvoice_account.id
+        cityvoice_group_account.name = cityvoice_account.name
+        cityvoice_group_account.status = cityvoice_account.account_status__c
+        cityvoice_group_account.save
+      end
+        
       sf_accounts = Salesforce::Account.find(:all, :conditions => ['account_status__c != ?', ''])
       sf_accounts.each do |sf_account|
         #GroupAccount Work
