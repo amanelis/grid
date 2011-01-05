@@ -16,6 +16,9 @@ class Account < ActiveRecord::Base
       @submissions ||= Submission.find_all_by_contact_form_id(self.collect(&:id))
     end
   end
+
+  belongs_to :account_manager
+  has_many :account_users
   
   named_scope :active, :conditions => ['LCASE(status) = ? OR LCASE(status) = ? OR LCASE(status) = ?', "active", "paused", "pending setup"], :order => "name ASC"
   named_scope :inactive, :conditions => ['LCASE(status) = ?', "inactive"], :order => "name ASC"
