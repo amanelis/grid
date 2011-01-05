@@ -1,10 +1,10 @@
 class UsersController < ApplicationController
-  before_filter :require_no_user, :only => [:new, :create]
+  #before_filter :require_no_user, :only => [:new, :create]
   before_filter :require_user, :only => [:show, :edit, :update]
   
   def index
     @current_user = current_user
-    @current_user.admin? ? @users = User.all : @users = User.find_by_id(current_user.id)
+    @current_user.admin? ? @users = User.all : @users = User.find_by_id(@current_user.id)
   end
   
   
@@ -23,16 +23,17 @@ class UsersController < ApplicationController
   end
   
   def show
-    @user = @current_user
+    @user = User.find(current_user)
   end
   
   def update
-    @user = @current_user # makes our views "cleaner" and more consistent
+    @user = User.find(current_user.id)
     if @user.update_attributes(params[:user])
       flash[:notice] = "Account updated!"
-      redirect_to person_url
+      redirect_to user_path(@user)
     else
-      render :action => :show
+      flash[:notice] = "Error on updating account!"
+      redirect_to person_url
     end
   end
 end

@@ -1,7 +1,7 @@
 %header
   %h3 My Account
 %article
-  - form_for @user, :url => person_path do |f|
+  - form_for (@user, :url => person_path) do |f|
     %p
       = f.label :email
       %br
