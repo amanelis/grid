@@ -65,7 +65,7 @@ class ApplicationManifest < Moonshine::Manifest::Rails
     # To stop a cron job, add :ensure => :absent
     
     on_stage 'production' do
-      cron 'pull_salesforce_accounts', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} Account.pull_salesforce_accounts", :user => configuration[:user], :minute => 1, :hour => 22
+      cron 'pull_salesforce_accounts', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} GroupAccount.pull_salesforce_accounts", :user => configuration[:user], :minute => 1, :hour => 22
       cron 'get_salesforce_numbers', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} PhoneNumber.get_salesforce_numbers", :user => configuration[:user], :minute => 31, :hour => 22, :ensure => :absent
       cron 'get_marchex_numbers', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} PhoneNumber.get_marchex_numbers", :user => configuration[:user], :minute => 31, :hour => 22
       cron 'pull_salesforce_campaigns', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} Campaign.pull_salesforce_campaigns", :user => configuration[:user], :minute => 45, :hour => 22

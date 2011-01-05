@@ -21,7 +21,7 @@ class Notifier < ActionMailer::Base
     email_list ||= account.reporting_emails.split(/, \s*/)
 
     recipients    email_list
-    bcc           ["dev@cityvoice.com"]
+    bcc           ["dev@cityvoice.com", "reporting@cityvoice.com"]
     subject       "Weekly Report"  
     from          "CityVoice <support@cityvoice.com>"
     sent_on       Time.now

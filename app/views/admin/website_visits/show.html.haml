@@ -2,11 +2,7 @@
   $(function(){
   $('#daterangepicker').daterangepicker({arrows:false}); 
   });
-  
-%script
-  $(function(){
-  $('#myTable').tablesorter(); 
-  });
+
   
 %header
   
@@ -48,7 +44,7 @@
 %h3
   All Visits by this visitor
 %article
-  %table{:class => "tablesorter", :id => "myTable"}
+  %table
     %thead
       %th Time Of Visit
       %th Actions
