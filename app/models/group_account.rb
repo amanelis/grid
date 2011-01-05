@@ -109,10 +109,10 @@ class GroupAccount < ActiveRecord::Base
         existing_account.main_contact = sf_account.main_contact__c
         existing_account.receive_weekly_report = sf_account.receive_weekly_report__c
         existing_account.reporting_emails = sf_account.email_reports_to__c
-        if sf_account.owner_id.present?
-          account_manager = Salesforce::User.find(sf_account.owner_id)
-          existing_account.account_manager = account_manager.name if account_manager.present?
-        end
+        # if sf_account.owner_id.present?
+        #   account_manager = Salesforce::User.find(sf_account.owner_id)
+        #   existing_account.account_manager = account_manager.name if account_manager.present?
+        # end
         if existing_group_account.present?
           existing_account.group_account_id = existing_group_account.id
         else
