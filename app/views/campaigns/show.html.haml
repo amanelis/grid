@@ -9,7 +9,7 @@
   
 %header
   %p.right
-    = link_to 'Lead Matrix', lead_matrix_admin_campaign_path, :class => "submit", :name => "submit"
+    = link_to 'Lead Matrix', lead_matrix_campaign_path, :class => "submit", :name => "submit"
   %h2 #{@campaign.name}
   %h4= @campaign.account.time_zone
 %article
@@ -17,7 +17,7 @@
     - if @campaign.is_sem?
       = render :partial => "shared/gauge"
 %article
-  -form_for(admin_accounts_path, :html => {:method => "get", :onchange => "alert('hello')"}) do |f|
+  -form_for(accounts_path, :html => {:method => "get", :onchange => "alert('hello')"}) do |f|
     = f.text_field :daterangepicker, :name => "daterange", :id => "daterangepicker", :autocomplete => "off"
     = f.submit "Filter Dates"
   %h3 Campaign Summary For #{@start_date} - #{@end_date}
@@ -63,7 +63,7 @@
               %th Unique Conversion Rate
             %tbody
               %tr
-                %td= link_to @campaign.website.nickname, admin_website_path(@campaign.website) 
+                %td= link_to @campaign.website.nickname, website_path(@campaign.website) 
                 %td= @campaign.number_of_visits_between(@start_date, @end_date).to_s
                 %td= @campaign.number_of_actions_between(@start_date, @end_date).to_s
                 %td= @campaign.number_of_bounces_between(@start_date, @end_date).to_s
@@ -95,7 +95,7 @@
             %tbody
               - (@campaign.campaign_style.keywords.sort { |a,b| a.descriptor <=> b.descriptor }).each do |keyword|
                 %tr
-                  %td= link_to keyword.descriptor, admin_keyword_path(keyword)
+                  %td= link_to keyword.descriptor, keyword_path(keyword)
                   %td= keyword.most_recent_ranking().created_at.strftime("%m/%d/%y %I:%M %p") if keyword.most_recent_ranking().present?
                   %td= keyword.most_recent_google_ranking() 
                   %td= keyword.google_ranking_change_between() 
@@ -121,7 +121,7 @@
                 %td= number.inboundno
 
         %h5
-          - semantic_form_for @campaign, :url => admin_campaign_path(@campaign) do |f| 
+          - semantic_form_for @campaign, :url => campaign_path(@campaign) do |f| 
             = f.semantic_errors :state
             - f.inputs do
               %br

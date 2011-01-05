@@ -1,6 +1,6 @@
 .activity_item{:id => "#{activity.timestamp.to_i}"}
   .title
-    = link_to activity.phone_number.campaign.name, admin_campaign_path(activity.phone_number.campaign)
+    = link_to activity.phone_number.campaign.name, campaign_path(activity.phone_number.campaign)
   .icon
     =image_tag("telephone.png", :height => "48", :width => "48")
     .time
@@ -28,7 +28,7 @@
   .review
     - if activity.duplicate?
       = "Duplicate Call"
-    - semantic_remote_form_for activity, :url => admin_activity_path(activity.activity) do |f| 
+    - semantic_remote_form_for activity, :url => activity_path(activity.activity) do |f| 
       = f.semantic_errors :state
       - f.inputs do
         %br

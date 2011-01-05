@@ -7,7 +7,7 @@
 %article
   %h3
     = 'For ' + (Date.yesterday - 1.week).to_s(:long) + ' to ' + Date.yesterday.to_s(:long)
-  %form{:href => '/admin', :action => "accounts", :id => 'index', :name => 'index', :method => 'GET'}
+  %form{:href => '/', :action => "accounts", :id => 'index', :name => 'index', :method => 'GET'}
     %label
       = "Account Status: "
     %select{:id => :account_status, :name => :account_status}
@@ -36,7 +36,7 @@
     %tbody
       - @accounts.each do |account|
         %tr{:class => cycle('odd', 'even')}
-          %td= link_to account.name, admin_account_path(account)
+          %td= link_to account.name, account_path(account)
           -account_data = @accounts_data[account.id]
           -account_type = account.account_type
           %td= account_type
@@ -62,6 +62,6 @@
             %td{:class => 'yellow-font'}= ActionController::Base.helpers.number_to_currency(cpconv)
           -else
             %td{:class => 'green-font'}= ActionController::Base.helpers.number_to_currency(cpconv)
-          /%td= link_to 'Show', admin_account_path(account)
+          /%td= link_to 'Show', account_path(account)
 
         

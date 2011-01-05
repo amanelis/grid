@@ -1,36 +1,32 @@
 ActionController::Routing::Routes.draw do |map|
-  # Custom Routes
-  map.admin "/admin", :controller => 'admin_area', :action => 'index'
-  map.refresh_accounts "/admin/accounts/refresh_accounts", :controller => "admin/accounts", :action => :refresh_accounts
-  map.report_client "/admin/accounts/:id/report/client", :controller => "admin/accounts", :action => :report_client
-  map.report_client_pdf "/admin/accounts/:id/report/client.pdf", :controller => "admin/accounts", :action => :report_client, :as => :client
-  map.export "/admin/accounts/export", :controller => "admin/accounts", :action => :export
-  # map.weekly_report "/admin/notifiers/weekly_report/:id", :controller => "admin/notifiers", :action => :weekly_report
-  map.send_weekly "/admin/accounts/send_weekly_email/:id", :controller => "admin/accounts", :action => :send_weekly_email
+  # CUSTOM ROUTES
+  map.refresh_accounts    "/accounts/refresh_accounts",         :controller => "accounts",        :action => :refresh_accounts
+  map.report_client       "/accounts/:id/report/client",        :controller => "accounts",        :action => :report_client
+  map.report_client_pdf   "/accounts/:id/report/client.pdf",    :controller => "accounts",        :action => :report_client, :as => :client
+  map.export              "/accounts/export",                   :controller => "accounts",        :action => :export
+  map.send_weekly         "/accounts/send_weekly_email/:id",    :controller => "accounts",        :action => :send_weekly_email
   
-  map.namespace :admin do |admin|
-    admin.resources :accounts, :member => {:report => :get}
-    admin.resources :users
-    admin.resources :campaigns, :member => {:lead_matrix => :get}
-    admin.resources :activities
-    admin.resources :keywords
-    admin.resources :job_statuses
-    admin.resources :websites
-    admin.resources :website_visits, :member => {:global_visitor => :get}
-    admin.resources :searches, :only => :index
-    admin.resources :contact_forms
-  end
-
+  map.resources :accounts,        :member => {:report => :get}
+  map.resources :campaigns,       :member => {:lead_matrix => :get}
+  map.resources :website_visits,  :member => {:global_visitor => :get}
+  map.resources :searches,        :only => :index
+  map.resources :users
+  map.resources :activities
+  map.resources :keywords
+  map.resources :job_statuses
+  map.resources :websites
+  map.resources :contact_forms
+  
   map.with_options :controller => 'home' do |home|
      home.dashboard 'dashboard', :action => 'dashboard'
   end
 
-  map.resource :person, :controller => "users"
-  map.resources :users, :password_resets
-  map.resource :user_session
-  map.resource :submission, :only => [:index, :create, :show]
-  map.root :controller => "home", :action => "index" # optional, this just sets the root route
-
+  map.resources   :users,       :password_resets
+  map.resource    :submission,  :only => [:index, :create, :show]
+  map.resource    :person,      :controller => "users"
+  map.resource    :user_session
+  
+  map.root        :controller => "home", :action => "index" 
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
 end

@@ -1,4 +1,4 @@
-class Admin::WebsitesController < ApplicationController
+class WebsitesController < ApplicationController
   before_filter :require_admin
   helper_method :sort_column, :sort_direction
   

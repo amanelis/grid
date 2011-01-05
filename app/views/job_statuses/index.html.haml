@@ -28,5 +28,5 @@
               = "-Errors-"
             -else
               = "Unknown"
-          %td= link_to 'Show', admin_job_status_path(job)
+          %td= link_to 'Show', job_status_path(job)
   = will_paginate(@activities)

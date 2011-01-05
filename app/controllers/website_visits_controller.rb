@@ -1,4 +1,4 @@
-class Admin::WebsiteVisitsController < ApplicationController
+class WebsiteVisitsController < ApplicationController
   before_filter :require_admin
   
   def index

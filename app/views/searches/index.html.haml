@@ -22,7 +22,7 @@
       %tbody
         - @search_accounts.each do |account|
           %tr{:class => cycle('odd', 'even')}
-            %td= link_to account.name, admin_account_path(account)
+            %td= link_to account.name, account_path(account)
             %td
               = account.number_of_lead_calls_between(Date.yesterday - 1.week, Date.yesterday).to_s
             %td
@@ -63,7 +63,7 @@
         -@search_campaigns.each do |campaign|
           %tr{ :class => cycle('odd', 'even')}
             %td
-              = link_to campaign.name, admin_campaign_path(campaign)
+              = link_to campaign.name, campaign_path(campaign)
             %td
               = campaign.number_of_lead_calls_between(Date.yesterday - 1.week, Date.yesterday).to_s
             %td

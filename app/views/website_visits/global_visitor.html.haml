@@ -7,7 +7,7 @@
   %h1 Visitor: #{@website_visit.visitor_id} 
   %h2 Visitor Statistics
 %article
-  -form_for(admin_website_visits_path, :html => {:method => "get", :onchange => "alert('hello')"}) do |f|
+  -form_for(website_visits_path, :html => {:method => "get", :onchange => "alert('hello')"}) do |f|
     = f.text_field :daterangepicker, :name => "daterangepicker", :id => "daterangepicker"
     = f.submit "Filter Dates"
   %h3 #{(@start_date).to_s(:long) + ' to ' + @end_date.to_s(:long)}

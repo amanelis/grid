@@ -1,4 +1,4 @@
-class Admin::ActivitiesController < ApplicationController
+class ActivitiesController < ApplicationController
   before_filter :require_admin
   
   def index

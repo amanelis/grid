@@ -1,9 +1,0 @@
-%h2 Account Information
-%br
-
-- semantic_form_for @user, :url => admin_user_path(@user) do |f|
-  = f.semantic_errors :state
-  - f.inputs :name => "Account Details" do
-    = f.input :email
-  - f.buttons do
-    = f.commit_button :Save, :button_html => { :class => "sexybutton sexysimple sexygreen" }

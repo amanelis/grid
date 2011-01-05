@@ -12,7 +12,7 @@
   %h1= #{@website.nickname} Visits
   %h2 Website Statistics
 %article
-  -form_for(admin_websites_path, :html => {:method => "get", :onchange => "alert('hello')"}) do |f|
+  -form_for(websites_path, :html => {:method => "get", :onchange => "alert('hello')"}) do |f|
     = f.text_field :daterangepicker, :name => "daterangepicker", :id => "daterangepicker", :value => @date_range
     = f.submit "Filter Dates"
   %h3 #{(@start_date).to_s(:long) + ' to ' + @end_date.to_s(:long)}
@@ -76,7 +76,7 @@
                 -temp_string = "NA"
                 -if website_visit.visitor_id.present?
                   -temp_string = website_visit.visitor_id.to_s
-                =link_to temp_string, admin_website_visit_path(website_visit) 
+                =link_to temp_string, website_visit_path(website_visit) 
               %td=website_visit.time_of_visit.strftime("%m/%d/%y %I:%M %p")
               %td=website_visit.ip_address
               %td=website_visit.geolocation
@@ -107,7 +107,7 @@
                 -temp_string = "NA"
                 -if website_visit.visitor_id.present?
                   -temp_string = website_visit.visitor_id.to_s
-                =link_to temp_string, admin_website_visit_path(website_visit) 
+                =link_to temp_string, website_visit_path(website_visit) 
               %td=website_visit.time_of_visit.strftime("%m/%d/%y %I:%M %p")
               %td=website_visit.ip_address
               %td=website_visit.geolocation

@@ -1,4 +1,4 @@
-class Admin::AccountsController < ApplicationController
+class AccountsController < ApplicationController
   before_filter :require_admin
   require 'fastercsv'
   

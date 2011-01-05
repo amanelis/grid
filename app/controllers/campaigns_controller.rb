@@ -1,4 +1,4 @@
-class Admin::CampaignsController < ApplicationController
+class CampaignsController < ApplicationController
   before_filter :require_admin
 
   def show

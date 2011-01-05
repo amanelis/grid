@@ -1,4 +1,4 @@
-class Admin::KeywordsController < ApplicationController
+class KeywordsController < ApplicationController
   before_filter :require_admin
   
   def index

@@ -6,7 +6,7 @@
   %h2 Lead Matrix for #{@campaign.name}
   
 %article
-  -form_for(lead_matrix_admin_campaign_path, :html => {:method => "get"}) do |f|
+  -form_for(lead_matrix_campaign_path, :html => {:method => "get"}) do |f|
     = f.label "Date to Evaluate:"
     = f.text_field :datepicker, :name => "datepicker", :id => "datepicker", :value => @date_selected.strftime("%m/%d/%Y")
     %br

@@ -1,6 +1,6 @@
 .activity_item{:id => "#{activity.timestamp.to_i}"}
   .title
-    = link_to activity.contact_form.campaign.name, admin_campaign_path(activity.contact_form.campaign)
+    = link_to activity.contact_form.campaign.name, campaign_path(activity.contact_form.campaign)
   .icon
     =image_tag("mail.png", :height => "48", :width => "48")
     .time
@@ -29,7 +29,7 @@
   .review
     - if activity.duplicate?
       = "Duplicate Submission"
-    - semantic_remote_form_for activity, :url => admin_activity_path(activity.activity) do |f| 
+    - semantic_remote_form_for activity, :url => activity_path(activity.activity) do |f| 
       = f.semantic_errors :state
       - f.inputs do
         %br

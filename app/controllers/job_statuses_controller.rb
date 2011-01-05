@@ -1,4 +1,4 @@
-class Admin::JobStatusesController < ApplicationController
+class JobStatusesController < ApplicationController
   before_filter :require_admin
   
   def index
