@@ -15,4 +15,5 @@
     %br
       = f.password_field :password_confirmation, :class => 'title'
     %p
+      = f.hidden_field :id, :value => @user.id
       = f.submit "Save", :class => 'button'

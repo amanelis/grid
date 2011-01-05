@@ -23,11 +23,13 @@ class UsersController < ApplicationController
   end
   
   def show
-    @user = User.find(current_user)
+    @user = User.find(params[:id])
   end
   
   def update
-    @user = User.find(current_user.id)
+    debugger
+  
+    @user = User.find_by_id(params[:user][:id])
     if @user.update_attributes(params[:user])
       flash[:notice] = "Account updated!"
       redirect_to user_path(@user)
