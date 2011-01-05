@@ -174,7 +174,8 @@ class Admin::AccountsController < ApplicationController
   
   # Simple method to reload salesforce data, accounts/campaigns
   def refresh_accounts
-    Account.pull_salesforce_accounts
+    # This in the future should be changed to refresh the GroupAccounts
+    # Account.pull_salesforce_accounts
     Campaign.pull_salesforce_campaigns
     Account.cache_results_for_accounts
     flash[:notice] = "Accounts reloaded!"
