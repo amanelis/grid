@@ -3,7 +3,8 @@ class UsersController < ApplicationController
   before_filter :require_user, :only => [:show, :edit, :update]
   
   def index
-    @users = User.all
+    @current_user = current_user
+    @current_user.admin? ? @users = User.all : @users = User.find_by_id(current_user.id)
   end
   
   
