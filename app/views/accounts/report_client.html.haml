@@ -18,6 +18,7 @@
   -if @account.campaigns.present?
     .span-24.last
       %h3 Cost Per Lead Summary
+      .chart#highcharts=high_chart("highcharts", @h)
       %table#cpl
         %thead
           %th Campaign Name
@@ -48,8 +49,7 @@
           %th= ActionController::Base.helpers.number_to_currency(@account.spend_between(@month_start, @month_end))
           %th= ActionController::Base.helpers.number_to_currency(@account.cost_per_lead_between(@month_start, @month_end))
           %th= ActionController::Base.helpers.number_to_currency(@account.cost_per_contact_between(@month_start, @month_end))
-      .span-24.last#highcharts
-        =high_chart("highcharts", @h)
+
   
   -if @account.campaigns.sem.present?
     %section#pay_per_click
@@ -195,29 +195,6 @@
                         %td= ranking[4]
                         %td= ranking[5]
                         %td= ranking[6]
-
-  /Begin of Map Detailed Reports
-  -if @account.campaigns.maps.present?
-    -@account.campaigns.maps.each do |campaign|
-      %table
-        %thead
-          %th
-            = campaign.name + ' Detailed Report'
-        %tbody
-          %tr
-            %td
-              -@keyword_link = campaign.campaign_style.google_keyword_rankings_graph(@month_start, @month_end)
-              -if @keyword_link.present?
-                = link_to image_tag(@keyword_link, :alt => 'Google Map Keyword Rankings'), @keyword_link
-                %br
-              -@count_link = campaign.campaign_style.google_map_data_counts_graph(@month_start, @month_end)
-              -if @count_link.present?
-                = link_to image_tag(@count_link, :alt => 'Click to View'), @count_link
-                %br
-              -@clicks_link = campaign.campaign_style.google_map_website_clicks_graph(@month_start, @month_end)
-              -if @clicks_link.present?
-                = link_to image_tag(@clicks_link, :alt => 'Click to View'), @clicks_link
-
 
   /Begin of Calls Section
   -@account.campaigns.each do |campaign|

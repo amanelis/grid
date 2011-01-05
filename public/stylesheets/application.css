@@ -227,9 +227,6 @@ background:-moz-linear-gradient(top, #FF8B00, #FFC100);
 	------------------
 */
 
-.data{width:710px;}
-
-.chart{width:150px;margin-right:0;}
 /*-------------------------------------------------------------- */
 /* Forms */
 label       { font-weight: bold;}

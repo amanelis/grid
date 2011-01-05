@@ -139,7 +139,8 @@ class AccountsController < ApplicationController
     
     
     @h = HighChart.new('graph') do |f|
-      f.title({:text=>"Campaign Data Graph"})      
+      f.title({:text=>"Campaign Data Graph"}) 
+      f.chart({:width=>"950"})      
       f.options[:x_axis][:categories] = @account.campaigns.active.collect(&:name)
       f.y_axis({:title=> {:text=> ''}, :labels=>{:align=>'right'} })
       
