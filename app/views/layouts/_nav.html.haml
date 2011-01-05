@@ -12,7 +12,7 @@
       -form_tag searches_url, :method => :get, :id => 'search' do
         =text_field_tag 'search'
     %aside#account
-      =link_to "My Account", person_url
+      =link_to "My Account", users_path
       =link_to 'Logout', user_session_path, :method => :delete, :id => "logout"
   -else
     =link_to "Home", root_path
