@@ -62,6 +62,8 @@ class Account < ActiveRecord::Base
     puts "Done."
   end
 
+
+  
   def self.pull_salesforce_accounts
     job_status = JobStatus.create(:name => "Account.pull_salesforce_accounts")
     begin

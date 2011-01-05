@@ -6,11 +6,6 @@
   $(function() {
   $( "#accordion" ).accordion({autoHeight: false, active: 0, collapsible: true});
   });
-%script
-  function() { 
-  // call the tablesorter plugin 
-  $("visit_table").tablesorter({widthFixed: true, widgets: ['zebra']}).tablesorterPager({container: $("#pager")});
-  }); 
   
   
 %header
@@ -18,11 +13,11 @@
   %h2 Website Statistics
 %article
   -form_for(admin_websites_path, :html => {:method => "get", :onchange => "alert('hello')"}) do |f|
-    = f.text_field :daterangepicker, :name => "daterangepicker", :id => "daterangepicker"
+    = f.text_field :daterangepicker, :name => "daterangepicker", :id => "daterangepicker", :value => @date_range
     = f.submit "Filter Dates"
   %h3 #{(@start_date).to_s(:long) + ' to ' + @end_date.to_s(:long)}
   
-  %table{:class => "pretty"}
+  %table
     %thead
       %th Website
       %th Visits
@@ -56,17 +51,24 @@
   %h3=link_to "Website Visits(#{@start_date} - #{@end_date})", :href => "#"
   #first_rung
     %article
-      %table{:id => "visit_table", :class => "tablesorter", :name => "visit_table"}
+      %table
         %thead
-          %th Visitor ID
-          %th Time Of Visit
-          %th IP Address
-          %th Location
-          %th Actions
-          %th Source
-          %th Referrer
-          %th Keyword
-          %th Time Spent
+          %th 
+            =sortable "visitor_id", "Visitor ID", {:daterangepicker => @date_range}
+          %th 
+            =sortable "time_of_visit", "Time Of Visit", {:daterangepicker => @date_range}
+          %th 
+            =sortable "ip_address", "IP Address", {:daterangepicker => @date_range}
+          %th 
+            =sortable "geolocation", "Location", {:daterangepicker => @date_range}
+          %th 
+            =sortable "actions", "Actions", {:daterangepicker => @date_range}
+          %th 
+            =sortable "referrer_type", "Source", {:daterangepicker => @date_range}
+          %th 
+            =sortable "referrer_search", "Keyword", {:daterangepicker => @date_range}
+          %th 
+            =sortable "time_total", "Time Spent", {:daterangepicker => @date_range}
         %tbody
           - @visits.each do |website_visit|
             %tr
@@ -80,15 +82,15 @@
               %td=website_visit.geolocation
               %td=website_visit.actions
               %td=website_visit.referrer_type
-              %td=website_visit.referrer_domain
               %td=website_visit.referrer_search
               %td
                 - @total_time = website_visit.time_total.to_i
                 = [(((@total_time/3600) != 0 ? (@total_time/3600).to_s + 'h' : nil)), (((@total_time/60 % 60) != 0 ? ((@total_time/60 % 60).to_s + 'm').rjust(2,'0') : nil)), (((@total_time % 60) != 0 ? ((@total_time % 60).to_s + 's').rjust(2,'0') : nil))].compact.join(':')
+      =will_paginate @visits   
   %h3=link_to "Website Bounces(#{@start_date} - #{@end_date})", :href => "#"
   #second_rung
     %article          
-      %table{:class => "pretty"}
+      %table
         %thead
           %th Visitor ID
           %th Time Of Visit
