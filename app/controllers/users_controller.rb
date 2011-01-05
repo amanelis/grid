@@ -27,8 +27,6 @@ class UsersController < ApplicationController
   end
   
   def update
-    debugger
-  
     @user = User.find_by_id(params[:user][:id])
     if @user.update_attributes(params[:user])
       flash[:notice] = "Account updated!"
