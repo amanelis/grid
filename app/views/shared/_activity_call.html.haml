@@ -1,6 +1,6 @@
 .activity_item{:id => "#{activity.timestamp.to_i}"}
   .title
-    = link_to activity.phone_number.campaign.name, campaign_path(activity.phone_number.campaign)
+    = link_to activity.activity_type.phone_number.campaign.name, campaign_path(activity.activity_type.phone_number.campaign)
   .icon
     =image_tag("telephone.png", :height => "48", :width => "48")
     .time
@@ -14,16 +14,12 @@
         ="(#{activity.caller_name})"
       %li
         Status: 
-        %b
-          = "#{activity.call_status} (#{(activity.call_end - activity.call_start).to_int} seconds)"
-      %li
-        %br
+        = "#{activity.call_status} (#{(activity.call_end - activity.call_start).to_int} seconds)"
       %li 
         -if activity.recorded? && activity.recording?
           = link_to('Listen', activity.recording.expiring_url(14400))
           = mp3_player "#{activity.recording.expiring_url(14400)}", :bg => "EEEEEE", :track => "EEEEEE", :slider => "222222", :loader => "EEEEEE"
         -else
-          =image_tag("sound.png", :height => "14", :width => "14")
           Call Recording Unavailable
   .review
     - if activity.duplicate?
@@ -31,10 +27,9 @@
     - semantic_remote_form_for activity, :url => activity_path(activity.activity) do |f| 
       = f.semantic_errors :state
       - f.inputs do
-        %br
         = f.input :review_status, :label => 'Review', :as => :select, :collection => activity.review_status_options, :include_blank => false
       - f.buttons do
-        = f.commit_button :update, :button_html => { :class => "sexybutton sexysimple sexygreen" }
+        = f.commit_button :update
   .bottom_title
     .leftinfo
       Inbound #: 
@@ -42,3 +37,4 @@
     .rightinfo
       Answered By:
       =number_to_phone(activity.forwardno)
+      
