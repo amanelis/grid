@@ -101,7 +101,7 @@ class Submission < ActiveRecord::Base
   
   def is_spam?
     return true if self.phone_number =~ /1010101010/
-    text = self.work_description + self.other_information
+    text = self.work_description.to_s + self.other_information.to_s
     return true if text =~ /http:/i
     return true if text =~ /www./i
     return true if text =~ /a href/i
