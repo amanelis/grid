@@ -1,8 +1,9 @@
 class ContactForm < ActiveRecord::Base
   belongs_to :campaign
   has_many :submissions, :dependent => :destroy
-
-
+  WUFOO_API_KEY = '9FTI-TCG8-BSEE-RFUV'
+  WUFOO_POST_KEY = 'hM7iVJ7tjf3Q7puc4f5FfxOJqDDr4woIxF0s68UU7Eo='
+  
   # INSTANCE BEHAVIOR
 
   def number_of_lead_submissions_between(start_date = Date.yesterday, end_date = Date.yesterday)
@@ -21,4 +22,7 @@ class ContactForm < ActiveRecord::Base
     self.active? ? false : true
   end
 
+  def create_wufoo_form
+    
+  end
 end
