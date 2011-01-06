@@ -27,14 +27,9 @@ class Account < ActiveRecord::Base
   attr_accessor :account_status
   
   validates_uniqueness_of :name, :case_sensitive => false
-  
-  # CLASS BEHAVIOR
 
   
-#  def self.combined_timeline_data
-#    raw_data = Utilities.merge_and_sum_timeline_data(Account.all.collect { |account| account.number_of_visits_by_date }, :visits)
-#    Utilities.massage_timeline(raw_data, [:visits])
-#  end
+  # CLASS BEHAVIOR
 
   def self.cache_results_for_accounts
     Rails.cache.write("admin_data", self.combined_timeline_data)
@@ -312,5 +307,4 @@ class Account < ActiveRecord::Base
     exception
   end
   
-
 end

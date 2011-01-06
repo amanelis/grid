@@ -66,7 +66,7 @@ class CampaignsController < ApplicationController
       @phone_number.update_attribute(:campaign_id, @campaign.id)
     end
     
-    redirect_to admin_campaign_path(@campaign)
+    redirect_to campaign_path(@campaign)
   end
   
   def lead_matrix

@@ -15,6 +15,7 @@ class GroupAccount < ActiveRecord::Base
       end
     end
   end
+
   
   # CLASS BEHAVIOR
   
@@ -53,7 +54,6 @@ class GroupAccount < ActiveRecord::Base
     Campaign.fix_target_cities
     puts "Done."
   end
-  
   
   def self.pull_salesforce_accounts
     job_status = JobStatus.create(:name => "GroupAccount.pull_salesforce_accounts")
@@ -134,4 +134,5 @@ class GroupAccount < ActiveRecord::Base
     end
     job_status.finish_with_no_errors
   end
+  
 end
