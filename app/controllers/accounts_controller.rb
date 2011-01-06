@@ -146,10 +146,10 @@ class AccountsController < ApplicationController
       
       f.labels(:items=>[:style=>{:left=>"40px", :top=>"8px", :color=>"black", :align => 'center'} ])
       
-      f.series(:type=> 'column',:name=> 'Calls',          :data => @account.campaigns.active.collect {|campaign| campaign.number_of_lead_calls_between(@month_start, @month_end) })
-      f.series(:type=> 'column',:name=> 'Forms',          :data => @account.campaigns.active.collect {|campaign| campaign.number_of_lead_submissions_between(@month_start, @month_end) })
-      f.series(:type=> 'column', :name=> 'Total Leads',   :data => @account.campaigns.active.collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
-      f.series(:type=> 'column', :name=> 'Total Contacts',:data => @account.campaigns.active.collect {|campaign| campaign.number_of_total_contacts_between(@month_start, @month_end) })
+      f.series(:type=> 'bar',:name=> 'Calls',          :data => @account.campaigns.active.collect {|campaign| campaign.number_of_lead_calls_between(@month_start, @month_end) })
+      f.series(:type=> 'bar',:name=> 'Forms',          :data => @account.campaigns.active.collect {|campaign| campaign.number_of_lead_submissions_between(@month_start, @month_end) })
+      f.series(:type=> 'bar', :name=> 'Total Leads',   :data => @account.campaigns.active.collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
+      f.series(:type=> 'bar', :name=> 'Total Contacts',:data => @account.campaigns.active.collect {|campaign| campaign.number_of_total_contacts_between(@month_start, @month_end) })
 
     end
     

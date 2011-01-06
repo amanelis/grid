@@ -37,7 +37,7 @@
                 = f.commit_button :update
           %td.time
             -activity_time_zone = activity.activity_type.phone_number.campaign.account.time_zone
-            =time_ago_in_words(activity.activity_type.call_start) 
+            =time_ago_in_words(activity.activity_type.call_start)
             -#+ " ago at " + activity.activity_type.call_start.in_time_zone(activity_time_zone).to_s(:time) + " " + activity_time_zone
 
   %h2 Form Submissions
