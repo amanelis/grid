@@ -168,7 +168,7 @@ class AccountsController < ApplicationController
     @account = Account.find(params[:id])
     @account.send_weekly_report_now
     flash[:notice] = "You have successfully sent an email!"
-    redirect_to admin_account_path(params[:id])
+    redirect_to account_path(params[:id])
   end
   
   # Simple method to reload salesforce data, accounts/campaigns
