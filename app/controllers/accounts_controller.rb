@@ -141,16 +141,14 @@ class AccountsController < ApplicationController
     @h = HighChart.new('graph') do |f|
       f.title({:text=>"Campaign Data Graph"}) 
       f.chart({:width=>"950"})      
-      f.options[:x_axis][:categories] = @account.campaigns.active.collect(&:name)
-      f.y_axis({:title=> {:text=> ''}, :labels=>{:align=>'right'} })
-      
-      f.labels(:items=>[:style=>{:left=>"40px", :top=>"8px", :color=>"black", :align => 'center'} ])
-      
-      f.series(:type=> 'bar',:name=> 'Calls',          :data => @account.campaigns.active.collect {|campaign| campaign.number_of_lead_calls_between(@month_start, @month_end) })
-      f.series(:type=> 'bar',:name=> 'Forms',          :data => @account.campaigns.active.collect {|campaign| campaign.number_of_lead_submissions_between(@month_start, @month_end) })
-      f.series(:type=> 'bar', :name=> 'Total Leads',   :data => @account.campaigns.active.collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
-      f.series(:type=> 'bar', :name=> 'Total Contacts',:data => @account.campaigns.active.collect {|campaign| campaign.number_of_total_contacts_between(@month_start, @month_end) })
+      f.y_axis({:title=> {:text=> ''}, :labels=>{:rotation=>0, :align=>'right'} })
+      f.x_axis(:categories => @account.campaigns.active.collect(&:name) , :labels=>{:rotation=>0 , :align => 'right'})
 
+      f.options[:chart][:defaultSeriesType] = "bar"
+      f.series(:name=> 'Calls',          :data => @account.campaigns.active.collect {|campaign| campaign.number_of_lead_calls_between(@month_start, @month_end) })
+      f.series(:name=> 'Forms',          :data => @account.campaigns.active.collect {|campaign| campaign.number_of_lead_submissions_between(@month_start, @month_end) })
+      f.series(:name=> 'Total Leads',   :data => @account.campaigns.active.collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
+      f.series(:name=> 'Total Contacts',:data => @account.campaigns.active.collect {|campaign| campaign.number_of_total_contacts_between(@month_start, @month_end) })
     end
     
     respond_to do |format|
