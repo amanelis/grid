@@ -16,9 +16,10 @@ class Notifier < ActionMailer::Base
     sent_on       Time.now
   end
 
-  def weekly_report(account, email_list = nil, date = nil)
-    date ||= Date.today.beginning_of_week
+  def weekly_report(account, email_list = nil, date = nil, previous = nil)
     email_list ||= account.reporting_emails.split(/, \s*/)
+    date ||= Date.today.beginning_of_week
+    previous ||= 6
 
     recipients    email_list
     bcc           ["dev@cityvoice.com", "reporting@cityvoice.com"]
@@ -26,7 +27,7 @@ class Notifier < ActionMailer::Base
     from          "CityVoice <support@cityvoice.com>"
     sent_on       Time.now
     content_type  "multipart/alternative"
-    body          :account_report_data => account.previous_days_report_data(date, 6)
+    body          :account_report_data => account.previous_days_report_data(date, previous)
   end
 
   def new_form_submission(submission)
