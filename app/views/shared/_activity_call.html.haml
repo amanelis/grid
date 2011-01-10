@@ -28,7 +28,7 @@
   .review
     - if activity.duplicate?
       = "Duplicate Call"
-    - form_for activity, :url => activity_path(activity.activity) do |f| 
+    - form_for activity, :url => activity_path(activity.activity) do |f|
       = f.select(:review_status, (activity.review_status_options))
       = f.submit(:update, :button_html => { :class => "sexybutton sexysimple sexygreen" })
   .bottom_title
