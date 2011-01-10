@@ -15,17 +15,17 @@
   :name: i18n
 - :version: = 1.0.1
   :name: formtastic
-- :version: = 2.3.14
-  :source: http://gemcutter.org
+- :source: http://gemcutter.org
+  :version: = 2.3.14
   :name: will_paginate
-- :version: = 0.1.4
-  :source: http://gemcutter.org
+- :source: http://gemcutter.org
+  :version: = 0.1.4
   :name: sendgrid
-- :version: = 0.8
-  :source: http://gemcutter.org
+- :source: http://gemcutter.org
+  :version: = 0.8
   :name: gchartrb
-- :version: = 0.0.3
-  :source: http://gemcutter.org
+- :source: http://gemcutter.org
+  :version: = 0.0.3
   :name: static-gmaps
 - :version: = 2.0.3
   :name: delayed_job
@@ -47,5 +47,7 @@
   :name: pdfkit
 - :version: = 1.5.3
   :name: fastercsv
+- :version: = 2.0.5
+  :name: twiliolib
 - :version: 2.3.9
   :name: rails
