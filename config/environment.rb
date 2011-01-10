@@ -43,6 +43,7 @@ Rails::Initializer.run do |config|
   config.gem 'searchlogic', :version => '2.4.27'
   config.gem 'pdfkit', :version => '0.4.6'
   config.gem 'fastercsv', :version => '1.5.3'
+  config.gem 'twiliolib', :version => '2.0.5'
 
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named
