@@ -105,14 +105,10 @@ class GroupAccount < ActiveRecord::Base
         #   account_manager = Salesforce::User.find(sf_account.owner_id)
         #   existing_account.account_manager = account_manager.name if account_manager.present?
         # end
-        if existing_group_account.present?
-          existing_account.group_account_id = existing_group_account.id
-        else
-          reseller = sf_account.parent_id.present? ? GroupAccount.find_by_salesforce_id(sf_account.parent_id) : cityvoice_group_account
-          if reseller.present?
-            if sf_account.account_type__c.include? 'Reseller'
-              existing_account.group_account_id = reseller.id
-            end
+        reseller = sf_account.parent_id.present? ? GroupAccount.find_by_salesforce_id(sf_account.parent_id) : cityvoice_group_account
+        if reseller.present?
+          if sf_account.account_type__c.include? 'Reseller'
+            existing_account.group_account_id = reseller.id
           end
         end
         
