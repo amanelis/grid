@@ -129,7 +129,7 @@ class GroupAccount < ActiveRecord::Base
      reseller_accounts = Salesforce::Account.find(:all, :conditions => ['account_type__c = ?', "Reseller"])
      reseller_accounts.each do |account|
        existing_account = GroupAccount.find_by_salesforce_id(account.id)
-       if exisiting_account.blank?
+       if existing_account.blank?
          existing_account = GroupAccount.new
          existing_account.salesforce_id = account.id
        end
