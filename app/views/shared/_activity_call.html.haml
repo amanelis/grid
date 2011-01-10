@@ -28,13 +28,9 @@
   .review
     - if activity.duplicate?
       = "Duplicate Call"
-    - semantic_remote_form_for activity, :url => activity_path(activity.activity) do |f| 
-      = f.semantic_errors :state
-      - f.inputs do
-        %br
-        = f.input :review_status, :label => 'Review', :as => :select, :collection => activity.review_status_options, :include_blank => false
-      - f.buttons do
-        = f.commit_button :update, :button_html => { :class => "sexybutton sexysimple sexygreen" }
+    - form_for activity, :url => activity_path(activity.activity) do |f|
+      = f.select(:review_status, (activity.review_status_options))
+      = f.submit(:update, :button_html => { :class => "sexybutton sexysimple sexygreen" })
   .bottom_title
     .leftinfo
       Inbound #: 
