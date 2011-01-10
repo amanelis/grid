@@ -106,7 +106,7 @@ class GroupAccount < ActiveRecord::Base
         # end
         reseller = sf_account.parent_id.present? ? GroupAccount.find_by_salesforce_id(sf_account.parent_id) : cityvoice_group_account
         if reseller.present?
-          existing_account.group_account_id = reseller.id if !sf_account.account_type__c.include? 'Reseller'
+          existing_account.group_account_id = reseller.id if reseller.account_type__c.include? 'Reseller'
         end
         
         existing_account.save
