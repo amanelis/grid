@@ -73,7 +73,6 @@ class GroupAccount < ActiveRecord::Base
         
       sf_accounts = Salesforce::Account.find(:all, :conditions => ['account_status__c != ?', ''])
       sf_accounts.each do |sf_account|
-        existing_group_account = GroupAccount.find_by_salesforce_id(sf_account.id)
         
         #Account Work
         existing_account = Account.find_by_salesforce_id(sf_account.id)
@@ -107,9 +106,7 @@ class GroupAccount < ActiveRecord::Base
         # end
         reseller = sf_account.parent_id.present? ? GroupAccount.find_by_salesforce_id(sf_account.parent_id) : cityvoice_group_account
         if reseller.present?
-          if sf_account.account_type__c.include? 'Reseller'
-            existing_account.group_account_id = reseller.id
-          end
+          existing_account.group_account_id = reseller.id if !sf_account.account_type__c.include? 'Reseller'
         end
         
         existing_account.save
