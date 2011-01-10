@@ -109,6 +109,7 @@ class GroupAccount < ActiveRecord::Base
         existing_account.main_contact = sf_account.main_contact__c
         existing_account.receive_weekly_report = sf_account.receive_weekly_report__c
         existing_account.reporting_emails = sf_account.email_reports_to__c
+        existing_account.group_account_id = cityvoice_group_account.id
         # if sf_account.owner_id.present?
         #   account_manager = Salesforce::User.find(sf_account.owner_id)
         #   existing_account.account_manager = account_manager.name if account_manager.present?
@@ -120,8 +121,6 @@ class GroupAccount < ActiveRecord::Base
           if reseller.present?
             if sf_account.account_type__c.include? 'Reseller'
               existing_account.group_account_id = reseller.id
-            else
-              existing_account.group_account_id = cityvoice_group_account.id
             end
           end
         end

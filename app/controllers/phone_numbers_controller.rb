@@ -27,5 +27,16 @@ class PhoneNumbersController < ApplicationController
     
   end
   
+  def available_numbers(area_code)
+    /2010-04-01/Accounts/{AccountSid}/AvailablePhoneNumbers/{IsoCountryCode}/Local
+    account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
+    resp = account.request("/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/AvailablePhoneNumbers/US/Local?AreaCode=210", 'GET')
+    resp.error! unless resp.kind_of? Net::HTTPSuccess
+    if resp.code == '200'
+      
+    end
+    puts "code: %s\nbody: %s" % [resp.code, resp.body]
+  end
+  
   
 end
