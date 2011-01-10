@@ -100,19 +100,18 @@ class GroupAccount < ActiveRecord::Base
         existing_account.receive_weekly_report = sf_account.receive_weekly_report__c
         existing_account.reporting_emails = sf_account.email_reports_to__c
         existing_account.group_account_id = cityvoice_group_account.id
+        
         # if sf_account.owner_id.present?
         #   account_manager = Salesforce::User.find(sf_account.owner_id)
         #   existing_account.account_manager = account_manager.name if account_manager.present?
         # end
-        if (GroupAccount.find_by_salesforce_id(sf_account.id)).present?
-          existing_account.group_account_id = (GroupAccount.find_by_salesforce_id(sf_account.id)).id
+        
+        if (account_as_existing_group_account = GroupAccount.find_by_salesforce_id(sf_account.id)).present?
+          existing_account.group_account_id = account_as_existing_group_account.id
         else
           reseller = sf_account.parent_id.present? ? GroupAccount.find_by_salesforce_id(sf_account.parent_id) : cityvoice_group_account
-          if reseller.present?
-            existing_account.group_account_id = reseller.id
-          end
+          existing_account.group_account_id = reseller.id if reseller.present?
         end
-        
         
         existing_account.save
       end
