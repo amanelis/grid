@@ -58,7 +58,7 @@ class GroupAccount < ActiveRecord::Base
   def self.pull_salesforce_accounts
     job_status = JobStatus.create(:name => "GroupAccount.pull_salesforce_accounts")
     begin
-      Account.pull_salesforce_reseller_accounts
+      self.pull_salesforce_reseller_accounts
       cityvoice_account = Account.find_by_name("CityVoice")
       cityvoice_group_account = GroupAccount.find_by_name("CityVoice")
       
@@ -125,7 +125,7 @@ class GroupAccount < ActiveRecord::Base
     job_status.finish_with_no_errors
   end
   
-  def pull_salesforce_reseller_accounts
+  def self.pull_salesforce_reseller_accounts
      reseller_accounts = Salesforce::Account.find(:all, :conditions => ['account_type__c = ?', "Reseller"])
      reseller_accounts.each do |account|
        existing_account = GroupAccount.find_by_salesforce_id(account.id)
@@ -139,5 +139,4 @@ class GroupAccount < ActiveRecord::Base
      end
    end
          
-  
 end
