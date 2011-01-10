@@ -16,7 +16,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :job_statuses
   map.resources :websites
   map.resources :contact_forms
-  map.resources :calls, :member => {:connect => :post, :collect => :post}
+  map.resources :calls, :member => {:collect => :post}
   map.resources :phone_numbers, :member => {:connect => :post}
   
   map.with_options :controller => 'home' do |home|
