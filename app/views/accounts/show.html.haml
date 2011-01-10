@@ -12,12 +12,13 @@
       = link_to "Send Email", send_weekly_path(params[:id])
   
   %h2= @account.name
-  %h3 Account Summary
+  %h4.quiet 
+    Account Summary for 
+    #{(@start_date).to_s(:long) + ' to ' + @end_date.to_s(:long)}
 %article
   -form_for(accounts_path, :html => {:method => "get", :onchange => "alert('hello')"}) do |f|
     = f.text_field :daterangepicker, :name => "daterange", :id => "daterangepicker", :autocomplete => "off"
-    = f.submit "Filter Dates"
-  %h3 #{(@start_date).to_s(:long) + ' to ' + @end_date.to_s(:long)}
+    = f.submit "Change Date Range"
   %table
     %thead
       %tr
