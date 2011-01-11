@@ -13,11 +13,13 @@ class AccountsController < ApplicationController
     @accounts_statuses = Account.account_statuses
     @accounts_types = Account.account_types
     
-    if current_user.roles.account_manager.to_a.present?
+    if current_user.account_manager?
+      @accounts = current_user.acquainted_accounts
       respond_to do |format|
         format.html 
       end
     else
+      @accounts = current_user.acquainted_accounts
       respond_to do |format|
         format.html 
       end
