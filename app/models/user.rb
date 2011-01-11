@@ -27,5 +27,15 @@ class User < ActiveRecord::Base
     return true if self.roles.account_manager.any? { |role| role.role_type.group_account == campaign.account.group_account }
     self.roles.account_user.any? { |role| role.role_type.account == campaign.account }
   end
-
+  
+  def acquainted_group_accounts
+    return GroupAccounts.all if self.admin?
+    self.roles.account_manager.collect { |role| role.role_type.group_account }
+  end
+  
+  def acquainted_accounts
+    return Accounts.all if self.admin?
+    (self.roles.account_manager.collect { |role| role.role_type.group_account.accounts } << self.roles.account_user.collect { |role| role.role_type.account }).flatten.compact.uniq
+  end
+  
 end
