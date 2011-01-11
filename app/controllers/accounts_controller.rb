@@ -6,24 +6,21 @@ class AccountsController < ApplicationController
   # GET /accounts
   # GET /accounts.xml
   def index
+    authorize! :read, Account
+    
     @passed_status = params[:account_status] ||= 'Active'
     @passed_type = params[:account_type] ||= ''
     @accounts = Account.get_accounts_by_status_and_account_type(params[:account_status], params[:account_type])
     @accounts_data = Rails.cache.fetch("accounts_data") { Account.get_accounts_data }
     @accounts_statuses = Account.account_statuses
     @accounts_types = Account.account_types
-    
-    if current_user.account_manager?
-      @accounts = current_user.acquainted_accounts
-      respond_to do |format|
-        format.html 
-      end
-    else
-      @accounts = current_user.acquainted_accounts
-      respond_to do |format|
-        format.html 
-      end
+
+    ## This shall pull the users accounts based on their role
+    @accounts = current_user.acquainted_accounts
+    respond_to do |format|
+      format.html 
     end
+    
   end
 
   # GET /accounts/1

@@ -7,8 +7,6 @@ class Ability
     if user.admin?
       can :manage, :all
     else
-      #can :read, Account
-      
       ## User is an ACCOUNT MANAGER
       if user.roles.account_manager.to_a.present?
         can :read, Account
@@ -17,12 +15,12 @@ class Ability
         end
       end
       
-      ## User is an ACCOUNT USER
+      ## User is an ACCOUNT USER or just USER
       if user.roles.account_user.to_a.present?
         can :read, Account
       end
 
-    end
-  end
+    end #if
+  end #initialize
   
 end
