@@ -11,6 +11,15 @@ class Ability
       can :update, Account do |account|
         account.try(:user) == user
       end
+  
+=begin    
+      if user.role?(:accountmanager)
+        can :read, Account
+        can :update, Account do |account|
+          account.try(:user) == user
+        end
+      end
+=end
     end
   end
   
