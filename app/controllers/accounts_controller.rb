@@ -182,6 +182,7 @@ class AccountsController < ApplicationController
   
   # Simple method to reload salesforce data, accounts/campaigns
   def refresh_accounts
+    authorize! :refresh_accounts, Account
     GroupAccount.pull_salesforce_accounts
     Campaign.pull_salesforce_campaigns
     Account.cache_results_for_accounts
