@@ -29,12 +29,10 @@
           %td.review
             - if activity.duplicate?
               = "Duplicate Call"
-            - semantic_remote_form_for activity.activity_type, :url => activity_path(activity.activity_type.activity.activity_type) do |f| 
-              = f.semantic_errors :state
-              - f.inputs do
-                = f.input :review_status, :label => 'Review', :as => :select, :collection => activity.activity_type.review_status_options, :include_blank => false
-              - f.buttons do
-                = f.commit_button :update
+            -else
+              - form_for activity.activity_type, :url => activity_path(activity.activity_type.activity) do |f|
+                = f.select(:review_status, (activity.activity_type.review_status_options))
+                = f.submit(:update)
           %td.time
             -activity_time_zone = activity.activity_type.phone_number.campaign.account.time_zone
             =time_ago_in_words(activity.activity_type.call_start)
