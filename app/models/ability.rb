@@ -12,14 +12,18 @@ class Ability
         account.try(:user) == user
       end
   
-=begin    
-      if user.role?(:accountmanager)
+    
+      if user.roles.account_manager.to_a.present?
         can :read, Account
         can :update, Account do |account|
           account.try(:user) == user
         end
       end
-=end
+      
+      if user.roles.account_user.to_a.present?
+        can :read, Account
+      end
+
     end
   end
   
