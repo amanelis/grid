@@ -6,6 +6,13 @@ class PhoneNumber < ActiveRecord::Base
   belongs_to :campaign
   has_many :calls, :dependent => :destroy
 
+  # Twilio REST API version
+  API_VERSION = '2010-04-01'
+
+  # Twilio AccountSid and AuthToken
+  ACCOUNT_SID = 'AC7fedbe5d54f77671320418d20f843330'
+  ACCOUNT_TOKEN = 'a7a72b0eb3c8a41064c4fc741674a903'
+  
 
   # CLASS BEHAVIOR
 
@@ -98,8 +105,27 @@ class PhoneNumber < ActiveRecord::Base
   def self.selectable_orphaned_phone_numbers
     self.orphaned_phone_numbers.collect { |orphan| ["#{orphan.name} - #{orphan.inboundno}", orphan.id] }.sort { |x, y| x.first.downcase <=> y.first.downcase }
   end
-
-
+  
+  
+  def create_twilio_number(phone_number, name, call_url = "http://grid.cityvoice.com/phone_numbers/connect/", fallback_url = "http://grid.cityvoice.com/phone_numbers/connect/", status_url = "http://grid.cityvoice.com/phone_numbers/collect/", caller_id = false)
+    account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
+    resp = account.request("/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/IncomingPhoneNumbers.json?PhoneNumber=+#{phone_number}&VoiceUrl=#{call_url}#{self.id}&VoiceMethod=POST&VoiceFallbackUrl=#{fallback_url}#{self.id}&VoiceFallbackMethod=POST&StatusCallback=#{status_url}#{self.id}&StatusCallbackMethod=POST&FriendlyName=#{CGI.escape(name)}&VoiceCallerIdLookup=#{caller_id}", 'POST')
+    resp.error! unless resp.kind_of? Net::HTTPSuccess
+    resp.code
+  end
+  
+  #Returns an Array of Hashes for Available Phone Numbers within an area_code.
+  def self.available_numbers(area_code = "210", country = "US")
+    account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
+    resp = account.request("/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/AvailablePhoneNumbers/#{country}/Local.json?AreaCode=#{area_code}", 'GET')
+    resp.error! unless resp.kind_of? Net::HTTPSuccess
+    numbers = Array.new()
+    if resp.code == '200'
+      results = JSON.parse(resp.body)['available_phone_numbers']
+      return results.sort! {|a,b| a["phone_number"].to_i <=> b["phone_number"].to_i}
+    end
+  end
+  
   # INSTANCE BEHAVIOR
   
   def orphan!

@@ -292,8 +292,8 @@ class MapKeyword < ActiveRecord::Base
         insider_start = review_source.index('<span>insiderpages.com</span>')
         if insider_start.present?
           insider_block = review_source[insider_start..(review_source.length - 1)]
-          insider_stop = (insider_block.index('</span> reviews') - 1)
-          google_insiderpages_review_count = insider_block[38..insider_stop].to_i
+          insider_stop = (insider_block.index('</span> reviews') - 1) if insider_block.present?
+          google_insiderpages_review_count = insider_block[38..insider_stop].to_i if insider_stop.present?
           
           insider_star_end = insider_block.index('webreview')
           insider_star_block = insider_block[0..insider_star_end]

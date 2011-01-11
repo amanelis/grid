@@ -23,6 +23,14 @@ class ContactForm < ActiveRecord::Base
   end
 
   def create_wufoo_form
+    wufoo = WuParty.new("cityvoice", "9FTI-TCG8-BSEE-RFUV") 
+    w
+    
+    
+    
+    
     
   end
+  
+  
 end

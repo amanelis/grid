@@ -47,5 +47,9 @@
   :name: pdfkit
 - :version: = 1.5.3
   :name: fastercsv
+- :version: = 2.0.5
+  :name: twiliolib
+- :version: = 1.4.1
+  :name: cancan
 - :version: 2.3.9
   :name: rails

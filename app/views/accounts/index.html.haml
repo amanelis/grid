@@ -4,9 +4,8 @@
     |
     = link_to 'Export', export_path, :class => "submit", :name => "submit"
   %h3 Accounts
+  %h4.quiet= 'For ' + (Date.yesterday - 1.week).to_s(:long) + ' to ' + Date.yesterday.to_s(:long)
 %article
-  %h3
-    = 'For ' + (Date.yesterday - 1.week).to_s(:long) + ' to ' + Date.yesterday.to_s(:long)
   %form{:href => '/', :action => "accounts", :id => 'index', :name => 'index', :method => 'GET'}
     %label
       = "Account Status: "

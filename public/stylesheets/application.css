@@ -96,8 +96,15 @@ margin-right:5px;
 }
 
 #account a{
-	text-decoration:underline;
 	font-size:.8em;
+	background:none;
+	-webkit-border-radius: none;
+	   -moz-border-radius: none;
+	        border-radius: none;
+}
+
+#account a:hover{
+	text-decoration:underline;
 }
 
 #search input[type="text"]{

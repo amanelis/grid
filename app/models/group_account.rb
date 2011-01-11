@@ -58,6 +58,7 @@ class GroupAccount < ActiveRecord::Base
   def self.pull_salesforce_accounts
     job_status = JobStatus.create(:name => "GroupAccount.pull_salesforce_accounts")
     begin
+      self.pull_salesforce_reseller_accounts
       cityvoice_account = Account.find_by_name("CityVoice")
       cityvoice_group_account = GroupAccount.find_by_name("CityVoice")
       
@@ -72,17 +73,6 @@ class GroupAccount < ActiveRecord::Base
         
       sf_accounts = Salesforce::Account.find(:all, :conditions => ['account_status__c != ?', ''])
       sf_accounts.each do |sf_account|
-        #GroupAccount Work
-        existing_group_account = GroupAccount.find_by_salesforce_id(sf_account.id)
-        if sf_account.account_type__c.include? 'Reseller'
-          if existing_group_account.blank?
-            existing_group_account = GroupAccount.new
-            existing_group_account.salesforce_id = sf_account.id
-          end
-          existing_group_account.name = sf_account.name
-          existing_group_account.status = sf_account.account_status__c
-          existing_group_account.save
-        end
         
         #Account Work
         existing_account = Account.find_by_salesforce_id(sf_account.id)
@@ -109,21 +99,18 @@ class GroupAccount < ActiveRecord::Base
         existing_account.main_contact = sf_account.main_contact__c
         existing_account.receive_weekly_report = sf_account.receive_weekly_report__c
         existing_account.reporting_emails = sf_account.email_reports_to__c
+        existing_account.group_account_id = cityvoice_group_account.id
+        
         # if sf_account.owner_id.present?
         #   account_manager = Salesforce::User.find(sf_account.owner_id)
         #   existing_account.account_manager = account_manager.name if account_manager.present?
         # end
-        if existing_group_account.present?
-          existing_account.group_account_id = existing_group_account.id
+        
+        if (account_as_existing_group_account = GroupAccount.find_by_salesforce_id(sf_account.id)).present?
+          existing_account.group_account_id = account_as_existing_group_account.id
         else
           reseller = sf_account.parent_id.present? ? GroupAccount.find_by_salesforce_id(sf_account.parent_id) : cityvoice_group_account
-          if reseller.present?
-            if sf_account.account_type__c.include? 'Reseller'
-              existing_account.group_account_id = reseller.id
-            else
-              existing_account.group_account_id = cityvoice_group_account.id
-            end
-          end
+          existing_account.group_account_id = reseller.id if reseller.present?
         end
         
         existing_account.save
@@ -135,4 +122,18 @@ class GroupAccount < ActiveRecord::Base
     job_status.finish_with_no_errors
   end
   
+  def self.pull_salesforce_reseller_accounts
+     reseller_accounts = Salesforce::Account.find(:all, :conditions => ['account_type__c = ?', "Reseller"])
+     reseller_accounts.each do |account|
+       existing_account = GroupAccount.find_by_salesforce_id(account.id)
+       if existing_account.blank?
+         existing_account = GroupAccount.new
+         existing_account.salesforce_id = account.id
+       end
+       existing_account.name = account.name
+       existing_account.status = account.account_status__c
+       existing_account.save
+     end
+   end
+         
 end

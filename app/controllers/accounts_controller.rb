@@ -22,6 +22,7 @@ class AccountsController < ApplicationController
   # GET /accounts/1
   # GET /accounts/1.xml
   def show    
+    @date_range = ''
     if params[:daterange].blank?
       @account = Account.find(params[:id])
       Time.zone = @account.time_zone
@@ -34,6 +35,7 @@ class AccountsController < ApplicationController
       
       @start_date = Date.yesterday - 1.week
       @end_date = Date.yesterday
+      @date_range = params[:daterange]
       @campaigns = @account.campaigns.sort! { |a,b| a.name <=> b.name}
       respond_to do |format|
         format.html # show.html.erb
@@ -50,7 +52,7 @@ class AccountsController < ApplicationController
 
       # Parse the date the GET request has received
       dates = params[:daterange].split(' - ')
-
+      @date_range = params[:daterange]
       begin
         @start_date = Date.parse(dates[0])
         @end_date = Date.parse(dates[1])

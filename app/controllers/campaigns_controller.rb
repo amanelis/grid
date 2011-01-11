@@ -7,7 +7,7 @@ class CampaignsController < ApplicationController
     @timeline = @campaign.campaign_style.combined_timeline_data
     @sorted_dates = @timeline.keys.sort
     @title = @campaign.account.name
-    
+    @date_range = ''
     if @campaign.is_sem?
       @chart = GoogleVisualr::Gauge.new
       @chart.add_column('string' , 'Label')
@@ -36,14 +36,14 @@ class CampaignsController < ApplicationController
     if params[:daterange].blank?
       @start_date = Date.yesterday - 1.week
       @end_date = Date.yesterday
-
+      
       respond_to do |format|
         format.html # show.html.erb
       end
     else
       # Parse the date the GET request has received
       dates = params[:daterange].split(' - ')
-
+      @date_range = params[:daterange]
       begin
         @start_date = Date.parse(dates[0])
         @end_date = Date.parse(dates[1])
