@@ -29,12 +29,12 @@ class User < ActiveRecord::Base
   end
   
   def acquainted_group_accounts
-    return GroupAccounts.all if self.admin?
+    return GroupAccount.all if self.admin?
     self.roles.account_manager.collect { |role| role.role_type.group_account }
   end
   
   def acquainted_accounts
-    return Accounts.all if self.admin?
+    return Account.all if self.admin?
     (self.roles.account_manager.collect { |role| role.role_type.group_account.accounts } << self.roles.account_user.collect { |role| role.role_type.account }).flatten.compact.uniq
   end
   
