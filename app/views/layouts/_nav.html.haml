@@ -1,20 +1,22 @@
 %nav
-  -if @current_user
-    -if @current_user.admin?
-      =link_to "Dashboard", dashboard_url
-      =link_to "Accounts", accounts_url
-      =link_to "Activity", activities_url
-      =link_to "Job Statuses", job_statuses_url
-      =link_to "Users", users_url
-    -else
-      =link_to "Dashboard", dashboard_url
+  - if @current_user
+    - if @current_user.admin?
+      = link_to "Dashboard", dashboard_url
+      = link_to "Accounts", accounts_url
+      = link_to "Activity", activities_url
+      = link_to "Job Statuses", job_statuses_url
+      = link_to "Users", users_url
+    - else
+      = link_to "Dashboard", dashboard_url
     %aside#search  
-      -form_tag searches_url, :method => :get, :id => 'search' do
-        =text_field_tag 'search'
+      - form_tag searches_url, :method => :get, :id => 'search' do
+        = text_field_tag 'search'
     %aside#account
-      =link_to "My Account", users_path
-      =link_to 'Logout', user_session_path, :method => :delete, :id => "logout"
-  -else
-    =link_to "Home", root_path
-    =link_to "Register", new_person_path
-    =link_to "Login", new_user_session_path
+      =# This is only for temp displaying user email.
+      = @current_user.email
+      = link_to "My Account", users_path
+      = link_to 'Logout', user_session_path, :method => :delete, :id => "logout"
+  - else
+    = link_to "Home", root_path
+    = link_to "Register", new_person_path
+    = link_to "Login", new_user_session_path
