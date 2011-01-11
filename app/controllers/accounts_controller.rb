@@ -1,25 +1,27 @@
 class AccountsController < ApplicationController
+  #before_filter :require_admin
   load_and_authorize_resource
-  
-  
-  before_filter :require_admin
   require 'fastercsv'
   
   # GET /accounts
   # GET /accounts.xml
   def index
-      @passed_status = params[:account_status] ||= 'Active'
-      @passed_type = params[:account_type] ||= ''
-      @accounts = Account.get_accounts_by_status_and_account_type(params[:account_status], params[:account_type])
-      #@accounts = Account.active.to_a if params[:accounts][:account_status] == 'Active'
-      #@search_accounts= Account.name_like_all(params[:search].to_s.split).ascend_by_name
-      @accounts_data = Rails.cache.fetch("accounts_data") { Account.get_accounts_data }
-      # @accounts_data = Account.get_accounts_data
-      @accounts_statuses = Account.account_statuses
-      @accounts_types = Account.account_types
+    @passed_status = params[:account_status] ||= 'Active'
+    @passed_type = params[:account_type] ||= ''
+    @accounts = Account.get_accounts_by_status_and_account_type(params[:account_status], params[:account_type])
+    @accounts_data = Rails.cache.fetch("accounts_data") { Account.get_accounts_data }
+    @accounts_statuses = Account.account_statuses
+    @accounts_types = Account.account_types
+    
+    if current_user.roles.account_manager.to_a.present?
       respond_to do |format|
-        format.html # index.html.erb
+        format.html 
       end
+    else
+      respond_to do |format|
+        format.html 
+      end
+    end
   end
 
   # GET /accounts/1
