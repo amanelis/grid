@@ -2,10 +2,51 @@
   .right= will_paginate(@activities)
   %h3 Activity
 %article
-  .activity
-    -@activities.each do |activity|
-      -if activity.is_call?
-        = render :partial => "shared/activity_call", :locals => { :activity => activity.activity_type }
-      -if activity.is_submission?
-        = render :partial => "shared/activity_submission", :locals => { :activity => activity.activity_type }
-    = will_paginate(@activities)
+  %h2 Phone Calls
+  %table
+    %thead
+      %tr
+        %th Campaign
+        %th Caller
+        %th Status
+        %th Recording
+        %th Review
+        %th Time
+    %tbody
+      -@activities.each do |activity|
+        %tr{:id => "#{activity.timestamp.to_i}"}
+          %td.campaign= link_to activity.activity_type.phone_number.campaign.name, campaign_path(activity.activity_type.phone_number.campaign)
+          %td.caller
+            =number_to_phone(activity.activity_type.caller_number)
+            ="(#{activity.activity_type.caller_name})"
+          %td.status= "#{activity.activity_type.call_status} (#{(activity.activity_type.call_end - activity.activity_type.call_start).to_int} seconds)"
+          %td.recording
+            -if activity.activity_type.recorded? && activity.activity_type.recording?
+              = link_to('Listen', activity.activity_type.recording.expiring_url(14400))
+              = mp3_player "#{activity.activity_type.recording.expiring_url(14400)}", :bg => "EEEEEE", :track => "EEEEEE", :slider => "222222", :loader => "EEEEEE"
+            -else
+              N/A
+          %td.review
+            - if activity.duplicate?
+              = "Duplicate Call"
+            -else
+              - form_for activity.activity_type, :url => activity_path(activity.activity_type.activity) do |f|
+                = f.select(:review_status, (activity.activity_type.review_status_options))
+                = f.submit(:update)
+          %td.time
+            -activity_time_zone = activity.activity_type.phone_number.campaign.account.time_zone
+            =time_ago_in_words(activity.activity_type.call_start)
+            -#+ " ago at " + activity.activity_type.call_start.in_time_zone(activity_time_zone).to_s(:time) + " " + activity_time_zone
+
+  %h2 Form Submissions
+  %table
+    %thead
+      %tr
+        %th Campaign
+        %th Caller
+        %th Status
+        %th Recording
+        %th Review
+        %th Time
+    %tbody
+      -#= render :partial => "shared/activity_submission", :locals => { :activity => activity.activity_type }
