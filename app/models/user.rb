@@ -11,6 +11,14 @@ class User < ActiveRecord::Base
     UserMailer.deliver_password_reset_instructions(self)  
   end
   
+  def account_manager?
+    self.roles.account_manager.to_a.present?
+  end
+  
+  def account_user?
+    self.roles.account_user.to_a.present?
+  end
+  
   def acquainted_with_group_account?(group_account)
     return true if self.admin?
     self.roles.account_manager.any? { |role| role.role_type.group_account == group_account }
