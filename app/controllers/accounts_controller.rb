@@ -15,8 +15,9 @@ class AccountsController < ApplicationController
     @accounts_statuses = Account.account_statuses
     @accounts_types = Account.account_types
 
-    ## This shall pull the users accounts based on their role
+    ## This will pull the users accounts based on their role
     @accounts = current_user.acquainted_accounts
+    @accounts.sort! {|a,b| a.name.downcase <=> b.name.downcase}
     respond_to do |format|
       format.html 
     end
@@ -25,18 +26,20 @@ class AccountsController < ApplicationController
 
   # GET /accounts/1
   # GET /accounts/1.xml
-  def show    
+  def show      
+    @account = Account.find(params[:id])
+    authorize! :read, @account
+    
+    Time.zone = @account.time_zone
+    @timeline = @account.combined_timeline_data    
+    @sorted_dates = @timeline.keys.sort
+    @title = @account.name
+    @seo_campaign_timelines = @account.campaign_seo_combined_timeline_data
+    @sem_campaign_timelines = @account.campaign_sem_combined_timeline_data
+    @map_campaign_timelines = @account.campaign_map_combined_timeline_data
     @date_range = ''
+    
     if params[:daterange].blank?
-      @account = Account.find(params[:id])
-      Time.zone = @account.time_zone
-      @timeline = @account.combined_timeline_data
-      @sorted_dates = @timeline.keys.sort
-      @title = @account.name
-      @seo_campaign_timelines = @account.campaign_seo_combined_timeline_data
-      @sem_campaign_timelines = @account.campaign_sem_combined_timeline_data
-      @map_campaign_timelines = @account.campaign_map_combined_timeline_data
-      
       @start_date = Date.yesterday - 1.week
       @end_date = Date.yesterday
       @date_range = params[:daterange]
@@ -45,15 +48,6 @@ class AccountsController < ApplicationController
         format.html # show.html.erb
       end
     else
-      @account = Account.find(params[:id])
-      Time.zone = @account.time_zone
-      @timeline = @account.combined_timeline_data
-      @sorted_dates = @timeline.keys.sort
-      @title = @account.name
-      @seo_campaign_timelines = @account.campaign_seo_combined_timeline_data
-      @sem_campaign_timelines = @account.campaign_sem_combined_timeline_data
-      @map_campaign_timelines = @account.campaign_map_combined_timeline_data
-
       # Parse the date the GET request has received
       dates = params[:daterange].split(' - ')
       @date_range = params[:daterange]

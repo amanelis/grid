@@ -9,15 +9,16 @@ class Ability
     else
       ## User is an ACCOUNT MANAGER
       if user.roles.account_manager.to_a.present?
-        can :read, Account
-        can :update, Account do |account|
-          account.try(:user) == user
+        can :read, Account do |account|
+          user.acquainted_with_account?(account)
         end
       end
       
       ## User is an ACCOUNT USER or just USER
       if user.roles.account_user.to_a.present?
-        can :read, Account
+        can :read, Account do |account|
+          user.acquainted_with_account?(account)
+        end
       end
 
     end #if
