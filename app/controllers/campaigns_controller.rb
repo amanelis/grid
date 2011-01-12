@@ -4,7 +4,8 @@ class CampaignsController < ApplicationController
   # for any of the default restfull rails routes.
   load_and_authorize_resource
 
-  def show
+  def show  
+    authorize! :read, @campaign
     @campaign = Campaign.find(params[:id])
     Time.zone = @campaign.account.time_zone
     @timeline = @campaign.campaign_style.combined_timeline_data
