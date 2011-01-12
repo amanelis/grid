@@ -6,5 +6,4 @@ class HomeController < ApplicationController
   def dashboard
     @user = current_user
   end
-
 end

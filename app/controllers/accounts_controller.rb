@@ -1,38 +1,45 @@
 class AccountsController < ApplicationController
-  before_filter :require_admin
+  #before_filter :require_admin
+  load_and_authorize_resource
   require 'fastercsv'
   
   # GET /accounts
   # GET /accounts.xml
   def index
-      @passed_status = params[:account_status] ||= 'Active'
-      @passed_type = params[:account_type] ||= ''
-      @accounts = Account.get_accounts_by_status_and_account_type(params[:account_status], params[:account_type])
-      #@accounts = Account.active.to_a if params[:accounts][:account_status] == 'Active'
-      #@search_accounts= Account.name_like_all(params[:search].to_s.split).ascend_by_name
-      @accounts_data = Rails.cache.fetch("accounts_data") { Account.get_accounts_data }
-      # @accounts_data = Account.get_accounts_data
-      @accounts_statuses = Account.account_statuses
-      @accounts_types = Account.account_types
-      respond_to do |format|
-        format.html # index.html.erb
-      end
+    authorize! :read, Account
+    
+    @passed_status = params[:account_status] ||= 'Active'
+    @passed_type = params[:account_type] ||= ''
+    @accounts = Account.get_accounts_by_status_and_account_type(params[:account_status], params[:account_type])
+    @accounts_data = Rails.cache.fetch("accounts_data") { Account.get_accounts_data }
+    @accounts_statuses = Account.account_statuses
+    @accounts_types = Account.account_types
+
+    ## This will pull the users accounts based on their role
+    @accounts = current_user.acquainted_accounts
+    @accounts.sort! {|a,b| a.name.downcase <=> b.name.downcase}
+    respond_to do |format|
+      format.html 
+    end
+    
   end
 
   # GET /accounts/1
   # GET /accounts/1.xml
-  def show    
+  def show      
+    @account = Account.find(params[:id])
+    authorize! :read, @account
+    
+    Time.zone = @account.time_zone
+    @timeline = @account.combined_timeline_data    
+    @sorted_dates = @timeline.keys.sort
+    @title = @account.name
+    @seo_campaign_timelines = @account.campaign_seo_combined_timeline_data
+    @sem_campaign_timelines = @account.campaign_sem_combined_timeline_data
+    @map_campaign_timelines = @account.campaign_map_combined_timeline_data
     @date_range = ''
+    
     if params[:daterange].blank?
-      @account = Account.find(params[:id])
-      Time.zone = @account.time_zone
-      @timeline = @account.combined_timeline_data
-      @sorted_dates = @timeline.keys.sort
-      @title = @account.name
-      @seo_campaign_timelines = @account.campaign_seo_combined_timeline_data
-      @sem_campaign_timelines = @account.campaign_sem_combined_timeline_data
-      @map_campaign_timelines = @account.campaign_map_combined_timeline_data
-      
       @start_date = Date.yesterday - 1.week
       @end_date = Date.yesterday
       @date_range = params[:daterange]
@@ -41,15 +48,6 @@ class AccountsController < ApplicationController
         format.html # show.html.erb
       end
     else
-      @account = Account.find(params[:id])
-      Time.zone = @account.time_zone
-      @timeline = @account.combined_timeline_data
-      @sorted_dates = @timeline.keys.sort
-      @title = @account.name
-      @seo_campaign_timelines = @account.campaign_seo_combined_timeline_data
-      @sem_campaign_timelines = @account.campaign_sem_combined_timeline_data
-      @map_campaign_timelines = @account.campaign_map_combined_timeline_data
-
       # Parse the date the GET request has received
       dates = params[:daterange].split(' - ')
       @date_range = params[:daterange]
@@ -175,6 +173,7 @@ class AccountsController < ApplicationController
   
   # Simple method to reload salesforce data, accounts/campaigns
   def refresh_accounts
+    authorize! :refresh_accounts, Account
     GroupAccount.pull_salesforce_accounts
     Campaign.pull_salesforce_campaigns
     Account.cache_results_for_accounts

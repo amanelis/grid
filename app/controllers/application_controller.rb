@@ -7,8 +7,13 @@ class ApplicationController < ActionController::Base
 
   # Scrub sensitive parameters from your log
   filter_parameter_logging :password, :password_confirmation
-
   include ExceptionNotification::Notifiable
+  
+  #CanCan rescue errors and access denied
+  rescue_from CanCan::AccessDenied do |exception|
+    flash[:error] = "Access denied for page you tried to view"
+    redirect_to dashboard_url
+  end
 
   private
     def current_user_session

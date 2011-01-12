@@ -1,5 +1,6 @@
 class CampaignsController < ApplicationController
-  before_filter :require_admin
+  #before_filter :require_admin
+  load_and_authorize_resource
 
   def show
     @campaign = Campaign.find(params[:id])
