@@ -32,6 +32,8 @@ class Ability
           user.acquainted_accounts.collect(&:campaigns).flatten.include?(campaign)
         end
         
+        can :lead_matrix, Campaign
+        
       end #user
 
     end #if
