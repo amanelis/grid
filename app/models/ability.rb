@@ -4,6 +4,7 @@ class Ability
   def initialize(user)
     user ||= User.new #if no user logged in 
     
+    ## User is an ADMIN
     if user.admin?
       can :manage, :all
     else
@@ -12,13 +13,16 @@ class Ability
         can :read, Account do |account|
           user.acquainted_with_account?(account)
         end
+        can :read, Activity
       end
       
-      ## User is an ACCOUNT USER or just USER
+      ## User is a USER
       if user.roles.account_user.to_a.present?
         can :read, Account do |account|
           user.acquainted_with_account?(account)
         end
+        
+        can :read, Activity
       end
 
     end #if
