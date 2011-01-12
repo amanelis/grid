@@ -66,7 +66,7 @@ class GroupAccount < ActiveRecord::Base
       if cityvoice_group_account.blank?
         cityvoice_account = Salesforce::Account.find(:all, :conditions => ['name = ?', 'CityVoice']).first
         cityvoice_group_account = GroupAccount.new
-        cityvoice_group_account.salesforce_id = cityvoice_account.id
+        cityvoice_group_account.salesforce = cityvoice_account
         cityvoice_group_account.name = cityvoice_account.name
         cityvoice_group_account.status = cityvoice_account.account_status__c
         cityvoice_group_account.save
@@ -79,7 +79,7 @@ class GroupAccount < ActiveRecord::Base
         existing_account = Account.find_by_salesforce_id(sf_account.id)
         if existing_account.blank?
           existing_account = Account.new
-          existing_account.salesforce_id = sf_account.id
+          existing_account.salesforce = sf_account
           existing_account.time_zone = "Central Time (US & Canada)"
         end
         existing_account.account_type = sf_account.account_type__c
@@ -100,19 +100,23 @@ class GroupAccount < ActiveRecord::Base
         existing_account.main_contact = sf_account.main_contact__c
         existing_account.receive_weekly_report = sf_account.receive_weekly_report__c
         existing_account.reporting_emails = sf_account.email_reports_to__c
-        existing_account.group_account_id = cityvoice_group_account.id
-        
-        # if sf_account.owner_id.present?
-        #   account_manager = Salesforce::User.find(sf_account.owner_id)
-        #   existing_account.account_manager = account_manager.name if account_manager.present?
-        # end
-        
+        existing_account.group_account = cityvoice_group_account
+                
         if (account_as_existing_group_account = GroupAccount.find_by_salesforce_id(sf_account.id)).present?
-          existing_account.group_account_id = account_as_existing_group_account.id
+          existing_account.group_account = account_as_existing_group_account
         else
-          reseller = sf_account.parent_id.present? ? GroupAccount.find_by_salesforce_id(sf_account.parent_id) : cityvoice_group_account
-          existing_account.group_account_id = reseller.id if reseller.present?
+          reseller = sf_account.parent.present? ? GroupAccount.find_by_salesforce_id(sf_account.parent_id) : cityvoice_group_account
+          existing_account.group_account = reseller if reseller.present?
         end
+
+        # if sf_account.owner.present?
+        #   sf_account_manager = Salesforce::User.find(sf_account.owner_id)
+        #   if sf_account_manager.present?
+        #     possible_account_managers = AccountManager.find_all_by_email(????)
+        #     account_manager = possible_account_managers.detect { |account_manager| account_manager.group_account == existing_account.group_account }
+        #     existing_account.account_manager = account_manager if account_manager.present?
+        #   end
+        # end
         
         existing_account.save
       end
@@ -129,7 +133,7 @@ class GroupAccount < ActiveRecord::Base
        existing_account = GroupAccount.find_by_salesforce_id(account.id)
        if existing_account.blank?
          existing_account = GroupAccount.new
-         existing_account.salesforce_id = account.id
+         existing_account.salesforce = account
        end
        existing_account.name = account.name
        existing_account.status = account.account_status__c
