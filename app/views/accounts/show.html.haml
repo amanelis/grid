@@ -4,9 +4,10 @@
   });
 %header
   .right 
-    = link_to "Export Report", report_client_pdf_path(params[:id]), :popup => true
+  - if @current_user.admin?
+    = link_to 'Refresh', refresh_accounts_path, :class => "submit", :name => "submit"
     |
-    = link_to "View Report", report_client_path(params[:id]), :popup => true
+    = link_to 'Export', export_path, :class => "submit", :name => "submit"
     - if @account.can_send_weekly_report_now?
       |
       = link_to "Send Email", send_weekly_path(params[:id])
