@@ -64,11 +64,11 @@ class GroupAccount < ActiveRecord::Base
       cityvoice_group_account = GroupAccount.find_by_name("CityVoice")
       
       if cityvoice_group_account.blank?
-        cityvoice_account = Salesforce::Account.find(:all, :conditions => ['name = ?', 'CityVoice']).first
+        sf_cityvoice_account = Salesforce::Account.find(:all, :conditions => ['name = ?', 'CityVoice']).first
         cityvoice_group_account = GroupAccount.new
-        cityvoice_group_account.salesforce = cityvoice_account
-        cityvoice_group_account.name = cityvoice_account.name
-        cityvoice_group_account.status = cityvoice_account.account_status__c
+        cityvoice_group_account.salesforce_id = sf_cityvoice_account.id
+        cityvoice_group_account.name = sf_cityvoice_account.name
+        cityvoice_group_account.status = sf_cityvoice_account.account_status__c
         cityvoice_group_account.save
       end
         
@@ -79,7 +79,7 @@ class GroupAccount < ActiveRecord::Base
         existing_account = Account.find_by_salesforce_id(sf_account.id)
         if existing_account.blank?
           existing_account = Account.new
-          existing_account.salesforce = sf_account
+          existing_account.salesforce_id = sf_account.id
           existing_account.time_zone = "Central Time (US & Canada)"
         end
         existing_account.account_type = sf_account.account_type__c
@@ -105,18 +105,18 @@ class GroupAccount < ActiveRecord::Base
         if (account_as_existing_group_account = GroupAccount.find_by_salesforce_id(sf_account.id)).present?
           existing_account.group_account = account_as_existing_group_account
         else
-          reseller = sf_account.parent.present? ? GroupAccount.find_by_salesforce_id(sf_account.parent_id) : cityvoice_group_account
-          existing_account.group_account = reseller if reseller.present?
+          reseller_group_account = sf_account.parent_id.present? ? GroupAccount.find_by_salesforce_id(sf_account.parent_id) : cityvoice_group_account
+          existing_account.group_account = reseller_group_account if reseller_group_account.present?
         end
 
-        # if sf_account.owner.present?
-        #   sf_account_manager = Salesforce::User.find(sf_account.owner_id)
-        #   if sf_account_manager.present?
-        #     possible_account_managers = AccountManager.find_all_by_email(????)
-        #     account_manager = possible_account_managers.detect { |account_manager| account_manager.group_account == existing_account.group_account }
-        #     existing_account.account_manager = account_manager if account_manager.present?
-        #   end
-        # end
+        if sf_account.owner_id.present?
+          sf_account_manager = Salesforce::User.find(sf_account.owner_id)
+          if sf_account_manager.present?
+            possible_account_managers = AccountManager.find_all_by_email(sf_account_manager.email)
+            account_manager = possible_account_managers.detect { |account_manager| account_manager.group_account == existing_account.group_account }
+            existing_account.account_manager = account_manager if account_manager.present?
+          end
+        end
         
         existing_account.save
       end
@@ -128,15 +128,15 @@ class GroupAccount < ActiveRecord::Base
   end
   
   def self.pull_salesforce_reseller_accounts
-     reseller_accounts = Salesforce::Account.find(:all, :conditions => ['account_type__c = ?', "Reseller"])
-     reseller_accounts.each do |account|
-       existing_account = GroupAccount.find_by_salesforce_id(account.id)
+     sf_reseller_accounts = Salesforce::Account.find(:all, :conditions => ['account_type__c = ?', "Reseller"])
+     sf_reseller_accounts.each do |sf_reseller_account|
+       existing_account = GroupAccount.find_by_salesforce_id(sf_reseller_account.id)
        if existing_account.blank?
          existing_account = GroupAccount.new
-         existing_account.salesforce = account
+         existing_account.salesforce_id = sf_reseller_account.id
        end
-       existing_account.name = account.name
-       existing_account.status = account.account_status__c
+       existing_account.name = sf_reseller_account.name
+       existing_account.status = sf_reseller_account.account_status__c
        existing_account.save
      end
    end
