@@ -19,6 +19,8 @@ class Ability
         can :read, Account do |account|
           user.acquainted_with_account?(account)
         end
+        
+        can :read, Activity
       end
 
     end #if
