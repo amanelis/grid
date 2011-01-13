@@ -1,0 +1,5 @@
+- if @current_user.admin? || @current_user.account_manager?
+  = link_to 'Refresh', refresh_accounts_path, :class => "submit", :name => "submit"
+  |
+  = link_to 'Export', export_path, :class => "submit", :name => "submit"
+  |

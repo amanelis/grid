@@ -74,6 +74,8 @@ class CampaignsController < ApplicationController
   end
   
   def lead_matrix
+    @campaign = Campaign.find(params[:id])
+    authorize! :lead_matrix, @campaign
     if params[:minutepicker].blank?
       @minutes_selected = 2
     else

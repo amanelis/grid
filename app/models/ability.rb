@@ -14,7 +14,6 @@ class Ability
         can :read, Account do |account|
           user.acquainted_with_account?(account)
         end
-        
         can :read, Campaign do |campaign|
           user.acquainted_accounts.collect(&:campaigns).flatten.include?(campaign)
         end
@@ -27,12 +26,13 @@ class Ability
         can :read, Account do |account|
           user.acquainted_with_account?(account)
         end
-        
         can :read, Campaign do |campaign|
           user.acquainted_accounts.collect(&:campaigns).flatten.include?(campaign)
         end
         
-        can :lead_matrix, Campaign
+        can :lead_matrix, Campaign do |campaign|
+          user.acquainted_accounts.collect(&:campaigns).flatten.include?(campaign)
+        end
         
       end #user
 

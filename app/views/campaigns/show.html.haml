@@ -9,7 +9,7 @@
   
 %header
   %p.right
-    = link_to 'Lead Matrix', lead_matrix_campaign_path, :class => "submit", :name => "submit"
+    = render :partial => 'shared/lead_matrix'
   %h2 #{@campaign.name}
   %h4= @campaign.account.time_zone
 %article
