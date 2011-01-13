@@ -102,6 +102,7 @@ class PhoneNumber < ActiveRecord::Base
     Campaign.orphanage.phone_numbers
   end
   
+  
   def self.selectable_orphaned_phone_numbers
     self.orphaned_phone_numbers.collect { |orphan| ["#{orphan.name} - #{orphan.inboundno}", orphan.id] }.sort { |x, y| x.first.downcase <=> y.first.downcase }
   end
@@ -109,7 +110,9 @@ class PhoneNumber < ActiveRecord::Base
   
   def create_twilio_number(phone_number, name, call_url = "http://grid.cityvoice.com/phone_numbers/connect/", fallback_url = "http://grid.cityvoice.com/phone_numbers/connect/", status_url = "http://grid.cityvoice.com/phone_numbers/collect/", caller_id = false)
     account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
-    resp = account.request("/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/IncomingPhoneNumbers.json?PhoneNumber=+#{phone_number}&VoiceUrl=#{call_url}#{self.id}&VoiceMethod=POST&VoiceFallbackUrl=#{fallback_url}#{self.id}&VoiceFallbackMethod=POST&StatusCallback=#{status_url}#{self.id}&StatusCallbackMethod=POST&FriendlyName=#{CGI.escape(name)}&VoiceCallerIdLookup=#{caller_id}", 'POST')
+    ###Need to add self.id back in for phone_number
+    #resp = account.request("/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/IncomingPhoneNumbers.json?AreaCode=#{phone_number}&VoiceUrl=#{call_url}#{self.id}&VoiceMethod=POST&VoiceFallbackUrl=#{fallback_url}#{self.id}&VoiceFallbackMethod=POST&StatusCallback=#{status_url}#{phone_number}&StatusCallbackMethod=POST&FriendlyName=#{CGI.escape(name)}&VoiceCallerIdLookup=#{caller_id}", 'POST')
+    resp = account.request("/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/IncomingPhoneNumbers.json?PhoneNumber=+12104413209", 'POST')
     resp.error! unless resp.kind_of? Net::HTTPSuccess
     resp.code
   end

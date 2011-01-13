@@ -5,7 +5,13 @@ class Call < ActiveRecord::Base
   include ActivityTypeMixin
   
   belongs_to :phone_number
+  # Twilio REST API version
+  API_VERSION = '2010-04-01'
 
+  # Twilio AccountSid and AuthToken
+  ACCOUNT_SID = 'AC7fedbe5d54f77671320418d20f843330'
+  ACCOUNT_TOKEN = 'a7a72b0eb3c8a41064c4fc741674a903'
+  
   ANSWERED_CALL = "ANSWER"
   CANCELED_CALL = "CANCEL"
   VOICEMAIL_CALL = "VOICEMAIL"
@@ -157,6 +163,21 @@ class Call < ActiveRecord::Base
   def self.fetch_call_recording(call_id)
     call = Call.find_by_call_id(call_id)
     call.fetch_call_recording
+  end
+  
+  def self.fetch_twilio_recording(callsid = 'CA4ba7830e9644f55d9edd79251e711529')
+    ##Get the recording ID
+    account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
+    
+    resp = account.request("/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/Calls/#{callsid}/Recordings.json", 'GET')
+    resp.error! unless resp.kind_of? Net::HTTPSuccess
+    puts "code: %s\nbody: %s" % [resp.code, resp.body]
+    
+    ##Get the recording
+    if resp.code == '200'
+      results = JSON.parse(resp.body)['recordings']
+      return results.last
+    end
   end
   
   def self.total_revenue(calls)
