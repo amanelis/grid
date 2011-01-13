@@ -152,12 +152,27 @@ header input{
 margin:0;
 }
 
+article h3{
+	font-weight:bold;
+	text-decoration:underline;
+}
+
 /*
 	Highcharts
 	------------------
 */
 #highcharts{
 }
+
+/*
+	Flash Messages
+	------------------
+*/
+#flash_notice, #flash_error {padding:0.8em;margin:1em 0;border:2px solid #ddd;}
+#flash_error {background:#fbe3e4;color:#8a1f11;border-color:#fbc2c4;}
+#flash_notice {background:#e6efc2;color:#264409;border-color:#c6d880;}
+#flash_error a{color:#8a1f11;}
+#flash_notice a {color:#264409;}
 
 /*
 	Tables
@@ -300,22 +315,4 @@ form.inline p { margin-bottom:0; }
   #pdf_link {
     display: none;
   }
-}
-
-/*-------------------------------------------------------------- */
-/* Old Stuff */
-
-#flash_notice, #flash_error {
-  padding: 5px 8px;
-  margin: 10px 0;
-}
-
-#flash_notice {
-  background-color: #CFC;
-  border: solid 1px #6C6;
-}
-
-#flash_error {
-  background-color: #FCC;
-  border: solid 1px #C66;
 }
