@@ -7,7 +7,7 @@ class AccountManager < ActiveRecord::Base
   validate :unique_role?
   
   def unique?
-    self.role.user.roles.account_manager.to_a.none? { |role| role.role_type.group_account == self.group_account }
+    self.role.user.account_managers.none? { |account_manager| account_manager.group_account == self.group_account }
   end
   
   
