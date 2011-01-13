@@ -474,7 +474,7 @@ class Campaign < ActiveRecord::Base
         new_phone_number.name = name
         new_phone_number.descript = name
         new_phone_number.twilio_version = API_VERSION
-        new_phone_number.id_caller = id_caller
+        new_phone_number.id_callers = id_caller
         new_phone_number.record_calls = record_calls
         new_phone_number.transcribe_calls = transcribe_calls
         new_phone_number.text_calls = text_calls
