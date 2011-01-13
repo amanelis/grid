@@ -14,7 +14,7 @@ class PhoneNumbersController < ApplicationController
   end
   
   def collect
-    @r = 
+    
   end
   
   
