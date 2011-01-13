@@ -154,7 +154,6 @@ margin:0;
 
 article h3{
 	font-weight:bold;
-	text-decoration:underline;
 }
 
 .delete{
@@ -164,10 +163,12 @@ article h3{
 }
 
 /*
-	Highcharts
+	Date Picker
 	------------------
 */
-#highcharts{
+#daterangepicker{
+	width:280px;
+	font-size:18px;
 }
 
 /*
@@ -185,14 +186,14 @@ article h3{
 	------------------
 */
 td a{
-color:#000;
+font-size:1.2em;
 font-weight:bold;
-text-decoration:underline;
+color:#000;
+text-decoration:none;
 }
 
 td a:hover{
-color:#464646;
-text-decoration:none;
+text-decoration:underline;
 }
 
 /*
