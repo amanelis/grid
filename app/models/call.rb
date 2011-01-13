@@ -165,7 +165,7 @@ class Call < ActiveRecord::Base
     call.fetch_call_recording
   end
   
-  def self.fetch_twilio_recording(callsid = 'CA4ba7830e9644f55d9edd79251e711529')
+  def self.fetch_twilio_recording(callsid = 'CA457c1285b3b7ac59620fa2c36883b2ea')
     ##Get the recording ID
     account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
     
