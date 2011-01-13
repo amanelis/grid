@@ -3,6 +3,9 @@ class User < ActiveRecord::Base
   
   has_many :roles
   
+  has_many :account_managers, :through => :roles, :source => :role_type, :source_type => 'AccountManager'
+  has_many :account_users, :through => :roles, :source => :role_type, :source_type => 'AccountUser'
+  
   
   # INSTANCE BEHAVIOR
 
@@ -12,38 +15,38 @@ class User < ActiveRecord::Base
   end
   
   def account_manager?
-    self.roles.account_manager.to_a.present?
+    self.account_managers.present?
   end
   
   def account_user?
-    self.roles.account_user.to_a.present?
+    self.account_users.present?
   end
   
   def acquainted_with_group_account?(group_account)
     return true if self.admin?
-    self.roles.account_manager.any? { |role| role.role_type.group_account == group_account }
+    self.account_managers.any? { |account_manager| account_manager.group_account == group_account }
   end
 
   def acquainted_with_account?(account)
     return true if self.admin?
-    return true if self.roles.account_manager.any? { |role| role.role_type.group_account == account.group_account }
-    self.roles.account_user.any? { |role| role.role_type.account == account }
+    return true if self.account_managers.any? { |account_manager| account_manager.group_account == account.group_account }
+    self.account_users.any? { |account_user| account_user.account == account }
   end
 
   def acquainted_with_campaign?(campaign)
     return true if self.admin?
-    return true if self.roles.account_manager.any? { |role| role.role_type.group_account == campaign.account.group_account }
-    self.roles.account_user.any? { |role| role.role_type.account == campaign.account }
+    return true if self.account_managers.any? { |account_manager| account_manager.group_account == campaign.account.group_account }
+    self.account_users.any? { |account_user| account_user.account == campaign.account }
   end
   
   def acquainted_group_accounts
     return GroupAccount.all if self.admin?
-    self.roles.account_manager.collect { |role| role.role_type.group_account }
+    self.account_managers.collect { |account_manager| account_manager.group_account }
   end
   
   def acquainted_accounts
     return Account.all if self.admin?
-    (self.roles.account_manager.collect { |role| role.role_type.group_account.accounts } << self.roles.account_user.collect { |role| role.role_type.account }).flatten.compact.uniq
+    (self.account_managers.collect { |account_manager| account_manager.group_account.accounts } << self.account_users.collect { |account_user| account_user.account }).flatten.uniq
   end
   
 end

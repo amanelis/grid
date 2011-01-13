@@ -9,7 +9,7 @@ class Ability
       can :manage, :all
     else
       ## User is an ACCOUNT MANAGER
-      if user.roles.account_manager.to_a.present?
+      if user.account_manager?
         
         can :read, Account do |account|
           user.acquainted_with_account?(account)
@@ -21,7 +21,7 @@ class Ability
       end #account manager
       
       ## User is a USER
-      if user.roles.account_user.to_a.present?
+      if user.account_user?
         
         can :read, Account do |account|
           user.acquainted_with_account?(account)

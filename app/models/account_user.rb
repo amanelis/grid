@@ -6,7 +6,7 @@ class AccountUser < ActiveRecord::Base
   validate :unique_role?
   
   def unique?
-    self.role.user.roles.account_user.to_a.none? { |role| role.role_type.account == self.account }
+    self.role.user.account_users.none? { |account_user| account_user.account == self.account }
   end
   
   
