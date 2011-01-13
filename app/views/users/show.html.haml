@@ -19,6 +19,16 @@
       = f.hidden_field :id, :value => @user.id
       %br
       = f.submit "Save", :class => 'button'
+      %br
+      %br
+      %h3 (if AM?) Account Manager Details
+      %label Name
+      %br
+      %input.title{:type => "input"}
+      %br
+      %label Phone Number
+      %br
+      %input.title{:type => "input"}
   #roles.span-11.last
     %h3 Current Roles
     %h4 
