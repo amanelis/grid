@@ -152,26 +152,48 @@ header input{
 margin:0;
 }
 
+article h3{
+	font-weight:bold;
+}
+
+.delete{
+	text-decoration:underline;
+	font-size: .8em;
+	color:#8a1f11;
+}
+
 /*
-	Highcharts
+	Date Picker
 	------------------
 */
-#highcharts{
+#daterangepicker{
+	width:280px;
+	font-size:18px;
 }
+
+/*
+	Flash Messages
+	------------------
+*/
+#flash_notice, #flash_error {padding:0.8em;margin:1em 0;border:2px solid #ddd;}
+#flash_error {background:#fbe3e4;color:#8a1f11;border-color:#fbc2c4;}
+#flash_notice {background:#e6efc2;color:#264409;border-color:#c6d880;}
+#flash_error a{color:#8a1f11;}
+#flash_notice a {color:#264409;}
 
 /*
 	Tables
 	------------------
 */
 td a{
-color:#000;
+font-size:1.2em;
 font-weight:bold;
-text-decoration:underline;
+color:#000;
+text-decoration:none;
 }
 
 td a:hover{
-color:#464646;
-text-decoration:none;
+text-decoration:underline;
 }
 
 /*
@@ -234,11 +256,6 @@ background:-webkit-gradient(linear,0% 0%,0% 100%,from(#FF8B00),to(#FFC100));
 background:-moz-linear-gradient(top, #FF8B00, #FFC100);
 }
 
-/*
-	Reports
-	------------------
-*/
-
 /*-------------------------------------------------------------- */
 /* Forms */
 label       { font-weight: bold;}
@@ -300,22 +317,4 @@ form.inline p { margin-bottom:0; }
   #pdf_link {
     display: none;
   }
-}
-
-/*-------------------------------------------------------------- */
-/* Old Stuff */
-
-#flash_notice, #flash_error {
-  padding: 5px 8px;
-  margin: 10px 0;
-}
-
-#flash_notice {
-  background-color: #CFC;
-  border: solid 1px #6C6;
-}
-
-#flash_error {
-  background-color: #FCC;
-  border: solid 1px #C66;
 }

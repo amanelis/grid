@@ -16,9 +16,7 @@
       - form_tag searches_url, :method => :get, :id => 'search' do
         = text_field_tag 'search'
     %aside#account
-      =# This is only for temp displaying user email.
-      = @current_user.email
-      = link_to "My Account", users_path
+      = link_to @current_user.email, user_path(@current_user)
       = link_to 'Logout', user_session_path, :method => :delete, :id => "logout"
   - else
     = link_to "Home", root_path

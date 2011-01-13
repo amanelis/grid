@@ -1,19 +1,77 @@
 %header
-  %h3 My Account
+  %h2 ACCOUNT NAME
+  %h4.quiet Edit Account
 %article
-  - form_for (@user, :url => person_path) do |f|
-    %p
+  #details.span-12
+    - form_for (@user, :url => person_path) do |f|
+      %h3 User Details
       = f.label :email
       %br
       = f.text_field :email, :class => 'title'
-    %p
+      %br
       = f.label :password
       %br
       = f.password_field :password, :class => 'title'
-    %p
+      %br
       %label Confirm Password
-    %br
+      %br
       = f.password_field :password_confirmation, :class => 'title'
-    %p
       = f.hidden_field :id, :value => @user.id
+      %br
       = f.submit "Save", :class => 'button'
+      %br
+      %br
+      %h3 (if AM?) Account Manager Details
+      %label Name
+      %br
+      %input.title{:type => "input"}
+      %br
+      %label Phone Number
+      %br
+      %input.title{:type => "input"}
+  #roles.span-11.last
+    %h3 Current Roles
+    %h4 
+      Group Account Manager - CityVoice
+      %a.delete Delete
+    %h3 Add Role
+    %label Account Type
+    %br
+    %input{:type => "radio"} Group Account Manager
+    %br
+    %input{:type => "radio"} Admin
+    %br
+    %input{:type => "radio"} User
+    %br
+    %br
+    %label Account Manager
+    %br
+    %select#account_manager
+      %option CityVoice
+      %option Boss
+    %br
+    %label User
+    %br
+    %select#user_account
+      %option 1-800 Plumbing
+      %option 1st Priority Plumbing
+      %option 4 Seasons Heating
+      %option Advanced Smile Care
+      %option Air Cool Now
+      %option All Needs Plumbing
+      %option 1-800 Plumbing
+      %option 1st Priority Plumbing
+      %option 4 Seasons Heating
+      %option Advanced Smile Care
+      %option Air Cool Now
+      %option All Needs Plumbing%option 1-800 Plumbing
+      %option 1st Priority Plumbing
+      %option 4 Seasons Heating
+      %option Advanced Smile Care
+      %option Air Cool Now
+      %option All Needs Plumbing%option 1-800 Plumbing
+      %option 1st Priority Plumbing
+      %option 4 Seasons Heating
+      %option Advanced Smile Care
+      %option Air Cool Now
+      %option All Needs Plumbing

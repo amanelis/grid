@@ -8,19 +8,15 @@
   });
   
 %header
-  %p.right
-    = link_to 'Lead Matrix', lead_matrix_campaign_path, :class => "submit", :name => "submit"
+  %p.right= render :partial => 'shared/lead_matrix'
   %h2 #{@campaign.name}
-  %h4= @campaign.account.time_zone
+  #datepicker=render :partial => "shared/date_picker"
+  %p.quiet= @campaign.account.time_zone
 %article
   #timeline_chart
     - if @campaign.is_sem?
       = render :partial => "shared/gauge"
 %article
-  -form_for(accounts_path, :html => {:method => "get", :onchange => "alert('hello')"}) do |f|
-    = f.text_field :daterangepicker, :name => "daterange", :id => "daterangepicker", :autocomplete => "off", :value => @date_range
-    = f.submit "Filter Dates"
-  %h3 Campaign Summary For #{@start_date} - #{@end_date}
   %table
     %thead
       %tr
