@@ -1,9 +1,6 @@
 %header
   %p.right
-    - if @current_user.admin?
-      = link_to 'Refresh', refresh_accounts_path, :class => "submit", :name => "submit"
-      |
-      = link_to 'Export', export_path, :class => "submit", :name => "submit"
+    = render :partial => 'shared/links'
   %h3
     = "Accounts (#{@accounts.count})"
   %h4.quiet= 'For ' + (Date.yesterday - 1.week).to_s(:long) + ' to ' + Date.yesterday.to_s(:long)

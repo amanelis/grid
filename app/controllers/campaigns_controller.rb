@@ -1,8 +1,11 @@
 class CampaignsController < ApplicationController
   #before_filter :require_admin
+  # Carefull, this load_and_authorize_resource function will setup all instance variables
+  # for any of the default restfull rails routes.
   load_and_authorize_resource
 
-  def show
+  def show  
+    authorize! :read, @campaign
     @campaign = Campaign.find(params[:id])
     Time.zone = @campaign.account.time_zone
     @timeline = @campaign.campaign_style.combined_timeline_data
@@ -71,6 +74,8 @@ class CampaignsController < ApplicationController
   end
   
   def lead_matrix
+    @campaign = Campaign.find(params[:id])
+    authorize! :lead_matrix, @campaign
     if params[:minutepicker].blank?
       @minutes_selected = 2
     else

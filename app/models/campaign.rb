@@ -25,6 +25,10 @@ class Campaign < ActiveRecord::Base
   def self.orphanage
     Campaign.find_by_name(ORPHANAGE_NAME)
   end
+  
+  def self.flavors
+    Campaign.all.collect(&:flavor).compact.join(';').split(';').uniq.sort
+  end
 
   def self.pull_salesforce_campaigns
     job_status = JobStatus.create(:name => "Campaign.pull_salesforce_campaigns")
@@ -56,6 +60,7 @@ class Campaign < ActiveRecord::Base
             existing_campaign.status = sf_campaign.status__c
             existing_campaign.name = sf_campaign.name
             existing_campaign.zip_code = sf_campaign.zip_code__c
+            existing_campaign.flavor = sf_campaign.campaign_type__c
             new_sem_campaign.mobile = true if sf_campaign.campaign_type__c.include? 'Mobile'
             new_sem_campaign.monthly_budget = sf_campaign.monthly_budget__c
             new_sem_campaign.rake = sf_campaign.campaign_rake__c
@@ -114,6 +119,7 @@ class Campaign < ActiveRecord::Base
             existing_campaign.status = sf_campaign.status__c
             existing_campaign.name = sf_campaign.name
             existing_campaign.zip_code = sf_campaign.zip_code__c
+            existing_campaign.flavor = sf_campaign.campaign_type__c
             new_seo_campaign.save!
             existing_campaign.save
 
@@ -138,6 +144,7 @@ class Campaign < ActiveRecord::Base
             existing_campaign.zip_code = sf_campaign.zip_code__c
             existing_campaign.status = sf_campaign.status__c
             existing_campaign.name = sf_campaign.name
+            existing_campaign.flavor = sf_campaign.campaign_type__c
             new_google_maps_campaign = new_maps_campaign.google_maps_campaigns.build
             new_google_maps_campaign.login = sf_campaign.maps_login__c
             new_google_maps_campaign.password = sf_campaign.maps_password__c
@@ -162,6 +169,7 @@ class Campaign < ActiveRecord::Base
             existing_campaign.zip_code = sf_campaign.zip_code__c
             existing_campaign.status = sf_campaign.status__c
             existing_campaign.name = sf_campaign.name
+            existing_campaign.flavor = sf_campaign.campaign_type__c
             new_other_campaign.save!
             existing_campaign.save
           end

@@ -1,15 +1,21 @@
 class ActivitiesController < ApplicationController
-  before_filter :require_admin
+  #before_filter :require_admin
+  # Carefull, this load_and_authorize_resource function will setup all instance variables
+  # for any of the default restfull rails routes.
+  load_and_authorize_resource
   
   def index
     @user = current_user
-    #@activities = Account.leads_in_previous_hours(Time.at(params[:after].to_i + 1))
+    @accounts = current_user.acquainted_accounts
+    @accounts.each do |account|
+      account.phone_numbers.calls
+      account.contact_forms.submissions
+    end
     @activities = Activity.paginate(:page => (params[:page] || 1), :order => 'timestamp DESC')
   end
   
   def update
     @user = current_user
-    
     @activity = Activity.find(params[:id]) 
     params[:activity] = {}
     
