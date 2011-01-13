@@ -4,9 +4,10 @@ class PhoneNumbersController < ApplicationController
   
   def connect
     @r = Twilio::Response.new
-    @r.append(Twilio::Record.new())
-    @r.append(Twilio::Say.new("For quality purposes, your call will be recorded ", :voice => "woman", :loop => 1))
-    @r.append(Twilio::Dial.new("2105389216"))
+    #@r.append(Twilio::Record.new())
+    #@r.append(Twilio::Say.new("For quality purposes, your call will be recorded ", :voice => "woman", :loop => 1))
+    @r.append(Twilio::Say.new("Chip, This is your computer. You're beard is looking mighty sexy! ", :voice => "woman", :loop => 5))
+    #@r.append(Twilio::Dial.new("2105389216"))
     puts @r.respond
     render :text => @r.respond
     
