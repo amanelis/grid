@@ -19,7 +19,13 @@ class Campaign < ActiveRecord::Base
   attr_accessor :adopting_phone_number
 
   ORPHANAGE_NAME = 'CityVoice SEM Orphaned Campaigns'
+  # Twilio REST API version
+  API_VERSION = '2010-04-01'
 
+  # Twilio AccountSid and AuthToken
+  ACCOUNT_SID = 'AC7fedbe5d54f77671320418d20f843330'
+  ACCOUNT_TOKEN = 'a7a72b0eb3c8a41064c4fc741674a903'
+  
   # CLASS BEHAVIOR
 
   def self.orphanage
@@ -451,6 +457,53 @@ class Campaign < ActiveRecord::Base
     end
   end
   
+  def create_twilio_number(phone_number, name, forward_to, id_caller = true, record_calls = true, transcribe_calls = false, text_calls = false, call_url = "http://grid.cityvoice.com/phone_numbers/connect/", fallback_url = "http://grid.cityvoice.com/phone_numbers/connect/", status_url = "http://grid.cityvoice.com/phone_numbers/collect/", sms_url = "http://grid.cityvoice.com/phone_numbers/sms_collect/", fallback_sms_url = "http://grid.cityvoice.com/phone_numbers/sms_collect/")
+    job_status = JobStatus.create(:name => "Campaign.create_twilio_number")
+    begin
+      #CREATE THE NUMBER IN TWILIO (BASIC INFORMATION)
+      account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
+      resp = account.request("/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/IncomingPhoneNumbers.json?PhoneNumber=+12104602928", 'POST')
+      raise unless resp.kind_of? Net::HTTPSuccess
+      
+      #CREATE THE PHONE NUMBER IN GRID IF TWILIO CREATION WAS SUCCESSFUL
+      if resp.code == '200'
+        new_phone_number = self.phone_numbers.build
+        new_phone_number.twilio_id = JSON.parse(resp.body)['sid']
+        new_phone_number.inboundno = phone_number.to_s
+        new_phone_number.forward_to = forward_to
+        new_phone_number.name = name
+        new_phone_number.descript = name
+        new_phone_number.twilio_version = API_VERSION
+        new_phone_number.id_caller = id_caller
+        new_phone_number.record_calls = record_calls
+        new_phone_number.transcribe_calls = transcribe_calls
+        new_phone_number.text_calls = text_calls
+        new_phone_number.save
+        
+        #UPDATE THE TWILIO URLS
+        d = { 'FriendlyName' => name, 
+              'ApiVersion' => "#{API_VERSION}",
+              'VoiceUrl' => "#{call_url}#{new_phone_number.id}",
+              'VoiceMethod' => 'POST',
+              'VoiceFallbackUrl' => "#{fallback_url}#{new_phone_number.id}",
+              'VoiceFallbackMethod' => 'POST',
+              'StatusCallback' => "#{status_url}#{new_phone_number.id}",
+              'StatusCallbackMethod' => 'POST',
+              'SmsUrl' => "#{sms_url}#{new_phone_number.id}",
+              'SmsMethod' => 'POST',
+              'SmsFallbackUrl' => "#{fallback_sms_url}#{new_phone_number.id}",
+              'SmsFallbackMethod' => 'POST',
+              'VoiceCallerIdLookup' => new_phone_number.id_callers.to_s
+            }
+        update_resp = account.request("/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/IncomingPhoneNumbers/#{new_phone_number.twilio_id}.json", 'PUT', d)
+      end
+    rescue Exception => ex
+      job_status.finish_with_errors(ex)
+      raise
+    end
+    job_status.finish_with_no_errors
+    true
+  end
   
   # PREDICATES
 

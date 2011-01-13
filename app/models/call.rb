@@ -165,18 +165,17 @@ class Call < ActiveRecord::Base
     call.fetch_call_recording
   end
   
-  def self.fetch_twilio_recording(callsid = 'CA457c1285b3b7ac59620fa2c36883b2ea')
-    ##Get the recording ID
+  def self.fetch_twilio_recording(callsid = 'CA4ba7830e9644f55d9edd79251e711529')
+    call = Call.find_by_call_id(callsid)
+    call.fetch_twilio_recording
+  end
+  
+  def self.get_twilio_call(callsid = 'CA457c1285b3b7ac59620fa2c36883b2ea')
     account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
-    
-    resp = account.request("/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/Calls/#{callsid}/Recordings.json", 'GET')
-    resp.error! unless resp.kind_of? Net::HTTPSuccess
-    puts "code: %s\nbody: %s" % [resp.code, resp.body]
-    
-    ##Get the recording
+    resp = account.request("/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/Calls/#{callsid}.json", 'GET')
+    return resp.error! unless resp.kind_of? Net::HTTPSuccess
     if resp.code == '200'
-      results = JSON.parse(resp.body)['recordings']
-      return results.last
+      return JSON.parse(resp.body)
     end
   end
   
@@ -192,6 +191,15 @@ class Call < ActiveRecord::Base
   
 
   # INSTANCE BEHAVIOR
+  
+  def get_twilio_call()
+    account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
+    resp = account.request("/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/Calls/#{self.call_id}.json", 'GET')
+    return resp.error! unless resp.kind_of? Net::HTTPSuccess
+    if resp.code == '200'
+      return JSON.parse(resp.body)
+    end
+  end
   
   def initialize_specifics(attributes={})
     self.review_status = PENDING
@@ -228,7 +236,22 @@ class Call < ActiveRecord::Base
       File.delete("#{RAILS_ROOT}/tmp/#{call_id}.mp3") if save!
     end
   end
-
+  
+  def fetch_twilio_call_recording(hard_update = false)
+    ##Get the recording ID
+    account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
+    resp = account.request("/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/Calls/#{self.call_id}/Recordings.json", 'GET')
+    return resp.error! unless resp.kind_of? Net::HTTPSuccess
+      
+    ##Get the recording
+    if resp.code == '200'
+      results = JSON.parse(resp.body)['recordings']
+      File.open("#{RAILS_ROOT}/tmp/#{self.call_id}.mp3", "a+") {|f| f.write(HTTParty.get("https://api.twilio.com/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/Recordings/#{results.last['sid']}"))}
+      self.recording = File.open("#{RAILS_ROOT}/tmp/#{call_id}.mp3")
+      File.delete("#{RAILS_ROOT}/tmp/#{call_id}.mp3") if save!
+    end
+  end
+  
   def duration
     span = self.call_end - self.call_start
     min = (span / 60).floor
