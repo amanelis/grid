@@ -7,10 +7,10 @@ class PhoneNumbersController < ApplicationController
     if @phone_number.present?
       @r = Twilio::Response.new
       @r.append(Twilio::Say.new("For quality purposes, your call will be recorded ", :voice => "woman", :loop => 1))
+      @r.append(Twilio::Dial.new(@phone_number.forward_to, :playBeep => false))
       @r.append(Twilio::Record.new())
-      @r.append(Twilio::Dial.new(@phone_number.forward_to))
-      puts @r.respond
-      render :text => @r.respond
+      text_block = "Response: #{@r.respond}\ncampaign.name: #{@phone_number.campaign.name}\nname: #{@phone_number.name}\ninboundno: #{@phone_number.inboundno}\ncmpid: #{@phone_number.cmpid}\nforward_to: #{@phone_number.forward_to}\ntwilio_id: #{@phone_number.twilio_id}"
+      render :text => text_block
     end
   end
   
