@@ -5,13 +5,15 @@ class CampaignsController < ApplicationController
   load_and_authorize_resource
 
   def show  
-    authorize! :read, @campaign
     @campaign = Campaign.find(params[:id])
+    authorize! :read, @campaign
+    
     Time.zone = @campaign.account.time_zone
     @timeline = @campaign.campaign_style.combined_timeline_data
     @sorted_dates = @timeline.keys.sort
     @title = @campaign.account.name
     @date_range = ''
+    
     if @campaign.is_sem?
       @chart = GoogleVisualr::Gauge.new
       @chart.add_column('string' , 'Label')
@@ -37,8 +39,9 @@ class CampaignsController < ApplicationController
       @chart.width  = 250
 	    @chart.height = 250
     end
+    
     if params[:daterange].blank?
-      @start_date = Date.yesterday - 1.week
+      @start_date = Date.yesterday - 1.month
       @end_date = Date.yesterday
       
       respond_to do |format|
@@ -52,7 +55,7 @@ class CampaignsController < ApplicationController
         @start_date = Date.parse(dates[0])
         @end_date = Date.parse(dates[1])
       rescue Exception
-        @start_date = Date.yesterday - 1.week
+        @start_date = Date.yesterday - 1.month
         @end_date = Date.yesterday
       end
 
@@ -60,6 +63,7 @@ class CampaignsController < ApplicationController
         format.html # show.html.erb
       end
     end
+    
   end
   
   def update
