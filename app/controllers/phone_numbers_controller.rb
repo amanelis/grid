@@ -1,6 +1,4 @@
-
 class PhoneNumbersController < ApplicationController
-  
   
   def connect
     @phone_number = PhoneNumber.find(params[:id])
@@ -9,10 +7,13 @@ class PhoneNumbersController < ApplicationController
       @r.append(Twilio::Say.new("For quality purposes, your call will be recorded ", :voice => "woman", :loop => 1))
       @r.append(Twilio::Dial.new(@phone_number.forward_to))
       if @phone_number.record_calls
+        #transcribe = @phone_number.transcribe_calls
+        #transcribeCallback = 'http://grid.cityvoice.com/calls/transcribe/'
         @r.append(Twilio::Record.new(:playBeep => "false"))
       end
-      text_block = "Response: #{@r.respond}\ncampaign.name: #{@phone_number.campaign.name}\nname: #{@phone_number.name}\ninboundno: #{@phone_number.inboundno}\ncmpid: #{@phone_number.cmpid}\nforward_to: #{@phone_number.forward_to}\ntwilio_id: #{@phone_number.twilio_id}"
-      render :text => text_block
+      
+      #text_block = "Request: #{@r}\nResponse: #{@r.respond}\ncampaign.name: #{@phone_number.campaign.name}\nname: #{@phone_number.name}\ninboundno: #{@phone_number.inboundno}\ncmpid: #{@phone_number.cmpid}\nforward_to: #{@phone_number.forward_to}\ntwilio_id: #{@phone_number.twilio_id}"
+      #render :text => text_block
     end
   end
   
@@ -47,6 +48,8 @@ class PhoneNumbersController < ApplicationController
     processed_calls << existing_call
     /
   end
+  
+  
   
   
   
