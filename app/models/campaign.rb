@@ -484,6 +484,7 @@ class Campaign < ActiveRecord::Base
         new_phone_number.record_calls = record_calls
         new_phone_number.transcribe_calls = transcribe_calls
         new_phone_number.text_calls = text_calls
+        phone_number.phone_number = true
         new_phone_number.save
         #UPDATE THE TWILIO URLS
         new_phone_number.update_twilio_number(name, forward_to, id_caller, record_calls, transcribe_calls, text_calls, call_url, fallback_url, status_url, sms_url, fallback_sms_url)
@@ -503,7 +504,8 @@ class Campaign < ActiveRecord::Base
       account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
       resp = account.request("/#{phone_number.twilio_version}/Accounts/#{ACCOUNT_SID}/IncomingPhoneNumbers/#{phone_number.twilio_id}.json", 'DELETE')
       if resp.code == '204'
-        #Need to inactivate phone number in Grid
+        phone_number.active = false
+        phone_number.save
         return true
       else
         return false
