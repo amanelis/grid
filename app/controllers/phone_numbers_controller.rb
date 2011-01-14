@@ -2,6 +2,7 @@ class PhoneNumbersController < ApplicationController
   
   def connect
     @phone_number = PhoneNumber.find(params[:id])
+    
     if @phone_number.present?
       @r = Twilio::Response.new
       @r.append(Twilio::Say.new("For quality purposes, your call will be recorded ", :voice => "woman", :loop => 1))
@@ -11,7 +12,7 @@ class PhoneNumbersController < ApplicationController
         #transcribeCallback = 'http://grid.cityvoice.com/calls/transcribe/'
         @r.append(Twilio::Record.new(:playBeep => "false"))
       end
-      
+      puts @r.respond
       #text_block = "Request: #{@r}\nResponse: #{@r.respond}\ncampaign.name: #{@phone_number.campaign.name}\nname: #{@phone_number.name}\ninboundno: #{@phone_number.inboundno}\ncmpid: #{@phone_number.cmpid}\nforward_to: #{@phone_number.forward_to}\ntwilio_id: #{@phone_number.twilio_id}"
       #render :text => text_block
     end
