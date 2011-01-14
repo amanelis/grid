@@ -107,9 +107,6 @@ class PhoneNumber < ActiveRecord::Base
     self.orphaned_phone_numbers.collect { |orphan| ["#{orphan.name} - #{orphan.inboundno}", orphan.id] }.sort { |x, y| x.first.downcase <=> y.first.downcase }
   end
   
-  
-  
-  
   #Returns an Array of Hashes for Available Phone Numbers within an area_code.
   def self.available_numbers(area_code = "210", country = "US")
     account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
@@ -122,7 +119,37 @@ class PhoneNumber < ActiveRecord::Base
     end
   end
   
+  
+  
   # INSTANCE BEHAVIOR
+  def update_twilio_number(name, forward_to, id_caller = true, record_calls = true, transcribe_calls = false, text_calls = false, call_url = "http://grid.cityvoice.com/phone_numbers/connect/", fallback_url = "http://grid.cityvoice.com/phone_numbers/connect/", status_url = "http://grid.cityvoice.com/phone_numbers/collect/", sms_url = "http://grid.cityvoice.com/phone_numbers/sms_collect/", fallback_sms_url = "http://grid.cityvoice.com/phone_numbers/sms_collect/")
+    job_status = JobStatus.create(:name => "PhoneNumber.update_twilio_number")
+    begin
+      #CREATE THE NUMBER IN TWILIO (BASIC INFORMATION)
+      account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
+      #UPDATE THE TWILIO URLS
+      d = { 'FriendlyName' => name,
+            'VoiceUrl' => "#{call_url}#{self.id}",
+            'VoiceMethod' => 'POST',
+            'VoiceFallbackUrl' => "#{fallback_url}#{self.id}",
+            'VoiceFallbackMethod' => 'POST',
+            'StatusCallback' => "#{status_url}#{self.id}",
+            'StatusCallbackMethod' => 'POST',
+            'SmsUrl' => "#{sms_url}#{self.id}",
+            'SmsMethod' => 'POST',
+            'SmsFallbackUrl' => "#{fallback_sms_url}#{self.id}",
+            'SmsFallbackMethod' => 'POST',
+            'VoiceCallerIdLookup' => id_caller
+          }
+      update_resp = account.request("/#{self.twilio_version}/Accounts/#{ACCOUNT_SID}/IncomingPhoneNumbers/#{self.twilio_id}.json", 'PUT', d)
+      raise unless update_resp.kind_of? Net::HTTPSuccess
+    rescue Exception => ex
+      job_status.finish_with_errors(ex)
+      raise
+    end
+    job_status.finish_with_no_errors
+    true
+  end
   
   def orphan!
     self.campaign_id = Campaign.orphanage.id

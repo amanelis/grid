@@ -462,11 +462,15 @@ class Campaign < ActiveRecord::Base
     begin
       #CREATE THE NUMBER IN TWILIO (BASIC INFORMATION)
       account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
-      resp = account.request("/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/IncomingPhoneNumbers.json?PhoneNumber=+12104602928", 'POST')
+      d = {}
+      d['PhoneNumber'] = '+1' + phone_number if phone_number.length == 10
+      d['PhoneNumber'] = '+' + phone_number if phone_number.length == 11
+      d['AreaCode'] = phone_number if phone_number.length == 3
+      resp = account.request("/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/IncomingPhoneNumbers.json", 'POST', d)
       raise unless resp.kind_of? Net::HTTPSuccess
       
       #CREATE THE PHONE NUMBER IN GRID IF TWILIO CREATION WAS SUCCESSFUL
-      if resp.code == '200'
+      if resp.code == '200' || resp.code == '201'
         new_phone_number = self.phone_numbers.build
         new_phone_number.twilio_id = JSON.parse(resp.body)['sid']
         new_phone_number.inboundno = phone_number.to_s
@@ -479,23 +483,8 @@ class Campaign < ActiveRecord::Base
         new_phone_number.transcribe_calls = transcribe_calls
         new_phone_number.text_calls = text_calls
         new_phone_number.save
-        
         #UPDATE THE TWILIO URLS
-        d = { 'FriendlyName' => name, 
-              'ApiVersion' => "#{API_VERSION}",
-              'VoiceUrl' => "#{call_url}#{new_phone_number.id}",
-              'VoiceMethod' => 'POST',
-              'VoiceFallbackUrl' => "#{fallback_url}#{new_phone_number.id}",
-              'VoiceFallbackMethod' => 'POST',
-              'StatusCallback' => "#{status_url}#{new_phone_number.id}",
-              'StatusCallbackMethod' => 'POST',
-              'SmsUrl' => "#{sms_url}#{new_phone_number.id}",
-              'SmsMethod' => 'POST',
-              'SmsFallbackUrl' => "#{fallback_sms_url}#{new_phone_number.id}",
-              'SmsFallbackMethod' => 'POST',
-              'VoiceCallerIdLookup' => new_phone_number.id_callers.to_s
-            }
-        update_resp = account.request("/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/IncomingPhoneNumbers/#{new_phone_number.twilio_id}.json", 'PUT', d)
+        new_phone_number.update_twilio_number(name, forward_to, id_caller, record_calls, transcribe_calls, text_calls, call_url, fallback_url, status_url, sms_url, fallback_sms_url)
       end
     rescue Exception => ex
       job_status.finish_with_errors(ex)
@@ -503,6 +492,21 @@ class Campaign < ActiveRecord::Base
     end
     job_status.finish_with_no_errors
     true
+  end
+  
+  def inactivate_phone_number(phone_number_id)
+    phone_number = self.phone_numbers.first(:conditions => ['id = ?', phone_number_id])
+    return false if phone_number.blank?
+    if phone_number.twilio_id.present?
+      account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
+      resp = account.request("/#{phone_number.twilio_version}/Accounts/#{ACCOUNT_SID}/IncomingPhoneNumbers/#{phone_number.twilio_id}.json", 'DELETE')
+      if resp.code == '204'
+        #Need to inactivate phone number in Grid
+        return true
+      else
+        return false
+      end
+    end
   end
   
   # PREDICATES
