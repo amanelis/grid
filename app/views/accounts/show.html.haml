@@ -7,7 +7,7 @@
     = render :partial => 'shared/links'
     - if @account.can_send_weekly_report_now?
       = link_to "| Send Email ", send_weekly_path(params[:id])
-    = link_to "| Export PDF", report_client_pdf_path(params[:id])
+    = link_to "| Export Client PDF", report_client_pdf_path(params[:id])
   
   %h2= @account.name
   %h4.quiet 
