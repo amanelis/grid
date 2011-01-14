@@ -12,13 +12,25 @@ class AccountsController < ApplicationController
     
     @passed_status = params[:account_status] ||= 'Active'
     @passed_type = params[:account_type] ||= ''
-    @accounts = Account.get_accounts_by_status_and_account_type(params[:account_status], params[:account_type])
+    
+    @accounts = current_user.acquainted_accounts
+    @accounts_statuses = Account.account_statuses_for(@accounts)
+    @accounts_types = Account.account_types_for(@accounts)
+    
+    if params[:account_status].present?
+      @accounts = @accounts.select {|account| account.status == params[:account_status]}
+    end
+      
+    if params[:account_type].present?
+      @accounts = @accounts.select {|account| account.account_type?(params[:account_type])}
+    end
+    
+    #@accounts = Account.get_accounts_by_status_and_account_type(params[:account_status], params[:account_type])
     @accounts_data = Rails.cache.fetch("accounts_data") { Account.get_accounts_data }
-    @accounts_statuses = Account.account_statuses
-    @accounts_types = Account.account_types
+
 
     ## This will pull the users accounts based on their role
-    @accounts = current_user.acquainted_accounts
+    
     @accounts.sort! {|a,b| a.name.downcase <=> b.name.downcase}
     respond_to do |format|
       format.html 

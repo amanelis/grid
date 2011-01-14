@@ -61,8 +61,16 @@ class Account < ActiveRecord::Base
     Account.all.collect(&:status).compact.uniq
   end
   
+  def self.account_statuses_for(accounts)
+    accounts.collect(&:status).compact.uniq
+  end
+  
   def self.account_types
     Account.all.collect(&:account_type).compact.join(';').split(';').uniq.sort
+  end
+
+  def self.account_types_for(accounts)
+    accounts.collect(&:account_type).compact.join(';').split(';').uniq.sort
   end
 
   def self.get_accounts_by_status_and_account_type(status, account_type)
@@ -101,7 +109,7 @@ class Account < ActiveRecord::Base
   def previous_days_report_data(date = Date.today, previous = 6)
     end_date = date - 1.day
     start_date = (previous == 0 ? end_date.beginning_of_month : end_date - previous.days)
-    [self.number_of_all_calls_between(start_date, end_date), self.number_of_lead_calls_between(start_date, end_date), self.number_of_all_submissions_between(start_date, end_date), self.number_of_lead_submissions_between(start_date, end_date), start_date, end_date, self.name]
+    [self.number_of_all_calls_for_cityvoice_campaigns_between(start_date, end_date), self.number_of_lead_calls_for_cityvoice_campaigns_between(start_date, end_date), self.number_of_all_submissions_for_cityvoice_campaigns_between(start_date, end_date), self.number_of_lead_submissions_for_cityvoice_campaigns_between(start_date, end_date), start_date, end_date, self.name]
   end
   
   def valid_reporting_emails
@@ -227,6 +235,22 @@ class Account < ActiveRecord::Base
     self.campaigns.active.to_a.sum { |campaign| campaign.number_of_lead_submissions_between(start_date, end_date) }
   end
 
+  def number_of_all_calls_for_cityvoice_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.number_of_all_calls_between(start_date, end_date) }
+  end
+
+  def number_of_lead_calls_for_cityvoice_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.number_of_lead_calls_between(start_date, end_date) }
+  end
+
+  def number_of_all_submissions_for_cityvoice_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.number_of_all_submissions_between(start_date, end_date) }
+  end
+
+  def number_of_lead_submissions_for_cityvoice_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.number_of_lead_submissions_between(start_date, end_date) }
+  end
+
   def sem_cost_per_click_between(start_date = Date.yesterday, end_date = Date.yesterday)
     (spend = self.sem_spend_between(start_date, end_date)) > 0 ? self.sem_clicks_between(start_date, end_date)/spend : 0.0
   end
@@ -287,6 +311,17 @@ class Account < ActiveRecord::Base
 
   def number_of_other_calls_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.active.to_a.sum { |campaign| campaign.number_of_other_calls_between(start_date, end_date) }
+  end
+  
+  
+  # PREDICATES
+  
+  def active?
+    ["active", "paused", "pending setup"].include?(self.status.downcase)
+  end
+  
+  def account_type?(type)
+    self.account_type.split(';').include?(type)
   end
   
   
