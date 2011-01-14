@@ -12,6 +12,11 @@ class ActivitiesController < ApplicationController
       account.contact_forms.submissions
     end
     @activities = Activity.paginate(:page => (params[:page] || 1), :order => 'timestamp DESC')
+    
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
   
   def update

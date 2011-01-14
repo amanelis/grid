@@ -1,3 +1,17 @@
+%script
+  jQuery.ajaxSetup({
+  'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")}
+  })
+
+  $(function() {
+  setTimeout(updateActivity, 100);
+  });
+
+  function updateActivity() {
+  $.getScript("/keywords.js")
+  setTimeout(updateActivity, 100);
+  }
+
 %header
   .right= will_paginate(@activities)
   %h3 Activity
