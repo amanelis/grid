@@ -37,7 +37,7 @@ class PhoneNumbersController < ApplicationController
         call.save!
         Call.fetch_twilio_call_recording(params[:CallSid])
         #Call.send_later(:fetch_twilio_call_recording, params[:CallSid]) if call.save!
-        #processed_calls << existing_call
+        head 200
       end
     rescue
       head 400
