@@ -14,7 +14,7 @@ class Campaign < ActiveRecord::Base
   named_scope :maps, :conditions => {:campaign_style_type => MapsCampaign.name}
   named_scope :other, :conditions => {:campaign_style_type => OtherCampaign.name}
   
-  named_scope :cityvoice, :conditions => ['LCASE(flavor) = ? OR LCASE(flavor) = ? OR LCASE(flavor) = ? OR LCASE(flavor) = ? OR LCASE(flavor) = ? OR LCASE(flavor) = ? OR LCASE(flavor) = ?', 'seo', 'sem - all', 'sem - bing', 'sem - google', 'sem - google boost', 'sem - google mobile', 'sem - yahoo']
+  named_scope :cityvoice, :conditions => ["LCASE(flavor) IN ('seo', 'sem - all', 'sem - bing', 'sem - google', 'sem - google boost', 'sem - google mobile', 'sem - yahoo')"]
 
   before_destroy :remove_from_many_to_many_relationships
 

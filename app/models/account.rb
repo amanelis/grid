@@ -101,7 +101,7 @@ class Account < ActiveRecord::Base
   def previous_days_report_data(date = Date.today, previous = 6)
     end_date = date - 1.day
     start_date = (previous == 0 ? end_date.beginning_of_month : end_date - previous.days)
-    [self.number_of_all_calls_between(start_date, end_date), self.number_of_lead_calls_between(start_date, end_date), self.number_of_all_submissions_between(start_date, end_date), self.number_of_lead_submissions_between(start_date, end_date), start_date, end_date, self.name]
+    [self.number_of_all_calls_for_cityvoice_campaigns_between(start_date, end_date), self.number_of_lead_calls_for_cityvoice_campaigns_between(start_date, end_date), self.number_of_all_submissions_for_cityvoice_campaigns_between(start_date, end_date), self.number_of_lead_submissions_for_cityvoice_campaigns_between(start_date, end_date), start_date, end_date, self.name]
   end
   
   def valid_reporting_emails
@@ -225,6 +225,22 @@ class Account < ActiveRecord::Base
 
   def number_of_lead_submissions_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.active.to_a.sum { |campaign| campaign.number_of_lead_submissions_between(start_date, end_date) }
+  end
+
+  def number_of_all_calls_for_cityvoice_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.number_of_all_calls_between(start_date, end_date) }
+  end
+
+  def number_of_lead_calls_for_cityvoice_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.number_of_lead_calls_between(start_date, end_date) }
+  end
+
+  def number_of_all_submissions_for_cityvoice_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.number_of_all_submissions_between(start_date, end_date) }
+  end
+
+  def number_of_lead_submissions_for_cityvoice_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.number_of_lead_submissions_between(start_date, end_date) }
   end
 
   def sem_cost_per_click_between(start_date = Date.yesterday, end_date = Date.yesterday)
