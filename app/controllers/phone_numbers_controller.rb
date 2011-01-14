@@ -2,7 +2,6 @@ class PhoneNumbersController < ApplicationController
   
   def connect
     @phone_number = PhoneNumber.find(params[:id])
-    
     @r = Twilio::Response.new
     @r.append(Twilio::Dial.new("2105389216"))
     @r.append(Twilio::Say.new("For quality purposes, your call will be recorded ", :voice => "woman", :loop => 1))
