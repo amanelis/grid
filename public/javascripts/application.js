@@ -8,11 +8,15 @@
   //  setTimeout(updateActivity, 10000);  
   //}  
 //});  
+
+
+$(fuction() {
+	//if ($("#activities").length > 0) {
+		setTimeout(updateAvtivity, 1000);
+	//}
+});
   
 function updateActivity() {
-  var after = $('.activity_item:first').attr('id')
-  $.getScript('activities.js?after=' + after);
-  if ($('.activity_notice').length == 0) {
-	setTimeout(updateActivity, 60000);  
-  }
+  	$.getScript("/activities.js")
+	setTimeout(updateActivity, 1000);
 }
