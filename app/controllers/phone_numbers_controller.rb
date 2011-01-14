@@ -4,9 +4,9 @@ class PhoneNumbersController < ApplicationController
     @phone_number = PhoneNumber.find(params[:id])
     
     @r = Twilio::Response.new
-    #@r.append(Twilio::Dial.new("2105389216")
+    @r.append(Twilio::Dial.new("2105389216"))
     @r.append(Twilio::Say.new("For quality purposes, your call will be recorded ", :voice => "woman", :loop => 1))
-    @r.append(Twilio::Redirect.new("2105389216"))
+    #@r.append(Twilio::Redirect.new("2105389216"))
     #@r.append(Twilio::Dial.new(@phone_number.forward_to))
     #@r.append(Twilio::Record.new(:playBeep => "false")) if @phone_number.record_calls
     puts @r.respond
