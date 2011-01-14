@@ -484,17 +484,17 @@ class Campaign < ActiveRecord::Base
         new_phone_number.record_calls = record_calls
         new_phone_number.transcribe_calls = transcribe_calls
         new_phone_number.text_calls = text_calls
-        phone_number.phone_number = true
+        new_phone_number.active = true
         new_phone_number.save
         #UPDATE THE TWILIO URLS
         new_phone_number.update_twilio_number(name, forward_to, id_caller, record_calls, transcribe_calls, text_calls, call_url, fallback_url, status_url, sms_url, fallback_sms_url)
+        job_status.finish_with_no_errors
+        return new_phone_number
       end
     rescue Exception => ex
       job_status.finish_with_errors(ex)
       raise
     end
-    job_status.finish_with_no_errors
-    true
   end
   
   def inactivate_phone_number(phone_number_id)
