@@ -61,8 +61,16 @@ class Account < ActiveRecord::Base
     Account.all.collect(&:status).compact.uniq
   end
   
+  def self.account_statuses_for(accounts)
+    accounts.collect(&:status).compact.uniq
+  end
+  
   def self.account_types
     Account.all.collect(&:account_type).compact.join(';').split(';').uniq.sort
+  end
+
+  def self.account_types_for(accounts)
+    accounts.collect(&:account_type).compact.join(';').split(';').uniq.sort
   end
 
   def self.get_accounts_by_status_and_account_type(status, account_type)
@@ -303,6 +311,17 @@ class Account < ActiveRecord::Base
 
   def number_of_other_calls_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.active.to_a.sum { |campaign| campaign.number_of_other_calls_between(start_date, end_date) }
+  end
+  
+  
+  # PREDICATES
+  
+  def active?
+    ["active", "paused", "pending setup"].include?(self.status.downcase)
+  end
+  
+  def account_type?(type)
+    self.account_type.split(';').include?(type)
   end
   
   
