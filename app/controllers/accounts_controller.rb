@@ -54,10 +54,8 @@ class AccountsController < ApplicationController
     @date_range = ''
     
     if params[:daterange].blank?
-      @start_date = Date.yesterday - 1.week
+      @start_date = Date.today.beginning_of_month
       @end_date = Date.yesterday
-      @date_range = params[:daterange]
-      # @campaigns = @account.campaigns.sort! { |a,b| a.name <=> b.name }
       
       @managed_campaigns    = @account.campaigns.cityvoice.sort! { |a,b| a.name <=> b.name }
       @unmanaged_campaigns  = @account.campaigns.unmanaged.sort! { |a,b| a.name <=> b.name }
@@ -67,16 +65,21 @@ class AccountsController < ApplicationController
       end
     else
       # Parse the date the GET request has received
-      dates = params[:daterange].split(' - ')
+      dates = params[:daterange].split(' to ') || params[:daterange].split(' - ')
       @date_range = params[:daterange]
-      begin
+      
+      begin 
         @start_date = Date.parse(dates[0])
         @end_date = Date.parse(dates[1])
-      rescue Exception
-        @start_date = Date.yesterday - 1.week
+      rescue
+        @start_date = Date.today.beginning_of_month
         @end_date = Date.yesterday
+        flash[:error] = "Your date was incorrect, we set it back to #{@start_date} to #{@end_date}"
       end
-      @campaigns = @account.campaigns.sort! { |a,b| a.name <=> b.name}
+      
+      @managed_campaigns    = @account.campaigns.cityvoice.sort! { |a,b| a.name <=> b.name }
+      @unmanaged_campaigns  = @account.campaigns.unmanaged.sort! { |a,b| a.name <=> b.name }
+
       respond_to do |format|
         format.html # show.html.erb
       end

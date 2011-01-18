@@ -18,6 +18,7 @@
   
   %h3 CityVoice Managed Campaigns
   %table
+    %h3 Managed Accounts
     %thead
       %tr
         %th Campaign Name (Click for Details)
@@ -32,6 +33,20 @@
         %th Cost Per Lead
         %th Cost Per Contact
     %tbody
+      - @managed_total_lead_calls = @managed_campaigns.to_a.sum {|campaign| campaign.number_of_lead_calls_between(@start_date, @end_date) }
+      - @managed_total_all_calls  = @managed_campaigns.to_a.sum {|campaign| campaign.number_of_all_calls_between(@start_date, @end_date) }
+      - @managed_total_lead_forms = @managed_campaigns.to_a.sum {|campaign| campaign.number_of_lead_submissions_between(@start_date, @end_date) }
+      - @managed_total_all_forms  = @managed_campaigns.to_a.sum {|campaign| campaign.number_of_all_submissions_between(@start_date, @end_date) }
+      - @managed_total_leads      = @managed_campaigns.to_a.sum {|campaign| campaign.number_of_total_leads_between(@start_date, @end_date) }
+      - @managed_total_contacts   = @managed_campaigns.to_a.sum {|campaign| campaign.number_of_total_contacts_between(@start_date, @end_date) }
+      
+      = @managed_total_lead_calls
+      = @managed_total_all_calls
+      = @managed_total_lead_forms
+      = @managed_total_all_forms
+      = @managed_total_leads
+      = @managed_total_contacts
+      
       - @managed_campaigns.each do |campaign|
         %tr
           %td= link_to campaign.name, campaign_path(campaign, :daterange => params[:daterange])
@@ -48,6 +63,7 @@
   
   %h3 Self-managed Campaigns        
   %table
+    %h3 Unmanaged Accounts
     %thead
       %tr
         %th Campaign Name (Click for Details)
