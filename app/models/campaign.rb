@@ -229,7 +229,7 @@ class Campaign < ActiveRecord::Base
   end
   
   def self.determine_totals_for(campaigns, messages, start_date = Date.yesterday, end_date = Date.yesterday)
-    messages.inject(Hash.new) { |results, message| results[message] = campaigns.to_a.sum { |campaign| campaign.send(message, start_date, end_date) } ; results }
+    messages.inject({}) { |results, message| results[message] = campaigns.sum { |campaign| campaign.send(message, start_date, end_date) } ; results }
   end
 
 
