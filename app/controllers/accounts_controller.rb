@@ -57,7 +57,7 @@ class AccountsController < ApplicationController
       @start_date = Date.yesterday - 1.week
       @end_date = Date.yesterday
       @date_range = params[:daterange]
-      @campaigns = @account.campaigns.sort! { |a,b| a.name <=> b.name}
+      @campaigns = @account.campaigns.sort! { |a,b| a.name <=> b.name }
       respond_to do |format|
         format.html # show.html.erb
       end
