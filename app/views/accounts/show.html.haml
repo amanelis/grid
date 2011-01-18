@@ -16,6 +16,7 @@
   #datepicker=render :partial => "shared/date_picker"
 %article
   %table
+    %h3 Managed Accounts
     %thead
       %tr
         %th Campaign Name (Click for Details)
@@ -45,6 +46,7 @@
           %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_contact_between(@start_date, @end_date))
           
   %table
+    %h3 Unmanaged Accounts
     %thead
       %tr
         %th Campaign Name (Click for Details)
