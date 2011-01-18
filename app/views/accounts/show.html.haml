@@ -55,8 +55,8 @@
         %td= @managed_total_results[@total_reporting_messages[5]].to_s
         %td= ActionController::Base.helpers.number_to_currency(@managed_total_results[@total_reporting_messages[6]])
         %td= ActionController::Base.helpers.number_to_currency(@managed_total_results[@total_reporting_messages[7]])
-        %td= @managed_total_results[@total_reporting_messages[8]].to_s
-        %td= @managed_total_results[@total_reporting_messages[9]].to_s
+        %td= ActionController::Base.helpers.number_to_currency(@managed_total_results[@total_reporting_messages[8]])
+        %td= ActionController::Base.helpers.number_to_currency(@managed_total_results[@total_reporting_messages[9]])
         
       - @unmanaged_total_results = Campaign.determine_totals_for(@unmanaged_campaigns, @total_reporting_messages, @start_date, @end_date) 
       - @unmanaged_campaigns.each do |campaign|
@@ -82,5 +82,5 @@
         %td= @unmanaged_total_results[@total_reporting_messages[5]].to_s
         %td= ActionController::Base.helpers.number_to_currency(@unmanaged_total_results[@total_reporting_messages[6]])
         %td= ActionController::Base.helpers.number_to_currency(@unmanaged_total_results[@total_reporting_messages[7]])
-        %td= @unmanaged_total_results[@total_reporting_messages[8]].to_s
-        %td= @unmanaged_total_results[@total_reporting_messages[9]].to_s
+        %td= ActionController::Base.helpers.number_to_currency(@unmanaged_total_results[@total_reporting_messages[8]])
+        %td= ActionController::Base.helpers.number_to_currency(@unmanaged_total_results[@total_reporting_messages[9]])
