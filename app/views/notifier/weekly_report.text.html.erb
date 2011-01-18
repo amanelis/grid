@@ -100,8 +100,8 @@
 			<td width="400" valign="middle" align="right" class="menu-or-slogan">
 			
 				<p>
-				  <h2>Weekly Lead Report for <%= @account_report_data[6]  %></h2>
 				  <h1><%= @account_report_data[4].strftime("%b %d") %> - <%= @account_report_data[5].strftime("%b %d") %></h1>
+				  <h2>Weekly Lead Report for <%= @account_report_data[6]  %></h2>
 				</p>  
 			
 			</td>	
@@ -129,9 +129,9 @@
   			<table cellpadding="0" cellspacing="0" width="540" align="center">
 
         	<tr>
-        		<td align="left" class="bordered-bottom" width="250"> <h2>Leads This Month</h2></p>
+        		<td align="left" class="bordered-bottom" width="250"> <h2>Total Leads</h2></p>
         		<td align="left" class="bordered-bottom"> <p></p></td>
-        		<td align="right" class="bordered-bottom"> <h2><%= @account_report_data[0] + @account_report_data[1] + @account_report_data[2] + @account_report_data[3] %></h2></td>  
+        		<td align="right" class="bordered-bottom"> <h2><%= @account_report_data[1] + @account_report_data[3] %></h2></td>  
         	</tr>
         	<tr>
         		<td align="left" class="bordered-bottom" width="250"> <img src="http://cityvoice.s3.amazonaws.com/images/phone.gif" width="40" height="40" alt=""></td>
@@ -185,7 +185,7 @@
 				<td width="255" valign="top" align="left" class="subscription">
 				
 				  <p>
-				    For questions, contact Shaunay or Shelton
+				    For questions, contact your account manager
 				    <br>(210) 691-0100
 				    <br><a href="mailto:support@cityvoice.com">support@cityvoice.com</a>
 				  </p>
