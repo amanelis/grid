@@ -21,6 +21,10 @@ class Campaign < ActiveRecord::Base
   attr_accessor :adopting_phone_number
 
   ORPHANAGE_NAME = 'CityVoice SEM Orphaned Campaigns'
+  
+  CITYVOICE_MANAGED_FLAVORS = ['seo', 'sem - all', 'sem - bing', 'sem - google', 'sem - google boost', 'sem - google mobile', 'sem - yahoo']
+  
+  
   # Twilio REST API version
   API_VERSION = '2010-04-01'
 
@@ -530,7 +534,13 @@ class Campaign < ActiveRecord::Base
   def is_other?
     self.campaign_style.instance_of?(OtherCampaign)
   end
-
+  
+  def cityvoice_managed?
+    CITYVOICE_MANAGED_FLAVORS.include?(self.flavor.downcase)
+  end
+  
+  
+  # PRIVATE BEHAVIOR
 
   private
 
