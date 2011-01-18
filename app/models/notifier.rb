@@ -16,13 +16,14 @@ class Notifier < ActionMailer::Base
     sent_on       Time.now
   end
 
-  def weekly_report(account, email_list = nil, date = nil, previous = nil)
+  def weekly_report(account, email_list = nil, date = nil, previous = nil, bcc_list = nil)
     email_list ||= account.reporting_emails.split(/, \s*/)
     date ||= Date.today.beginning_of_week
     previous ||= 6
+    bcc_list ||= ["dev@cityvoice.com", "reporting@cityvoice.com"]
 
     recipients    email_list
-    bcc           ["dev@cityvoice.com", "reporting@cityvoice.com"]
+    bcc           bcc_list
     subject       "Weekly Report"  
     from          "CityVoice <support@cityvoice.com>"
     sent_on       Time.now

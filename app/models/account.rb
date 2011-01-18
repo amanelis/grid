@@ -126,6 +126,11 @@ class Account < ActiveRecord::Base
     self == Account.find_by_name("CityVoice")
   end
   
+  def send_test_weekly_report(email_list, date = Date.today, previous = 0)
+    return if email_list.blank?
+    Notifier.deliver_weekly_report(self, email_list, date, previous, [])
+  end
+
   def number_of_visits_by_date
     Utilities.merge_and_sum_timeline_data(self.campaigns.active.collect { |campaign| campaign.campaign_style.number_of_visits_by_date }, :visits)
   end
