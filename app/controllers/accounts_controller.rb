@@ -53,6 +53,19 @@ class AccountsController < ApplicationController
     @map_campaign_timelines = @account.campaign_map_combined_timeline_data
     @date_range = ''
     
+    @total_reporting_messages = [:number_of_lead_calls_between,
+                                 :number_of_all_calls_between,
+                                 :number_of_lead_submissions_between,
+                                 :number_of_all_submissions_between, 
+                                 :number_of_total_leads_between,     
+                                 :number_of_total_contacts_between,  
+                                 :cost_between,                      
+                                 :spend_between,                     
+                                 :cost_per_lead_between,            
+                                 :cost_per_contact_between]         
+                                 
+                                  
+    
     if params[:daterange].blank?
       @start_date = Date.today.beginning_of_month
       @end_date = Date.yesterday
