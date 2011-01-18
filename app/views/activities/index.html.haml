@@ -1,15 +1,15 @@
-%script
+:javascript
   jQuery.ajaxSetup({
-  'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")}
+    'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")}
   })
 
   $(function() {
-  setTimeout(updateActivity, 10000);
+    setTimeout(updateActivity, 10000);
   });
 
   function updateActivity() {
-  $.getScript("/activities.js")
-  setTimeout(updateActivity, 10000);
+    $.getScript("/activities.js")
+    setTimeout(updateActivity, 10000);
   }
 
 %header

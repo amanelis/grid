@@ -47,21 +47,21 @@
           %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_contact_between(@start_date, @end_date))
       %tr
         %td Total Managed:
-        %td TOTAL LC
-        %td TOTAL AC
-        %td TOTAL LF
-        %td TOTAL AF
-        %td TOTAL LEADS
-        %td TOTAL CONTACTS
-        %td TOTAL COST
-        %td TOTAL SPEND
-        %td TOTAL CPL
-        %td TOTAL CPC
+        %td= @managed_total_results[@total_reporting_messages[0]].to_s
+        %td= @managed_total_results[@total_reporting_messages[1]].to_s
+        %td= @managed_total_results[@total_reporting_messages[2]].to_s
+        %td= @managed_total_results[@total_reporting_messages[3]].to_s
+        %td= @managed_total_results[@total_reporting_messages[4]].to_s
+        %td= @managed_total_results[@total_reporting_messages[5]].to_s
+        %td= ActionController::Base.helpers.number_to_currency(@managed_total_results[@total_reporting_messages[6]])
+        %td= ActionController::Base.helpers.number_to_currency(@managed_total_results[@total_reporting_messages[7]])
+        %td= @managed_total_results[@total_reporting_messages[8]].to_s
+        %td= @managed_total_results[@total_reporting_messages[9]].to_s
         
       - @unmanaged_total_results = Campaign.determine_totals_for(@unmanaged_campaigns, @total_reporting_messages, @start_date, @end_date) 
       - @unmanaged_campaigns.each do |campaign|
         %tr
-          %td= link_to campaign.name (:class => "unmanaged"), campaign_path(campaign, :daterange => params[:daterange])
+          %td= link_to campaign.name, campaign_path(campaign, :daterange => params[:daterange])
           %td= campaign.number_of_lead_calls_between(@start_date, @end_date).to_s
           %td= campaign.number_of_all_calls_between(@start_date, @end_date).to_s
           %td= campaign.number_of_lead_submissions_between(@start_date, @end_date).to_s
@@ -74,13 +74,13 @@
           %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_contact_between(@start_date, @end_date))
       %tr
         %td Total Unmanaged
-        %td TOTAL LC
-        %td TOTAL AC
-        %td TOTAL LF
-        %td TOTAL AF
-        %td TOTAL LEADS
-        %td TOTAL CONTACTS
-        %td TOTAL COST
-        %td TOTAL SPEND
-        %td TOTAL CPL
-        %td TOTAL CPC
+        %td= @unmanaged_total_results[@total_reporting_messages[0]].to_s
+        %td= @unmanaged_total_results[@total_reporting_messages[1]].to_s
+        %td= @unmanaged_total_results[@total_reporting_messages[2]].to_s
+        %td= @unmanaged_total_results[@total_reporting_messages[3]].to_s
+        %td= @unmanaged_total_results[@total_reporting_messages[4]].to_s
+        %td= @unmanaged_total_results[@total_reporting_messages[5]].to_s
+        %td= ActionController::Base.helpers.number_to_currency(@unmanaged_total_results[@total_reporting_messages[6]])
+        %td= ActionController::Base.helpers.number_to_currency(@unmanaged_total_results[@total_reporting_messages[7]])
+        %td= @unmanaged_total_results[@total_reporting_messages[8]].to_s
+        %td= @unmanaged_total_results[@total_reporting_messages[9]].to_s
