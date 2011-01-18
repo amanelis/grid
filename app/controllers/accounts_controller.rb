@@ -58,6 +58,10 @@ class AccountsController < ApplicationController
       @end_date = Date.yesterday
       @date_range = params[:daterange]
       @campaigns = @account.campaigns.sort! { |a,b| a.name <=> b.name }
+      
+      @managed_campaigns    = @account.campaigns.cityvoice.sort! { |a,b| a.name <=> b.name }
+      @unmanaged_campaigns  = @account.campaigns.unmanaged.sort! { |a,b| a.name <=> b.name }
+      
       respond_to do |format|
         format.html # show.html.erb
       end
