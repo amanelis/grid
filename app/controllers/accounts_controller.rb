@@ -56,7 +56,6 @@ class AccountsController < ApplicationController
     if params[:daterange].blank?
       @start_date = Date.yesterday - 1.week
       @end_date = Date.yesterday
-      @date_range = params[:daterange]
       
       @managed_campaigns    = @account.campaigns.cityvoice.sort! { |a,b| a.name <=> b.name }
       @unmanaged_campaigns  = @account.campaigns.unmanaged.sort! { |a,b| a.name <=> b.name }
@@ -66,19 +65,15 @@ class AccountsController < ApplicationController
       end
     else
       # Parse the date the GET request has received
-      dates = params[:daterange].split(' - ')
+      dates = params[:daterange].split(' to ')
       @date_range = params[:daterange]
-      begin
-        @start_date = Date.parse(dates[0])
-        @end_date = Date.parse(dates[1])
-      rescue Exception
-        @start_date = Date.yesterday - 1.week
-        @end_date = Date.yesterday
-      end
+      
+      @start_date = Date.parse(dates[0])
+      @end_date = Date.parse(dates[1])
       
       @managed_campaigns    = @account.campaigns.cityvoice.sort! { |a,b| a.name <=> b.name }
       @unmanaged_campaigns  = @account.campaigns.unmanaged.sort! { |a,b| a.name <=> b.name }
-      
+
       respond_to do |format|
         format.html # show.html.erb
       end
