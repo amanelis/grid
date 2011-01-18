@@ -129,17 +129,17 @@
   			<table cellpadding="0" cellspacing="0" width="540" align="center">
 
         	<tr>
-        		<td align="left" class="bordered-bottom" width="250"> <h2>Total Leads</h2></p>
+        		<td align="left" class="bordered-bottom" width="150"> <h2>Total Leads</h2></p>
         		<td align="left" class="bordered-bottom"> <p></p></td>
         		<td align="right" class="bordered-bottom"> <h2><%= @account_report_data[1] + @account_report_data[3] %></h2></td>  
         	</tr>
         	<tr>
-        		<td align="left" class="bordered-bottom" width="250"> <img src="http://cityvoice.s3.amazonaws.com/images/phone.gif" width="40" height="40" alt=""></td>
+        		<td align="left" class="bordered-bottom" width="150"> <img src="http://cityvoice.s3.amazonaws.com/images/phone.gif" width="40" height="40" alt=""></td>
         		<td align="left" class="bordered-bottom"> <p><b>CALLS</b><br>Leads <em>(unique answered calls and voicemail)</em><br>Other <em>(call backs, hang ups, and no-answers)</em><br>Total Calls</p></td>
         		<td align="right" class="bordered-bottom"> <p><br><%= @account_report_data[1] %><br><%= @account_report_data[0] %><br><%= @account_report_data[1] + @account_report_data[0] %></p></td>
         	</tr>
         	<tr>
-        		<td align="left" class="bordered-bottom" width="250"> <img src="http://cityvoice.s3.amazonaws.com/images/form.gif" width="40" height="40" alt=""></td>
+        		<td align="left" class="bordered-bottom" width="150"> <img src="http://cityvoice.s3.amazonaws.com/images/form.gif" width="40" height="40" alt=""></td>
         		<td align="left" class="bordered-bottom"> <p><b>FORMS</b><br>Leads <em>(looking for service)</em><br>Other <em>(spam and duplicates)</em><br>Total Form Submissions</p></td>
         		<td align="right" class="bordered-bottom"> <p><br><%= @account_report_data[3] %><br><%= @account_report_data[2] %><br><%= @account_report_data[3] + @account_report_data[2] %></p></td>
         	</tr>
