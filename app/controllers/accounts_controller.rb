@@ -57,10 +57,8 @@ class AccountsController < ApplicationController
       @start_date = Date.yesterday - 1.week
       @end_date = Date.yesterday
       @date_range = params[:daterange]
-      # @campaigns = @account.campaigns.sort! { |a,b| a.name <=> b.name }
       
-      @managed_campaigns    = @account.campaigns.cityvoice.sort! { |a,b| a.name <=> b.name }
-      @unmanaged_campaigns  = @account.campaigns.unmanaged.sort! { |a,b| a.name <=> b.name }
+      
       
       respond_to do |format|
         format.html # show.html.erb
@@ -76,7 +74,10 @@ class AccountsController < ApplicationController
         @start_date = Date.yesterday - 1.week
         @end_date = Date.yesterday
       end
-      @campaigns = @account.campaigns.sort! { |a,b| a.name <=> b.name}
+      
+      @managed_campaigns    = @account.campaigns.cityvoice.sort! { |a,b| a.name <=> b.name }
+      @unmanaged_campaigns  = @account.campaigns.unmanaged.sort! { |a,b| a.name <=> b.name }
+      
       respond_to do |format|
         format.html # show.html.erb
       end
