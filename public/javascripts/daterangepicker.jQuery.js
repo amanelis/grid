@@ -50,8 +50,8 @@ jQuery.fn.daterangepicker = function(settings){
 		doneButtonText: 'Done',
 		earliestDate: Date.parse('-15years'), //earliest date allowed 
 		latestDate: Date.parse('+15years'), //latest date allowed 
-		rangeSplitter: '-', //string to use between dates in single input
-		dateFormat: 'm/d/yy', // date formatting. Available formats: http://docs.jquery.com/UI/Datepicker/%24.datepicker.formatDate
+		rangeSplitter: 'to', //string to use between dates in single input
+		dateFormat: 'MM d, yy', // date formatting. Available formats: http://docs.jquery.com/UI/Datepicker/%24.datepicker.formatDate
 		closeOnSelect: true, //if a complete selection is made, close the menu
 		arrows: false,
 		posX: rangeInput.offset().left, // x position
