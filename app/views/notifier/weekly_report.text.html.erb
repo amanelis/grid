@@ -102,6 +102,7 @@
 				<p>
 				  <h1>Weekly Report</h1>
 				  <h2>for <%= @account_report_data[6]  %></h2>
+				  <h3><%= @account_report_data[4].strftime("%b %d") %> - <%= @account_report_data[5].strftime("%b %d") %></h3>
 				</p>  
 			
 			</td>	
@@ -129,7 +130,7 @@
   			<table cellpadding="0" cellspacing="0" width="540" align="center">
 
         	<tr>
-        		<td align="left" class="bordered-bottom" width="250"> <h2>Weekly Leads</h2></p>
+        		<td align="left" class="bordered-bottom" width="250"> <h2>Leads This Month</h2></p>
         		<td align="left" class="bordered-bottom"> <p></p></td>
         		<td align="right" class="bordered-bottom"> <h2><%= @account_report_data[1] + @account_report_data[3] %></h2></td>  
         	</tr>

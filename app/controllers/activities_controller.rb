@@ -4,7 +4,7 @@ class ActivitiesController < ApplicationController
   # for any of the default restfull rails routes.
   load_and_authorize_resource
   
-  def index
+  def index  
     @user = current_user
     @accounts = current_user.acquainted_accounts
     @accounts.each do |account|
@@ -12,6 +12,11 @@ class ActivitiesController < ApplicationController
       account.contact_forms.submissions
     end
     @activities = Activity.paginate(:page => (params[:page] || 1), :order => 'timestamp DESC')
+    
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
   
   def update
