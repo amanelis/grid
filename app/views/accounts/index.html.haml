@@ -3,7 +3,7 @@
     = render :partial => 'shared/links'
   %h3
     = "Accounts (#{@accounts.count})"
-  %h4.quiet= 'For ' + (Date.yesterday - 1.week).to_s(:long) + ' to ' + Date.yesterday.to_s(:long)
+  %h4.quiet= 'For ' + (Date.yesterday.beginning_of_month).to_s(:long) + ' to ' + Date.yesterday.to_s(:long)
 %article
   %form{:href => '/', :action => "accounts", :id => 'index', :name => 'index', :method => 'GET'}
     %label

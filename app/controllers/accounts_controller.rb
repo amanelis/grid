@@ -214,11 +214,7 @@ class AccountsController < ApplicationController
     flash[:notice] = "Accounts reloaded!"
     redirect_to :action => "index"
   end
-  
-  
-  # This function right now is VERY BASIC feature of exporting data to csv
-  # for account managers, more options and sorting will be implemented as 
-  # dev continues
+
   def export
     @accounts = Account.find(:all, :order => "name")
     @outfile  = "accounts_" + Time.now.strftime("%m-%d-%Y") + ".csv"
