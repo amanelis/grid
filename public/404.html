@@ -6,25 +6,28 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
   <title>The page you were looking for doesn't exist (404)</title>
-	<style type="text/css">
-		body { background-color: #fff; color: #666; text-align: center; font-family: arial, sans-serif; }
-		div.dialog {
-			width: 25em;
-			padding: 0 4em;
-			margin: 4em auto 0 auto;
-			border: 1px solid #ccc;
-			border-right-color: #999;
-			border-bottom-color: #999;
-		}
-		h1 { font-size: 100%; color: #f00; line-height: 1.5em; }
-	</style>
+  <link rel="stylesheet" href="/stylesheets/application.css" type="text/css" media="screen" charset="utf-8">
 </head>
 
-<body>
+<body class="container error">
   <!-- This file lives in public/404.html -->
-  <div class="dialog">
-    <h1>This page has gone missing.</h1>
-    <p>You got here from a bad path or perhaps it never existed at all.</p>
-  </div>
+  <section id="content">
+    <header>
+      <h1>This page has gone missing.</h1>
+      <h3>Error 404</h3>
+    </header>
+    
+    <article>
+      <a href="http://grid.cityvoice.com">
+      <img src="/images/hoff.jpg">
+      </a>
+      <p>This page doesn't exist anymore. The Hoff insists that you try something else.</p>
+    </article>
+  </section>
+  
+  <footer>
+    <small>&copy; Copyright 2011 <a href="http://cityvoice.com">CityVoice</a>.
+    <span class="right"><a href="http://cityvoice.com">Feedback/Support</a></span></small>
+  </footer>
 </body>
 </html>
