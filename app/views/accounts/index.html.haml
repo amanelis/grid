@@ -1,3 +1,18 @@
+:javascript
+  jQuery.ajaxSetup({
+    'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")}
+  })
+
+  $(function() {
+    //setTimeout(updateActivity, 5000);
+  });
+
+  function updateActivity() {
+    var after = $("#activities tbody tr").attr("data-time");
+    $.getScript("/activities.js?after=" + after)
+    setTimeout(updateActivity, 5000);
+  }
+
 %header
   %p.right
     = render :partial => 'shared/links'
