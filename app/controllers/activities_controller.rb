@@ -11,7 +11,8 @@ class ActivitiesController < ApplicationController
       account.phone_numbers.calls
       account.contact_forms.submissions
     end
-    @activities = Activity.paginate(:page => (params[:page] || 1), :order => 'timestamp DESC')
+    #@activities = Activity.paginate(:page => (params[:page] || 1), :order => 'timestamp DESC', :limit => 10)
+    #@activities = Activity.all(:conditions => ["timestamp > ?", Time.at(params[:after].to_i + 1)], :limit => 10)
     
     respond_to do |format|
       format.html

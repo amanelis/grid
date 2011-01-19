@@ -1,1 +1,9 @@
-//$("#activities tbody tr:first").before("<%=raw escape_javascript(render(@activities)) %>")
+<% @activities.each do |a| %>
+	<% if a.timestamp.to_i < params[:after].to_i %>
+		$("#activities tbody tr:first").before("<%#=raw escape_javascript(render(@activities)) %>")
+	<% end %>
+<% end %>
+
+
+
+<%#=raw escape_javascript(render(@activities)) %>
