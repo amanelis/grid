@@ -4,12 +4,12 @@
   })
 
   $(function() {
-    setTimeout(updateActivity, 10000);
+    setTimeout(updateActivity, 15000);
   });
 
   function updateActivity() {
     $.getScript("/activities.js")
-    setTimeout(updateActivity, 10000);
+    setTimeout(updateActivity, 15000);
   }
 
 %header
@@ -17,7 +17,7 @@
   %h3 Activity
 %article
   %h3 Phone Calls
-  %table
+  %table#activities
     %thead
       %tr
         %th Campaign

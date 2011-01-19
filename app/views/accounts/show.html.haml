@@ -10,9 +10,6 @@
     = link_to "| Export Client PDF", report_client_pdf_path(params[:id])
   
   %h2= @account.name
-  %h4.quiet 
-    Account Summary for 
-    #{(@start_date).to_s(:long) + ' to ' + @end_date.to_s(:long)}
   #datepicker=render :partial => "shared/date_picker"
 %article
   
