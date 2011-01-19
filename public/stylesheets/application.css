@@ -8,6 +8,11 @@ margin:0 auto;
 background-image: url("/images/grid_background.png");
 }
 
+.error header, .error article{
+	text-align:center;
+}
+
+
 #logo{
 float:left;
 margin-right:10px;
