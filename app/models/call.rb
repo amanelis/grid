@@ -165,12 +165,12 @@ class Call < ActiveRecord::Base
     call.fetch_call_recording
   end
   
-  def self.fetch_twilio_recording(callsid = 'CA4ba7830e9644f55d9edd79251e711529')
+  def self.fetch_twilio_recording(callsid = 'CAda20f29dd3a0e8b0602ef71dd3887314')
     call = Call.find_by_call_id(callsid)
     call.fetch_twilio_recording
   end
   
-  def self.get_twilio_call(callsid = 'CA457c1285b3b7ac59620fa2c36883b2ea')
+  def self.get_twilio_call(callsid = 'CAda20f29dd3a0e8b0602ef71dd3887314')
     account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
     resp = account.request("/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/Calls/#{callsid}.json", 'GET')
     return resp.error! unless resp.kind_of? Net::HTTPSuccess
