@@ -41,7 +41,7 @@ class CampaignsController < ApplicationController
     end
     
     if params[:daterange].blank?
-      @start_date = Date.yesterday - 1.month
+      @start_date = Date.today.beginning_of_month
       @end_date = Date.yesterday
       
       respond_to do |format|
@@ -49,19 +49,19 @@ class CampaignsController < ApplicationController
       end
     else
       # Parse the date the GET request has received
-      dates = params[:daterange].split(' - ')
+      dates = params[:daterange].split(' to ') || params[:daterange].split(' - ')
       @date_range = params[:daterange]
-      begin
+      
+      begin 
         @start_date = Date.parse(dates[0])
         @end_date = Date.parse(dates[1])
-      rescue Exception
-        @start_date = Date.yesterday - 1.month
+      rescue
+        @start_date = Date.today.beginning_of_month
         @end_date = Date.yesterday
+        flash[:error] = "Your date was incorrect, we set it back to #{@start_date} to #{@end_date}"
+        redirect_to campaign_path(params[:id])
       end
-
-      respond_to do |format|
-        format.html # show.html.erb
-      end
+      
     end
     
   end
