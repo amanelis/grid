@@ -29,7 +29,11 @@ gem 'cancan',  '1.4.1'
 gem 'json', '1.4.6'
 gem 'xmlparser', '0.6.81'
 
-group :development do
-	gem 'cucumber'
-	gem 'mocha'
+group :test do
+  gem 'rspec'
+  gem 'rspec-rails'
+  gem 'webrat'
+  gem 'cucumber-rails'
+  gem 'capybara'
+  gem 'database_cleaner'
 end
