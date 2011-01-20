@@ -132,6 +132,10 @@ body{
 font-family: "proxima-nova-1","proxima-nova-2","Lucida Grande", "Helvetica Nueue", helvetica, sans-serif;
 }
 
+.strong{
+	font-weight:bold;
+}
+
 nav a{
 font-weight:bold;
 font-size:1em;
@@ -179,7 +183,7 @@ article h3{
 */
 #daterangepicker{
 	width:300px;
-	font-size:16px;
+	font-size:14px;
 }
 
 /*

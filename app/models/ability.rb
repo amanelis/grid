@@ -18,6 +18,7 @@ class Ability
         
         can :refresh_accounts, Account
         can :export, Account
+        can :report, Account
         can :report_client, Account
       end 
       

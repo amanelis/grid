@@ -1,4 +1,3 @@
-=javascript_include_tag 'highcharts'
 %header
   .right
     %h2
@@ -18,7 +17,7 @@
   -if @account.campaigns.present?
     .span-24.last
       %h3 Cost Per Lead Summary
-      .chart#highcharts=high_chart("highcharts", @h)
+      .chart=high_chart("highcharts", @h)
       %table#cpl
         %thead
           %th Campaign Name
