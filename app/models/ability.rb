@@ -17,6 +17,8 @@ class Ability
         end
         
         can :refresh_accounts, Account
+        can :export, Account
+        can :report_client, Account
       end 
       
       if user.account_user?
