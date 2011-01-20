@@ -132,7 +132,7 @@ class AccountsController < ApplicationController
 
   # /accounts/:id/report
   def report
-    @account = Account.find(params[:id])
+    authorize! :read, @account
     Time.zone = @account.time_zone
 
     respond_to do |format|
@@ -142,10 +142,13 @@ class AccountsController < ApplicationController
   
   # /accounts/:id/report/client /.pdf
   def report_client
-    @account = Account.find(params[:id])
+    authorize! :read, @account
     Time.zone = @account.time_zone
     @month_start = (Date.today - 1.month).beginning_of_month
     @month_end = (Date.today - 1.month).end_of_month
+    
+    @managed_campaigns    = @account.campaigns.cityvoice.sort! { |a,b| a.name <=> b.name }
+    @unmanaged_campaigns  = @account.campaigns.unmanaged.sort! { |a,b| a.name <=> b.name }
     
     
     @h = HighChart.new('graph') do |f|
@@ -155,10 +158,10 @@ class AccountsController < ApplicationController
       f.x_axis(:categories => @account.campaigns.active.collect(&:name) , :labels=>{:rotation=>0 , :align => 'right'})
 
       f.options[:chart][:defaultSeriesType] = "bar"
-      f.series(:name=> 'Calls',          :data => @account.campaigns.active.collect {|campaign| campaign.number_of_lead_calls_between(@month_start, @month_end) })
-      f.series(:name=> 'Forms',          :data => @account.campaigns.active.collect {|campaign| campaign.number_of_lead_submissions_between(@month_start, @month_end) })
-      f.series(:name=> 'Total Leads',   :data => @account.campaigns.active.collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
-      f.series(:name=> 'Total Contacts',:data => @account.campaigns.active.collect {|campaign| campaign.number_of_total_contacts_between(@month_start, @month_end) })
+      f.series(:name=> 'Calls',           :data => @managed_campaigns.collect {|campaign| campaign.number_of_lead_calls_between(@month_start, @month_end) })
+      f.series(:name=> 'Forms',           :data => @managed_campaigns.collect {|campaign| campaign.number_of_lead_submissions_between(@month_start, @month_end) })
+      f.series(:name=> 'Total Leads',     :data => @managed_campaigns.collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
+      f.series(:name=> 'Total Contacts',  :data => @managed_campaigns.collect {|campaign| campaign.number_of_total_contacts_between(@month_start, @month_end) })
     end
     
     respond_to do |format|

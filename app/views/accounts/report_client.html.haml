@@ -16,7 +16,7 @@
 %article
   -if @account.campaigns.present?
     .span-24.last
-      %h3 Cost Per Lead Summary
+      %h3 Cost Per Lead Summary - Managed Campaigns
       .chart=high_chart("highcharts", @h)
       %table#cpl
         %thead
