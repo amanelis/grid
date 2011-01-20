@@ -60,12 +60,10 @@ class AccountsController < ApplicationController
                                  :number_of_total_leads_between,     
                                  :number_of_total_contacts_between,  
                                  :cost_between,                      
-                                 :spend_between,                     
-                                 :cost_per_lead_between,            
-                                 :cost_per_contact_between]         
+                                 :spend_between]         
                                  
-                                  
-    
+                                 
+                                 
     if params[:daterange].blank?
       @start_date = Date.today.beginning_of_month
       @end_date = Date.yesterday
