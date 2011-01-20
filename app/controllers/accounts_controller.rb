@@ -1,18 +1,12 @@
 class AccountsController < ApplicationController
-  #before_filter :require_admin
-  # Carefull, this load_and_authorize_resource function will setup all instance variables
-  # for any of the default restfull rails routes.
   load_and_authorize_resource
-  require 'fastercsv'
-  
-  # GET /accounts
-  # GET /accounts.xml
+
+  # /accounts
   def index
     authorize! :read, Account
     
     @passed_status = params[:account_status] ||= 'Active'
     @passed_type = params[:account_type] ||= ''
-    
     @accounts = current_user.acquainted_accounts
     @accounts_statuses = Account.account_statuses_for(@accounts)
     @accounts_types = Account.account_types_for(@accounts)
@@ -25,29 +19,22 @@ class AccountsController < ApplicationController
       @accounts = @accounts.select {|account| account.account_type?(params[:account_type])}
     end
     
-    #@accounts = Account.get_accounts_by_status_and_account_type(params[:account_status], params[:account_type])
     @accounts_data = Rails.cache.fetch("accounts_data") { Account.get_accounts_data }
-
-
-    ## This will pull the users accounts based on their role
-    
     @accounts.sort! {|a,b| a.name.downcase <=> b.name.downcase}
+    
     respond_to do |format|
       format.html 
+      format.js
+      format.xml { render :xml => @accounts }
     end
     
   end
 
-  # GET /accounts/1
-  # GET /accounts/1.xml
-  def show      
-    @account = Account.find(params[:id])
+  # /accounts/:id
+  def show
     authorize! :read, @account
     
-    Time.zone = @account.time_zone
-    @timeline = @account.combined_timeline_data    
-    @sorted_dates = @timeline.keys.sort
-    @title = @account.name
+    Time.zone = @account.time_zone    
     @seo_campaign_timelines = @account.campaign_seo_combined_timeline_data
     @sem_campaign_timelines = @account.campaign_sem_combined_timeline_data
     @map_campaign_timelines = @account.campaign_map_combined_timeline_data
@@ -72,10 +59,9 @@ class AccountsController < ApplicationController
       @unmanaged_campaigns  = @account.campaigns.unmanaged.sort! { |a,b| a.name <=> b.name }
       
       respond_to do |format|
-        format.html # show.html.erb
+        format.html 
       end
     else
-      # Parse the date the GET request has received
       dates = params[:daterange].split(' to ') || params[:daterange].split(' - ')
       @date_range = params[:daterange]
       
@@ -88,31 +74,26 @@ class AccountsController < ApplicationController
       rescue
         @start_date = Date.today.beginning_of_month
         @end_date = Date.yesterday
-        flash[:error] = "Your date was incorrect, we set it back to #{@start_date} to #{@end_date}"
+        flash[:error] = "Your date entered was incorrect, we set it back to <strong>#{@start_date} to #{@end_date}</strong> for you."
         redirect_to account_path(params[:id])
-      end
-      
+      end 
     end
-    
   end
 
-  # GET /accounts/new
-  # GET /accounts/new.xml
+  # /accounts/new
   def new
     @account = Account.new
 
     respond_to do |format|
-      format.html # new.html.erb
+      format.html
     end
   end
 
-  # GET /accounts/1/edit
+  # /accounts/:id/edit
   def edit
     @account = Account.find(params[:id])
   end
 
-  # POST /accounts
-  # POST /accounts.xml
   def create
     @account = Account.new(params[:account])
 
@@ -126,8 +107,7 @@ class AccountsController < ApplicationController
     end
   end
 
-  # PUT /accounts/1
-  # PUT /accounts/1.xml
+  # /accounts/:id/update
   def update
     @account = Account.find(params[:id])
 
@@ -141,8 +121,6 @@ class AccountsController < ApplicationController
     end
   end
 
-  # DELETE /accounts/1
-  # DELETE /accounts/1.xml
   def destroy
     @account = Account.find(params[:id])
     @account.destroy
@@ -152,15 +130,17 @@ class AccountsController < ApplicationController
     end
   end
 
+  # /accounts/:id/report
   def report
     @account = Account.find(params[:id])
     Time.zone = @account.time_zone
 
     respond_to do |format|
-      format.html # show.html.erb
+      format.html
     end
   end
   
+  # /accounts/:id/report/client /.pdf
   def report_client
     @account = Account.find(params[:id])
     Time.zone = @account.time_zone
