@@ -25,6 +25,11 @@ gem 'searchlogic',  '2.4.27'
 gem 'pdfkit',  '0.4.6'
 gem 'fastercsv',  '1.5.3'
 gem 'twiliolib',  '2.0.7'
-gem "cancan",  '1.4.1'
-gem "json", '1.4.6'
-gem "xmlparser", '0.6.81'
+gem 'cancan',  '1.4.1'
+gem 'json', '1.4.6'
+gem 'xmlparser', '0.6.81'
+
+group :development do
+	gem 'cucumber'
+	gem 'mocha'
+end
