@@ -231,6 +231,26 @@ class Campaign < ActiveRecord::Base
   def self.determine_totals_for(campaigns, messages, start_date = Date.yesterday, end_date = Date.yesterday)
     messages.inject({}) { |results, message| results[message] = campaigns.sum { |campaign| campaign.send(message, start_date, end_date) } ; results }
   end
+  
+  def self.weighted_cost_per_lead_for(campaigns, start_date = Date.yesterday, end_date = Date.yesterday)
+    weighted_total = 0.0
+    total_weight = 0.0
+    campaigns.each do |campaign|
+      total_weight += (weight = campaign.number_of_total_leads_between(start_date, end_date))
+      weighted_total += (campaign.cost_per_lead_between(start_date, end_date) * weight)
+    end
+    total_weight > 0 ? weighted_total / total_weight : 0.0 
+  end
+
+  def self.weighted_cost_per_contact_for(campaigns, start_date = Date.yesterday, end_date = Date.yesterday)
+    weighted_total = 0.0
+    total_weight = 0.0
+    campaigns.each do |campaign|
+      total_weight += (weight = campaign.number_of_total_contacts_between(start_date, end_date))
+      weighted_total += (campaign.cost_per_contact_between(start_date, end_date) * weight)
+    end
+    total_weight > 0 ? weighted_total / total_weight : 0.0 
+  end
 
 
   # INSTANCE BEHAVIOR
