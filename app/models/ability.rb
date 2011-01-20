@@ -15,6 +15,10 @@ class Ability
         can :read, Campaign do |campaign|
           user.acquainted_accounts.collect(&:campaigns).flatten.include?(campaign)
         end
+        
+        can :refresh_accounts, Account
+        can :export, Account
+        can :report_client, Account
       end 
       
       if user.account_user?

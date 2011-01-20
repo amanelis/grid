@@ -1,9 +1,24 @@
+:javascript
+  jQuery.ajaxSetup({
+    'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")}
+  })
+
+  $(function() {
+    //setTimeout(updateActivity, 5000);
+  });
+
+  function updateActivity() {
+    var after = $("#activities tbody tr").attr("data-time");
+    $.getScript("/activities.js?after=" + after)
+    setTimeout(updateActivity, 5000);
+  }
+
 %header
   %p.right
     = render :partial => 'shared/links'
   %h3
     = "Accounts (#{@accounts.count})"
-  %h4.quiet= 'For ' + (Date.yesterday - 1.week).to_s(:long) + ' to ' + Date.yesterday.to_s(:long)
+  %h4.quiet= 'For ' + (Date.yesterday.beginning_of_month).to_s(:long) + ' to ' + Date.yesterday.to_s(:long)
 %article
   %form{:href => '/', :action => "accounts", :id => 'index', :name => 'index', :method => 'GET'}
     %label

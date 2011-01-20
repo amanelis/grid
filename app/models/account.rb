@@ -32,7 +32,7 @@ class Account < ActiveRecord::Base
   # CLASS BEHAVIOR
 
   def self.cache_results_for_accounts
-    Rails.cache.write("admin_data", self.combined_timeline_data)
+    # Rails.cache.write("admin_data", self.combined_timeline_data)
     Rails.cache.write("accounts_data", self.get_accounts_data)
   end
 
@@ -45,10 +45,10 @@ class Account < ActiveRecord::Base
     self.active.inject({}) do |the_data, an_account|
       the_data[an_account.id] = {:name => an_account.name,
                                  :account_type => an_account.account_type,
-                                 :ctr => an_account.sem_click_through_rate_between(Date.yesterday - 1.week, Date.yesterday) * 100,
-                                 :leads => an_account.number_of_total_leads_between(Date.yesterday - 1.week, Date.yesterday),
-                                 :cpconv => an_account.cost_per_lead_between(Date.yesterday - 1.week, Date.yesterday),
-                                 :leads_by_day => an_account.number_of_total_leads_by_day_between(Date.yesterday - 1.week, Date.yesterday)}
+                                 :ctr => an_account.sem_click_through_rate_between(Date.yesterday.beginning_of_month, Date.yesterday) * 100,
+                                 :leads => an_account.number_of_total_leads_between(Date.yesterday.beginning_of_month, Date.yesterday),
+                                 :cpconv => an_account.cost_per_lead_between(Date.yesterday.beginning_of_month, Date.yesterday),
+                                 :leads_by_day => an_account.number_of_total_leads_by_day_between(Date.yesterday.beginning_of_month, Date.yesterday)}
       the_data
     end
   end

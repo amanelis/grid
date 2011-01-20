@@ -1,69 +1,78 @@
-:javascript
-  jQuery.ajaxSetup({
-    'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")}
-  })
+- if params[:q] == 'real'
+  :javascript
+    jQuery.ajaxSetup({
+      'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")}
+    })
 
-  $(function() {
-    setTimeout(updateActivity, 15000);
-  });
+    $(function() {
+      setTimeout(updateActivity, 25000);
+    });
 
-  function updateActivity() {
-    $.getScript("/activities.js")
-    setTimeout(updateActivity, 15000);
-  }
+    function updateActivity() {
+      var after = $("#activities tbody tr").attr("data-time");
+      $.getScript("/activities.js?after=" + after)
+      setTimeout(updateActivity, 25000);
+    }
+  - @activities = Activity.all(:conditions => ["timestamp > ?", Time.at(params[:after].to_i + 1)], :limit => 10)
+  %header
+    %h3 Activity
+  %article
+    %h3 Phone Calls
+    =# link_to "Standard Feed", activities_path
+    %table#activities
+      %thead
+        %tr
+          %th Campaign
+          %th Caller
+          %th Status
+          %th Recording
+          %th Review
+          %th Time
+      %tbody
+        - for activity in @activities
+          = render activity
+    %h2 Form Submissions
+    %table
+      %thead
+        %tr
+          %th Campaign
+          %th Caller
+          %th Status
+          %th Recording
+          %th Review
+          %th Time
+      %tbody
+        -#= render :partial => "shared/activity_submission", :locals => { :activity => activity.activity_type }
 
-%header
-  .right= will_paginate(@activities)
-  %h3 Activity
-%article
-  %h3 Phone Calls
-  %table#activities
-    %thead
-      %tr
-        %th Campaign
-        %th Caller
-        %th Status
-        %th Recording
-        %th Review
-        %th Time
-    %tbody
-      -@activities.each do |activity|
-        -if activity.is_call?
-          %tr{:id => "#{activity.timestamp.to_i}"}
-            %td.campaign= link_to activity.activity_type.phone_number.campaign.name, campaign_path(activity.activity_type.phone_number.campaign)
-            %td.caller
-              =number_to_phone(activity.activity_type.caller_number)
-              ="(#{activity.activity_type.caller_name})"
-            %td.status= "#{activity.activity_type.call_status} (#{(activity.activity_type.call_end - activity.activity_type.call_start).to_int} seconds)"
-            %td.recording
-              -if activity.activity_type.recorded? && activity.activity_type.recording?
-                = link_to('Listen', activity.activity_type.recording.expiring_url(14400))
-                = mp3_player "#{activity.activity_type.recording.expiring_url(14400)}", :bg => "EEEEEE", :track => "EEEEEE", :slider => "222222", :loader => "EEEEEE"
-              -else
-                N/A
-            %td.review
-              - if activity.duplicate?
-                = "Duplicate Call"
-              -else
-                - form_for activity.activity_type, :url => activity_path(activity.activity_type.activity) do |f|
-                  = f.select(:review_status, (activity.activity_type.review_status_options))
-                  = f.submit(:update)
-            %td.time
-              -activity_time_zone = activity.activity_type.phone_number.campaign.account.time_zone
-              =time_ago_in_words(activity.activity_type.call_start)
-              -#+ " ago at " + activity.activity_type.call_start.in_time_zone(activity_time_zone).to_s(:time) + " " + activity_time_zone
-        %div.activities
-          
-
-  %h2 Form Submissions
-  %table
-    %thead
-      %tr
-        %th Campaign
-        %th Caller
-        %th Status
-        %th Recording
-        %th Review
-        %th Time
-    %tbody
-      -#= render :partial => "shared/activity_submission", :locals => { :activity => activity.activity_type }
+- if params[:q].blank?
+  - @activities = Activity.paginate(:page => (params[:page] || 1), :order => 'timestamp DESC', :limit => 10)
+  %header
+    .right= will_paginate(@activities)
+    %h3 Activity
+  %article
+    %h3 Phone Calls
+    =# link_to "Real Time", "/activities?q=real"
+    %table#activities
+      %thead
+        %tr
+          %th Campaign
+          %th Caller
+          %th Status
+          %th Recording
+          %th Review
+          %th Time
+      %tbody
+        - for activity in @activities
+          = render activity
+    %h2 Form Submissions
+    %table
+      %thead
+        %tr
+          %th Campaign
+          %th Caller
+          %th Status
+          %th Recording
+          %th Review
+          %th Time
+      %tbody
+        -#= render :partial => "shared/activity_submission", :locals => { :activity => activity.activity_type }

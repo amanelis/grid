@@ -81,6 +81,9 @@ class AccountsController < ApplicationController
       dates = params[:daterange].split(' to ') || params[:daterange].split(' - ')
       @date_range = params[:daterange]
       
+      @managed_campaigns    = @account.campaigns.cityvoice.sort! { |a,b| a.name <=> b.name }
+      @unmanaged_campaigns  = @account.campaigns.unmanaged.sort! { |a,b| a.name <=> b.name }
+      
       begin 
         @start_date = Date.parse(dates[0])
         @end_date = Date.parse(dates[1])
@@ -88,14 +91,9 @@ class AccountsController < ApplicationController
         @start_date = Date.today.beginning_of_month
         @end_date = Date.yesterday
         flash[:error] = "Your date was incorrect, we set it back to #{@start_date} to #{@end_date}"
+        redirect_to account_path(params[:id])
       end
       
-      @managed_campaigns    = @account.campaigns.cityvoice.sort! { |a,b| a.name <=> b.name }
-      @unmanaged_campaigns  = @account.campaigns.unmanaged.sort! { |a,b| a.name <=> b.name }
-
-      respond_to do |format|
-        format.html # show.html.erb
-      end
     end
     
   end
@@ -214,11 +212,7 @@ class AccountsController < ApplicationController
     flash[:notice] = "Accounts reloaded!"
     redirect_to :action => "index"
   end
-  
-  
-  # This function right now is VERY BASIC feature of exporting data to csv
-  # for account managers, more options and sorting will be implemented as 
-  # dev continues
+
   def export
     @accounts = Account.find(:all, :order => "name")
     @outfile  = "accounts_" + Time.now.strftime("%m-%d-%Y") + ".csv"

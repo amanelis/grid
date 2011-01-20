@@ -165,12 +165,12 @@ class Call < ActiveRecord::Base
     call.fetch_call_recording
   end
   
-  def self.fetch_twilio_recording(callsid = 'CA4ba7830e9644f55d9edd79251e711529')
+  def self.fetch_twilio_recording(callsid = 'CA0ae8ca05f42f14248d89a202cc9001be')
     call = Call.find_by_call_id(callsid)
     call.fetch_twilio_recording
   end
   
-  def self.get_twilio_call(callsid = 'CA457c1285b3b7ac59620fa2c36883b2ea')
+  def self.get_twilio_call(callsid = 'CA0ae8ca05f42f14248d89a202cc9001be')
     account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
     resp = account.request("/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/Calls/#{callsid}.json", 'GET')
     return resp.error! unless resp.kind_of? Net::HTTPSuccess
@@ -237,7 +237,7 @@ class Call < ActiveRecord::Base
     end
   end
   
-  def fetch_twilio_call_recording(hard_update = false)
+  def fetch_twilio_recording(hard_update = false)
     ##Get the recording ID
     account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
     resp = account.request("/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/Calls/#{self.call_id}/Recordings.json", 'GET')
@@ -247,8 +247,8 @@ class Call < ActiveRecord::Base
     if resp.code == '200'
       results = JSON.parse(resp.body)['recordings']
       File.open("#{RAILS_ROOT}/tmp/#{self.call_id}.mp3", "a+") {|f| f.write(HTTParty.get("https://api.twilio.com/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/Recordings/#{results.last['sid']}"))}
-      self.recording = File.open("#{RAILS_ROOT}/tmp/#{call_id}.mp3")
-      File.delete("#{RAILS_ROOT}/tmp/#{call_id}.mp3") if save!
+      self.recording = File.open("#{RAILS_ROOT}/tmp/#{self.call_id}.mp3")
+      File.delete("#{RAILS_ROOT}/tmp/#{self.call_id}.mp3") if save!
     end
   end
   

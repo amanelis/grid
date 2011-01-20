@@ -20,3 +20,11 @@ module GridDateInflections
 end
 
 Date.send(:include, GridDateInflections)
+
+module GridTwilioInflections
+  class Twilio::Dial
+    attributes :record
+  end
+end
+
+Twilio::Dial.send(:include, GridTwilioInflections)

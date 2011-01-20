@@ -12,7 +12,7 @@ to setup your database and migrations. If your migrations fail try switching to 
 
 == Pulling Data
 After you fully get setup and you can run the server and/or console and get NO error messages on either after startup. If so you are ready to pull some data for your database. Don't forget to run your migrations, but remember these cannot fail or you cannot continue with proper functionality of the application. At this point go ahead and startup the console for the Grid application and you can start a giant data pull from salesforce by executing this command:
-  Account.pull_all_data_migrations
+  GroupAccount.pull_all_data_migrations
 This takes a very long time so be patient grab a cup of tea. If this fails (which you will know after about 2 seconds) then the appropriate error message should be able to tell you the exact problem, but if you can start up the console and get no errors then this task will most likely succeed. The most common error with pulling data we have seen has been with the daemons gem, just make sure you only have one version installed and your pull should be successfull
 
 == Administrator
