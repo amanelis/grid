@@ -1,6 +1,35 @@
-%h3 Create Campaign
+#create.span-8.append-1
+  %h3 Create Campaign
 
-%label Name
-%br
-%input.title{:type => "text"}
-%br
+  %label Name
+  %br
+  %input.text{:type => "text", :placeholder => "CityVoice"}
+  %br
+  %label Industry
+  %br
+  %input.text{:type => "text", :placeholder => "Plumbing"}
+  %br
+  %label URL
+  %br
+  %input.text{:type => "text", :placeholder => "http://"}
+  %br
+  %label Area Code
+  %br
+  %input.text{:type => "text", :placeholder => "210"}
+  %br
+  %label Forwarding Number
+  %br
+  %input.text{:type => "text", :placeholder => "210 844 6400"}
+  %br
+  %label Campaign Type
+  %br
+  %select#user_account
+    %option SEO
+    %option SEM
+    %option Maps
+    %option Other
+#campaign_type.span-12.last
+  %h3 Search Engine Optimization Campaign
+  %h3 Pay-per-click Campaign
+  %h3 Google Maps Campaign
+  %h3 Other Campaign

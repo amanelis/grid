@@ -179,8 +179,9 @@ article h3{
 	color:#8a1f11;
 }
 
-.unmanaged, .unmanaged td a{
-	color:#505050;
+.total td{
+	font-weight:bold;
+	border-top:black solid 2px;
 }
 /*
 	Date Picker
@@ -209,6 +210,10 @@ td a{
 font-size:1.2em;
 color:#000;
 text-decoration:none;
+}
+
+td{
+	line-height:2em;
 }
 
 td a:hover{

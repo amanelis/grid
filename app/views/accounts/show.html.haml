@@ -14,6 +14,7 @@
 %article
   
   %table
+    %caption CityVoice Managed
     %thead
       %tr
         %th Campaign Name (Click for Details)
@@ -28,8 +29,6 @@
         %th Cost Per Lead
         %th Cost Per Contact
     %tbody
-      %tr
-        %td.large.strong Managed
       - @managed_total_results = Campaign.determine_totals_for(@managed_campaigns, @total_reporting_messages, @start_date, @end_date)      
       - @managed_campaigns.each do |campaign|
         %tr
@@ -44,7 +43,7 @@
           %td= ActionController::Base.helpers.number_to_currency(campaign.spend_between(@start_date, @end_date))
           %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(@start_date, @end_date))
           %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_contact_between(@start_date, @end_date))
-      %tr.strong
+      %tr.total
         %td Total Managed:
         %td= @managed_total_results[@total_reporting_messages[0]].to_s
         %td= @managed_total_results[@total_reporting_messages[1]].to_s
@@ -56,12 +55,25 @@
         %td= ActionController::Base.helpers.number_to_currency(@managed_total_results[@total_reporting_messages[7]])
         %td= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_lead_for(@managed_campaigns, @start_date, @end_date))
         %td= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_contact_for(@managed_campaigns, @start_date, @end_date))
-      
+
+  %table
+    %caption Unmanaged
+    %thead
       %tr
-        %td.large.unmanaged Un-managed
+        %th Campaign Name (Click for Details)
+        %th Lead Calls
+        %th All Calls
+        %th Lead Forms
+        %th All Forms
+        %th Total Leads
+        %th Total Contacts
+        %th Cost
+        %th Spend (Marked-Up)
+        %th Cost Per Lead
+        %th Cost Per Contact
       - @unmanaged_total_results = Campaign.determine_totals_for(@unmanaged_campaigns, @total_reporting_messages, @start_date, @end_date) 
       - @unmanaged_campaigns.each do |campaign|
-        %tr.unmanaged
+        %tr
           %td{:class => "unmanaged"}= link_to campaign.name, campaign_path(campaign, :daterange => params[:daterange])
           %td= campaign.number_of_lead_calls_between(@start_date, @end_date).to_s
           %td= campaign.number_of_all_calls_between(@start_date, @end_date).to_s
@@ -73,7 +85,7 @@
           %td= ActionController::Base.helpers.number_to_currency(campaign.spend_between(@start_date, @end_date))
           %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(@start_date, @end_date))
           %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_contact_between(@start_date, @end_date))
-      %tr.unmanaged.strong
+      %tr.total
         %td Total Unmanaged
         %td= @unmanaged_total_results[@total_reporting_messages[0]].to_s
         %td= @unmanaged_total_results[@total_reporting_messages[1]].to_s

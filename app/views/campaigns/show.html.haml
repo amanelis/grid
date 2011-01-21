@@ -6,8 +6,9 @@
   $(function() {
   $( "#accordion" ).accordion({autoHeight: false, active: false, collapsible: true});
   });
-%header Add Campaign
-%article=render :partial => "layouts/nav"
+%header 
+  %h2 Add Campaign
+%article=render :partial => "campaigns/new"
 %header
   %p.right= render :partial => 'shared/lead_matrix'
   %h2 #{@campaign.name}
