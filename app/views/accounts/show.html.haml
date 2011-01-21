@@ -62,7 +62,7 @@
       - @unmanaged_total_results = Campaign.determine_totals_for(@unmanaged_campaigns, @total_reporting_messages, @start_date, @end_date) 
       - @unmanaged_campaigns.each do |campaign|
         %tr.unmanaged
-          %td= link_to campaign.name, campaign_path(campaign, :daterange => params[:daterange])
+          %td{:class => "unmanaged"}= link_to campaign.name, campaign_path(campaign, :daterange => params[:daterange])
           %td= campaign.number_of_lead_calls_between(@start_date, @end_date).to_s
           %td= campaign.number_of_all_calls_between(@start_date, @end_date).to_s
           %td= campaign.number_of_lead_submissions_between(@start_date, @end_date).to_s

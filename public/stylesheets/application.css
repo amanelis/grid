@@ -132,8 +132,14 @@ body{
 font-family: "proxima-nova-1","proxima-nova-2","Lucida Grande", "Helvetica Nueue", helvetica, sans-serif;
 }
 
-.strong{
+.strong, .strong td{
 	font-weight:bold;
+	font-size:1.2em;
+}
+
+.large{
+	font-size:2em;
+	line-height:1.2em;
 }
 
 nav a{
@@ -173,10 +179,9 @@ article h3{
 	color:#8a1f11;
 }
 
-.unmanaged {
+.unmanaged, .unmanaged td a{
 	color:#505050;
 }
-
 /*
 	Date Picker
 	------------------
@@ -202,7 +207,6 @@ article h3{
 */
 td a{
 font-size:1.2em;
-font-weight:bold;
 color:#000;
 text-decoration:none;
 }
