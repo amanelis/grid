@@ -34,12 +34,11 @@ class AccountsController < ApplicationController
   def show
     authorize! :read, @account
     
-    Time.zone = @account.time_zone    
+    Time.zone = @account.time_zone  
     @seo_campaign_timelines = @account.campaign_seo_combined_timeline_data
     @sem_campaign_timelines = @account.campaign_sem_combined_timeline_data
     @map_campaign_timelines = @account.campaign_map_combined_timeline_data
     @date_range = ''
-    
     @total_reporting_messages = [:number_of_lead_calls_between,
                                  :number_of_all_calls_between,
                                  :number_of_lead_submissions_between,
@@ -47,9 +46,7 @@ class AccountsController < ApplicationController
                                  :number_of_total_leads_between,     
                                  :number_of_total_contacts_between,  
                                  :cost_between,                      
-                                 :spend_between]         
-                                 
-                                 
+                                 :spend_between]             
                                  
     if params[:daterange].blank?
       @start_date = Date.today.beginning_of_month
@@ -82,6 +79,7 @@ class AccountsController < ApplicationController
 
   # /accounts/new
   def new
+    authorize! :create, @account
     @account = Account.new
 
     respond_to do |format|
@@ -91,10 +89,12 @@ class AccountsController < ApplicationController
 
   # /accounts/:id/edit
   def edit
+    authorize! :edit, @account
     @account = Account.find(params[:id])
   end
 
   def create
+    authorize! :create, @account
     @account = Account.new(params[:account])
 
     respond_to do |format|
@@ -109,6 +109,7 @@ class AccountsController < ApplicationController
 
   # /accounts/:id/update
   def update
+    authorize! :update, @account
     @account = Account.find(params[:id])
 
     respond_to do |format|
@@ -122,6 +123,7 @@ class AccountsController < ApplicationController
   end
 
   def destroy
+    authorize! :destroy, @account
     @account = Account.find(params[:id])
     @account.destroy
 
