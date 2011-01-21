@@ -8,10 +8,10 @@ class GroupAccount < ActiveRecord::Base
   # TESTING METHODS
   
   def self.print_account_structure
-    GroupAccount.all.each do |gaccount|
+    GroupAccount.all.sort {|a,b| a.name.downcase <=> b.name.downcase}.each do |gaccount|
       puts 'Group Account:' + gaccount.name
       accounts = gaccount.accounts
-      accounts.each do |account|
+      accounts.sort {|a,b| a.name.downcase <=> b.name.downcase}.each do |account|
         puts '------' + account.name
       end
     end
