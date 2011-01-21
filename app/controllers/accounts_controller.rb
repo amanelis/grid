@@ -4,12 +4,12 @@ class AccountsController < ApplicationController
   # /accounts
   def index
     authorize! :read, Account
-    
-    @passed_status = params[:account_status] ||= 'Active'
-    @passed_type = params[:account_type] ||= ''
     @accounts = current_user.acquainted_accounts
     @accounts_statuses = Account.account_statuses_for(@accounts)
     @accounts_types = Account.account_types_for(@accounts)
+    
+    @passed_status = params[:account_status] ||= 'Active'
+    @passed_type = params[:account_type] ||= ''
     
     if params[:account_status].present?
       @accounts = @accounts.select {|account| account.status == params[:account_status]}
@@ -33,12 +33,12 @@ class AccountsController < ApplicationController
   # /accounts/:id
   def show
     authorize! :read, @account
-    
     Time.zone = @account.time_zone  
+    @date_range = ''
+    
     @seo_campaign_timelines = @account.campaign_seo_combined_timeline_data
     @sem_campaign_timelines = @account.campaign_sem_combined_timeline_data
     @map_campaign_timelines = @account.campaign_map_combined_timeline_data
-    @date_range = ''
     @total_reporting_messages = [:number_of_lead_calls_between,
                                  :number_of_all_calls_between,
                                  :number_of_lead_submissions_between,
@@ -71,8 +71,11 @@ class AccountsController < ApplicationController
       rescue
         @start_date = Date.today.beginning_of_month
         @end_date = Date.yesterday
-        flash[:error] = "Your date entered was incorrect, we set it back to <strong>#{@start_date} to #{@end_date}</strong> for you."
-        redirect_to account_path(params[:id])
+        flash[:error] = "The date you entered was incorrect, we set it back to <strong>#{(@start_date).to_s(:long)} to #{@end_date.to_s(:long)}</strong> for you."
+        
+        respond_to do |format|
+          format.html { redirect_to account_path(params[:id]) }
+        end
       end 
     end
   end
@@ -175,7 +178,7 @@ class AccountsController < ApplicationController
     @accounts = Account.active.to_a
 
     respond_to do |format|
-      format.html # show.html.erb
+      format.html
     end
   end
   
@@ -186,7 +189,6 @@ class AccountsController < ApplicationController
     redirect_to account_path(params[:id])
   end
   
-  # Simple method to reload salesforce data, accounts/campaigns
   def refresh_accounts
     authorize! :refresh_accounts, Account
     GroupAccount.pull_salesforce_accounts
@@ -212,8 +214,8 @@ class AccountsController < ApplicationController
           account.account_type,
           account.salesforce_id
         ]
-      end # @accounts
-    end # csv_array
+      end 
+    end
     
     send_data csv_data,
       :type => 'text/csv; charset=iso-8859-1; header=present',
