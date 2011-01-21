@@ -98,31 +98,31 @@
                   %td= keyword.yahoo_ranking_change_between() 
                   %td= keyword.most_recent_bing_ranking() 
                   %td= keyword.bing_ranking_change_between()    
-    
-    %h3=link_to "Phone Numbers On Campaign", :href => "#"
-    #third_rung  
-      %article
-        %table
-          %thead
-            %tr
-              %th Name
-              %th Description
-              %th Number
-          %tbody
-            -@campaign.phone_numbers.each do |number|
+    - if can? :update, @campaign
+      %h3=link_to "Phone Numbers On Campaign", :href => "#"
+      #third_rung  
+        %article
+          %table
+            %thead
               %tr
-                %td= number.name
-                %td= number.descript
-                %td= number.inboundno
+                %th Name
+                %th Description
+                %th Number
+            %tbody
+              -@campaign.phone_numbers.each do |number|
+                %tr
+                  %td= number.name
+                  %td= number.descript
+                  %td= number.inboundno
 
-        %h5
-          - semantic_form_for @campaign, :url => campaign_path(@campaign) do |f| 
-            = f.semantic_errors :state
-            - f.inputs do
-              %br
-              = f.input :adopting_phone_number, :label => 'Add Orphaned Phone Number', :as => :select, :collection => PhoneNumber.selectable_orphaned_phone_numbers, :include_blank => true
-            - f.buttons do
-              = f.commit_button :update
+          %h5
+            - semantic_form_for @campaign, :url => campaign_path(@campaign) do |f| 
+              = f.semantic_errors :state
+              - f.inputs do
+                %br
+                = f.input :adopting_phone_number, :label => 'Add Orphaned Phone Number', :as => :select, :collection => PhoneNumber.selectable_orphaned_phone_numbers, :include_blank => true
+              - f.buttons do
+                = f.commit_button :update
     %h3=link_to "Submission Log (ID = #{@campaign.contact_form_id_string}, Emails: #{@campaign.contact_form_emails_string})", :href => "#"
     #fourth_rung  
       %article

@@ -1,5 +1,5 @@
 class WebsiteVisitsController < ApplicationController
-  before_filter :require_admin
+  load_and_authorize_resource
   
   def index
     @website_visit = WebsiteVisit.all

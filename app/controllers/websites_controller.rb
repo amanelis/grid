@@ -1,5 +1,5 @@
 class WebsitesController < ApplicationController
-  before_filter :require_admin
+  load_and_authorize_resource
   helper_method :sort_column, :sort_direction
   
   def index

@@ -33,6 +33,7 @@ class Ability
           user.acquainted_accounts.collect(&:campaigns).flatten.include?(campaign)
         end
         
+        can :read, Website
         can :report, Account
         can :report_client, Account
       end
