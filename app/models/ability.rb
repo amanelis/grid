@@ -32,6 +32,9 @@ class Ability
         can :lead_matrix, Campaign do |campaign|
           user.acquainted_accounts.collect(&:campaigns).flatten.include?(campaign)
         end
+        
+        can :report, Account
+        can :report_client, Account
       end
 
     end
