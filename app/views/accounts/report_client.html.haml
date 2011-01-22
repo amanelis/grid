@@ -81,6 +81,7 @@
   -if @account.campaigns.seo.present?
     %section#organic_campaigns
       %h3 Organic Campaigns Summary
+      .chart=high_chart("highcharts_organic_campaign", @organic_campaign_summary_graph)
       %table
         %thead
           %th Campaign Name
