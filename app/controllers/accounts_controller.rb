@@ -156,17 +156,31 @@ class AccountsController < ApplicationController
     @unmanaged_campaigns  = @account.campaigns.unmanaged.sort! { |a,b| a.name <=> b.name }
     
     
-    @h = HighChart.new('graph') do |f|
-      f.title({:text=>"Campaign Data Graph"}) 
+    @cost_per_lead_summary_graph = HighChart.new('graph') do |f|
+      f.title({:text=>"Managed Campaign Data Graph"}) 
       f.chart({:width=>"950"})      
       f.y_axis({:title=> {:text=> ''}, :labels=>{:rotation=>0, :align=>'right'} })
       f.x_axis(:categories => @account.campaigns.active.collect(&:name) , :labels=>{:rotation=>0 , :align => 'right'})
 
       f.options[:chart][:defaultSeriesType] = "bar"
-      f.series(:name=> 'Total Leads',     :data => @managed_campaigns.collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
+      f.series(:name=> 'Total Leads',      :data => @managed_campaigns.collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
       #f.series(:name=> 'Calls',           :data => @managed_campaigns.collect {|campaign| campaign.number_of_lead_calls_between(@month_start, @month_end) })
       #f.series(:name=> 'Forms',           :data => @managed_campaigns.collect {|campaign| campaign.number_of_lead_submissions_between(@month_start, @month_end) })
       #f.series(:name=> 'Total Contacts',  :data => @managed_campaigns.collect {|campaign| campaign.number_of_total_contacts_between(@month_start, @month_end) })
+    end
+    
+    @pay_per_click_summary_graph = HighChart.new('graph') do |f|
+      f.title({:text=>"Pay Per Click Graph"}) 
+      f.chart({:width=>"950"})      
+      f.y_axis({:title=> {:text=> ''}, :labels=>{:rotation=>0, :align=>'right'} })
+      f.x_axis(:categories => @account.campaigns.sem.active.collect(&:name) , :labels=>{:rotation=>0 , :align => 'right'})
+
+      f.options[:chart][:defaultSeriesType] = "bar"
+      
+#################################################################################################
+      #### THis graph is not done, need to be pulling the SEM campaign.number_of_total_leads....
+      f.series(:name=> 'Total Leads',     :data => @managed_campaigns.collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
+#################################################################################################
     end
     
     respond_to do |format|

@@ -1,15 +1,11 @@
 %header
   .right
     %h2
-      $
-      %span= @account.total_revenue_between(@month_start, @month_end)
-      in Revenue
+      %span= "$#{@account.total_revenue_between(@month_start, @month_end)} in Revenue"
     %h3
-      %span= @account.number_of_total_contacts_between(@month_start, @month_end)
-      Contacts
+      %span= "#{@account.number_of_total_contacts_between(@month_start, @month_end)} Contacts"
     %h3
-      %span= @account.number_of_total_leads_between(@month_start, @month_end)
-      Leads
+      %span= "#{@account.number_of_total_leads_between(@month_start, @month_end)} Leads"
   %h1= @account.name
   %h2 CityVoice Monthly Report
   %p= @month_start.to_s(:long) + ' to ' + @month_end.to_s(:long)
@@ -17,7 +13,7 @@
   -if @account.campaigns.present?
     .span-24.last
       %h3 Cost Per Lead Summary - Managed Campaigns
-      .chart=high_chart("highcharts", @h)
+      .chart=high_chart("highcharts_cost_per_lead", @cost_per_lead_summary_graph)
       %table#cpl
         %thead
           %th Campaign Name
@@ -53,6 +49,7 @@
   -if @account.campaigns.sem.present?
     %section#pay_per_click
       %h3 Pay Per Click Summary
+      .chart=high_chart("highcharts_pay_per_click", @pay_per_click_summary_graph)
       %table
         %thead
           %th Campaign Name
