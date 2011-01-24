@@ -62,7 +62,7 @@ class AccountsController < ApplicationController
         f.x_axis(:categories => @managed_campaigns.collect(&:name) , :labels=>{:rotation=>0 , :align => 'right'})
 
         f.options[:chart][:defaultSeriesType] = "bar"
-        f.series(:name=> 'Total Leads',       :data => @managed_campaigns.collect {|campaign| campaign.cost_per_lead_between(@start_date, @end_date) })
+        f.series(:name=> 'Total Leads',       :data => @managed_campaigns.collect {|campaign| campaign.number_of_total_leads_between(@start_date, @end_date) })
       end
       
       respond_to do |format|
