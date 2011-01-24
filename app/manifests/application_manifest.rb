@@ -73,8 +73,8 @@ class ApplicationManifest < Moonshine::Manifest::Rails
       cron 'add_websites', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} Website.add_websites", :user => configuration[:user], :minute => 1, :hour => 23
       cron 'data_pull_websites_visits', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} WebsiteVisit.data_pull_websites_visits", :user => configuration[:user], :minute => 45, :hour => '*'
       cron 'update_keywords_from_salesforce', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} Keyword.update_keywords_from_salesforce", :user => configuration[:user], :minute => 31, :hour => 22
-      cron 'update_keyword_rankings', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} Keyword.update_keyword_rankings", :user => configuration[:user], :minute => 1, :hour => 1
-      cron 'update_inbound_links', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} SeoCampaign.update_inbound_links", :user => configuration[:user], :minute => 1, :hour => 2
+      cron 'update_keyword_rankings', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} Keyword.update_keyword_rankings", :user => configuration[:user], :minute => 1, :hour => 1, :ensure => :absent
+      cron 'update_inbound_links', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} SeoCampaign.update_inbound_links", :user => configuration[:user], :minute => 1, :hour => 2, :ensure => :absent
       cron 'clean_up_inbound_links', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} SeoCampaign.clean_up_inbound_links", :user => configuration[:user], :minute => 31, :hour => 2
       cron 'update_website_analyses', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} SeoCampaign.update_website_analyses", :user => configuration[:user], :minute => 1, :hour => 3
       cron 'update_map_keywords_from_salesforce', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} MapKeyword.update_keywords_from_salesforce", :user => configuration[:user], :minute => 1, :hour => 4
