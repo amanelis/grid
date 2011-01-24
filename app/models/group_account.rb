@@ -69,7 +69,7 @@ class GroupAccount < ActiveRecord::Base
         cityvoice_group_account.salesforce_id = sf_cityvoice_account.id
         cityvoice_group_account.name = sf_cityvoice_account.name
         cityvoice_group_account.status = sf_cityvoice_account.account_status__c
-        cityvoice_group_account.save
+        cityvoice_group_account.save!
       end
         
       sf_accounts = Salesforce::Account.find(:all, :conditions => ['account_status__c != ?', ''])
@@ -118,7 +118,7 @@ class GroupAccount < ActiveRecord::Base
           end
         end
         
-        existing_account.save
+        existing_account.save!
       end
     rescue Exception => ex
       job_status.finish_with_errors(ex)
@@ -137,7 +137,7 @@ class GroupAccount < ActiveRecord::Base
        end
        existing_account.name = sf_reseller_account.name
        existing_account.status = sf_reseller_account.account_status__c
-       existing_account.save
+       existing_account.save!
      end
    end
          

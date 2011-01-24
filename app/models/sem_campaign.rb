@@ -52,7 +52,7 @@ class SemCampaign < ActiveRecord::Base
       new_report.pulled_on = date.strftime("%m/%d/%Y")
       new_report.provider = 'Google'
       new_report.report_type = ALL_CAMPAIGN_REPORT_TYPE
-      new_report.save
+      new_report.save!
 
       adwords = AdWords::API.new(AdWords::AdWordsCredentials.new({'developerToken' => 'HC3GEwJ4LqgyVNeNTenIVw', 'applicationToken' => '-o8E21xqBmVx7CkQ5TfAag', 'useragent' => 'Biz Search Local', 'password' => 'brayden11', 'email' => 'bizsearchlocal.jon@gmail.com', 'clientEmail' => 'bizsearchlocal.jon@gmail.com', 'environment' => 'PRODUCTION', }))
       report_name = "All Campaigns- " + date.year.to_s + "-" + date.month.to_s + "-" + date.day.to_s
@@ -91,12 +91,12 @@ class SemCampaign < ActiveRecord::Base
                 end
                 client.timezone = row['timezone']
                 client.reference_id = row['customerid']
-                client.save
+                client.save!
               end
               google_sem_campaign.name = row['campaign']
               google_sem_campaign.status = row['campStatus']
               google_sem_campaign.campaign_type = row['adwordsType']
-              google_sem_campaign.save
+              google_sem_campaign.save!
 
               #Add the Campaign Summary
               adwords_campaign_summary = AdwordsCampaignSummary.find_by_google_sem_campaign_id_and_report_date(google_sem_campaign.id, date)
@@ -121,11 +121,11 @@ class SemCampaign < ActiveRecord::Base
               adwords_campaign_summary.lost_imp_share_budget = row['lostImpShareBudget']
               adwords_campaign_summary.lost_imp_share_rank = row['lostImpShareRank']
               adwords_campaign_summary.clicks = row['clicks']
-              adwords_campaign_summary.save
+              adwords_campaign_summary.save!
 
             rescue => e
               new_report.result = "Error Occurred"
-              new_report.save
+              new_report.save!
               puts "Error updating campaign-level report: #{ e }"
               next
             end
@@ -133,14 +133,14 @@ class SemCampaign < ActiveRecord::Base
         end
       rescue AdWords::Error::Error => e
         new_report.result = "Error Occurred"
-        new_report.save
+        new_report.save!
         puts "Error updating campaign-level report: #{ e }"
       end
 
       if new_report.result == 'Started'
         new_report.job_id = job_id
         new_report.result = 'Completed'
-        new_report.save
+        new_report.save!
         puts 'Completed adding campaign-level report at ' + Time.now.to_s
       else
         SemCampaignReportStatus.delete(new_report.id)
@@ -162,7 +162,7 @@ class SemCampaign < ActiveRecord::Base
       new_report.pulled_on = date.strftime("%m/%d/%Y")
       new_report.provider = 'Google'
       new_report.report_type = ALL_AD_REPORT_TYPE
-      new_report.save
+      new_report.save!
 
       adwords = AdWords::API.new(AdWords::AdWordsCredentials.new({'developerToken' => 'HC3GEwJ4LqgyVNeNTenIVw', 'applicationToken' => '-o8E21xqBmVx7CkQ5TfAag', 'useragent' => 'Biz Search Local', 'password' => 'brayden11', 'email' => 'bizsearchlocal.jon@gmail.com', 'clientEmail' => 'bizsearchlocal.jon@gmail.com', 'environment' => 'PRODUCTION', }))
       report_name = "All Ad- " + date.year.to_s + "-" + date.month.to_s + "-" + date.day.to_s
@@ -201,12 +201,12 @@ class SemCampaign < ActiveRecord::Base
                 end
                 client.timezone = row['timezone']
                 client.reference_id = row['customerid']
-                client.save
+                client.save!
               end
               google_sem_campaign.name = row['campaign']
               google_sem_campaign.status = row['campStatus']
               google_sem_campaign.campaign_type = row['adwordsType']
-              google_sem_campaign.save
+              google_sem_campaign.save!
 
               #Add or Update the Ad Group
               adgroup = AdwordsAdGroup.find_by_reference_id(row["adgroupid"])
@@ -216,7 +216,7 @@ class SemCampaign < ActiveRecord::Base
                 adgroup.reference_id = row["adgroupid"]
               end
               adgroup.status = row["agStatus"]
-              adgroup.save
+              adgroup.save!
 
               #Add or Update the Keyword
               keyword = AdwordsKeyword.find_by_reference_id(row["keywordid"])
@@ -229,7 +229,7 @@ class SemCampaign < ActiveRecord::Base
               keyword.dest_url = row["kwDestUrl"]
               keyword.status = row["kwStatus"]
               keyword.keyword_type = row["kwType"]
-              keyword.save
+              keyword.save!
 
               #Add or Update the Ad
               ad = AdwordsAd.find_by_reference_id(row["creativeid"])
@@ -249,7 +249,7 @@ class SemCampaign < ActiveRecord::Base
               ad.hosting_key = row["hostingKey"]
               ad.preview = row["preview"]
               ad.vis_url = row["creativeVisUrl"]
-              ad.save
+              ad.save!
 
               #Add the Ad Summary
               adword = AdwordsAdSummary.find_by_adwords_ad_id_and_adwords_keyword_id_and_summary_date(ad.id, keyword.id, date)
@@ -303,11 +303,11 @@ class SemCampaign < ActiveRecord::Base
               adword.conv_rate = row["convRate"]
               adword.cost_per_conv = row["costPerConv"]
               adword.clicks = row["clicks"]
-              adword.save
+              adword.save!
 
             rescue => e
               new_report.result = "Error Occurred"
-              new_report.save
+              new_report.save!
               puts "Error updating ad-level report: #{ e }"
               next
             end
@@ -315,14 +315,14 @@ class SemCampaign < ActiveRecord::Base
         end
       rescue AdWords::Error::Error => e
         new_report.result = "Error Occurred"
-        new_report.save
+        new_report.save!
         puts "Error updating ad-level report: #{ e }"
       end
 
       if new_report.result == 'Started'
         new_report.job_id = job_id
         new_report.result = 'Completed'
-        new_report.save
+        new_report.save!
         puts 'Completed adding ad-level report at ' + Time.now.to_s
       else
         SemCampaignReportStatus.delete(new_report.id)
@@ -352,7 +352,7 @@ class SemCampaign < ActiveRecord::Base
         new_report.pulled_on = date.strftime('%m/%d/%Y')
         new_report.provider = 'Google'
         new_report.report_type = CAMPAIGN_REPORT_TYPE
-        new_report.save
+        new_report.save!
         begin
           adwords = AdWords::API.new(AdWords::AdWordsCredentials.new({'developerToken' => self.developer_token, 'applicationToken' => self.application_token, 'useragent' => self.user_agent, 'password' => self.password, 'email' => self.email, 'clientEmail' => self.client_email, 'environment' => 'PRODUCTION', }))
           report_name = self.name + ': ' + date.year.to_s + '-' + date.month.to_s + '-' + date.day.to_s
@@ -417,14 +417,14 @@ class SemCampaign < ActiveRecord::Base
                 end
                 adwords_client.timezone = row['timezone']
                 adwords_client.reference_id = row['customerid']
-                adwords_client.save
+                adwords_client.save!
 
                 #Add or Update the Campaign
                 google_sem_campaign = GoogleSemCampaign.find_by_reference_id(row['campaignid'])
                 google_sem_campaign.name = row['campaign']
                 google_sem_campaign.status = row['campStatus']
                 google_sem_campaign.campaign_type = row['adwordsType']
-                google_sem_campaign.save
+                google_sem_campaign.save!
 
                 adwords_campaign_summary = AdwordsCampaignSummary.find_by_google_sem_campaign_id_and_report_date(google_sem_campaign.id, date)
                 if adwords_campaign_summary.blank?
@@ -448,10 +448,10 @@ class SemCampaign < ActiveRecord::Base
                 adwords_campaign_summary.lost_imp_share_budget = row['lostImpShareBudget']
                 adwords_campaign_summary.lost_imp_share_rank = row['lostImpShareRank']
                 adwords_campaign_summary.clicks = row['clicks']
-                adwords_campaign_summary.save
+                adwords_campaign_summary.save!
               rescue => e
                 new_report.result = 'Error Occurred'
-                new_report.save
+                new_report.save!
                 puts "Error updating campaign-level report: #{ e }"
                 next
               end
@@ -462,13 +462,13 @@ class SemCampaign < ActiveRecord::Base
           puts "Time to run: #{time12 - time11} seconds"
         rescue AdWords::Error::Error => e
           new_report.result = 'Error Occurred'
-          new_report.save
+          new_report.save!
           puts "Error updating campaign-level report: #{ e }"
         end
         if new_report.result == 'Started'
           new_report.job_id = job_id
           new_report.result = 'Completed'
-          new_report.save
+          new_report.save!
           puts 'Completed adding campaign-level report at ' + Time.now.to_s
         else
           SemCampaignReportStatus.delete(new_report.id)
@@ -497,7 +497,7 @@ class SemCampaign < ActiveRecord::Base
         new_report.pulled_on = date.strftime("%m/%d/%Y")
         new_report.provider = 'Google'
         new_report.report_type = AD_REPORT_TYPE
-        new_report.save
+        new_report.save!
 
         adwords = AdWords::API.new(AdWords::AdWordsCredentials.new({'developerToken' => campaign.developer_token, 'applicationToken' => campaign.application_token, 'useragent' => campaign.user_agent, 'password' => campaign.password, 'email' => campaign.email, 'clientEmail' => campaign.client_email, 'environment' => 'PRODUCTION', }))
         report_name = "Ad- " + self.name + date.year.to_s + "-" + date.month.to_s + "-" + date.day.to_s
@@ -531,14 +531,14 @@ class SemCampaign < ActiveRecord::Base
                 end
                 client.timezone = row['timezone']
                 client.reference_id = row['customerid']
-                client.save
+                client.save!
 
                 #Add or Update the Campaign
                 sem_campaign = GoogleSemCampaign.find_by_reference_id(row['campaignid'])
                 sem_campaign.name = row['campaign']
                 sem_campaign.status = row['campStatus']
                 sem_campaign.campaign_type = row['adwordsType']
-                sem_campaign.save
+                sem_campaign.save!
 
                 #Add or Update the Ad Group
                 adgroup = AdwordsAdGroup.find_by_reference_id(row["adgroupid"])
@@ -548,7 +548,7 @@ class SemCampaign < ActiveRecord::Base
                   adgroup.reference_id = row["adgroupid"]
                 end
                 adgroup.status = row["agStatus"]
-                adgroup.save
+                adgroup.save!
 
                 #Add or Update the Keyword
                 keyword = AdwordsKeyword.find_by_reference_id(row["keywordid"])
@@ -561,7 +561,7 @@ class SemCampaign < ActiveRecord::Base
                 keyword.dest_url = row["kwDestUrl"]
                 keyword.status = row["kwStatus"]
                 keyword.keyword_type = row["kwType"]
-                keyword.save
+                keyword.save!
 
                 #Add or Update the Ad
                 ad = AdwordsAd.find_by_reference_id(row["creativeid"])
@@ -581,7 +581,7 @@ class SemCampaign < ActiveRecord::Base
                 ad.hosting_key = row["hostingKey"]
                 ad.preview = row["preview"]
                 ad.vis_url = row["creativeVisUrl"]
-                ad.save
+                ad.save!
 
                 #Add the Ad Summary
                 adword = AdwordsAdSummary.find_by_adwords_ad_id_and_summary_date(ad.id, date)
@@ -634,11 +634,11 @@ class SemCampaign < ActiveRecord::Base
                 adword.conv_rate = row["convRate"]
                 adword.cost_per_conv = row["costPerConv"]
                 adword.clicks = row["clicks"]
-                adword.save
+                adword.save!
 
               rescue => e
                 new_report.result = "Error Occurred"
-                new_report.save
+                new_report.save!
                 puts "Error updating ad-level report: #{ e }"
                 next
               end
@@ -646,13 +646,13 @@ class SemCampaign < ActiveRecord::Base
           end
         rescue AdWords::Error::Error => e
           new_report.result = "Error Occurred"
-          new_report.save
+          new_report.save!
           puts "Error updating ad-level report: #{ e }"
         end
         if new_report.result == 'Started'
           new_report.job_id = job_id
           new_report.result = 'Completed'
-          new_report.save
+          new_report.save!
           puts 'Completed adding ad-level report at ' + Time.now.to_s
         else
           SemCampaignReportStatus.delete(new_report.id)
