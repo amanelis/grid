@@ -14,6 +14,7 @@
   #datepicker=render :partial => "shared/date_picker"
 %article
   %h3 CityVoice Managed
+  %p *Cost Per Contact - Spend / Total contacts (includes spam, hangups, etc.)
   %table.span-12.append-1
     %thead
       %tr
@@ -23,6 +24,7 @@
         %th Total
         %th Cost
         %th Cost Per Lead
+        %th Cost Per Contact*
     %tbody
       - @managed_total_results = Campaign.determine_totals_for(@managed_campaigns, @total_reporting_messages, @start_date, @end_date)      
       - @managed_campaigns.each do |campaign|
@@ -32,7 +34,8 @@
           %td= campaign.number_of_lead_submissions_between(@start_date, @end_date).to_s
           %td= campaign.number_of_total_leads_between(@start_date, @end_date).to_s
           %td= ActionController::Base.helpers.number_to_currency(campaign.cost_between(@start_date, @end_date))
-          %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(@start_date, @end_date)) 
+          %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(@start_date, @end_date))
+          %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_contact_between(@start_date, @end_date)) 
       %tr.total
         %td Total
         %td= @managed_total_results[@total_reporting_messages[0]].to_s
@@ -40,6 +43,7 @@
         %td= @managed_total_results[@total_reporting_messages[4]].to_s
         %td= ActionController::Base.helpers.number_to_currency(@managed_total_results[@total_reporting_messages[6]])
         %td= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_lead_for(@managed_campaigns, @start_date, @end_date))
+        %td= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_contact_for(@managed_campaigns, @start_date, @end_date)) 
   .span-10.last
     %p Graph GOES HUR
   %hr
