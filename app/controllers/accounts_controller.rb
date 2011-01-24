@@ -46,34 +46,17 @@ class AccountsController < ApplicationController
                                  :number_of_total_leads_between,     
                                  :number_of_total_contacts_between,  
                                  :cost_between,                      
-                                 :spend_between]             
+                                 :spend_between]  
+                                 
+    @managed_campaigns    = @account.campaigns.active.cityvoice.to_a.sort { |a,b| a.name <=> b.name }
+    @unmanaged_campaigns  = @account.campaigns.active.unmanaged.to_a.sort { |a,b| a.name <=> b.name }           
                                  
     if params[:daterange].blank?
       @start_date = Date.today.beginning_of_month
       @end_date = Date.yesterday
-      
-      @managed_campaigns    = @account.campaigns.active.cityvoice.sort { |a,b| a.name <=> b.name }
-      @unmanaged_campaigns  = @account.campaigns.active.unmanaged.sort { |a,b| a.name <=> b.name }
-      
-      @campaign_summary_graph = HighChart.new('graph') do |f|
-        f.title({:text=>"Campaign Summary"}) 
-        f.chart({:width=>"1800"})      
-        f.y_axis({:title=> {:text=> ''}, :labels=>{:rotation=>0, :align=>'right'} })
-        f.x_axis(:categories => @managed_campaigns.collect(&:name) , :labels=>{:rotation=>0 , :align => 'right'})
-
-        f.options[:chart][:defaultSeriesType] = "bar"
-        f.series(:name=> 'Total Leads',       :data => @managed_campaigns.collect {|campaign| campaign.number_of_total_leads_between(@start_date, @end_date) })
-      end
-      
-      respond_to do |format|
-        format.html 
-      end
     else
       dates = params[:daterange].split(' to ') || params[:daterange].split(' - ')
       @date_range = params[:daterange]
-      
-      @managed_campaigns    = @account.campaigns.active.cityvoice.sort { |a,b| a.name <=> b.name }
-      @unmanaged_campaigns  = @account.campaigns.active.unmanaged.sort { |a,b| a.name <=> b.name }
       
       begin 
         @start_date = Date.parse(dates[0])
@@ -87,15 +70,24 @@ class AccountsController < ApplicationController
           format.html { redirect_to account_path(params[:id]) }
         end
       end 
-      
     end
+    
+    @campaign_summary_graph = HighChart.new('graph') do |f|
+      f.title({:text=>"Campaign Summary"}) 
+      f.chart({:width=>"1800"})      
+      f.y_axis({:title=> {:text=> ''}, :labels=>{:rotation=>0, :align=>'right'} })
+      f.x_axis(:categories => @managed_campaigns.collect(&:name) , :labels=>{:rotation=>0 , :align => 'right'})
+
+      f.options[:chart][:defaultSeriesType] = "bar"
+      f.series(:name=> 'Total Leads',       :data => @managed_campaigns.collect {|campaign| campaign.number_of_total_leads_between(@start_date, @end_date) })
+    end
+    
   end
 
   # /accounts/new
   def new
     authorize! :create, @account
-    @account = Account.new
-
+    
     respond_to do |format|
       format.html
     end
@@ -104,13 +96,11 @@ class AccountsController < ApplicationController
   # /accounts/:id/edit
   def edit
     authorize! :edit, @account
-    @account = Account.find(params[:id])
   end
 
   def create
     authorize! :create, @account
-    @account = Account.new(params[:account])
-
+    
     respond_to do |format|
       if @account.save
         flash[:notice] = 'Account was successfully created.'
@@ -124,7 +114,6 @@ class AccountsController < ApplicationController
   # /accounts/:id/update
   def update
     authorize! :update, @account
-    @account = Account.find(params[:id])
 
     respond_to do |format|
       if @account.update_attributes(params[:account])
@@ -138,7 +127,6 @@ class AccountsController < ApplicationController
 
   def destroy
     authorize! :destroy, @account
-    @account = Account.find(params[:id])
     @account.destroy
 
     respond_to do |format|
@@ -160,13 +148,12 @@ class AccountsController < ApplicationController
   def report_client
     authorize! :read, @account
     Time.zone = @account.time_zone
+    
     @month_start = (Date.today - 1.month).beginning_of_month
     @month_end = (Date.today - 1.month).end_of_month
     
     @managed_campaigns    = @account.campaigns.active.cityvoice.to_a.sort { |a,b| a.name <=> b.name }
     @unmanaged_campaigns  = @account.campaigns.active.unmanaged.to_a.sort { |a,b| a.name <=> b.name }
-    
-    debugger
     
     @cost_per_lead_summary_graph = HighChart.new('graph') do |f|
       f.title({:text=>"Managed Campaign Graph"}) 
