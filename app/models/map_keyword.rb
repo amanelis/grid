@@ -82,7 +82,7 @@ class MapKeyword < ActiveRecord::Base
       if yahoo_campaign.present?
         yahoo_campaign.maps_url = yahoo_result[4]
         yahoo_campaign.reference_id = yahoo_result[6]
-        yahoo_campaign.save
+        yahoo_campaign.save!
       else
         self.maps_campaign.yahoo_maps_campaigns.build(:maps_url => yahoo_result[4],
                                                       :reference_id => yahoo_result[6])
@@ -91,7 +91,7 @@ class MapKeyword < ActiveRecord::Base
       if bing_campaign.present?
         bing_campaign.reference_id = bing_result[3]
         bing_campaign.maps_url = bing_result[1]
-        bing_campaign.save
+        bing_campaign.save!
       else
         self.maps_campaign.bing_maps_campaigns.build(:maps_url => bing_result[1],
                                                      :reference_id => bing_result[3])

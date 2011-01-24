@@ -26,7 +26,7 @@ class Website < ActiveRecord::Base
         existing_website.database_server = url["server"]
         existing_website.admin_sitekey = url["sitekey_admin"]
         existing_website.is_active = true
-        existing_website.save
+        existing_website.save!
       end
 
       sf_campaigns = Salesforce::Clientcampaign.all
@@ -37,8 +37,8 @@ class Website < ActiveRecord::Base
           if local_campaign.present?
             local_campaign.website = website
             #website.campaigns << local_campaign unless local_campaign.website.present?   website.campaigns.include?(local_campaign)
-            local_campaign.save
-            website.save
+            local_campaign.save!
+            website.save!
           end
         end
       end

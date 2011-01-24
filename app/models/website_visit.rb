@@ -154,7 +154,7 @@ class WebsiteVisit < ActiveRecord::Base
                   nurl.referrer_type = visit["referrer_type"]
                   nurl.visitor_id = visit["uid"]
                   nurl.time_of_visit = Time.at(visit["time"].to_i)
-                  nurl.save
+                  nurl.save!
                 else
                   nurl = WebsiteVisit.find_or_create_by_session_id_and_website_id(:session_id => visit["session_id"],
                                                                                 :website_id => website.id,
