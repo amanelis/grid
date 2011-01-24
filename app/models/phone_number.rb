@@ -153,7 +153,7 @@ class PhoneNumber < ActiveRecord::Base
   
   def orphan!
     self.campaign_id = Campaign.orphanage.id
-    self.save
+    self.save!
   end
 
   def number_of_answered_calls_between(start_date = Date.yesterday, end_date = Date.yesterday)
