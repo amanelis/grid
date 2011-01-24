@@ -52,8 +52,8 @@ class AccountsController < ApplicationController
       @start_date = Date.today.beginning_of_month
       @end_date = Date.yesterday
       
-      @managed_campaigns    = @account.campaigns.active.cityvoice.sort! { |a,b| a.name <=> b.name }
-      @unmanaged_campaigns  = @account.campaigns.active.unmanaged.sort! { |a,b| a.name <=> b.name }
+      @managed_campaigns    = @account.campaigns.active.cityvoice.sort { |a,b| a.name <=> b.name }
+      @unmanaged_campaigns  = @account.campaigns.active.unmanaged.sort { |a,b| a.name <=> b.name }
       
       @campaign_summary_graph = HighChart.new('graph') do |f|
         f.title({:text=>"Campaign Summary"}) 
@@ -72,8 +72,8 @@ class AccountsController < ApplicationController
       dates = params[:daterange].split(' to ') || params[:daterange].split(' - ')
       @date_range = params[:daterange]
       
-      @managed_campaigns    = @account.campaigns.active.cityvoice.sort! { |a,b| a.name <=> b.name }
-      @unmanaged_campaigns  = @account.campaigns.active.unmanaged.sort! { |a,b| a.name <=> b.name }
+      @managed_campaigns    = @account.campaigns.active.cityvoice.sort { |a,b| a.name <=> b.name }
+      @unmanaged_campaigns  = @account.campaigns.active.unmanaged.sort { |a,b| a.name <=> b.name }
       
       begin 
         @start_date = Date.parse(dates[0])
@@ -87,6 +87,7 @@ class AccountsController < ApplicationController
           format.html { redirect_to account_path(params[:id]) }
         end
       end 
+      
     end
   end
 
@@ -162,14 +163,16 @@ class AccountsController < ApplicationController
     @month_start = (Date.today - 1.month).beginning_of_month
     @month_end = (Date.today - 1.month).end_of_month
     
-    @managed_campaigns    = @account.campaigns.active.cityvoice.sort! { |a,b| a.name <=> b.name }
-    @unmanaged_campaigns  = @account.campaigns.active.unmanaged.sort! { |a,b| a.name <=> b.name }
+    @managed_campaigns    = @account.campaigns.active.cityvoice.to_a.sort { |a,b| a.name <=> b.name }
+    @unmanaged_campaigns  = @account.campaigns.active.unmanaged.to_a.sort { |a,b| a.name <=> b.name }
+    
+    debugger
     
     @cost_per_lead_summary_graph = HighChart.new('graph') do |f|
       f.title({:text=>"Managed Campaign Graph"}) 
       f.chart({:width=>"950"})      
       f.y_axis({:title=> {:text=> ''}, :labels=>{:rotation=>0, :align=>'right'} })
-      f.x_axis(:categories => @account.campaigns.active.collect(&:name) , :labels=>{:rotation=>0 , :align => 'right'})
+      f.x_axis(:categories => @managed_campaigns.collect(&:name) , :labels=>{:rotation=>0 , :align => 'right'})
 
       f.options[:chart][:defaultSeriesType] = "bar"
       f.series(:name=> 'Total Leads',       :data => @managed_campaigns.collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
@@ -179,7 +182,7 @@ class AccountsController < ApplicationController
       f.title({:text=>"Pay Per Click Graph"}) 
       f.chart({:width=>"950"})      
       f.y_axis({:title=> {:text=> ''}, :labels=>{:rotation=>0, :align=>'right'} })
-      f.x_axis(:categories => @account.campaigns.sem.active.collect(&:name) , :labels=>{:rotation=>0 , :align => 'right'})
+      f.x_axis(:categories => @managed_campaigns.select(&:is_sem?).collect(&:name) , :labels=>{:rotation=>0 , :align => 'right'})
 
       f.options[:chart][:defaultSeriesType] = "bar"
       f.series(:name=> 'Total Leads',       :data => @managed_campaigns.select(&:is_sem?).collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
@@ -189,11 +192,13 @@ class AccountsController < ApplicationController
       f.title({:text=>"Organic Campaign Graph"}) 
       f.chart({:width=>"950"})      
       f.y_axis({:title=> {:text=> ''}, :labels=>{:rotation=>0, :align=>'right'} })
-      f.x_axis(:categories => @account.campaigns.seo.active.collect(&:name) , :labels=>{:rotation=>0 , :align => 'right'})
+      f.x_axis(:categories => @managed_campaigns.select(&:is_seo?).collect(&:name) , :labels=>{:rotation=>0 , :align => 'right'})
 
       f.options[:chart][:defaultSeriesType] = "bar"
       f.series(:name=> 'Total Leads',       :data => @managed_campaigns.select(&:is_seo?).collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
     end
+    
+    
     
     respond_to do |format|
       format.html {render :layout => 'report'}
