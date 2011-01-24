@@ -39,10 +39,8 @@ class GroupAccount < ActiveRecord::Base
     # Keyword.update_keyword_rankings
     # puts "Updating Inbound Links"
     # SeoCampaign.update_inbound_links
-    puts "Cleaning Inbound Links"
-    SeoCampaign.clean_up_inbound_links
-    puts "Updating Website Analyses"
-    SeoCampaign.update_website_analyses
+?    # puts "Updating Website Analyses"
+    # SeoCampaign.update_website_analyses
     puts "Updating Map Keywords"
     MapKeyword.update_keywords_from_salesforce
     puts "Updating Map Keyword Rankings"
