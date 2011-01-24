@@ -55,6 +55,16 @@ class AccountsController < ApplicationController
       @managed_campaigns    = @account.campaigns.cityvoice.sort! { |a,b| a.name <=> b.name }
       @unmanaged_campaigns  = @account.campaigns.unmanaged.sort! { |a,b| a.name <=> b.name }
       
+      @campaign_summary_graph = HighChart.new('graph') do |f|
+        f.title({:text=>"Campaign Summary"}) 
+        f.chart({:width=>"1800"})      
+        f.y_axis({:title=> {:text=> ''}, :labels=>{:rotation=>0, :align=>'right'} })
+        f.x_axis(:categories => @managed_campaigns.collect(&:name) , :labels=>{:rotation=>0 , :align => 'right'})
+
+        f.options[:chart][:defaultSeriesType] = "bar"
+        f.series(:name=> 'Total Leads',       :data => @managed_campaigns.collect {|campaign| campaign.cost_per_lead_between(@start_date, @end_date) })
+      end
+      
       respond_to do |format|
         format.html 
       end
@@ -184,16 +194,6 @@ class AccountsController < ApplicationController
 
       f.options[:chart][:defaultSeriesType] = "bar"
       f.series(:name=> 'Total Leads',       :data => @managed_campaigns.select(&:is_seo?).collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
-    end
-    
-    @managed_campaign_summary_graph = HighChart.new('graph') do |f|
-      f.title({:text=>"Campaign Summary"}) 
-      f.chart({:width=>"1400"})      
-      f.y_axis({:title=> {:text=> ''}, :labels=>{:rotation=>0, :align=>'right'} })
-      f.x_axis(:categories => @managed_campaigns.collect(&:name) , :labels=>{:rotation=>0 , :align => 'right'})
-      
-      f.options[:chart][:defaultSeriesType] = "bar"
-      f.series(:name=> 'Total Leads',       :data => @managed_campaigns.collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
     end
     
     respond_to do |format|

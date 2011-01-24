@@ -15,6 +15,7 @@
   %h2= @account.name
   #datepicker=render :partial => "shared/date_picker"
 %article
+  %p=high_chart("managed_campaign_summary_graph", @campaign_summary_graph)
   %h3 CityVoice Managed
   %p *Cost Per Contact - Spend / Total contacts (includes spam, hangups, etc.)
   %table.span-12.append-1 
@@ -46,8 +47,6 @@
         %td= ActionController::Base.helpers.number_to_currency(@managed_total_results[@total_reporting_messages[6]])
         %td= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_lead_for(@managed_campaigns, @start_date, @end_date))
         %td= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_contact_for(@managed_campaigns, @start_date, @end_date)) 
-  .span-10.last
-    %p Graph GOES HUR
   %hr
   %h3 Unmanaged
   %table.span-23.last
