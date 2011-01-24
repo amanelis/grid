@@ -6,14 +6,15 @@
   .right 
     = render :partial => 'shared/links'
     - if @account.can_send_weekly_report_now?
-      = link_to "Send Email |", send_weekly_path(params[:id])
-    = link_to "Export Client PDF |", report_client_pdf_path(params[:id])
-    = link_to "View Client Report", report_client_path(params[:id]), :rel => "facebox"
+      = link_to "Send Email", send_weekly_path(params[:id])
+      |
+    = link_to "Export Client PDF", report_client_pdf_path(params[:id])
+    |
+    = link_to "View Client Report", report_client_path(params[:id])
   
   %h2= @account.name
   #datepicker=render :partial => "shared/date_picker"
 %article
-  
   %table
     %caption CityVoice Managed
     %thead

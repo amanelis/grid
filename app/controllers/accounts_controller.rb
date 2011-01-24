@@ -163,7 +163,7 @@ class AccountsController < ApplicationController
       f.x_axis(:categories => @account.campaigns.active.collect(&:name) , :labels=>{:rotation=>0 , :align => 'right'})
 
       f.options[:chart][:defaultSeriesType] = "bar"
-      f.series(:name=> 'Total Leads',      :data => @managed_campaigns.collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
+      f.series(:name=> 'Total Leads',       :data => @managed_campaigns.collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
     end
     
     @pay_per_click_summary_graph = HighChart.new('graph') do |f|
@@ -173,7 +173,7 @@ class AccountsController < ApplicationController
       f.x_axis(:categories => @account.campaigns.sem.active.collect(&:name) , :labels=>{:rotation=>0 , :align => 'right'})
 
       f.options[:chart][:defaultSeriesType] = "bar"
-      f.series(:name=> 'Total Leads', :data => @managed_campaigns.select(&:is_sem?).collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
+      f.series(:name=> 'Total Leads',       :data => @managed_campaigns.select(&:is_sem?).collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
     end
     
     @organic_campaign_summary_graph = HighChart.new('graph') do |f|
@@ -183,7 +183,17 @@ class AccountsController < ApplicationController
       f.x_axis(:categories => @account.campaigns.seo.active.collect(&:name) , :labels=>{:rotation=>0 , :align => 'right'})
 
       f.options[:chart][:defaultSeriesType] = "bar"
-      f.series(:name=> 'Total Leads', :data => @managed_campaigns.select(&:is_seo?).collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
+      f.series(:name=> 'Total Leads',       :data => @managed_campaigns.select(&:is_seo?).collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
+    end
+    
+    @managed_campaign_summary_graph = HighChart.new('graph') do |f|
+      f.title({:text=>"Campaign Summary"}) 
+      f.chart({:width=>"1400"})      
+      f.y_axis({:title=> {:text=> ''}, :labels=>{:rotation=>0, :align=>'right'} })
+      f.x_axis(:categories => @managed_campaigns.collect(&:name) , :labels=>{:rotation=>0 , :align => 'right'})
+      
+      f.options[:chart][:defaultSeriesType] = "bar"
+      f.series(:name=> 'Total Leads',       :data => @managed_campaigns.collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
     end
     
     respond_to do |format|
