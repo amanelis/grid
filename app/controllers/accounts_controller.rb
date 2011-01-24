@@ -53,6 +53,7 @@ class AccountsController < ApplicationController
       @end_date = Date.yesterday
       
       @managed_campaigns    = @account.campaigns.active.cityvoice.sort! { |a,b| a.name <=> b.name }
+      @unmanaged_campaigns  = @account.campaigns.active.unmanaged.sort! { |a,b| a.name <=> b.name }
       
       @campaign_summary_graph = HighChart.new('graph') do |f|
         f.title({:text=>"Campaign Summary"}) 
@@ -71,8 +72,8 @@ class AccountsController < ApplicationController
       dates = params[:daterange].split(' to ') || params[:daterange].split(' - ')
       @date_range = params[:daterange]
       
-      @managed_campaigns    = @account.campaigns.cityvoice.sort! { |a,b| a.name <=> b.name }
-      @unmanaged_campaigns  = @account.campaigns.unmanaged.sort! { |a,b| a.name <=> b.name }
+      @managed_campaigns    = @account.campaigns.active.cityvoice.sort! { |a,b| a.name <=> b.name }
+      @unmanaged_campaigns  = @account.campaigns.active.unmanaged.sort! { |a,b| a.name <=> b.name }
       
       begin 
         @start_date = Date.parse(dates[0])
@@ -162,6 +163,7 @@ class AccountsController < ApplicationController
     @month_end = (Date.today - 1.month).end_of_month
     
     @managed_campaigns    = @account.campaigns.active.cityvoice.sort! { |a,b| a.name <=> b.name }
+    @unmanaged_campaigns  = @account.campaigns.active.unmanaged.sort! { |a,b| a.name <=> b.name }
     
     @cost_per_lead_summary_graph = HighChart.new('graph') do |f|
       f.title({:text=>"Managed Campaign Graph"}) 
