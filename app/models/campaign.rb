@@ -542,7 +542,7 @@ class Campaign < ActiveRecord::Base
     end
   end
   
-  def create_contact_form(return_url = '', forwarding_email = '', forwarding_bcc_email = '', custom1_text = '', custom2_text = '', custom3_text = '', custom4_text = '', need_name = true, need_address = true, need_phone = true, need_email = true, work_category = true, work_description = true, date_requested = true, time_requested = true, other_information = true)
+  def create_contact_form(description = '', return_url = '', forwarding_email = '', forwarding_bcc_email = '', custom1_text = '', custom2_text = '', custom3_text = '', custom4_text = '', need_name = true, need_address = true, need_phone = true, need_email = true, work_category = true, work_description = true, date_requested = true, time_requested = true, other_information = true)
     form = self.contact_forms.build
     form.forwarding_email = forwarding_email
     form.forwarding_bcc_email = forwarding_bcc_email
@@ -629,21 +629,21 @@ class Campaign < ActiveRecord::Base
                   <td><textarea name=\"submission[other_information]\"></textarea></td>
                   </tr>" if other_information == true         
     form_text += "<tr>
-                  <td width=\"164\" align=\"right\"><label for=\"time\">#{custom1_value}</label></td>
+                  <td width=\"164\" align=\"right\"><label for=\"time\">#{custom1_text}</label></td>
                   <td><input id=\"custom1_value\" maxlength=\"40\" name=\"submission[custom1_value]\" size=\"20\" type=\"text\"/></td>
-                  </tr>" if custom1_value.present?
+                  </tr>" if custom1_text.present?
     form_text += "<tr>
-                  <td width=\"164\" align=\"right\"><label for=\"time\">#{custom2_value}</label></td>
+                  <td width=\"164\" align=\"right\"><label for=\"time\">#{custom2_text}</label></td>
                   <td><input id=\"custom1_value\" maxlength=\"40\" name=\"submission[custom2_value]\" size=\"20\" type=\"text\"/></td>
-                  </tr>" if custom2_value.present?
+                  </tr>" if custom2_text.present?
     form_text += "<tr>
-                  <td width=\"164\" align=\"right\"><label for=\"time\">#{custom3_value}</label></td>
+                  <td width=\"164\" align=\"right\"><label for=\"time\">#{custom3_text}</label></td>
                   <td><input id=\"custom1_value\" maxlength=\"40\" name=\"submission[custom3_value]\" size=\"20\" type=\"text\"/></td>
-                  </tr>" if custom3_value.present?
+                  </tr>" if custom3_text.present?
     form_text += "<tr>
-                  <td width=\"164\" align=\"right\"><label for=\"time\">#{custom4_value}</label></td>
+                  <td width=\"164\" align=\"right\"><label for=\"time\">#{custom4_text}</label></td>
                   <td><input id=\"custom1_value\" maxlength=\"40\" name=\"submission[custom4_value]\" size=\"20\" type=\"text\"/></td>
-                  </tr>" if custom4_value.present?
+                  </tr>" if custom4_text.present?
     form_text += "<tr>
                   <td width=\"164\">&nbsp;</td>
                   <td><input type=\"submit\" name=\"submit\" value=\"Submit Request\" onclick=\"return checkform()\"></td>

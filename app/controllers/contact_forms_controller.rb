@@ -4,4 +4,5 @@ class ContactFormsController < ApplicationController
     @form = ContactForm.find(params[:id])
   end
   
+  
 end

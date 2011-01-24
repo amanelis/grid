@@ -118,4 +118,8 @@ class CampaignsController < ApplicationController
     create if request.post?
   end
 
+  def new_contact_form
+    @campaign = Campaign.find(params[:id])
+  end
+  
 end
