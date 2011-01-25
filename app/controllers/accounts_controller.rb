@@ -156,8 +156,7 @@ class AccountsController < ApplicationController
     @unmanaged_campaigns  = @account.campaigns.active.unmanaged.to_a.sort { |a,b| a.name <=> b.name }
     
     @cost_per_lead_summary_graph = HighChart.new('graph') do |f|
-      f.title({:text=>"Managed Campaign Graph"}) 
-      f.chart({:width=>"950"})      
+      f.title({:text=>"Managed Campaign Graph"})    
       f.y_axis({:title=> {:text=> ''}, :labels=>{:rotation=>0, :align=>'right'} })
       f.x_axis(:categories => @managed_campaigns.collect(&:name) , :labels=>{:rotation=>0 , :align => 'right'})
 
@@ -166,8 +165,7 @@ class AccountsController < ApplicationController
     end
     
     @pay_per_click_summary_graph = HighChart.new('graph') do |f|
-      f.title({:text=>"Pay Per Click Graph"}) 
-      f.chart({:width=>"950"})      
+      f.title({:text=>"Pay Per Click Graph"})    
       f.y_axis({:title=> {:text=> ''}, :labels=>{:rotation=>0, :align=>'right'} })
       f.x_axis(:categories => @managed_campaigns.select(&:is_sem?).collect(&:name) , :labels=>{:rotation=>0 , :align => 'right'})
 
@@ -176,8 +174,7 @@ class AccountsController < ApplicationController
     end
     
     @organic_campaign_summary_graph = HighChart.new('graph') do |f|
-      f.title({:text=>"Organic Campaign Graph"}) 
-      f.chart({:width=>"950"})      
+      f.title({:text=>"Organic Campaign Graph"})    
       f.y_axis({:title=> {:text=> ''}, :labels=>{:rotation=>0, :align=>'right'} })
       f.x_axis(:categories => @managed_campaigns.select(&:is_seo?).collect(&:name) , :labels=>{:rotation=>0 , :align => 'right'})
 
