@@ -7,7 +7,11 @@ ActionController::Routing::Routes.draw do |map|
   map.send_weekly         "/accounts/send_weekly_email/:id",    :controller => "accounts",        :action => :send_weekly_email
   
   map.resources :accounts,        :member => {:report => :get}
-  map.resources :campaigns,       :member => {:lead_matrix => :get, :new_contact_form => :get}
+  map.resources :campaigns, :has_many => :contact_forms, :member => {:lead_matrix => :get}
+  
+  map.resources :campaigns do |campaign|
+    campaign.resources :contact_forms, :member => { :enable => [:put, :post] } 
+  end
   map.resources :website_visits,  :member => {:global_visitor => :get}
   map.resources :calls,           :member => {:collect => :post}
   map.resources :phone_numbers,   :member => {:connect => :post}

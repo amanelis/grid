@@ -118,8 +118,16 @@ class CampaignsController < ApplicationController
     create if request.post?
   end
 
-  def new_contact_form
+  def new_campaign_contact_form
+    
+  end
+  
+  def create_new_campaign_contact_form
     @campaign = Campaign.find(params[:id])
+    if @campaign.present?
+      @form_text = @campaign.create_contact_form(params[:description], params[:return_url], params[:forwarding_email], params[:forwarding_bcc_email], params[:custom1_text], params[:custom2_text], params[:custom3_text], params[:custom4_text], params[:need_name], params[:need_address], params[:need_phone], params[:need_email], params[:work_category], params[:work_description], params[:date_requested], params[:time_requested], params[:other_information])
+      @form = @campaign.contact_forms.last
+    end
   end
   
 end
