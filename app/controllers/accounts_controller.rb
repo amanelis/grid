@@ -89,7 +89,7 @@ class AccountsController < ApplicationController
       f.legend(:enabled => 'false')
       
       f.options[:chart][:defaultSeriesType] = "line"
-      f.series(:name=> 'Total Leads',       :data => ((@start_date)..(@end_date)).to_a.inject([]) { |leads, date| leads << @managed_campaigns.sum {|campaign| campaign.number_of_total_leads_between(date, date) }})
+      f.series(:name=> 'Total Leads',       :data => (@start_date..@end_date).to_a.inject([]) { |leads, date| leads << @managed_campaigns.sum {|campaign| campaign.number_of_total_leads_between(date, date) }})
     end
     
   end
