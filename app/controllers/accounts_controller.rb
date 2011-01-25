@@ -76,7 +76,7 @@ class AccountsController < ApplicationController
       f.title({:text=>"Campaign Summary"})  
       f.y_axis({:title=> {:text=> 'Leads'}, :labels=>{:rotation=>0, :align=>'right'} })
       f.x_axis(:categories => @managed_campaigns.collect(&:name) , :labels=>{:rotation=>-45 , :align => 'right'})
-      f.legend(:enabled => 'false')
+      f.legend(:enabled => false)
 
       f.options[:chart][:defaultSeriesType] = "column"
       f.series(:name=> 'Total Leads',       :data => @managed_campaigns.collect {|campaign| campaign.number_of_total_leads_between(@start_date, @end_date) })
@@ -86,7 +86,7 @@ class AccountsController < ApplicationController
       f.title({:text=>"Total Daily Leads"})  
       f.y_axis({:title=> {:text=> 'Daily Leads'}, :labels=>{:rotation=>0, :align=>'right'} })
       f.x_axis(:categories => ((@start_date)..(@end_date)).to_a , :labels=>{:rotation=>-45 , :align => 'right'})
-      f.legend(:enabled => 'false')
+      f.legend(:enabled => false)
       
       f.options[:chart][:defaultSeriesType] = "line"
       f.series(:name=> 'Total Leads',       :data => (@start_date..@end_date).inject([]) { |leads, date| leads << @managed_campaigns.sum { |campaign| campaign.number_of_total_leads_between(date, date) } })
