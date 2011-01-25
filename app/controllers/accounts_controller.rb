@@ -79,7 +79,7 @@ class AccountsController < ApplicationController
       f.legend(:enabled => false)
       
       f.options[:chart][:defaultSeriesType] = "line"
-      f.series(:name=> 'Total Leads',       :data => (@start_date..@end_date).inject([]) { |leads, date| leads << @managed_campaigns.sum { |campaign| campaign.number_of_total_leads_between(date, date) } })
+      f.series(:name=> 'Leads',       :data => (@start_date..@end_date).inject([]) { |leads, date| leads << @managed_campaigns.sum { |campaign| campaign.number_of_total_leads_between(date, date) } })
     end
     
     @campaign_summary_graph = HighChart.new('graph') do |f|
@@ -89,7 +89,7 @@ class AccountsController < ApplicationController
       f.legend(:enabled => false)
 
       f.options[:chart][:defaultSeriesType] = "column"
-      f.series(:name=> 'Total Leads',       :data => @managed_campaigns.collect {|campaign| campaign.number_of_total_leads_between(@start_date, @end_date) })
+      f.series(:name=> 'Leads',       :data => @managed_campaigns.collect {|campaign| campaign.number_of_total_leads_between(@start_date, @end_date) })
     end
     
   end
