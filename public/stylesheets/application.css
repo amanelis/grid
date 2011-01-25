@@ -6,8 +6,6 @@ body{
 	background-image: url("/images/grid_background.png");
 }
 .container{
-width:974px;
-margin:0 auto;
 }
 
 .error header, .error article{
