@@ -73,12 +73,12 @@ class AccountsController < ApplicationController
     end
     
     @campaign_summary_graph = HighChart.new('graph') do |f|
-      f.title({:text=>"Campaign Summary"}) 
-      f.chart({:width=>"1800"})      
-      f.y_axis({:title=> {:text=> ''}, :labels=>{:rotation=>0, :align=>'right'} })
-      f.x_axis(:categories => @managed_campaigns.collect(&:name) , :labels=>{:rotation=>0 , :align => 'right'})
+      f.title({:text=>"Campaign Summary"})  
+      f.y_axis({:title=> {:text=> 'Leads'}, :labels=>{:rotation=>0, :align=>'right'} })
+      f.x_axis(:categories => @managed_campaigns.collect(&:name) , :labels=>{:rotation=>-45 , :align => 'right'})
+      f.legend(:enabled => 'false')
 
-      f.options[:chart][:defaultSeriesType] = "bar"
+      f.options[:chart][:defaultSeriesType] = "column"
       f.series(:name=> 'Total Leads',       :data => @managed_campaigns.collect {|campaign| campaign.number_of_total_leads_between(@start_date, @end_date) })
     end
     
