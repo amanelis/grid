@@ -75,7 +75,7 @@ class Account < ActiveRecord::Base
   end
 
   def self.get_accounts_by_status_and_account_type(status, account_type)
-    Account.find(:all, :conditions => ['status = ? AND account_type LIKE ?', status, ('%' + account_type + '%')]).sort! { |a,b| a.name.downcase <=> b.name.downcase }
+    Account.find(:all, :conditions => ['status = ? AND account_type LIKE ?', status, ('%' + account_type + '%')]).sort { |a,b| a.name.downcase <=> b.name.downcase }
   end
   
   def self.send_weekly_reports
