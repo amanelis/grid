@@ -74,7 +74,7 @@ class AccountsController < ApplicationController
     
     @daily_total_leads_graph = HighChart.new('graph') do |f|
       f.title({:text=>"Total Daily Leads"})  
-      f.y_axis({:title=> {:text=> 'Daily Leads'}, :labels=>{:rotation=>0, :align=>'right'} })
+      f.y_axis({:title=> {:text=> 'Daily Leads'}, :min => 0, :labels=>{:rotation=>0, :align=>'right'} })
       f.x_axis(:categories => ((@start_date)..(@end_date)).to_a , :labels=>{:rotation=>-45 , :align => 'right'})
       f.legend(:enabled => false)
       
@@ -84,7 +84,7 @@ class AccountsController < ApplicationController
     
     @campaign_summary_graph = HighChart.new('graph') do |f|
       f.title({:text=>"Campaign Summary"})  
-      f.y_axis({:title=> {:text=> 'Leads'}, :labels=>{:rotation=>0, :align=>'right'} })
+      f.y_axis({:title=> {:text=> 'Leads'}, :min => 0, :labels=>{:rotation=>0, :align=>'right'} })
       f.x_axis(:categories => @managed_campaigns.collect(&:name) , :labels=>{:rotation=>-45 , :align => 'right'})
       f.legend(:enabled => false)
 
