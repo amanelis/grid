@@ -274,7 +274,7 @@ class Account < ActiveRecord::Base
   end
 
   def number_of_total_leads_by_day_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    (start_date..end_date).to_a.inject([]) { |data, date | data << self.campaigns.active.to_a.sum { |campaign| campaign.number_of_total_leads_between(date, date) } }
+    (start_date..end_date).inject([]) { |data, date | data << self.campaigns.active.to_a.sum { |campaign| campaign.number_of_total_leads_between(date, date) } }
   end
 
   def cost_between(start_date = Date.yesterday, end_date = Date.yesterday)
