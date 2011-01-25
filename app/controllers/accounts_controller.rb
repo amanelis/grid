@@ -82,6 +82,16 @@ class AccountsController < ApplicationController
       f.series(:name=> 'Total Leads',       :data => @managed_campaigns.collect {|campaign| campaign.number_of_total_leads_between(@start_date, @end_date) })
     end
     
+    @daily_total_leads_graph = HighChart.new('graph') do |f|
+      f.title({:text=>"Total Daily Leads"})  
+      f.y_axis({:title=> {:text=> 'Daily Leads'}, :labels=>{:rotation=>0, :align=>'right'} })
+      f.x_axis(:categories => ((@start_date)..(@end_date)).to_a , :labels=>{:rotation=>-45 , :align => 'right'})
+      f.legend(:enabled => 'false')
+      
+      f.options[:chart][:defaultSeriesType] = "line"
+      f.series(:name=> 'Total Leads',       :data => ((@start_date)..(@end_date)).to_a.inject([]) { |leads, date| leads << @managed_campaigns.sum {|campaign| campaign.number_of_total_leads_between(date, date) }})
+    end
+    
   end
 
   # /accounts/new
