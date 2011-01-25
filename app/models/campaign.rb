@@ -58,9 +58,8 @@ class Campaign < ActiveRecord::Base
           if sf_campaign.campaign_type__c.include? 'SEM'
             if existing_campaign.blank?
               new_sem_campaign = SemCampaign.new
-              existing_campaign = new_sem_campaign.build_campaign
-              existing_campaign.account_id = account.id
-              existing_campaign.salesforce_id = sf_campaign.id
+              new_sem_campaign.account = account
+              new_sem_campaign.salesforce_id = sf_campaign.id
             else
               new_sem_campaign = existing_campaign.campaign_style
               unless new_sem_campaign.instance_of?(SemCampaign)
@@ -70,10 +69,10 @@ class Campaign < ActiveRecord::Base
                 next
               end
             end
-            existing_campaign.status = sf_campaign.status__c
-            existing_campaign.name = sf_campaign.name
-            existing_campaign.zip_code = sf_campaign.zip_code__c
-            existing_campaign.flavor = sf_campaign.campaign_type__c
+            new_sem_campaign.status = sf_campaign.status__c
+            new_sem_campaign.name = sf_campaign.name
+            new_sem_campaign.zip_code = sf_campaign.zip_code__c
+            new_sem_campaign.flavor = sf_campaign.campaign_type__c
             new_sem_campaign.mobile = true if sf_campaign.campaign_type__c.include? 'Mobile'
             new_sem_campaign.monthly_budget = sf_campaign.monthly_budget__c
             new_sem_campaign.rake = sf_campaign.campaign_rake__c
@@ -85,7 +84,7 @@ class Campaign < ActiveRecord::Base
             new_sem_campaign.client_email = 'bizsearchlocal.jon@gmail.com'
             new_sem_campaign.environment = 'PRODUCTION'
             new_sem_campaign.save!
-            existing_campaign.save
+            new_sem_campaign.campaign.save!
 
             google_ids = sf_campaign.google_campaign_id__c.present? ? sf_campaign.google_campaign_id__c.split(',') : ''
             google_ids.each do |google_id|
@@ -95,10 +94,10 @@ class Campaign < ActiveRecord::Base
                 new_google_sem_campaign.reference_id = google_id.strip
               elsif google_sem_campaign.sem_campaign.name == ORPHANAGE_NAME
                 google_sem_campaign.sem_campaign_id = new_sem_campaign.id
-                google_sem_campaign.save
+                google_sem_campaign.save!
               elsif google_sem_campaign.sem_campaign_id != new_sem_campaign.id
                 google_sem_campaign.sem_campaign_id = new_sem_campaign.id
-                google_sem_campaign.save
+                google_sem_campaign.save!
                 puts "#{google_sem_campaign.name} reassigned from #{google_sem_campaign.sem_campaign.name} to #{new_sem_campaign.name}"
               end
             end
@@ -108,9 +107,8 @@ class Campaign < ActiveRecord::Base
             sf_account = Salesforce::Account.find(account.salesforce_id)
             if existing_campaign.blank?
               new_seo_campaign = SeoCampaign.new
-              existing_campaign = new_seo_campaign.build_campaign
-              existing_campaign.account_id = account.id
-              existing_campaign.salesforce_id = sf_campaign.id
+              new_seo_campaign.account = account
+              new_seo_campaign.salesforce_id = sf_campaign.id
             else
               new_seo_campaign = existing_campaign.campaign_style
               unless new_seo_campaign.instance_of?(SeoCampaign)
@@ -129,19 +127,18 @@ class Campaign < ActiveRecord::Base
             new_seo_campaign.hosting_site = sf_account.hosting_site__c
             new_seo_campaign.hosting_username = sf_account.hosting_username__c
             new_seo_campaign.hosting_password = sf_account.hosting_password__c
-            existing_campaign.status = sf_campaign.status__c
-            existing_campaign.name = sf_campaign.name
-            existing_campaign.zip_code = sf_campaign.zip_code__c
-            existing_campaign.flavor = sf_campaign.campaign_type__c
+            new_seo_campaign.status = sf_campaign.status__c
+            new_seo_campaign.name = sf_campaign.name
+            new_seo_campaign.zip_code = sf_campaign.zip_code__c
+            new_seo_campaign.flavor = sf_campaign.campaign_type__c
             new_seo_campaign.save!
-            existing_campaign.save
+            new_seo_campaign.campaign.save!
 
           elsif sf_campaign.campaign_type__c.include? 'Maps'
             if existing_campaign.blank?
               new_maps_campaign = MapsCampaign.new
-              existing_campaign = new_maps_campaign.build_campaign
-              existing_campaign.account_id = account.id
-              existing_campaign.salesforce_id = sf_campaign.id
+              new_maps_campaign.account = account
+              new_maps_campaign.salesforce_id = sf_campaign.id
 
             else
               new_maps_campaign = existing_campaign.campaign_style
@@ -154,22 +151,21 @@ class Campaign < ActiveRecord::Base
             end
             new_maps_campaign.keywords = sf_campaign.keywords__c
             new_maps_campaign.company_name = sf_campaign.maps_company_name__c
-            existing_campaign.zip_code = sf_campaign.zip_code__c
-            existing_campaign.status = sf_campaign.status__c
-            existing_campaign.name = sf_campaign.name
-            existing_campaign.flavor = sf_campaign.campaign_type__c
+            new_maps_campaign.zip_code = sf_campaign.zip_code__c
+            new_maps_campaign.status = sf_campaign.status__c
+            new_maps_campaign.name = sf_campaign.name
+            new_maps_campaign.flavor = sf_campaign.campaign_type__c
             new_google_maps_campaign = new_maps_campaign.google_maps_campaigns.build
             new_google_maps_campaign.login = sf_campaign.maps_login__c
             new_google_maps_campaign.password = sf_campaign.maps_password__c
             new_maps_campaign.save!
-            existing_campaign.save
+            new_maps_campaign.campaign.save!
 
           else
             if existing_campaign.blank?
               new_other_campaign = OtherCampaign.new
-              existing_campaign = new_other_campaign.build_campaign
-              existing_campaign.account_id = account.id
-              existing_campaign.salesforce_id = sf_campaign.id
+              new_other_campaign.account = account
+              new_other_campaign.salesforce_id = sf_campaign.id
             else
               new_other_campaign = existing_campaign.campaign_style
               unless new_other_campaign.instance_of?(OtherCampaign)
@@ -179,12 +175,12 @@ class Campaign < ActiveRecord::Base
                 next
               end
             end
-            existing_campaign.zip_code = sf_campaign.zip_code__c
-            existing_campaign.status = sf_campaign.status__c
-            existing_campaign.name = sf_campaign.name
-            existing_campaign.flavor = sf_campaign.campaign_type__c
+            new_other_campaign.zip_code = sf_campaign.zip_code__c
+            new_other_campaign.status = sf_campaign.status__c
+            new_other_campaign.name = sf_campaign.name
+            new_other_campaign.flavor = sf_campaign.campaign_type__c
             new_other_campaign.save!
-            existing_campaign.save
+            new_other_campaign.campaign.save!
           end
         end
       end
@@ -200,7 +196,7 @@ class Campaign < ActiveRecord::Base
     campaigns.each do |campaign|
       if campaign.target_cities.blank?
         campaign.target_cities = campaign.account.city.downcase if campaign.account.city.present?
-        campaign.save
+        campaign.save!
       end
     end
   end
@@ -213,7 +209,7 @@ class Campaign < ActiveRecord::Base
         existing_campaign = Campaign.find_by_account_id_and_name(account.id, sf_campaign.name)
         if existing_campaign.present?
           existing_campaign.salesforce_id = sf_campaign.id
-          existing_campaign.save
+          existing_campaign.save!
         end
       end
     end
@@ -230,6 +226,26 @@ class Campaign < ActiveRecord::Base
   
   def self.determine_totals_for(campaigns, messages, start_date = Date.yesterday, end_date = Date.yesterday)
     messages.inject({}) { |results, message| results[message] = campaigns.sum { |campaign| campaign.send(message, start_date, end_date) } ; results }
+  end
+  
+  def self.weighted_cost_per_lead_for(campaigns, start_date = Date.yesterday, end_date = Date.yesterday)
+    weighted_total = 0.0
+    total_weight = 0.0
+    campaigns.each do |campaign|
+      total_weight += (weight = campaign.number_of_total_leads_between(start_date, end_date))
+      weighted_total += (campaign.cost_per_lead_between(start_date, end_date) * weight)
+    end
+    total_weight > 0 ? weighted_total / total_weight : 0.0 
+  end
+
+  def self.weighted_cost_per_contact_for(campaigns, start_date = Date.yesterday, end_date = Date.yesterday)
+    weighted_total = 0.0
+    total_weight = 0.0
+    campaigns.each do |campaign|
+      total_weight += (weight = campaign.number_of_total_contacts_between(start_date, end_date))
+      weighted_total += (campaign.cost_per_contact_between(start_date, end_date) * weight)
+    end
+    total_weight > 0 ? weighted_total / total_weight : 0.0 
   end
 
 
@@ -403,7 +419,7 @@ class Campaign < ActiveRecord::Base
     
     if existing_website.present?
       self.website_id = existing_website.id
-      self.save
+      self.save!
       return "Website already exists on another campaign!\nClick Code: <script src=\"http://stats.cityvoice.com/js\" type=\"text/javascript\"></script><script type=\"text/javascript\">citystats.init(#{existing_website.site_id});</script><noscript><p><img alt=\"CityStats\" width=\"1\" height=\"1\" src=\"http://stats.cityvoice.com/#{existing_website.site_id}ns.gif\" /></p></noscript>"
     end
       
@@ -448,7 +464,7 @@ class Campaign < ActiveRecord::Base
       new_website.timezone = time_zone
       new_website.mirrors = mirrors
       new_website.dst = "dst"
-      new_website.save
+      new_website.save!
       self.website_id = new_website.id
       self.save!
       return "Website was created!\nClick Code: <script src=\"http://stats.cityvoice.com/js\" type=\"text/javascript\"></script><script type=\"text/javascript\">citystats.init(#{site_id});</script><noscript><p><img alt=\"CityStats\" width=\"1\" height=\"1\" src=\"http://stats.cityvoice.com/#{site_id}ns.gif\" /></p></noscript>"
@@ -461,7 +477,7 @@ class Campaign < ActiveRecord::Base
     return "There is no website on this campaign" if self.website.blank?
     if self.website.campaigns.count > 1 || HTTParty.get("http://stats.cityvoice.com.re.getclicky.com/api/whitelabel/?auth=de8f1bae61c60eb0&type=site&site_id=#{self.website.site_id}&delete=1").parsed_response.split("\n").first == 'OK'
       self.website_id = nil
-      self.save
+      self.save!
       "Your site was deleted."
     else
       "There was an error deleting your site."
@@ -494,7 +510,7 @@ class Campaign < ActiveRecord::Base
         new_phone_number.transcribe_calls = transcribe_calls
         new_phone_number.text_calls = text_calls
         new_phone_number.active = true
-        new_phone_number.save
+        new_phone_number.save!
         #UPDATE THE TWILIO URLS
         new_phone_number.update_twilio_number(name, forward_to, id_caller, record_calls, transcribe_calls, text_calls, call_url, fallback_url, status_url, sms_url, fallback_sms_url)
         job_status.finish_with_no_errors
@@ -514,7 +530,7 @@ class Campaign < ActiveRecord::Base
       resp = account.request("/#{phone_number.twilio_version}/Accounts/#{ACCOUNT_SID}/IncomingPhoneNumbers/#{phone_number.twilio_id}.json", 'DELETE')
       if resp.code == '204'
         phone_number.active = false
-        phone_number.save
+        phone_number.save!
         return true
       else
         return false

@@ -1,16 +1,18 @@
 :javascript
-  jQuery.ajaxSetup({
-    'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")}
+  jQuery(document).ready(function($) {
+    $('a[rel*=facebox]').facebox()
   })
 
-  $(function() {
-    //setTimeout(updateActivity, 5000);
-  });
-
-  function updateActivity() {
-    var after = $("#activities tbody tr").attr("data-time");
-    $.getScript("/activities.js?after=" + after)
-    setTimeout(updateActivity, 5000);
+  function refresh_accounts() {
+    jQuery.facebox.close();
+    //$('#loading').html('<p><img src="images/facebox/loading.gif" /></p>');
+    $('#loading').html('<h3><font color="green">Loading accounts... This could take about 5 minutes depending on your connection, please be patient.</font></h3>');
+    window.location = "/accounts/refresh_accounts"
+  }
+  
+  function confirm_refresh_accounts() {
+    var message = '<center>Refresh accounts from salesforce?</center><br><center><a href="#" onClick="refresh_accounts();">Yes</a> or <a href="#" onClick="jQuery.facebox.close();">No</a></center>';
+    jQuery.facebox(message);
   }
 
 %header
@@ -36,6 +38,7 @@
       - for account_type in @accounts_types
         %option{ :selected => account_type == @passed_type}= account_type
     %input{:type => 'submit', :value => 'Filter'}
+    #loading
       
   %table{:class => "pretty"}
     %thead

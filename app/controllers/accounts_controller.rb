@@ -1,21 +1,15 @@
 class AccountsController < ApplicationController
-  #before_filter :require_admin
-  # Carefull, this load_and_authorize_resource function will setup all instance variables
-  # for any of the default restfull rails routes.
   load_and_authorize_resource
-  require 'fastercsv'
-  
-  # GET /accounts
-  # GET /accounts.xml
+
+  # /accounts
   def index
     authorize! :read, Account
-    
-    @passed_status = params[:account_status] ||= 'Active'
-    @passed_type = params[:account_type] ||= ''
-    
     @accounts = current_user.acquainted_accounts
     @accounts_statuses = Account.account_statuses_for(@accounts)
     @accounts_types = Account.account_types_for(@accounts)
+    
+    @passed_status = params[:account_status] ||= 'Active'
+    @passed_type = params[:account_type] ||= ''
     
     if params[:account_status].present?
       @accounts = @accounts.select {|account| account.status == params[:account_status]}
@@ -25,34 +19,26 @@ class AccountsController < ApplicationController
       @accounts = @accounts.select {|account| account.account_type?(params[:account_type])}
     end
     
-    #@accounts = Account.get_accounts_by_status_and_account_type(params[:account_status], params[:account_type])
     @accounts_data = Rails.cache.fetch("accounts_data") { Account.get_accounts_data }
-
-
-    ## This will pull the users accounts based on their role
-    
     @accounts.sort! {|a,b| a.name.downcase <=> b.name.downcase}
+    
     respond_to do |format|
       format.html 
+      format.js
+      format.xml { render :xml => @accounts }
     end
     
   end
 
-  # GET /accounts/1
-  # GET /accounts/1.xml
-  def show      
-    @account = Account.find(params[:id])
+  # /accounts/:id
+  def show
     authorize! :read, @account
+    Time.zone = @account.time_zone  
+    @date_range = ''
     
-    Time.zone = @account.time_zone
-    @timeline = @account.combined_timeline_data    
-    @sorted_dates = @timeline.keys.sort
-    @title = @account.name
     @seo_campaign_timelines = @account.campaign_seo_combined_timeline_data
     @sem_campaign_timelines = @account.campaign_sem_combined_timeline_data
     @map_campaign_timelines = @account.campaign_map_combined_timeline_data
-    @date_range = ''
-    
     @total_reporting_messages = [:number_of_lead_calls_between,
                                  :number_of_all_calls_between,
                                  :number_of_lead_submissions_between,
@@ -60,29 +46,17 @@ class AccountsController < ApplicationController
                                  :number_of_total_leads_between,     
                                  :number_of_total_contacts_between,  
                                  :cost_between,                      
-                                 :spend_between,                     
-                                 :cost_per_lead_between,            
-                                 :cost_per_contact_between]         
+                                 :spend_between]  
                                  
-                                  
-    
+    @managed_campaigns    = @account.campaigns.active.cityvoice.to_a.sort { |a,b| a.name <=> b.name }
+    @unmanaged_campaigns  = @account.campaigns.active.unmanaged.to_a.sort { |a,b| a.name <=> b.name }           
+                                 
     if params[:daterange].blank?
       @start_date = Date.today.beginning_of_month
       @end_date = Date.yesterday
-      
-      @managed_campaigns    = @account.campaigns.cityvoice.sort! { |a,b| a.name <=> b.name }
-      @unmanaged_campaigns  = @account.campaigns.unmanaged.sort! { |a,b| a.name <=> b.name }
-      
-      respond_to do |format|
-        format.html # show.html.erb
-      end
     else
-      # Parse the date the GET request has received
       dates = params[:daterange].split(' to ') || params[:daterange].split(' - ')
       @date_range = params[:daterange]
-      
-      @managed_campaigns    = @account.campaigns.cityvoice.sort! { |a,b| a.name <=> b.name }
-      @unmanaged_campaigns  = @account.campaigns.unmanaged.sort! { |a,b| a.name <=> b.name }
       
       begin 
         @start_date = Date.parse(dates[0])
@@ -90,34 +64,43 @@ class AccountsController < ApplicationController
       rescue
         @start_date = Date.today.beginning_of_month
         @end_date = Date.yesterday
-        flash[:error] = "Your date was incorrect, we set it back to #{@start_date} to #{@end_date}"
-        redirect_to account_path(params[:id])
-      end
-      
+        flash[:error] = "The date you entered was incorrect, we set it back to <strong>#{(@start_date).to_s(:long)} to #{@end_date.to_s(:long)}</strong> for you."
+        
+        respond_to do |format|
+          format.html { redirect_to account_path(params[:id]) }
+        end
+      end 
+    end
+    
+    @campaign_summary_graph = HighChart.new('graph') do |f|
+      f.title({:text=>"Campaign Summary"})  
+      f.y_axis({:title=> {:text=> 'Leads'}, :labels=>{:rotation=>0, :align=>'right'} })
+      f.x_axis(:categories => @managed_campaigns.collect(&:name) , :labels=>{:rotation=>-45 , :align => 'right'})
+      f.legend(:enabled => 'false')
+
+      f.options[:chart][:defaultSeriesType] = "column"
+      f.series(:name=> 'Total Leads',       :data => @managed_campaigns.collect {|campaign| campaign.number_of_total_leads_between(@start_date, @end_date) })
     end
     
   end
 
-  # GET /accounts/new
-  # GET /accounts/new.xml
+  # /accounts/new
   def new
-    @account = Account.new
-
+    authorize! :create, @account
+    
     respond_to do |format|
-      format.html # new.html.erb
+      format.html
     end
   end
 
-  # GET /accounts/1/edit
+  # /accounts/:id/edit
   def edit
-    @account = Account.find(params[:id])
+    authorize! :edit, @account
   end
 
-  # POST /accounts
-  # POST /accounts.xml
   def create
-    @account = Account.new(params[:account])
-
+    authorize! :create, @account
+    
     respond_to do |format|
       if @account.save
         flash[:notice] = 'Account was successfully created.'
@@ -128,10 +111,9 @@ class AccountsController < ApplicationController
     end
   end
 
-  # PUT /accounts/1
-  # PUT /accounts/1.xml
+  # /accounts/:id/update
   def update
-    @account = Account.find(params[:id])
+    authorize! :update, @account
 
     respond_to do |format|
       if @account.update_attributes(params[:account])
@@ -143,10 +125,8 @@ class AccountsController < ApplicationController
     end
   end
 
-  # DELETE /accounts/1
-  # DELETE /accounts/1.xml
   def destroy
-    @account = Account.find(params[:id])
+    authorize! :destroy, @account
     @account.destroy
 
     respond_to do |format|
@@ -154,34 +134,58 @@ class AccountsController < ApplicationController
     end
   end
 
+  # /accounts/:id/report
   def report
-    @account = Account.find(params[:id])
+    authorize! :read, @account
     Time.zone = @account.time_zone
 
     respond_to do |format|
-      format.html # show.html.erb
+      format.html
     end
   end
   
+  # /accounts/:id/report/client /.pdf
   def report_client
-    @account = Account.find(params[:id])
+    authorize! :read, @account
     Time.zone = @account.time_zone
+    
     @month_start = (Date.today - 1.month).beginning_of_month
     @month_end = (Date.today - 1.month).end_of_month
     
+    @managed_campaigns    = @account.campaigns.active.cityvoice.to_a.sort { |a,b| a.name <=> b.name }
+    @unmanaged_campaigns  = @account.campaigns.active.unmanaged.to_a.sort { |a,b| a.name <=> b.name }
     
-    @h = HighChart.new('graph') do |f|
-      f.title({:text=>"Campaign Data Graph"}) 
+    @cost_per_lead_summary_graph = HighChart.new('graph') do |f|
+      f.title({:text=>"Managed Campaign Graph"}) 
       f.chart({:width=>"950"})      
       f.y_axis({:title=> {:text=> ''}, :labels=>{:rotation=>0, :align=>'right'} })
-      f.x_axis(:categories => @account.campaigns.active.collect(&:name) , :labels=>{:rotation=>0 , :align => 'right'})
+      f.x_axis(:categories => @managed_campaigns.collect(&:name) , :labels=>{:rotation=>0 , :align => 'right'})
 
       f.options[:chart][:defaultSeriesType] = "bar"
-      f.series(:name=> 'Calls',          :data => @account.campaigns.active.collect {|campaign| campaign.number_of_lead_calls_between(@month_start, @month_end) })
-      f.series(:name=> 'Forms',          :data => @account.campaigns.active.collect {|campaign| campaign.number_of_lead_submissions_between(@month_start, @month_end) })
-      f.series(:name=> 'Total Leads',   :data => @account.campaigns.active.collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
-      f.series(:name=> 'Total Contacts',:data => @account.campaigns.active.collect {|campaign| campaign.number_of_total_contacts_between(@month_start, @month_end) })
+      f.series(:name=> 'Total Leads',       :data => @managed_campaigns.collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
     end
+    
+    @pay_per_click_summary_graph = HighChart.new('graph') do |f|
+      f.title({:text=>"Pay Per Click Graph"}) 
+      f.chart({:width=>"950"})      
+      f.y_axis({:title=> {:text=> ''}, :labels=>{:rotation=>0, :align=>'right'} })
+      f.x_axis(:categories => @managed_campaigns.select(&:is_sem?).collect(&:name) , :labels=>{:rotation=>0 , :align => 'right'})
+
+      f.options[:chart][:defaultSeriesType] = "bar"
+      f.series(:name=> 'Total Leads',       :data => @managed_campaigns.select(&:is_sem?).collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
+    end
+    
+    @organic_campaign_summary_graph = HighChart.new('graph') do |f|
+      f.title({:text=>"Organic Campaign Graph"}) 
+      f.chart({:width=>"950"})      
+      f.y_axis({:title=> {:text=> ''}, :labels=>{:rotation=>0, :align=>'right'} })
+      f.x_axis(:categories => @managed_campaigns.select(&:is_seo?).collect(&:name) , :labels=>{:rotation=>0 , :align => 'right'})
+
+      f.options[:chart][:defaultSeriesType] = "bar"
+      f.series(:name=> 'Total Leads',       :data => @managed_campaigns.select(&:is_seo?).collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
+    end
+    
+    
     
     respond_to do |format|
       format.html {render :layout => 'report'}
@@ -192,7 +196,7 @@ class AccountsController < ApplicationController
     @accounts = Account.active.to_a
 
     respond_to do |format|
-      format.html # show.html.erb
+      format.html
     end
   end
   
@@ -203,7 +207,6 @@ class AccountsController < ApplicationController
     redirect_to account_path(params[:id])
   end
   
-  # Simple method to reload salesforce data, accounts/campaigns
   def refresh_accounts
     authorize! :refresh_accounts, Account
     GroupAccount.pull_salesforce_accounts
@@ -229,8 +232,8 @@ class AccountsController < ApplicationController
           account.account_type,
           account.salesforce_id
         ]
-      end # @accounts
-    end # csv_array
+      end 
+    end
     
     send_data csv_data,
       :type => 'text/csv; charset=iso-8859-1; header=present',

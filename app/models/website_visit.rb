@@ -154,7 +154,7 @@ class WebsiteVisit < ActiveRecord::Base
                   nurl.referrer_type = visit["referrer_type"]
                   nurl.visitor_id = visit["uid"]
                   nurl.time_of_visit = Time.at(visit["time"].to_i)
-                  nurl.save
+                  nurl.save!
                 else
                   nurl = WebsiteVisit.find_or_create_by_session_id_and_website_id(:session_id => visit["session_id"],
                                                                                 :website_id => website.id,
@@ -208,7 +208,7 @@ class WebsiteVisit < ActiveRecord::Base
     self.website.campaigns.each do |campaign|
       possible_calls = possible_calls + campaign.calls.snapshot(self.time_of_visit, time_span) if time_span.present?
     end
-    possible_calls = possible_calls.sort! {|a,b| a.call_start <=> b.call_start } if possible_calls.present?
+    possible_calls = possible_calls.sort {|a,b| a.call_start <=> b.call_start } if possible_calls.present?
     possible_calls
   end
   
@@ -219,7 +219,7 @@ class WebsiteVisit < ActiveRecord::Base
         possible_submissions = possible_submissions + form.submissions.snapshot(self.time_of_visit, time_span) if time_span.present?
       end  
     end
-    possible_submissions = possible_submissions.sort! {|a,b| a.time_of_submission <=> b.time_of_submission} if possible_submissions.present?
+    possible_submissions = possible_submissions.sort {|a,b| a.time_of_submission <=> b.time_of_submission} if possible_submissions.present?
     possible_submissions
   end
   

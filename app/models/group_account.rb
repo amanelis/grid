@@ -8,10 +8,10 @@ class GroupAccount < ActiveRecord::Base
   # TESTING METHODS
   
   def self.print_account_structure
-    GroupAccount.all.each do |gaccount|
+    GroupAccount.all.sort {|a,b| a.name.downcase <=> b.name.downcase}.each do |gaccount|
       puts 'Group Account:' + gaccount.name
       accounts = gaccount.accounts
-      accounts.each do |account|
+      accounts.sort {|a,b| a.name.downcase <=> b.name.downcase}.each do |account|
         puts '------' + account.name
       end
     end
@@ -35,14 +35,12 @@ class GroupAccount < ActiveRecord::Base
     WebsiteVisit.data_pull_websites_visits
     puts "Pulling Salesforce Keywords..."
     Keyword.update_keywords_from_salesforce
-    puts "Updating Keyword Rankings..."
-    Keyword.update_keyword_rankings
-    puts "Updating Inbound Links"
-    SeoCampaign.update_inbound_links
-    puts "Cleaning Inbound Links"
-    SeoCampaign.clean_up_inbound_links
-    puts "Updating Website Analyses"
-    SeoCampaign.update_website_analyses
+    # puts "Updating Keyword Rankings..."
+    # Keyword.update_keyword_rankings
+    # puts "Updating Inbound Links"
+    # SeoCampaign.update_inbound_links
+    # puts "Updating Website Analyses"
+    # SeoCampaign.update_website_analyses
     puts "Updating Map Keywords"
     MapKeyword.update_keywords_from_salesforce
     puts "Updating Map Keyword Rankings"
@@ -69,7 +67,7 @@ class GroupAccount < ActiveRecord::Base
         cityvoice_group_account.salesforce_id = sf_cityvoice_account.id
         cityvoice_group_account.name = sf_cityvoice_account.name
         cityvoice_group_account.status = sf_cityvoice_account.account_status__c
-        cityvoice_group_account.save
+        cityvoice_group_account.save!
       end
         
       sf_accounts = Salesforce::Account.find(:all, :conditions => ['account_status__c != ?', ''])
@@ -118,7 +116,7 @@ class GroupAccount < ActiveRecord::Base
           end
         end
         
-        existing_account.save
+        existing_account.save!
       end
     rescue Exception => ex
       job_status.finish_with_errors(ex)
@@ -137,7 +135,7 @@ class GroupAccount < ActiveRecord::Base
        end
        existing_account.name = sf_reseller_account.name
        existing_account.status = sf_reseller_account.account_status__c
-       existing_account.save
+       existing_account.save!
      end
    end
          

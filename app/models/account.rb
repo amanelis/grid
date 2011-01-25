@@ -2,6 +2,7 @@ class Account < ActiveRecord::Base
   belongs_to :group_account
 	belongs_to :reseller, :class_name => "Account", :foreign_key => "reseller_id"
   has_many :campaigns, :dependent => :destroy
+  has_many :websites, :through => :campaigns
 	has_many :clients, :class_name => "Account", :foreign_key => "reseller_id"
   has_one :adwords_client, :dependent => :destroy
   
@@ -74,7 +75,7 @@ class Account < ActiveRecord::Base
   end
 
   def self.get_accounts_by_status_and_account_type(status, account_type)
-    Account.find(:all, :conditions => ['status = ? AND account_type LIKE ?', status, ('%' + account_type + '%')]).sort! { |a,b| a.name.downcase <=> b.name.downcase }
+    Account.find(:all, :conditions => ['status = ? AND account_type LIKE ?', status, ('%' + account_type + '%')]).sort { |a,b| a.name.downcase <=> b.name.downcase }
   end
   
   def self.send_weekly_reports

@@ -115,7 +115,7 @@ class PhoneNumber < ActiveRecord::Base
     numbers = Array.new()
     if resp.code == '200'
       results = JSON.parse(resp.body)['available_phone_numbers']
-      return results.sort! {|a,b| a["phone_number"].to_i <=> b["phone_number"].to_i}
+      return results.sort {|a,b| a["phone_number"].to_i <=> b["phone_number"].to_i}
     end
   end
   
@@ -153,7 +153,7 @@ class PhoneNumber < ActiveRecord::Base
   
   def orphan!
     self.campaign_id = Campaign.orphanage.id
-    self.save
+    self.save!
   end
 
   def number_of_answered_calls_between(start_date = Date.yesterday, end_date = Date.yesterday)

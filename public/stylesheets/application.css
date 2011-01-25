@@ -132,6 +132,16 @@ body{
 font-family: "proxima-nova-1","proxima-nova-2","Lucida Grande", "Helvetica Nueue", helvetica, sans-serif;
 }
 
+.strong, .strong td{
+	font-weight:bold;
+	font-size:1.2em;
+}
+
+.large{
+	font-size:2em;
+	line-height:1.2em;
+}
+
 nav a{
 font-weight:bold;
 font-size:1em;
@@ -157,29 +167,23 @@ header input{
 margin:0;
 }
 
-article h3{
-	font-weight:bold;
-	line-height:1.5em;
-	border-bottom:1px solid #A9A9A9;
-}
-
 .delete{
 	text-decoration:underline;
 	font-size: .8em;
 	color:#8a1f11;
 }
 
-.unmanaged {
-	color:#505050;
+.total td{
+	font-weight:bold;
+	border-top:black solid 2px;
 }
-
 /*
 	Date Picker
 	------------------
 */
 #daterangepicker{
 	width:300px;
-	font-size:16px;
+	font-size:14px;
 }
 
 /*
@@ -198,13 +202,17 @@ article h3{
 */
 td a{
 font-size:1.2em;
-font-weight:bold;
 color:#000;
 text-decoration:none;
+font-weight:bold;
+}
+
+td{
+	line-height:2em;
 }
 
 td a:hover{
-text-decoration:underline;
+color:#0099FF;
 }
 
 /*
