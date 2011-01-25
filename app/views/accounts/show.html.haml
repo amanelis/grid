@@ -5,7 +5,8 @@
 %header
   .right 
     = render :partial => 'shared/links'
-    = " | ".to_s
+    -unless request.path_parameters['action'] == "show"
+      = " | ".to_s
     - if @account.can_send_weekly_report_now?
       = link_to "Send Email", send_weekly_path(params[:id])
       |
