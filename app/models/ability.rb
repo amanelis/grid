@@ -15,6 +15,9 @@ class Ability
         can :read, Campaign do |campaign|
           user.acquainted_accounts.collect(&:campaigns).flatten.include?(campaign)
         end
+        can :read, Website do |website|
+          user.acquainted_accounts.collect(&:websites).flatten.include?(website)
+        end
         
         can :refresh_accounts, Account
         can :export, Account

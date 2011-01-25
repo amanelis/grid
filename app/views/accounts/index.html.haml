@@ -1,17 +1,11 @@
 :javascript
-  jQuery.ajaxSetup({
-    'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")}
-  })
-
-  $(function() {
-    //setTimeout(updateActivity, 5000);
-  });
-
-  function updateActivity() {
-    var after = $("#activities tbody tr").attr("data-time");
-    $.getScript("/activities.js?after=" + after)
-    setTimeout(updateActivity, 5000);
+  function refresh_accounts() {
+    $('#loading').html('<p><img src="images/facebox/loading.gif" /></p>');
   }
+	
+  jQuery(document).ready(function($) {
+    $('a[rel*=facebox]').facebox()
+  })
 
 %header
   %p.right
@@ -36,6 +30,7 @@
       - for account_type in @accounts_types
         %option{ :selected => account_type == @passed_type}= account_type
     %input{:type => 'submit', :value => 'Filter'}
+    #loading
       
   %table{:class => "pretty"}
     %thead
