@@ -5,6 +5,8 @@ ActionController::Routing::Routes.draw do |map|
   map.report_client_pdf   "/accounts/:id/report/client.pdf",    :controller => "accounts",        :action => :report_client, :as => :client
   map.export              "/accounts/export",                   :controller => "accounts",        :action => :export
   map.send_weekly         "/accounts/send_weekly_email/:id",    :controller => "accounts",        :action => :send_weekly_email
+  map.login               "/login",                             :controller => "user_sessions",   :action => :new
+  map.register            "/register",                          :controller => "users",           :action => :new
   
   map.resources :accounts,        :member => {:report => :get}
   map.resources :campaigns,       :member => {:lead_matrix => :get}
