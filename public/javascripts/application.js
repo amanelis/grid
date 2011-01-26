@@ -8,6 +8,16 @@ function refresh_accounts() {
   window.location = "/accounts/refresh_accounts"
 }
 
+function export_accounts() {
+	jQuery.facebox.close();
+  window.location = "/accounts/export"
+}
+
+function confirm_export_accounts() {
+  var message = '<center>This will export account data to a CSV file, continue?</center><br><center><a href="#" onClick="export_accounts();">Yes</a> or <a href="#" onClick="jQuery.facebox.close();">No</a></center>';
+  jQuery.facebox(message);
+}
+
 function confirm_refresh_accounts() {
   var message = '<center>Refresh accounts from salesforce?</center><br><center><a href="#" onClick="refresh_accounts();">Yes</a> or <a href="#" onClick="jQuery.facebox.close();">No</a></center>';
   jQuery.facebox(message);
