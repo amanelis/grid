@@ -21,7 +21,7 @@ class Account < ActiveRecord::Base
   belongs_to :account_manager
   has_many :account_users
   
-  named_scope :active, :conditions => ['LCASE(status) = ? OR LCASE(status) = ? OR LCASE(status) = ?', "active", "paused", "pending setup"], :order => "name ASC"
+  named_scope :active, :conditions => ['LCASE(status) = ?', "active"], :order => "name ASC"
   named_scope :inactive, :conditions => ['LCASE(status) = ?', "inactive"], :order => "name ASC"
   named_scope :reseller, :conditions => ['LCASE(account_type) LIKE ?', "%reseller%"]
 
