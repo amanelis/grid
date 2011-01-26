@@ -1,5 +1,5 @@
 class SearchesController < ApplicationController
-  before_filter :require_admin
+  load_and_authorize_resource
 
   def index
     @search_term = params[:search].to_s.strip
