@@ -335,9 +335,9 @@ class SemCampaign < ActiveRecord::Base
   end
 
 
-# INSTANCE BEHAVIOR
+  # INSTANCE BEHAVIOR
 
-# campaign-level report
+  # campaign-level report
 
   def create_campaign_level_sem_campaign_report_for_google(date)
     existing_report = SemCampaignReportStatus.first(:conditions => ['pulled_on = ? AND report_type= ? AND sem_campaign_id = ?', date.strftime('%m/%d/%Y'), CAMPAIGN_REPORT_TYPE, self.id])
@@ -482,7 +482,7 @@ class SemCampaign < ActiveRecord::Base
     end
   end
 
-# ad-level report
+  # ad-level report
 
   def create_ad_level_sem_campaign_report_for_google(date)
     existing_report = SemCampaignReportStatus.first(:conditions => ['pulled_on = ? AND report_type= ? AND sem_campaign_id = ?', date.strftime('%m/%d/%Y'), AD_REPORT_TYPE, self.id])
@@ -666,7 +666,6 @@ class SemCampaign < ActiveRecord::Base
     end
   end
 
-
   def spend_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.spend_between(start_date, end_date) }
   end
@@ -717,12 +716,7 @@ class SemCampaign < ActiveRecord::Base
   end
 
   def calls_per_visit_on(date)
-    data = {}
-    visits = self.campaign.website.website_visits.for_date(date)
-    visits.each do |visit|
-      data[visit] = self.campaign.calls.snapshot(visit.time_of_visit, 60)
-    end
-    data
+    self.campaign.website.website_visits.for_date(date).inject({}) { |data, visit| data[visit] = self.campaign.calls.snapshot(visit.time_of_visit, 60) ; data }
   end
 
   def percentage_spent_this_month()
