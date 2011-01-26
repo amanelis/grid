@@ -1,5 +1,8 @@
 - if @current_user.admin? || @current_user.account_manager?
-  = link_to 'Refresh Accounts', refresh_accounts_path, :class => "submit", :name => "submit", :onclick => "refresh_accounts()"
+  =# link_to 'Refresh Accounts', refresh_accounts_path, :class => "submit", :name => "submit", :onclick => "refresh_accounts()"
+  =# link_to 'Refresh Accounts', :partial => "shared/refresh_accounts_confirm", :rel => "facebox"
+  -#<a href="#" id="refresh_accounts" onClick="confirm_refresh_accounts();">Refresh Accounts</a>
+  = link_to 'Refresh Accounts', "#", :onclick => "confirm_refresh_accounts();"
   |
   = link_to 'Export CSV', export_path, :class => "submit", :name => "submit"
-  |
+  

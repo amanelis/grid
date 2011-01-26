@@ -5,6 +5,8 @@
 %header
   .right 
     = render :partial => 'shared/links'
+    -unless request.path_parameters['action'] == "show"
+      = " | ".to_s
     - if @account.can_send_weekly_report_now?
       = link_to "Send Email", send_weekly_path(params[:id])
       |
@@ -15,39 +17,42 @@
   %h2= @account.name
   #datepicker=render :partial => "shared/date_picker"
 %article
-  - unless @managed_campaigns.empty?
-    %p=high_chart("managed_campaign_summary_graph", @campaign_summary_graph)
-  %h3 CityVoice Managed
-  %p *Cost Per Contact - Spend / Total contacts (includes spam, hangups, etc.)
-  %table.span-12.append-1 
-    %thead
-      %tr
-        %th Campaigns
-        %th Call Leads
-        %th Form Leads
-        %th Total
-        %th Cost
-        %th Cost Per Lead
-        %th Cost Per Contact*
-    %tbody
-      - @managed_total_results = Campaign.determine_totals_for(@managed_campaigns, @total_reporting_messages, @start_date, @end_date)      
-      - @managed_campaigns.each do |campaign|
+  =high_chart("total_daily_leads_graph", @daily_total_leads_graph)
+  %hr
+  #cityvoice_managed.span-11
+    %h3 CityVoice Managed
+    %table
+      %thead
         %tr
-          %td= link_to campaign.name, campaign_path(campaign, :daterange => params[:daterange])
-          %td= campaign.number_of_lead_calls_between(@start_date, @end_date).to_s
-          %td= campaign.number_of_lead_submissions_between(@start_date, @end_date).to_s
-          %td= campaign.number_of_total_leads_between(@start_date, @end_date).to_s
-          %td= ActionController::Base.helpers.number_to_currency(campaign.cost_between(@start_date, @end_date))
-          %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(@start_date, @end_date))
-          %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_contact_between(@start_date, @end_date)) 
-      %tr.total
-        %td Total
-        %td= @managed_total_results[@total_reporting_messages[0]].to_s
-        %td= @managed_total_results[@total_reporting_messages[2]].to_s
-        %td= @managed_total_results[@total_reporting_messages[4]].to_s
-        %td= ActionController::Base.helpers.number_to_currency(@managed_total_results[@total_reporting_messages[6]])
-        %td= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_lead_for(@managed_campaigns, @start_date, @end_date))
-        %td= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_contact_for(@managed_campaigns, @start_date, @end_date)) 
+          %th Campaigns
+          %th Call Leads
+          %th Form Leads
+          %th Total
+          %th Cost
+          %th Cost Per Lead
+          %th Cost Per Contact*
+      %tbody
+        - @managed_total_results = Campaign.determine_totals_for(@managed_campaigns, @total_reporting_messages, @start_date, @end_date)      
+        - @managed_campaigns.each do |campaign|
+          %tr
+            %td= link_to campaign.name, campaign_path(campaign, :daterange => params[:daterange])
+            %td= campaign.number_of_lead_calls_between(@start_date, @end_date).to_s
+            %td= campaign.number_of_lead_submissions_between(@start_date, @end_date).to_s
+            %td= campaign.number_of_total_leads_between(@start_date, @end_date).to_s
+            %td= ActionController::Base.helpers.number_to_currency(campaign.cost_between(@start_date, @end_date))
+            %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(@start_date, @end_date))
+            %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_contact_between(@start_date, @end_date)) 
+        %tr.total
+          %td Total
+          %td= @managed_total_results[@total_reporting_messages[0]].to_s
+          %td= @managed_total_results[@total_reporting_messages[2]].to_s
+          %td= @managed_total_results[@total_reporting_messages[4]].to_s
+          %td= ActionController::Base.helpers.number_to_currency(@managed_total_results[@total_reporting_messages[6]])
+          %td= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_lead_for(@managed_campaigns, @start_date, @end_date))
+          %td= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_contact_for(@managed_campaigns, @start_date, @end_date)) 
+    %p *Cost Per Contact - Spend / Total contacts (includes spam, hangups, etc.)
+  - unless @managed_campaigns.empty?
+    #managed_graph.span-12.last=high_chart("managed_campaign_summary_graph", @campaign_summary_graph)
   %hr
   %h3 Unmanaged
   %table.span-23.last
