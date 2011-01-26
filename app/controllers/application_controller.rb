@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
   end
 
   private
-    # respond("html", dashboard_path, "js", root_url, ............)
+    # respond("html", dashboard_path, "js", root_url, "xml", @object, .................)
     def respond(*args)
       respond_to do |format|
         Hash[*args].each do |f, r|
@@ -24,6 +24,10 @@ class ApplicationController < ActionController::Base
             r.nil? ? format.html : format.html {redirect_to r}
           elsif f.to_s == "js"
             r.nil? ? format.js : format.js {redirect_to r} 
+          elsif f.to_s == "xml"
+            r.nil? ? format.xml : format.xml {render :xml => r}
+          elsif f.to_s == "json"
+            r.nil? ? format.json : format.json {render :json => r}
           end
         end
       end
