@@ -11,11 +11,24 @@ class ApplicationController < ActionController::Base
   
   #CanCan rescue errors and access denied
   rescue_from CanCan::AccessDenied do |exception|
-    flash[:error] = "Access denied for page you tried to view"
+    flash[:error] = "Ooops, looks like you do not have permissions to view that page!"
     redirect_to dashboard_url
   end
 
   private
+    # respond("html", dashboard_path, "js", root_url, ............)
+    def respond(*args)
+      respond_to do |format|
+        Hash[*args].each do |f, r|
+          if f.to_s == "html"
+            r.nil? ? format.html : format.html {redirect_to r}
+          elsif f.to_s == "js"
+            r.nil? ? format.js : format.js {redirect_to r} 
+          end
+        end
+      end
+    end
+  
     def current_user_session
       return @current_user_session if defined?(@current_user_session)
       @current_user_session = UserSession.find
