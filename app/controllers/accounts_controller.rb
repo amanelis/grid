@@ -22,12 +22,7 @@ class AccountsController < ApplicationController
     @accounts_data = Rails.cache.fetch("accounts_data") { Account.get_accounts_data }
     @accounts.sort! {|a,b| a.name.downcase <=> b.name.downcase}
     
-    respond_to do |format|
-      format.html 
-      format.js
-      format.xml { render :xml => @accounts }
-    end
-    
+    respond("html", nil, "xml", @accounts) 
   end
 
   # /accounts/:id
@@ -65,31 +60,28 @@ class AccountsController < ApplicationController
         @start_date = Date.today.beginning_of_month
         @end_date = Date.yesterday
         flash[:error] = "The date you entered was incorrect, we set it back to <strong>#{(@start_date).to_s(:long)} to #{@end_date.to_s(:long)}</strong> for you."
-        
-        respond_to do |format|
-          format.html { redirect_to account_path(params[:id]) }
-        end
+        respond("html", account_path(params[:id]))
       end 
     end
     
     @daily_total_leads_graph = HighChart.new('graph') do |f|
       f.title({:text=>"Total Daily Leads"})  
-      f.y_axis({:title=> {:text=> 'Daily Leads'}, :labels=>{:rotation=>0, :align=>'right'} })
+      f.y_axis({:title=> {:text=> 'Daily Leads'}, :min => 0, :labels=>{:rotation=>0, :align=>'right'} })
       f.x_axis(:categories => ((@start_date)..(@end_date)).to_a , :labels=>{:rotation=>-45 , :align => 'right'})
       f.legend(:enabled => false)
       
       f.options[:chart][:defaultSeriesType] = "line"
-      f.series(:name=> 'Total Leads',       :data => (@start_date..@end_date).inject([]) { |leads, date| leads << @managed_campaigns.sum { |campaign| campaign.number_of_total_leads_between(date, date) } })
+      f.series(:name=> 'Leads',       :data => (@start_date..@end_date).inject([]) { |leads, date| leads << @managed_campaigns.sum { |campaign| campaign.number_of_total_leads_between(date, date) } })
     end
     
     @campaign_summary_graph = HighChart.new('graph') do |f|
       f.title({:text=>"Campaign Summary"})  
-      f.y_axis({:title=> {:text=> 'Leads'}, :labels=>{:rotation=>0, :align=>'right'} })
+      f.y_axis({:title=> {:text=> 'Leads'}, :min => 0, :labels=>{:rotation=>0, :align=>'right'} })
       f.x_axis(:categories => @managed_campaigns.collect(&:name) , :labels=>{:rotation=>-45 , :align => 'right'})
       f.legend(:enabled => false)
 
       f.options[:chart][:defaultSeriesType] = "column"
-      f.series(:name=> 'Total Leads',       :data => @managed_campaigns.collect {|campaign| campaign.number_of_total_leads_between(@start_date, @end_date) })
+      f.series(:name=> 'Leads',       :data => @managed_campaigns.collect {|campaign| campaign.number_of_total_leads_between(@start_date, @end_date) })
     end
     
   end
@@ -97,10 +89,6 @@ class AccountsController < ApplicationController
   # /accounts/new
   def new
     authorize! :create, @account
-    
-    respond_to do |format|
-      format.html
-    end
   end
 
   # /accounts/:id/edit
@@ -148,10 +136,6 @@ class AccountsController < ApplicationController
   def report
     authorize! :read, @account
     Time.zone = @account.time_zone
-
-    respond_to do |format|
-      format.html
-    end
   end
   
   # /accounts/:id/report/client /.pdf

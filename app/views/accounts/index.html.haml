@@ -17,7 +17,6 @@
       - for status in @accounts_statuses
         %option{ :selected => status == @passed_status}= status
 
-
     %label
       = "Account Type: "
     %select{:id => :account_type, :name => :account_type}

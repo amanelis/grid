@@ -1,0 +1,23 @@
+%tr{:id => "#{call.timestamp.to_i}", "data-time" => "#{call.timestamp.to_i}"}
+  %td.campaign= link_to call.phone_number.campaign.name, campaign_path(call.phone_number.campaign)
+  %td.caller
+    =number_to_phone(call.caller_number)
+    ="(#{call.caller_name})"
+  %td.status= "#{call.call_status} (#{(call.call_end - call.call_start).to_int} seconds)"
+  %td.recording
+    -if call.recorded? && call.recording?
+      = link_to('Listen', call.recording.expiring_url(14400))
+      = mp3_player "#{call.recording.expiring_url(14400)}", :bg => "EEEEEE", :track => "EEEEEE", :slider => "222222", :loader => "EEEEEE"
+    -else
+      N/A
+  %td.review
+    - if call.duplicate?
+      = "Duplicate Call"
+    -else
+      - form_for call, :url => activity_path(call.activity) do |f|
+        = f.select(:review_status, (call.review_status_options))
+        = f.submit(:update)
+  %td.time
+    -activity_time_zone = call.phone_number.campaign.account.time_zone
+    =time_ago_in_words(call.call_start)
+%div.activities
