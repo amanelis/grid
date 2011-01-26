@@ -22,12 +22,7 @@ class AccountsController < ApplicationController
     @accounts_data = Rails.cache.fetch("accounts_data") { Account.get_accounts_data }
     @accounts.sort! {|a,b| a.name.downcase <=> b.name.downcase}
     
-    respond_to do |format|
-      format.html 
-      format.js
-      format.xml { render :xml => @accounts }
-    end
-    
+    respond("html", nil, "xml", @accounts) 
   end
 
   # /accounts/:id
@@ -65,10 +60,7 @@ class AccountsController < ApplicationController
         @start_date = Date.today.beginning_of_month
         @end_date = Date.yesterday
         flash[:error] = "The date you entered was incorrect, we set it back to <strong>#{(@start_date).to_s(:long)} to #{@end_date.to_s(:long)}</strong> for you."
-        
-        respond_to do |format|
-          format.html { redirect_to account_path(params[:id]) }
-        end
+        respond("html", account_path(params[:id]))
       end 
     end
     
@@ -97,10 +89,6 @@ class AccountsController < ApplicationController
   # /accounts/new
   def new
     authorize! :create, @account
-    
-    respond_to do |format|
-      format.html
-    end
   end
 
   # /accounts/:id/edit
@@ -148,10 +136,6 @@ class AccountsController < ApplicationController
   def report
     authorize! :read, @account
     Time.zone = @account.time_zone
-
-    respond_to do |format|
-      format.html
-    end
   end
   
   # /accounts/:id/report/client /.pdf
