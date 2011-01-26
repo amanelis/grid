@@ -1,7 +1,6 @@
 require 'xmlrpc/client'
 require 'xmlrpc/datetime'
 
-
 class PhoneNumber < ActiveRecord::Base
   belongs_to :campaign
   has_many :calls, :dependent => :destroy
@@ -102,7 +101,6 @@ class PhoneNumber < ActiveRecord::Base
     Campaign.orphanage.phone_numbers
   end
   
-  
   def self.selectable_orphaned_phone_numbers
     self.orphaned_phone_numbers.collect { |orphan| ["#{orphan.name} - #{orphan.inboundno}", orphan.id] }.sort { |x, y| x.first.downcase <=> y.first.downcase }
   end
@@ -112,16 +110,15 @@ class PhoneNumber < ActiveRecord::Base
     account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
     resp = account.request("/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/AvailablePhoneNumbers/#{country}/Local.json?AreaCode=#{area_code}", 'GET')
     resp.error! unless resp.kind_of? Net::HTTPSuccess
-    numbers = Array.new()
     if resp.code == '200'
       results = JSON.parse(resp.body)['available_phone_numbers']
       return results.sort {|a,b| a["phone_number"].to_i <=> b["phone_number"].to_i}
     end
   end
   
-  
-  
+
   # INSTANCE BEHAVIOR
+
   def update_twilio_number(name, forward_to, id_caller = true, record_calls = true, transcribe_calls = false, text_calls = false, call_url = "http://grid.cityvoice.com/phone_numbers/connect/", fallback_url = "http://grid.cityvoice.com/phone_numbers/connect/", status_url = "http://grid.cityvoice.com/phone_numbers/collect/", sms_url = "http://grid.cityvoice.com/phone_numbers/sms_collect/", fallback_sms_url = "http://grid.cityvoice.com/phone_numbers/sms_collect/")
     job_status = JobStatus.create(:name => "PhoneNumber.update_twilio_number")
     begin
