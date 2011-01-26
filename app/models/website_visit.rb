@@ -10,7 +10,8 @@ class WebsiteVisit < ActiveRecord::Base
   named_scope :between, lambda { |start_date, end_date| {:conditions => ['time_of_visit between ? AND ?', start_date.to_time_in_current_zone.at_beginning_of_day.utc, end_date.to_time_in_current_zone.end_of_day.utc], :order => 'time_of_visit ASC'} }
   named_scope :for_date, lambda { |date| {:conditions => ['time_of_visit between ? AND ?', date.to_time_in_current_zone.at_beginning_of_day.utc, date.to_time_in_current_zone.end_of_day.utc]} }
   named_scope :for_visitor, lambda { |visitor| {:conditions => ['visitor_id = ?', visitor]} }
-  
+
+
   # CLASS BEHAVIOR
 
   def self.data_pull_websites_visits(hard_update = false, start_date = (Date.today - 2.days), end_date = Date.yesterday, verbose = false)
@@ -198,29 +199,21 @@ class WebsiteVisit < ActiveRecord::Base
     exception
   end
 
+
   # INSTANCE BEHAVIOR
+  
   def all_visits_from_visitor()
     self.class.find_all_by_visitor_id(self.visitor_id)
   end
   
   def possible_calls(time_span = 2)
-    possible_calls = Array.new
-    self.website.campaigns.each do |campaign|
-      possible_calls = possible_calls + campaign.calls.snapshot(self.time_of_visit, time_span) if time_span.present?
-    end
-    possible_calls = possible_calls.sort {|a,b| a.call_start <=> b.call_start } if possible_calls.present?
-    possible_calls
+    return [] if time_span.blank?
+    self.website.campaigns.inject([]) { |possible_calls, campaign| possible_calls << campaign.calls.snapshot(self.time_of_visit, time_span) }.flatten.sort {|a,b| a.call_start <=> b.call_start }
   end
   
   def possible_submissions(time_span = 2)
-    possible_submissions = Array.new
-    self.website.campaigns.each do |campaign|
-      campaign.contact_forms.each do |form|
-        possible_submissions = possible_submissions + form.submissions.snapshot(self.time_of_visit, time_span) if time_span.present?
-      end  
-    end
-    possible_submissions = possible_submissions.sort {|a,b| a.time_of_submission <=> b.time_of_submission} if possible_submissions.present?
-    possible_submissions
+    return [] if time_span.blank?
+    self.website.campaigns.inject([]) { |possible_submissions, campaign| possible_submissions << campaign.submissions.snapshot(self.time_of_visit, time_span) }.flatten.sort {|a,b| a.time_of_submission <=> b.time_of_submission }
   end
   
 end
