@@ -47,7 +47,6 @@ class AccountsController < ApplicationController
     else
       dates = params[:daterange].split(' to ') || params[:daterange].split(' - ')
       @date_range = params[:daterange]
-      
       begin 
         @start_date = Date.parse(dates[0])
         @end_date = Date.parse(dates[1])
