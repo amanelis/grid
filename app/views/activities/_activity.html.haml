@@ -4,8 +4,8 @@
     %td.campaign= link_to activity.activity_type.phone_number.campaign.name, campaign_path(activity.activity_type.phone_number.campaign)
     %td.caller
       =number_to_phone(activity.activity_type.caller_number)
-      ="(#{activity.activity_type.caller_name})"
-    %td{:class => activity.activity_type.call_status}=  "#{(activity.activity_type.call_end - activity.activity_type.call_start).to_int} seconds"
+      %br
+      %small=activity.activity_type.caller_name
     %td.recording
       -if activity.activity_type.recorded? && activity.activity_type.recording?
         = link_to('Listen', activity.activity_type.recording.expiring_url(14400))
@@ -13,6 +13,7 @@
       -else
         N/A
     %td.review
+      %span{:class => activity.activity_type.call_status}=  "#{(activity.activity_type.call_end - activity.activity_type.call_start).to_int} seconds"
       - if activity.activity_type.duplicate?
         = "Duplicate"
       -else
@@ -27,27 +28,15 @@
   %tr{"data-time" => "#{activity.timestamp.to_i}"}
     %td.type= image_tag ("icons/form.png")
     %td.campaign= link_to activity.activity_type.contact_form.campaign.name, campaign_path(activity.activity_type.contact_form.campaign)
-    %td.caller=mail_to("#{activity.activity_type.from_email}", "#{activity.activity_type.name || activity.activity_type.from_email}")
-    %td.status
-      Status
+    %td.caller
+      =activity.activity_type.from_email
+      %br
+      %small=activity.activity_type.name || activity.activity_type.from_email
+      %small=activity.activity_type.phone_number
+      %small=activity.activity_type.home_address
     %td.recording
-      %ul
-        %li
-          Phone:
-          =activity.activity_type.phone_number
-        %li
-          Address:
-          =activity.activity_type.home_address
-        %li
-          Submitted at:
-          -activity_time_zone = activity.activity_type.contact_form.campaign.account.time_zone
-          =activity.activity_type.time_of_submission.in_time_zone(activity_time_zone).to_s(:long) + " " + activity_time_zone
-        %li
-          Work Category:
-          =activity.activity_type.work_category
-        %li
-          Description:
-          =activity.activity_type.work_description
+      %strong=activity.activity_type.work_category
+      %small=activity.activity_type.work_description
     %td.review
       - if activity.duplicate?
         = "Duplicate"
@@ -57,5 +46,5 @@
           = f.submit(:update)
     %td.time
       -activity_time_zone = activity.activity_type.contact_form.campaign.account.time_zone
-      =time_ago_in_words(activity.activity_type.time_of_submission) + " ago"
+      =time_ago_in_words(activity.activity_type.time_of_submission)
     
