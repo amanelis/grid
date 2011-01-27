@@ -24,7 +24,7 @@ class ContactForm < ActiveRecord::Base
 
   def create_wufoo_form
     wufoo = WuParty.new("cityvoice", "9FTI-TCG8-BSEE-RFUV") 
-    w
+    
   end
   
   def get_form_text()
