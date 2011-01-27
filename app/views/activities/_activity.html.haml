@@ -50,7 +50,10 @@
       - if activity.duplicate?
         = "Duplicate Submission"
       -else
-        - form_for activity, :url => activity_path(activity.activity) do |f| 
+        - form_for activity, :url => activity_path(activity) do |f| 
           = f.select(:review_status, (activity.activity_type.review_status_options))
           = f.submit(:update)
-    %td.time=time_ago_in_words(activity.activity_type.time_of_submission)+ " ago"
+    %td.time
+      -activity_time_zone = activity.activity_type.contact_form.campaign.account.time_zone
+      =time_ago_in_words(activity.activity_type.time_of_submission) + " ago"
+    
