@@ -2,6 +2,11 @@ class ContactFormsController < ApplicationController
   
   def get_html
     @form = ContactForm.find(params[:id])
+    render :text => @form.html_block
+  end
+  
+  def thank_you
+    text = "<label for=\"thank_you\">Thank you for your submission.</label><"
   end
   
   def create
@@ -27,8 +32,11 @@ class ContactFormsController < ApplicationController
       @form.time_requested = params[:time_requested]
       @form.other_information = params[:other_information]
       @form.save
+      block = @form.get_form_text
+      @form.html_block = block
+      @form.save
       #@form_text = @campaign.create_contact_form(params[:description], params[:return_url], params[:forwarding_email], params[:forwarding_bcc_email], params[:custom1_text], params[:custom2_text], params[:custom3_text], params[:custom4_text], params[:need_name], params[:need_address], params[:need_phone], params[:need_email], params[:work_category], params[:work_description], params[:date_requested], params[:time_requested], params[:other_information])
-      render :text => @form.get_form_text
+      render :text => @form.html_block
     end
   end
   
@@ -38,5 +46,14 @@ class ContactFormsController < ApplicationController
        @form = @campaign.contact_forms.build
      end
   end
+  
+  def show
+    
+  end
+  
+  def update
+    
+  end
+  
   
 end
