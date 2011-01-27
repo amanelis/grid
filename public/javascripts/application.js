@@ -19,7 +19,7 @@ function confirm_export_accounts() {
 }
 
 function confirm_refresh_accounts() {
-  var message = '<center>Refresh accounts from salesforce?</center><br><center><a href="#" onClick="refresh_accounts();">Yes</a> or <a href="#" onClick="jQuery.facebox.close();">No</a></center>';
+  var message = '<center>Refresh accounts from salesforce?<br>This will take about 5 minutes...</center><br><center><a href="#" onClick="refresh_accounts();">Yes</a> or <a href="#" onClick="jQuery.facebox.close();">No</a></center>';
   jQuery.facebox(message);
 }
 
