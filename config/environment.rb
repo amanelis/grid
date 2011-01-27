@@ -45,6 +45,7 @@ Rails::Initializer.run do |config|
   config.gem 'fastercsv', :version => '1.5.3'
   config.gem 'twiliolib', :version => '2.0.7'
   config.gem "cancan", :version => '1.4.1'
+  config.gem "sanitize", :version => '2.0.0'
 
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named
