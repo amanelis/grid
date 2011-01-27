@@ -1,50 +1,48 @@
 - if activity.is_call?
   %tr{"data-time" => "#{activity.timestamp.to_i}"}
     %td.type= image_tag ("icons/telephone.png")
-    %td.campaign= link_to activity.activity_type.phone_number.campaign.name, campaign_path(activity.activity_type.phone_number.campaign)
+    %td.campaign
+      = link_to activity.activity_type.phone_number.campaign.name, campaign_path(activity.activity_type.phone_number.campaign)
     %td.caller
-      =number_to_phone(activity.activity_type.caller_number)
-      %br
-      %small=activity.activity_type.caller_name
+      %strong=number_to_phone(activity.activity_type.caller_number)
+      %p=activity.activity_type.caller_name
     %td.recording
       -if activity.activity_type.recorded? && activity.activity_type.recording?
-        = link_to('Listen', activity.activity_type.recording.expiring_url(14400))
-        = mp3_player "#{activity.activity_type.recording.expiring_url(14400)}", :bg => "EEEEEE", :track => "EEEEEE", :slider => "222222", :loader => "EEEEEE"
+        %audio{:src => activity.activity_type.recording.expiring_url(14400), :autoplay =>"true"}
       -else
         N/A
-    %td.review
-      %span{:class => activity.activity_type.call_status}=  "#{(activity.activity_type.call_end - activity.activity_type.call_start).to_int} seconds"
+    %td.review{:class => activity.activity_type.call_status.downcase}
+      =  "#{(activity.activity_type.call_end - activity.activity_type.call_start).to_int} seconds"
       - if activity.activity_type.duplicate?
-        = "Duplicate"
+        %p.duplicate= "Duplicate"
       -else
         - form_for activity, :url => activity_path(activity) do |f|
           = f.select(:review_status, (activity.activity_type.review_status_options))
           = f.submit(:update)
     %td.time
       -activity_time_zone = activity.activity_type.phone_number.campaign.account.time_zone
-      =time_ago_in_words(activity.activity_type.call_start)
+      =time_ago_in_words(activity.activity_type.call_start) + " ago"
 
 - elsif activity.is_submission?
   %tr{"data-time" => "#{activity.timestamp.to_i}"}
     %td.type= image_tag ("icons/form.png")
     %td.campaign= link_to activity.activity_type.contact_form.campaign.name, campaign_path(activity.activity_type.contact_form.campaign)
     %td.caller
-      =activity.activity_type.from_email
-      %br
-      %small=activity.activity_type.name || activity.activity_type.from_email
-      %small=activity.activity_type.phone_number
-      %small=activity.activity_type.home_address
+      %strong=activity.activity_type.from_email
+      %p=activity.activity_type.name || activity.activity_type.from_email
+      %p=activity.activity_type.phone_number
+      %p=activity.activity_type.home_address
     %td.recording
-      %strong=activity.activity_type.work_category
-      %small=activity.activity_type.work_description
+      %strong=h activity.activity_type.work_category
+      %p=h activity.activity_type.work_description
     %td.review
       - if activity.duplicate?
-        = "Duplicate"
+        %p.duplicate= "Duplicate"
       -else
         - form_for activity, :url => activity_path(activity) do |f| 
           = f.select(:review_status, (activity.activity_type.review_status_options))
           = f.submit(:update)
     %td.time
       -activity_time_zone = activity.activity_type.contact_form.campaign.account.time_zone
-      =time_ago_in_words(activity.activity_type.time_of_submission)
+      =time_ago_in_words(activity.activity_type.time_of_submission) + " ago"
     
