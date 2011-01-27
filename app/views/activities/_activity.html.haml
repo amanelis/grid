@@ -1,5 +1,6 @@
 - if activity.is_call?
-  %tr{:id => "#{activity.timestamp.to_i}", "data-time" => "#{activity.timestamp.to_i}"}
+  %tr{"data-time" => "#{activity.timestamp.to_i}"}
+    %td.type
     %td.campaign= link_to activity.activity_type.phone_number.campaign.name, campaign_path(activity.activity_type.phone_number.campaign)
     %td.caller
       =number_to_phone(activity.activity_type.caller_number)
@@ -21,10 +22,27 @@
     %td.time
       -activity_time_zone = activity.activity_type.phone_number.campaign.account.time_zone
       =time_ago_in_words(activity.activity_type.call_start)
-  %div.activities
 
 - elsif activity.is_submission?
-  .activity_item{:id => "#{activity.timestamp.to_i}"}
+  %tr{"data-time" => "#{activity.timestamp.to_i}"}
+    %td.type
+    %td.campaign
+    %td.caller
+    %td.recording
+    %td.review
+      - if activity.duplicate?
+        = "Duplicate Submission"
+      -else
+        - form_for activity, :url => activity_path(activity.activity) do |f| 
+          = f.select(:review_status, :label => 'Review', :as => :select, :collection => activity.review_status_options, :include_blank => false
+          = f.submit(:update)
+    %td.time
+  
+  
+  
+  
+  
+  
     .title
       = link_to activity.contact_form.campaign.name, campaign_path(activity.contact_form.campaign)
     .icon
@@ -53,15 +71,7 @@
           Description:
           =activity.work_description
     .review
-      - if activity.duplicate?
-        = "Duplicate Submission"
-      - semantic_remote_form_for activity, :url => activity_path(activity.activity) do |f| 
-        = f.semantic_errors :state
-        - f.inputs do
-          %br
-          = f.input :review_status, :label => 'Review', :as => :select, :collection => activity.review_status_options, :include_blank => false
-        - f.buttons do
-          = f.commit_button :update, :button_html => { :class => "sexybutton sexysimple sexygreen" }
+
     .bottom_title
       .leftinfo
         =activity.ip_address
