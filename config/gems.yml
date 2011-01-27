@@ -51,7 +51,5 @@
   :name: twiliolib
 - :version: = 1.4.1
   :name: cancan
-- :version: = 2.0.0
-  :name: sanitize
 - :version: 2.3.9
   :name: rails

@@ -18,7 +18,7 @@ class SubmissionsController < ApplicationController
     logger.debug params[:submission].to_yaml
     logger.debug "**********************************\n\n"
     
-    @submission = Submission.new(Sanitize.clean(params[:submission]))
+    @submission = Submission.new(params[:submission])
     @submission.ip_address = request.remote_ip
     @submission.user_agent = request.user_agent
     @submission.time_of_submission = DateTime.now
