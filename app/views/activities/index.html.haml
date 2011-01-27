@@ -15,10 +15,9 @@
     }
 
 %header
+  .right= will_paginate(@activities)
   %h3 Activity
 %article
-  .right= will_paginate(@activities)
-  %h2 Phone Calls
   %table#activities
     %thead
       %tr
@@ -32,17 +31,5 @@
       - for activity in @activities
         - if activity.is_call?
           = render activity, :locals => {:activity => activity}
-        
-  %h2 Form Submissions
-  %table
-    %thead
-      %tr
-        %th Campaign
-        %th Caller
-        %th Status
-        %th Recording
-        %th Review
-        %th Time
-    %tbody
-      -# if activity.is_submission?
-        =# render :partial => "shared/activity_submission", :locals => { :activity => activity.activity_type }
+        - if activity.is_submission?
+          = render :partial => "shared/activity_submission", :locals => { :activity => activity.activity_type }
