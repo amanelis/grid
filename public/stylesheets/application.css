@@ -109,8 +109,29 @@ background-repeat: no-repeat;
 padding-left:16px;
 }
 
-li{
+ul{
 	list-style-type:none;
+}
+
+/*
+	Header UL Nav
+	------------------
+*/
+
+header li{
+	float:left;
+	margin-left:24px;
+	text-align:center;
+}
+
+header li a{
+	color:#000;
+}
+
+header li a:hover{
+	opacity: .5;
+	color:#000;
+	text-decoration:none;
 }
 
 /*

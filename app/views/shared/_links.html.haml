@@ -1,7 +1,13 @@
 - if @current_user.admin? || @current_user.account_manager?
-  = link_to 'Refresh Accounts', "#", :onclick => "confirm_refresh_accounts();"
-  |
-  = link_to 'Export Accounts', "#", :onclick => "confirm_export_accounts();"
+  %li
+    %a{:onclick => "confirm_refresh_accounts();"}
+      = image_tag ("icons/refresh.png")
+      %br
+      Refresh
+  %li
+    %a{:onclick => "confirm_export_accounts();"}
+      = image_tag ("icons/csv.png")
+      %br
+      CSV
   -if request.path_parameters['action'] == "show"
-    |
   
