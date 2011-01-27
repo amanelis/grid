@@ -5,19 +5,19 @@
     })
 
     $(function() {
-      setTimeout(updateActivity, 25000);
+      setTimeout(updateActivity, 7000);
     });
 
     function updateActivity() {
       var after = $("#activities tbody tr").attr("data-time");
       $.getScript("/activities.js?after=" + after)
-      setTimeout(updateActivity, 25000);
+      setTimeout(updateActivity, 7000);
     }
 
 %header
   %h3 Activity
 %article
-  .right= will_paginate(@activities_calls)
+  .right= will_paginate(@activities)
   %h2 Phone Calls
   %table#activities
     %thead
@@ -29,9 +29,10 @@
         %th Review
         %th Time
     %tbody
-      - for call in @activities_calls
-        = render :partial => "call", :locals => {:call => call}
-  .right=# will_paginate(@activities_submissions)
+      - for activity in @activities
+        - if activity.is_call?
+          = render activity, :locals => {:activity => activity}
+        
   %h2 Form Submissions
   %table
     %thead
