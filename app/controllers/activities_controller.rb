@@ -5,9 +5,9 @@ class ActivitiesController < ApplicationController
     @user = current_user
     @accounts = current_user.acquainted_accounts
     
-    @activities_calls       = @accounts.collect {|account| account.phone_numbers.calls}.flatten.paginate(:page => (params[:page] || 1), :order => 'timestamp DESC', :per_page => 150)
-    @activities_submissions = @accounts.collect {|account| account.contact_forms.submissions}.flatten.paginate(:page => (params[:page] || 1), :order => 'timestamp DESC', :per_page => 150)
-    @activities_all         = Activity.paginate(:page => (params[:page] || 1), :order => 'timestamp DESC', :per_page => 150)
+    @activities_calls       = @accounts.collect {|account| account.phone_numbers.calls}.flatten.paginate(:page => (params[:page] || 1), :order => 'timestamp ASC', :per_page => 150)
+    @activities_submissions = @accounts.collect {|account| account.contact_forms.submissions}.flatten.paginate(:page => (params[:page] || 1), :order => 'timestamp ASC', :per_page => 150)
+    @activities_all         = Activity.paginate(:page => (params[:page] || 1), :order => 'timestamp ASC', :per_page => 150)
     
     respond("html", nil, "js", nil)
   end
