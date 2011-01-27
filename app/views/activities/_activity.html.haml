@@ -5,7 +5,7 @@
     %td.caller
       =number_to_phone(activity.activity_type.caller_number)
       ="(#{activity.activity_type.caller_name})"
-    %td.status= "#{activity.activity_type.call_status} (#{(activity.activity_type.call_end - activity.activity_type.call_start).to_int} seconds)"
+    %td{:class => activity.activity_type.call_status}=  "#{(activity.activity_type.call_end - activity.activity_type.call_start).to_int} seconds"
     %td.recording
       -if activity.activity_type.recorded? && activity.activity_type.recording?
         = link_to('Listen', activity.activity_type.recording.expiring_url(14400))
@@ -14,7 +14,7 @@
         N/A
     %td.review
       - if activity.activity_type.duplicate?
-        = "Duplicate Call"
+        = "Duplicate"
       -else
         - form_for activity, :url => activity_path(activity) do |f|
           = f.select(:review_status, (activity.activity_type.review_status_options))
@@ -28,6 +28,8 @@
     %td.type= image_tag ("icons/form.png")
     %td.campaign= link_to activity.activity_type.contact_form.campaign.name, campaign_path(activity.activity_type.contact_form.campaign)
     %td.caller=mail_to("#{activity.activity_type.from_email}", "#{activity.activity_type.name || activity.activity_type.from_email}")
+    %td.status
+      Status
     %td.recording
       %ul
         %li
@@ -48,7 +50,7 @@
           =activity.activity_type.work_description
     %td.review
       - if activity.duplicate?
-        = "Duplicate Submission"
+        = "Duplicate"
       -else
         - form_for activity, :url => activity_path(activity) do |f| 
           = f.select(:review_status, (activity.activity_type.review_status_options))

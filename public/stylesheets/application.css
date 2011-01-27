@@ -348,3 +348,16 @@ form.inline p { margin-bottom:0; }
     display: none;
   }
 }
+
+/*
+	Activities
+	------------------
+*/
+
+.wrong, .hangup, .cancel{
+	color:red;
+}
+
+.ANSWER{
+	color:green;
+}
