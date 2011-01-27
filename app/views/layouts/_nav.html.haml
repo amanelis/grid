@@ -17,11 +17,10 @@
     = link_to @current_user.email, user_path(@current_user)
     = link_to 'Logout', user_session_path, :method => :delete, :id => "logout"
   %aside#search.span-3.last
-    - form_tag searches_url, :method => :get, :id => 'search' do
-      = text_field_tag 'search'
+    = render :partial => 'shared/search'
 - else
-  %aside.span-22.last
+  %aside.span-21.last
     %nav
       = link_to "Home", root_path
-      = link_to "Register", new_person_path
-      = link_to "Login", new_user_session_path
+      = link_to "Register", register_path
+      = link_to "Login", login_path

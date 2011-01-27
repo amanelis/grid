@@ -1,14 +1,13 @@
 class SearchesController < ApplicationController
-  before_filter :require_admin
-
+  load_and_authorize_resource :account, :campaign
+  
   def index
-    @search_term = params[:search].to_s.strip
-    if @search_term.blank?
-      @search_accounts = nil
-      @search_campaigns = nil
-    else
-      @search_accounts = Account.name_like_all(@search_term).ascend_by_name
-      @search_campaigns = Campaign.name_like_all(@search_term).ascend_by_name
+    @accounts     = current_user.acquainted_accounts
+    @campaigns    = current_user.acquainted_campaigns
+    @search_term  = params[:search].to_s.strip
+    unless @search_term.blank?
+      @search_accounts  = Account.name_like_all(@search_term).ascend_by_name.select  {|result| @accounts.include?(result)}
+      @search_campaigns = Campaign.name_like_all(@search_term).ascend_by_name.select {|result| @campaigns.include?(result)}
     end
   end
 

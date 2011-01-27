@@ -21,6 +21,7 @@ class ContactForm < ActiveRecord::Base
   def inactive?
     self.active? ? false : true
   end
+<<<<<<< HEAD
 
   def create_wufoo_form
     wufoo = WuParty.new("cityvoice", "9FTI-TCG8-BSEE-RFUV") 
@@ -130,5 +131,7 @@ class ContactForm < ActiveRecord::Base
     
   end
   
+=======
+>>>>>>> 2b480624f08a7d80215bd511696cfe71488c4a41
   
 end

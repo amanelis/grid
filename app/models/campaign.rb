@@ -32,6 +32,7 @@ class Campaign < ActiveRecord::Base
   # Twilio AccountSid and AuthToken
   ACCOUNT_SID = 'AC7fedbe5d54f77671320418d20f843330'
   ACCOUNT_TOKEN = 'a7a72b0eb3c8a41064c4fc741674a903'
+
   
   # CLASS BEHAVIOR
 
@@ -54,6 +55,8 @@ class Campaign < ActiveRecord::Base
         account = Account.find_by_salesforce_id(sf_campaign.account_id__c)
         if account.present?
           existing_campaign = Campaign.find_by_salesforce_id(sf_campaign.id)
+
+          # SEM CAMPAIGN
 
           if sf_campaign.campaign_type__c.include? 'SEM'
             if existing_campaign.blank?
@@ -102,6 +105,7 @@ class Campaign < ActiveRecord::Base
               end
             end
 
+          # SEO CAMPAIGN
 
           elsif sf_campaign.campaign_type__c.include? 'SEO'
             sf_account = Salesforce::Account.find(account.salesforce_id)
@@ -133,13 +137,14 @@ class Campaign < ActiveRecord::Base
             new_seo_campaign.flavor = sf_campaign.campaign_type__c
             new_seo_campaign.save!
             new_seo_campaign.campaign.save!
+            
+          # MAPS CAMPAIGN
 
           elsif sf_campaign.campaign_type__c.include? 'Maps'
             if existing_campaign.blank?
               new_maps_campaign = MapsCampaign.new
               new_maps_campaign.account = account
               new_maps_campaign.salesforce_id = sf_campaign.id
-
             else
               new_maps_campaign = existing_campaign.campaign_style
               unless new_maps_campaign.instance_of?(MapsCampaign)
@@ -160,6 +165,8 @@ class Campaign < ActiveRecord::Base
             new_google_maps_campaign.password = sf_campaign.maps_password__c
             new_maps_campaign.save!
             new_maps_campaign.campaign.save!
+            
+          # OTHER CAMPAIGN
 
           else
             if existing_campaign.blank?
@@ -189,39 +196,6 @@ class Campaign < ActiveRecord::Base
       raise
     end
     job_status.finish_with_no_errors
-  end
-
-  def self.fix_target_cities
-    campaigns = Campaign.all
-    campaigns.each do |campaign|
-      if campaign.target_cities.blank?
-        campaign.target_cities = campaign.account.city.downcase if campaign.account.city.present?
-        campaign.save!
-      end
-    end
-  end
-
-  def self.fix_sf_campaign_ids
-    sf_campaigns = Salesforce::Clientcampaign.all
-    sf_campaigns.each do |sf_campaign|
-      account = Account.find_by_salesforce_id(sf_campaign.account_id__c)
-      if account.present?
-        existing_campaign = Campaign.find_by_account_id_and_name(account.id, sf_campaign.name)
-        if existing_campaign.present?
-          existing_campaign.salesforce_id = sf_campaign.id
-          existing_campaign.save!
-        end
-      end
-    end
-  end
-
-  def self.fix_duplicates
-    after_date = Date.new(2010, 9, 1)
-    campaigns = Campaign.find(:all, :conditions => ['created_at > ?', after_date])
-    styles = campaigns.collect { |campaign| campaign.campaign_style }
-    styles.each do |style|
-      style.destroy
-    end
   end
   
   def self.determine_totals_for(campaigns, messages, start_date = Date.yesterday, end_date = Date.yesterday)
@@ -384,9 +358,7 @@ class Campaign < ActiveRecord::Base
   end
 
   def number_of_leads_by_date
-    calls_as_leads = self.number_of_specific_calls_labeled_by_date(self.calls.lead, :leads)
-    submissions_as_leads = self.number_of_specific_submissions_labeled_by_date(self.submissions.lead, :leads)
-    Utilities.merge_and_sum_timeline_data([calls_as_leads, submissions_as_leads], :leads)
+    Utilities.merge_and_sum_timeline_data([self.number_of_specific_calls_labeled_by_date(self.calls.lead, :leads), self.number_of_specific_submissions_labeled_by_date(self.submissions.lead, :leads)], :leads)
   end
 
   def call_timeline_data
@@ -497,25 +469,24 @@ class Campaign < ActiveRecord::Base
       raise unless resp.kind_of? Net::HTTPSuccess
       
       #CREATE THE PHONE NUMBER IN GRID IF TWILIO CREATION WAS SUCCESSFUL
-      if resp.code == '200' || resp.code == '201'
-        new_phone_number = self.phone_numbers.build
-        new_phone_number.twilio_id = JSON.parse(resp.body)['sid']
-        new_phone_number.inboundno = phone_number.to_s
-        new_phone_number.forward_to = forward_to
-        new_phone_number.name = name
-        new_phone_number.descript = name
-        new_phone_number.twilio_version = API_VERSION
-        new_phone_number.id_callers = id_caller
-        new_phone_number.record_calls = record_calls
-        new_phone_number.transcribe_calls = transcribe_calls
-        new_phone_number.text_calls = text_calls
-        new_phone_number.active = true
-        new_phone_number.save!
-        #UPDATE THE TWILIO URLS
-        new_phone_number.update_twilio_number(name, forward_to, id_caller, record_calls, transcribe_calls, text_calls, call_url, fallback_url, status_url, sms_url, fallback_sms_url)
-        job_status.finish_with_no_errors
-        return new_phone_number
-      end
+      new_phone_number = self.phone_numbers.build
+      new_phone_number.twilio_id = JSON.parse(resp.body)['sid']
+      new_phone_number.inboundno = phone_number.to_s
+      new_phone_number.forward_to = forward_to
+      new_phone_number.name = name
+      new_phone_number.descript = name
+      new_phone_number.twilio_version = API_VERSION
+      new_phone_number.id_callers = id_caller
+      new_phone_number.record_calls = record_calls
+      new_phone_number.transcribe_calls = transcribe_calls
+      new_phone_number.text_calls = text_calls
+      new_phone_number.active = true
+      new_phone_number.save!
+      
+      #UPDATE THE TWILIO URLS
+      new_phone_number.update_twilio_number(name, forward_to, id_caller, record_calls, transcribe_calls, text_calls, call_url, fallback_url, status_url, sms_url, fallback_sms_url)
+      job_status.finish_with_no_errors
+      return new_phone_number
     rescue Exception => ex
       job_status.finish_with_errors(ex)
       raise
@@ -524,19 +495,15 @@ class Campaign < ActiveRecord::Base
   
   def inactivate_phone_number(phone_number_id)
     phone_number = self.phone_numbers.first(:conditions => ['id = ?', phone_number_id])
-    return false if phone_number.blank?
-    if phone_number.twilio_id.present?
-      account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
-      resp = account.request("/#{phone_number.twilio_version}/Accounts/#{ACCOUNT_SID}/IncomingPhoneNumbers/#{phone_number.twilio_id}.json", 'DELETE')
-      if resp.code == '204'
-        phone_number.active = false
-        phone_number.save!
-        return true
-      else
-        return false
-      end
-    end
+    return false if phone_number.blank? || phone_number.twilio_id.blank?
+    account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
+    resp = account.request("/#{phone_number.twilio_version}/Accounts/#{ACCOUNT_SID}/IncomingPhoneNumbers/#{phone_number.twilio_id}.json", 'DELETE')
+    return false unless resp.code == '204'
+    phone_number.active = false
+    phone_number.save!
+    true
   end
+
   
   def create_contact_form(description = '', return_url = '', forwarding_email = '', forwarding_bcc_email = '', custom1_text = '', custom2_text = '', custom3_text = '', custom4_text = '', need_name = true, need_address = true, need_phone = true, need_email = true, work_category = true, work_description = true, date_requested = true, time_requested = true, other_information = true)
     form = self.contact_forms.build

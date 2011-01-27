@@ -1,0 +1,54 @@
+%h3 View Form
+%br
+%label ="Form Description:"
+%label =@form.description
+%br
+%label ="Email To (Comma Separated):"
+%label =@form.forwarding_email
+%br
+%label ="BCC Email To (Comma Separated):"
+%label =@form.forwarding_bcc_email
+%br
+%label ="Link To Return To:"
+%label =@form.return_url
+%br
+%label ="Custom Field 1:"
+%label =@form.custom1_text
+%br
+%label ="Custom Field 2:"
+%label =@form.custom2_text
+%br
+%label ="Custom Field 3:"
+%label =@form.custom3_text
+%br
+%label ="Custom Field 4:"
+%label =@form.custom4_text
+%br
+%label ="Include Name?"
+%check_box :need_name, :read_only => "true", :value => @form.need_name
+%br
+%label ="Include Address?"
+%check_box :need_address, :read_only => "true", :value => @form.need_address
+%br
+%label ="Include Phone Number?"
+%check_box :need_phone, :read_only => "true", :value => @form.need_phone
+%br
+%label ="Include Email?"
+%check_box :need_email, :read_only => "true", :value => @form.need_email
+%br
+%label ="Include Work Category?"
+%check_box :work_category, :read_only => "true", :value => @form.work_category
+%br
+%label ="Include Work Description?"
+%check_box :work_description, :read_only => "true", :value => @form.work_description
+%br
+%label ="Include Date Requested?"
+%check_box :date_requested, :read_only => "true", :value => @form.date_requested
+%br
+%label ="Include Time Requested?"
+%check_box :time_requested, :read_only => "true", :value => @form.time_requested
+%br
+%label ="Include Other Information?"
+%check_box :other_information, :read_only => "true", :value => @form.other_information
+
+  

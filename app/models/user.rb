@@ -48,5 +48,9 @@ class User < ActiveRecord::Base
     return Account.all if self.admin?
     (self.account_managers.collect { |account_manager| account_manager.group_account.accounts } << self.account_users.collect { |account_user| account_user.account }).flatten.uniq
   end
+
+  def acquainted_campaigns
+    self.acquainted_accounts.collect(&:campaigns).flatten
+  end
   
 end

@@ -1,8 +1,9 @@
+-if @search_accounts.blank? || @search_campaigns.blank?
+  %hs Search for Accounts or Campaigns
+  = render :partial => 'shared/search'
+
 %h3
-  -if @search_accounts.blank?
-    = "No Account Results for \"#{@search_term}\""
-  -else
-    = "Accounts found for \"#{@search_term}\""
+  -unless @search_accounts.blank?
     %table{:class => "pretty"}
       %thead
         %tr
@@ -35,13 +36,8 @@
               = ActionController::Base.helpers.number_to_currency(account.spend_between(Date.yesterday - 1.week, Date.yesterday))
             %td
               = ActionController::Base.helpers.number_to_currency(account.cost_per_lead_between(Date.yesterday - 1.week, Date.yesterday))
-
-
 %h3
-  -if @search_campaigns.blank?
-    = "No Campaign Results for \"#{@search_term}\""
-  -else
-    = "Campaigns found for \"#{@search_term}\""
+  -unless @search_campaigns.blank?
     %table{:class => "pretty"}
       %thead
         %tr

@@ -1,5 +1,5 @@
 class KeywordsController < ApplicationController
-  before_filter :require_admin
+  load_and_authorize_resource
   
   def index
       @campaign = Campaign.find(params[:id])

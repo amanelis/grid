@@ -1,7 +1,4 @@
 class CampaignsController < ApplicationController
-  #before_filter :require_admin
-  # Carefull, this load_and_authorize_resource function will setup all instance variables
-  # for any of the default restfull rails routes.
   load_and_authorize_resource
 
   def show  
