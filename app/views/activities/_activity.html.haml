@@ -26,54 +26,31 @@
 - elsif activity.is_submission?
   %tr{"data-time" => "#{activity.timestamp.to_i}"}
     %td.type
-    %td.campaign
-    %td.caller
+    %td.campaign= link_to activity.activity_type.contact_form.campaign.name, campaign_path(activity.activity_type.contact_form.campaign)
+    %td.caller=mail_to("#{activity.activity_type.from_email}", "#{activity.activity_type.name || activity.activity_type.from_email}")
     %td.recording
+      %ul
+        %li
+          Phone:
+          =activity.activity_type.phone_number
+        %li
+          Address:
+          =activity.activity_type.home_address
+        %li
+          Submitted at:
+          -activity_time_zone = activity.activity_type.contact_form.campaign.account.time_zone
+          =activity.activity_type.time_of_submission.in_time_zone(activity_time_zone).to_s(:long) + " " + activity_time_zone
+        %li
+          Work Category:
+          =activity.activity_type.work_category
+        %li
+          Description:
+          =activity.activity_type.work_description
     %td.review
       - if activity.duplicate?
         = "Duplicate Submission"
       -else
         - form_for activity, :url => activity_path(activity.activity) do |f| 
-          = f.select(:review_status, :label => 'Review', :as => :select, :collection => activity.review_status_options, :include_blank => false
+          = f.select(:review_status, (activity.activity_type.review_status_options))
           = f.submit(:update)
-    %td.time
-  
-  
-  
-  
-  
-  
-    .title
-      = link_to activity.contact_form.campaign.name, campaign_path(activity.contact_form.campaign)
-    .icon
-      =image_tag("mail.png", :height => "48", :width => "48")
-      .time
-        =time_ago_in_words(activity.time_of_submission)+ " ago"
-    .info
-      %ul
-        %li
-          Name:
-          =mail_to("#{activity.from_email}", "#{activity.name || activity.from_email}")
-        %li
-          Phone:
-          =activity.phone_number
-        %li
-          Address:
-          =activity.home_address
-        %li
-          Submitted at:
-          -activity_time_zone = activity.contact_form.campaign.account.time_zone
-          =activity.time_of_submission.in_time_zone(activity_time_zone).to_s(:long) + " " + activity_time_zone
-        %li
-          Work Category:
-          =activity.work_category
-        %li
-          Description:
-          =activity.work_description
-    .review
-
-    .bottom_title
-      .leftinfo
-        =activity.ip_address
-      .rightinfo
-        =activity.user_agent
+    %td.time=time_ago_in_words(activity.activity_type.time_of_submission)+ " ago"
