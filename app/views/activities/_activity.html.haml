@@ -1,23 +1,69 @@
-%tr{:id => "#{activity.timestamp.to_i}", "data-time" => "#{activity.timestamp.to_i}"}
-  %td.campaign= link_to activity.activity_type.phone_number.campaign.name, campaign_path(activity.activity_type.phone_number.campaign)
-  %td.caller
-    =number_to_phone(activity.activity_type.caller_number)
-    ="(#{activity.activity_type.caller_name})"
-  %td.status= "#{activity.activity_type.call_status} (#{(activity.activity_type.call_end - activity.activity_type.call_start).to_int} seconds)"
-  %td.recording
-    -if activity.activity_type.recorded? && activity.activity_type.recording?
-      = link_to('Listen', activity.activity_type.recording.expiring_url(14400))
-      = mp3_player "#{activity.activity_type.recording.expiring_url(14400)}", :bg => "EEEEEE", :track => "EEEEEE", :slider => "222222", :loader => "EEEEEE"
-    -else
-      N/A
-  %td.review
-    - if activity.activity_type.duplicate?
-      = "Duplicate Call"
-    -else
-      - form_for activity, :url => activity_path(activity) do |f|
-        = f.select(:review_status, (activity.activity_type.review_status_options))
-        = f.submit(:update)
-  %td.time
-    -activity_time_zone = activity.activity_type.phone_number.campaign.account.time_zone
-    =time_ago_in_words(activity.activity_type.call_start)
-%div.activities
+- if activity.is_call?
+  %tr{:id => "#{activity.timestamp.to_i}", "data-time" => "#{activity.timestamp.to_i}"}
+    %td.campaign= link_to activity.activity_type.phone_number.campaign.name, campaign_path(activity.activity_type.phone_number.campaign)
+    %td.caller
+      =number_to_phone(activity.activity_type.caller_number)
+      ="(#{activity.activity_type.caller_name})"
+    %td.status= "#{activity.activity_type.call_status} (#{(activity.activity_type.call_end - activity.activity_type.call_start).to_int} seconds)"
+    %td.recording
+      -if activity.activity_type.recorded? && activity.activity_type.recording?
+        = link_to('Listen', activity.activity_type.recording.expiring_url(14400))
+        = mp3_player "#{activity.activity_type.recording.expiring_url(14400)}", :bg => "EEEEEE", :track => "EEEEEE", :slider => "222222", :loader => "EEEEEE"
+      -else
+        N/A
+    %td.review
+      - if activity.activity_type.duplicate?
+        = "Duplicate Call"
+      -else
+        - form_for activity, :url => activity_path(activity) do |f|
+          = f.select(:review_status, (activity.activity_type.review_status_options))
+          = f.submit(:update)
+    %td.time
+      -activity_time_zone = activity.activity_type.phone_number.campaign.account.time_zone
+      =time_ago_in_words(activity.activity_type.call_start)
+  %div.activities
+
+- elsif activity.is_submission?
+  .activity_item{:id => "#{activity.timestamp.to_i}"}
+    .title
+      = link_to activity.contact_form.campaign.name, campaign_path(activity.contact_form.campaign)
+    .icon
+      =image_tag("mail.png", :height => "48", :width => "48")
+      .time
+        =time_ago_in_words(activity.time_of_submission)+ " ago"
+    .info
+      %ul
+        %li
+          Name:
+          =mail_to("#{activity.from_email}", "#{activity.name || activity.from_email}")
+        %li
+          Phone:
+          =activity.phone_number
+        %li
+          Address:
+          =activity.home_address
+        %li
+          Submitted at:
+          -activity_time_zone = activity.contact_form.campaign.account.time_zone
+          =activity.time_of_submission.in_time_zone(activity_time_zone).to_s(:long) + " " + activity_time_zone
+        %li
+          Work Category:
+          =activity.work_category
+        %li
+          Description:
+          =activity.work_description
+    .review
+      - if activity.duplicate?
+        = "Duplicate Submission"
+      - semantic_remote_form_for activity, :url => activity_path(activity.activity) do |f| 
+        = f.semantic_errors :state
+        - f.inputs do
+          %br
+          = f.input :review_status, :label => 'Review', :as => :select, :collection => activity.review_status_options, :include_blank => false
+        - f.buttons do
+          = f.commit_button :update, :button_html => { :class => "sexybutton sexysimple sexygreen" }
+    .bottom_title
+      .leftinfo
+        =activity.ip_address
+      .rightinfo
+        =activity.user_agent
