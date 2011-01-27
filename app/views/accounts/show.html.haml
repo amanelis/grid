@@ -12,7 +12,7 @@
           %br
           Email
     %li
-      %a{:href => report_client_pdf_path(params[:id])}
+      %a{:onclick => "confirm_export_report(#{params[:id]});"}
         = image_tag ("icons/export.png")
         %br
         Export
