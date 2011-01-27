@@ -11,14 +11,9 @@ class AccountsController < ApplicationController
     @passed_status = params[:account_status] ||= 'Active'
     @passed_type = params[:account_type] ||= ''
     
-    if params[:account_status].present?
-      @accounts = @accounts.select {|account| account.status == params[:account_status]}
-    end
-      
-    if params[:account_type].present?
-      @accounts = @accounts.select {|account| account.account_type?(params[:account_type])}
-    end
-    
+    @accounts = @accounts.select {|account| account.status == params[:account_status]} if params[:account_status].present?
+    @accounts = @accounts.select {|account| account.account_type?(params[:account_type])} if params[:account_type].present?
+
     @accounts_data = Rails.cache.fetch("accounts_data") { Account.get_accounts_data }
     @accounts.sort! {|a,b| a.name.downcase <=> b.name.downcase}
     
@@ -31,9 +26,9 @@ class AccountsController < ApplicationController
     Time.zone = @account.time_zone  
     @date_range = ''
     
-    @seo_campaign_timelines = @account.campaign_seo_combined_timeline_data
-    @sem_campaign_timelines = @account.campaign_sem_combined_timeline_data
-    @map_campaign_timelines = @account.campaign_map_combined_timeline_data
+    #@seo_campaign_timelines = @account.campaign_seo_combined_timeline_data
+    #@sem_campaign_timelines = @account.campaign_sem_combined_timeline_data
+    #@map_campaign_timelines = @account.campaign_map_combined_timeline_data
     @total_reporting_messages = [:number_of_lead_calls_between,
                                  :number_of_all_calls_between,
                                  :number_of_lead_submissions_between,
