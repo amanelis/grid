@@ -273,6 +273,18 @@ class Account < ActiveRecord::Base
     self.campaigns.active.to_a.sum { |campaign| campaign.number_of_total_contacts_between(start_date, end_date) }
   end
 
+  def total_revenue_for_cityvoice_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.total_revenue_between(start_date, end_date) }
+  end
+  
+  def number_of_total_leads_for_cityvoice_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.number_of_total_leads_between(start_date, end_date) }
+  end
+
+  def number_of_total_contacts_for_cityvoice_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.number_of_total_contacts_between(start_date, end_date) }
+  end
+
   def number_of_total_leads_by_day_between(start_date = Date.yesterday, end_date = Date.yesterday)
     (start_date..end_date).inject([]) { |data, date | data << self.campaigns.active.to_a.sum { |campaign| campaign.number_of_total_leads_between(date, date) } }
   end
