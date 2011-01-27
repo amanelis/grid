@@ -48,7 +48,7 @@ class ContactFormsController < ApplicationController
   end
   
   def show
-    
+    @form = ContactForm.find(params[:id])
   end
   
   def update
