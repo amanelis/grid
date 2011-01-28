@@ -3,8 +3,13 @@
     $('a[rel*=facebox]').facebox()
   })
 
+:javascript
+  audiojs.events.ready(function() {
+      var as = audiojs.createAll();
+    });
 %header
   %h1 Welcome to Grid
 %article
   %h2 New fun things are being added daily, please use the feedback button at the bottom right to report issues or suggest new features.
+  %audio{:src => "http://s3.amazonaws.com/audiojs/03-its-all-about-the-crystalizabeths.mp3", :preload => "none", :type => "audio/mpeg"}
   
