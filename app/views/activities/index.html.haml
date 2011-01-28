@@ -13,7 +13,10 @@
       $.getScript("/activities.js?after=" + after)
       setTimeout(updateActivity, 7000);
     }
-
+:javascript
+  audiojs.events.ready(function() {
+      var as = audiojs.createAll();
+    });
 %header
   .right.pagination= will_paginate(@activities)
   %h3 Activity
