@@ -327,7 +327,7 @@ class Account < ActiveRecord::Base
   # PREDICATES
   
   def active?
-    ["active", "paused", "pending setup"].include?(self.status.downcase)
+    self.status.downcase == "active"
   end
   
   def account_type?(type)
