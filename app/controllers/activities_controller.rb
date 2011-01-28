@@ -6,7 +6,7 @@ class ActivitiesController < ApplicationController
     @accounts = current_user.acquainted_accounts 
     # @activities_calls       = @accounts.collect {|account| account.phone_numbers.calls}.flatten.sort {|a,b| b.timestamp <=> a.timestamp}.paginate(:page => (params[:page] || 1), :order => 'timestamp DESC', :per_page => 150)
     # @activities_submissions = @accounts.collect {|account| account.contact_forms.submissions}.flatten.sort {|a,b| b.timestamp <=> a.timestamp}.paginate(:page => (params[:page] || 1), :order => 'timestamp DESC', :per_page => 150)
-    @activities = Activity.paginate(:page => (params[:page] || 1), :order => 'timestamp DESC', :per_page => 100)
+    @activities = Activity.paginate(:page => (params[:page] || 1), :order => 'timestamp DESC', :per_page => 50)
     
     respond("html", nil, "js", nil)
   end
