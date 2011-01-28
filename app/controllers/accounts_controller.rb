@@ -206,23 +206,13 @@ class AccountsController < ApplicationController
     @outfile  = "accounts_" + Time.now.strftime("%m-%d-%Y") + ".csv"
     
     csv_data = FasterCSV.generate do |csv|
-      csv << [
-        "Name",
-        "Account Type",
-        "Salesforce ID"
-      ]
+      csv << ["Name", "Account Type", "Salesforce ID"]
       @accounts.each do |account|
-        csv << [
-          account.name,
-          account.account_type,
-          account.salesforce_id
-        ]
+        csv << [account.name, account.account_type, account.salesforce_id]
       end 
     end
     
-    send_data csv_data,
-      :type => 'text/csv; charset=iso-8859-1; header=present',
-      :disposition => "attachment; filename=#{@outfile}"
+    send_data csv_data, :type => 'text/csv; charset=iso-8859-1; header=present', :disposition => "attachment; filename=#{@outfile}"
   end 
 
 end
