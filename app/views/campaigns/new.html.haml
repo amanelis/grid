@@ -1,0 +1,37 @@
+#create.span-8.append-1
+  %h3 Create Campaign
+  -form_for (@campaign, {:url => new_account_campaign_path}, :method => :post) do |f|
+    = f.hidden_field :account_id, :name => :account_id, :value => @account.id.to_s
+    = f.label "Name"
+    %br
+    = f.text_field :name, :placeholder => "CityVoice", :name => "name", :id => "name"
+    %br
+    = f.label "Industry"
+    %br
+    = f.select :industry, @industries, :name => "industry", :id => "industry"
+    %br
+    = f.label "URL"
+    %br
+    = f.text_field :url, :placeholder => "http://", :name => "url", :id => "url"
+    %br
+    = f.label "Area Code"
+    %br
+    = f.text_field :area_code, :placeholder => "210", :name => "area_code", :id => "area_code"
+    %br
+    = f.label "Forwarding Number"
+    %br
+    = f.text_field :forwarding_number, :placeholder => "210 844 6400", :name => "forwarding_number", :id => "forwarding_number"
+    %br
+    = f.label "Campaign Type"
+    %br
+    = f.select :flavor, @flavors, :name => "flavor", :id => "flavor"
+    %br
+    %br
+    = f.submit "Create Campaign"
+    %br
+    %br
+#campaign_type.span-12.last
+  %h3 Search Engine Optimization Campaign
+  %h3 Pay-per-click Campaign
+  %h3 Google Maps Campaign
+  %h3 Other Campaign
