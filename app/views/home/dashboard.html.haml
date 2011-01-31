@@ -1,11 +1,7 @@
 :javascript
-  jQuery(document).ready(function($) {
-    $('a[rel*=facebox]').facebox()
-  })
-
   audiojs.events.ready(function() {
-    var as = audiojs.createAll();
-  });
+        audiojs.createAll();
+      });
 %header
   %h1 Welcome to Grid
 %article
@@ -18,5 +14,8 @@
     %h3= "Total Inactive Accounts: #{@inactive_accounts}"
     %h3= "Total Reseller Accounts: #{@reseller_accounts}"
     %h3= "?? Leads Generated Today: #{@reseller_accounts}"
+    
+    %audio{:preload => "none", :type => "audio/mpeg"}
+      %source{:src => "http://s3.amazonaws.com/audiojs/03-its-all-about-the-crystalizabeths.mp3"}
     
   
