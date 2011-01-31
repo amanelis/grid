@@ -3,7 +3,10 @@ class Website < ActiveRecord::Base
   has_many :website_visits, :dependent => :destroy
 
   GOOGLE_MAPS_API_KEY = 'ABQIAAAALQRqYHHjSnLmL7zwbG0n-BQkiq2IPuxpcd6yKI6maifg0dbT5RQMwn92qd1fSdzERnpNoeonkmJ_Cw'
-
+  
+  GINZA_KEY = '32cb93caac0403cdaad7e0683ad10cf2'
+  GINZA_USERNAME = 'kate.wright'
+  GINZA_PASSWORD = 'cityvoice'
 
   # CLASS BEHAVIOR
 
@@ -215,6 +218,45 @@ class Website < ActiveRecord::Base
       end
     end
     return map_url
+  end
+  
+  
+  
+  #### NEEDS TO BE SET AS AN CLASS VARIABLE ON WEBSITE---IN TESTING PHASE
+  def self.list_ginza_sites
+    begin
+      HTTParty.get("https://app.ginzametrics.com/v1/list_sites?api_key=#{GINZA_KEY}").to_a
+    rescue Exception => ex
+      raise
+    end
+  end
+  
+  #### NEEDS TO BE SET AS AN INSTANCE VARIABLE ON WEBSITE---IN TESTING PHASE
+  def self.get_ginza_site_keyword_count(global_id = '9e082ec734be')
+    begin
+      HTTParty.get("https://app.ginzametrics.com/v1/sites/#{global_id}/active_keywords?api_key=#{GINZA_KEY}").parsed_response
+    rescue Exception => ex
+      raise
+    end
+  end
+  
+  #### NEEDS TO BE SET AS AN INSTANCE VARIABLE ON WEBSITE---IN TESTING PHASE
+  def self.get_ginza_latest_rankings(global_id = '9e082ec734be')
+    begin
+      HTTParty.get("https://app.ginzametrics.com/v1/sites/#{global_id}/latest_rankings?api_key=#{GINZA_KEY}").to_a
+    rescue Exception => ex
+      raise
+    end
+  end
+  
+  
+  #### NEEDS TO BE SET AS AN INSTANCE VARIABLE ON WEBSITE---IN TESTING PHASE
+  def self.get_ginza_latest_ranking_date(global_id = '9e082ec734be')
+    begin
+      HTTParty.get("https://app.ginzametrics.com/v1/sites/#{global_id}/latest_rankings_date?api_key=#{GINZA_KEY}")
+    rescue Exception => ex
+      raise
+    end
   end
 
   

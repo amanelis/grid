@@ -109,7 +109,7 @@ class Keyword < ActiveRecord::Base
       puts "Error in Keyword.get_new_search_positions"
     end
   end
-
+  
   def get_relevancy
     # HACK: The rails belongs_to method seems to have a bug. self.url.url should give me the URL string, but it doesn't
     begin

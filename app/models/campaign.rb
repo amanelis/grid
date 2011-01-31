@@ -36,7 +36,7 @@ class Campaign < ActiveRecord::Base
 
   # VIRTUAL ATTRIBUTES
   
-  def add_industry(industry)
+  def industry=(industry)
     self.industries << Industry.find_by_name(industry)
     self.save!
   end
