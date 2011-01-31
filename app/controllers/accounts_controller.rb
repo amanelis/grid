@@ -74,11 +74,9 @@ class AccountsController < ApplicationController
     
   end
 
-  # /accounts/new
   def new
   end
 
-  # /accounts/:id/edit
   def edit
   end
 
@@ -86,7 +84,6 @@ class AccountsController < ApplicationController
     create!(:notice => "Account was successfully created!") { accounts_path }
   end
 
-  # /accounts/:id/update
   def update
     update!(:notice => "Account was updated successfully!") { accounts_path }
   end
