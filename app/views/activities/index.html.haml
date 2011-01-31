@@ -5,43 +5,32 @@
     })
 
     $(function() {
-      setTimeout(updateActivity, 25000);
+      setTimeout(updateActivity, 7000);
     });
 
     function updateActivity() {
       var after = $("#activities tbody tr").attr("data-time");
       $.getScript("/activities.js?after=" + after)
-      setTimeout(updateActivity, 25000);
+      setTimeout(updateActivity, 7000);
     }
-
+-#:javascript
+  -#audiojs.events.ready(function() {
+    -#  var as = audiojs.createAll();
+    -#});
 %header
+  .right.pagination= will_paginate(@activities)
   %h3 Activity
 %article
-  .right= will_paginate(@activities_calls)
-  %h2 Phone Calls
-  %table#activities
+  %table#activities.small
     %thead
       %tr
+        %th Type
         %th Campaign
-        %th Caller
-        %th Status
-        %th Recording
+        %th From
+        %th Content
         %th Review
         %th Time
     %tbody
-      - for call in @activities_calls
-        = render :partial => "call", :locals => {:call => call}
-  .right= will_paginate(@activities_submissions)
-  %h2 Form Submissions
-  %table
-    %thead
-      %tr
-        %th Campaign
-        %th Caller
-        %th Status
-        %th Recording
-        %th Review
-        %th Time
-    %tbody
-      -# if activity.is_submission?
-        =# render :partial => "shared/activity_submission", :locals => { :activity => activity.activity_type }
+      - for activity in @activities
+        = render activity, :locals => {:activity => activity}
+  .pagination= will_paginate(@activities)

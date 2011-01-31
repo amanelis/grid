@@ -1,24 +1,19 @@
 class AccountsController < ApplicationController
-  load_and_authorize_resource
+  load_and_authorize_resource # If the method is you want to authorize is not restfull, you must authorize! the action
+  inherit_resources
+  before_filter :load_time_zone, :only => [:show, :report, :report_client]
 
   # /accounts
   def index
-    authorize! :read, Account
     @accounts = current_user.acquainted_accounts
-    @accounts_statuses = Account.account_statuses_for(@accounts)
-    @accounts_types = Account.account_types_for(@accounts)
+    @accounts_statuses = Account.account_statuses_for(@accounts) && @accounts_types = Account.account_types_for(@accounts)
     
     @passed_status = params[:account_status] ||= 'Active'
     @passed_type = params[:account_type] ||= ''
     
-    if params[:account_status].present?
-      @accounts = @accounts.select {|account| account.status == params[:account_status]}
-    end
-      
-    if params[:account_type].present?
-      @accounts = @accounts.select {|account| account.account_type?(params[:account_type])}
-    end
-    
+    @accounts = @accounts.select {|account| account.status == params[:account_status]} if params[:account_status].present?
+    @accounts = @accounts.select {|account| account.account_type?(params[:account_type])} if params[:account_type].present?
+
     @accounts_data = Rails.cache.fetch("accounts_data") { Account.get_accounts_data }
     @accounts.sort! {|a,b| a.name.downcase <=> b.name.downcase}
     
@@ -27,13 +22,7 @@ class AccountsController < ApplicationController
 
   # /accounts/:id
   def show
-    authorize! :read, @account
-    Time.zone = @account.time_zone  
     @date_range = ''
-    
-    @seo_campaign_timelines = @account.campaign_seo_combined_timeline_data
-    @sem_campaign_timelines = @account.campaign_sem_combined_timeline_data
-    @map_campaign_timelines = @account.campaign_map_combined_timeline_data
     @total_reporting_messages = [:number_of_lead_calls_between,
                                  :number_of_all_calls_between,
                                  :number_of_lead_submissions_between,
@@ -52,7 +41,6 @@ class AccountsController < ApplicationController
     else
       dates = params[:daterange].split(' to ') || params[:daterange].split(' - ')
       @date_range = params[:daterange]
-      
       begin 
         @start_date = Date.parse(dates[0])
         @end_date = Date.parse(dates[1])
@@ -88,60 +76,33 @@ class AccountsController < ApplicationController
 
   # /accounts/new
   def new
-    authorize! :create, @account
   end
 
   # /accounts/:id/edit
   def edit
-    authorize! :edit, @account
   end
 
   def create
-    authorize! :create, @account
-    
-    respond_to do |format|
-      if @account.save
-        flash[:notice] = 'Account was successfully created.'
-        format.html { redirect_to(@account) }
-      else
-        format.html { render :action => "new" }
-      end
-    end
+    create!(:notice => "Account was successfully created!") { accounts_path }
   end
 
   # /accounts/:id/update
   def update
-    authorize! :update, @account
-
-    respond_to do |format|
-      if @account.update_attributes(params[:account])
-        flash[:notice] = 'Account was successfully updated.'
-        format.html { redirect_to(@account) }
-      else
-        format.html { render :action => "edit" }
-      end
-    end
+    update!(:notice => "Account was updated successfully!") { accounts_path }
   end
 
   def destroy
-    authorize! :destroy, @account
-    @account.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(accounts_url) }
-    end
+    destroy!(:notice => "Account was successfully deleted!") { accounts_path }
   end
 
   # /accounts/:id/report
   def report
     authorize! :read, @account
-    Time.zone = @account.time_zone
   end
   
   # /accounts/:id/report/client /.pdf
   def report_client
     authorize! :read, @account
-    Time.zone = @account.time_zone
     
     @month_start = (Date.today - 1.month).beginning_of_month
     @month_end = (Date.today - 1.month).end_of_month
@@ -176,8 +137,6 @@ class AccountsController < ApplicationController
       f.series(:name=> 'Total Leads',       :data => @managed_campaigns.select(&:is_seo?).collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
     end
     
-    
-    
     respond_to do |format|
       format.html {render :layout => 'report'}
     end
@@ -192,6 +151,7 @@ class AccountsController < ApplicationController
   end
   
   def send_weekly_email
+    authorize! :read, @account
     @account = Account.find(params[:id])
     @account.send_weekly_report_now
     flash[:notice] = "You have successfully sent an email!"
@@ -208,27 +168,17 @@ class AccountsController < ApplicationController
   end
 
   def export
+    can :export, Account
     @accounts = Account.find(:all, :order => "name")
     @outfile  = "accounts_" + Time.now.strftime("%m-%d-%Y") + ".csv"
     
     csv_data = FasterCSV.generate do |csv|
-      csv << [
-        "Name",
-        "Account Type",
-        "Salesforce ID"
-      ]
+      csv << ["Name", "Account Type", "Salesforce ID"]
       @accounts.each do |account|
-        csv << [
-          account.name,
-          account.account_type,
-          account.salesforce_id
-        ]
+        csv << [account.name, account.account_type, account.salesforce_id]
       end 
     end
-    
-    send_data csv_data,
-      :type => 'text/csv; charset=iso-8859-1; header=present',
-      :disposition => "attachment; filename=#{@outfile}"
+    send_data csv_data, :type => 'text/csv; charset=iso-8859-1; header=present', :disposition => "attachment; filename=#{@outfile}"
   end 
 
 end

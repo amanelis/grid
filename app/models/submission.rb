@@ -161,4 +161,34 @@ class Submission < ActiveRecord::Base
     true
   end
   
+  def send_customer_lobby_request(customer_lobby_id = '4969', name = 'Ben', email = 'ben@cityvoice.com')
+    post_url = 'https://www.customerlobby.com/bulk-invite'
+    review_data = "#{customer_lobby_id}\t#{name}\t#{email}"
+    
+    url = URI.parse("http://www.customerlobby.com/bulk-invitation?username=cityvoice&password=17Lincoln79&filename=customerlobby.txt")
+    customer_lobby_id = '4969'
+    name = 'Ben'
+    email = 'ben@cityvoice.com'
+    file = File.open("#{RAILS_ROOT}/tmp/customerlobby.txt", "w") {|f| f.write("#{customer_lobby_id}\t#{name}\t#{email}\n")}
+    
+    boundary = "AaB03x"
+    post_body = []
+    post_body << "--#{boundary}\r\n"
+    post_body << "Content-Disposition: attachment; filename=\"#{File.basename(file)}\"\r\n"
+    post_body << "Content-Type: text/plain\r\n"
+    post_body << "\r\n"
+    post_body << File.read("#{RAILS_ROOT}/tmp/customerlobby.txt")
+    post_body << "\r\n--#{boundary}--\r\n"
+
+    http = Net::HTTP.new(url.host, url.port)
+    request = Net::HTTP::Post.new(url.request_uri)
+    request.body = post_body.join
+    request["Content-Type"] = "text/plain"
+    response = http.request(request)
+
+    
+    url = 'https://www.googleapis.com/customsearch/v1?key=AIzaSyB7dKG1N0KawnBKHEdBe4TjeQayNIqULjk&cx=013695089876934848547:d49ftpucgri&q=air+conditioning+san+antonio&alt=json'
+    
+  end
+  
 end

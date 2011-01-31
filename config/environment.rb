@@ -21,7 +21,6 @@ Rails::Initializer.run do |config|
   # config.gem "sqlite3-ruby", :lib => "sqlite3"
   # config.gem "aws-s3", :lib => "aws/s3"
   # config.gem 'johnreilly-activerecord-activesalesforce-adapter', :source => 'http://gems.github.com', :lib => 'activerecord-activesalesforce-adapter'
-=begin
   config.gem 'hpricot', :version => '0.8.2'
   config.gem 'httparty', :version => '0.6.1'
   config.gem 'nokogiri', :version => '1.4.3.1'
@@ -46,7 +45,8 @@ Rails::Initializer.run do |config|
   config.gem 'fastercsv', :version => '1.5.3'
   config.gem 'twiliolib', :version => '2.0.7'
   config.gem "cancan", :version => '1.4.1'
-=end
+  config.gem "inherited_resources", :version => '1.0.6'
+
 
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named

@@ -1,11 +1,11 @@
 %header
   .right
     %h2
-      %span= "$#{@account.total_revenue_between(@month_start, @month_end)} in Revenue"
+      %span= "$#{@account.total_revenue_for_cityvoice_campaigns_between(@month_start, @month_end)} in Revenue"
     %h3
-      %span= "#{@account.number_of_total_contacts_between(@month_start, @month_end)} Contacts"
+      %span= "#{@account.number_of_total_contacts_for_cityvoice_campaigns_between(@month_start, @month_end)} Contacts"
     %h3
-      %span= "#{@account.number_of_total_leads_between(@month_start, @month_end)} Leads"
+      %span= "#{@account.number_of_total_leads_for_cityvoice_campaigns_between(@month_start, @month_end)} Leads"
   %h1= @account.name
   %h2 CityVoice Monthly Report
   %p= @month_start.to_s(:long) + ' to ' + @month_end.to_s(:long)
@@ -25,7 +25,7 @@
           %th Cost Per Lead
           %th Cost Per Contact
         %tbody
-          -@account.campaigns.each do |campaign|
+          -@managed_campaigns.each do |campaign|
             %tr
               %td= campaign.name
               %td= campaign.number_of_lead_calls_between(@month_start, @month_end).to_s

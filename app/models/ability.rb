@@ -38,6 +38,9 @@ class Ability
         can :read, Website do |website|
           user.acquainted_accounts.collect(&:websites).flatten.include?(website)
         end
+        can :read, WebsiteVisit do |website_visit|
+          user.acquainted_accounts.collect(&:websites).flatten.include?(website_visit.website)
+        end
         
         can :report, Account
         can :report_client, Account

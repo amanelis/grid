@@ -57,6 +57,7 @@ margin-right:10px;
 }
 
 nav a{
+text-shadow: 0 -1px 0 #000;
 font-size:.8em;
 color:gray;
 padding:5px;
@@ -64,6 +65,7 @@ margin:5px 0 0 5px;
 }
 
 nav a:hover{
+text-shadow: 0 -1px 0 #444;
 background:gray;
 -webkit-border-radius: 4px;
    -moz-border-radius: 4px;
@@ -109,8 +111,33 @@ background-repeat: no-repeat;
 padding-left:16px;
 }
 
-li{
+ul{
 	list-style-type:none;
+}
+
+/*
+	Header UL Nav
+	------------------
+*/
+header ul{
+	margin:0;
+}
+
+header li{
+	float:left;
+	margin-left:24px;
+	text-align:center;
+}
+
+header li a{
+	color:#000;
+	
+}
+
+header li a:hover{
+	opacity: .5;
+	color:#000;
+	text-decoration:none;
 }
 
 /*
@@ -118,16 +145,20 @@ li{
 	------------------
 */
 body{
-font-family: "proxima-nova-1","proxima-nova-2","Lucida Grande", "Helvetica Nueue", helvetica, sans-serif;
+font-family: "Lucida Grande", "Helvetica Nueue", helvetica, sans-serif;
 }
 
 .strong, .strong td{
 	font-weight:bold;
-	font-size:1.2em;
 }
 
 .large{
 	font-size:2em;
+	line-height:1.2em;
+}
+
+.small{
+	font-size:.8em;
 	line-height:1.2em;
 }
 
@@ -166,6 +197,8 @@ margin:0;
 	font-weight:bold;
 	border-top:black solid 2px;
 }
+
+
 /*
 	Date Picker
 	------------------
@@ -190,7 +223,6 @@ margin:0;
 	------------------
 */
 td a{
-font-size:1.2em;
 color:#000;
 text-decoration:none;
 font-weight:bold;
@@ -202,6 +234,11 @@ td{
 
 td a:hover{
 color:#0099FF;
+}
+
+td p{
+	margin:0;
+	padding:0;
 }
 
 /*
@@ -326,3 +363,39 @@ form.inline p { margin-bottom:0; }
     display: none;
   }
 }
+
+/*
+	Activities
+	------------------
+*/
+
+.wrong, .hangup, .cancel, .duplicate, .voicemail, .noanswer, .congestion, .busy, .unanswered, .after, .spam, .hangup {
+	color:red;
+}
+
+.answer{
+	color:green;
+}
+
+/*
+	Pagination
+	------------------
+*/
+.pagination {
+  text-align: center;}
+  .pagination a, .pagination span{
+    padding: .2em .3em; }
+  .pagination span.disabled {
+    color: #9E9E9E; }
+  .pagination .current {
+    font-weight: bold;
+    background-color:#9E9E9E;
+-webkit-border-radius: 75px;
+   -moz-border-radius: 75px;
+        border-radius: 75px;
+	}
+  .pagination a {
+    text-decoration: none;
+    color: black; }
+    .pagination a:hover, .pagination a:focus {
+      text-decoration: underline; }

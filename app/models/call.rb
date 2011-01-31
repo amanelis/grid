@@ -245,10 +245,16 @@ class Call < ActiveRecord::Base
       
     ##Get the recording
     if resp.code == '200'
-      results = JSON.parse(resp.body)['recordings']
-      File.open("#{RAILS_ROOT}/tmp/#{self.call_id}.mp3", "a+") {|f| f.write(HTTParty.get("https://api.twilio.com/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/Recordings/#{results.last['sid']}"))}
-      self.recording = File.open("#{RAILS_ROOT}/tmp/#{self.call_id}.mp3")
-      File.delete("#{RAILS_ROOT}/tmp/#{self.call_id}.mp3") if save!
+      begin
+        results = JSON.parse(resp.body)['recordings']
+        File.open("#{RAILS_ROOT}/tmp/#{self.call_id}.mp3", "a+") {|f| f.write(HTTParty.get("https://api.twilio.com/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/Recordings/#{results.last['sid']}"))}
+        self.recording = File.open("#{RAILS_ROOT}/tmp/#{self.call_id}.mp3")
+        File.delete("#{RAILS_ROOT}/tmp/#{self.call_id}.mp3") if save!
+        self.recorded = true
+        self.save
+      rescue
+        
+      end
     end
   end
   

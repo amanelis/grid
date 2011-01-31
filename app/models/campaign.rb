@@ -33,7 +33,31 @@ class Campaign < ActiveRecord::Base
   ACCOUNT_SID = 'AC7fedbe5d54f77671320418d20f843330'
   ACCOUNT_TOKEN = 'a7a72b0eb3c8a41064c4fc741674a903'
 
+
+  # VIRTUAL ATTRIBUTES
   
+  def add_industry(industry)
+    self.industries << Industry.find_by_name(industry)
+    self.save!
+  end
+
+  def url=(url)
+    self.create_website(url)
+  end
+
+  def area_code=(area_code)
+    self.create_twilio_number(area_code, self.name, self.forwarding_number)
+  end
+
+  def forwarding_number
+    @forwarding_number
+  end
+  
+  def forwarding_number=(a_forwarding_number)
+    @forwarding_number = a_forwarding_number
+  end
+
+
   # CLASS BEHAVIOR
 
   def self.orphanage
@@ -456,7 +480,7 @@ class Campaign < ActiveRecord::Base
     end
   end
   
-  def create_twilio_number(phone_number, name, forward_to, id_caller = true, record_calls = true, transcribe_calls = false, text_calls = false, call_url = "http://grid.cityvoice.com/phone_numbers/connect/", fallback_url = "http://grid.cityvoice.com/phone_numbers/connect/", status_url = "http://grid.cityvoice.com/phone_numbers/collect/", sms_url = "http://grid.cityvoice.com/phone_numbers/sms_collect/", fallback_sms_url = "http://grid.cityvoice.com/phone_numbers/sms_collect/")
+  def create_twilio_number(phone_number, name, forward_to, id_callers = true, record_calls = true, transcribe_calls = false, text_calls = false, call_url = "http://grid.cityvoice.com/phone_numbers/connect/", fallback_url = "http://grid.cityvoice.com/phone_numbers/connect/", status_url = "http://grid.cityvoice.com/phone_numbers/collect/", sms_url = "http://grid.cityvoice.com/phone_numbers/sms_collect/", fallback_sms_url = "http://grid.cityvoice.com/phone_numbers/sms_collect/")
     job_status = JobStatus.create(:name => "Campaign.create_twilio_number")
     begin
       #CREATE THE NUMBER IN TWILIO (BASIC INFORMATION)
@@ -471,12 +495,12 @@ class Campaign < ActiveRecord::Base
       #CREATE THE PHONE NUMBER IN GRID IF TWILIO CREATION WAS SUCCESSFUL
       new_phone_number = self.phone_numbers.build
       new_phone_number.twilio_id = JSON.parse(resp.body)['sid']
-      new_phone_number.inboundno = phone_number.to_s
+      new_phone_number.inboundno = JSON.parse(resp.body)['phone_number'].gsub("+", "")
       new_phone_number.forward_to = forward_to
       new_phone_number.name = name
       new_phone_number.descript = name
       new_phone_number.twilio_version = API_VERSION
-      new_phone_number.id_callers = id_caller
+      new_phone_number.id_callers = id_callers
       new_phone_number.record_calls = record_calls
       new_phone_number.transcribe_calls = transcribe_calls
       new_phone_number.text_calls = text_calls
@@ -484,7 +508,7 @@ class Campaign < ActiveRecord::Base
       new_phone_number.save!
       
       #UPDATE THE TWILIO URLS
-      new_phone_number.update_twilio_number(name, forward_to, id_caller, record_calls, transcribe_calls, text_calls, call_url, fallback_url, status_url, sms_url, fallback_sms_url)
+      new_phone_number.update_twilio_number(new_phone_number.name, new_phone_number.forward_to, new_phone_number.id_callers, new_phone_number.record_calls, new_phone_number.transcribe_calls, new_phone_number.text_calls, call_url, fallback_url, status_url, sms_url, fallback_sms_url)
       job_status.finish_with_no_errors
       return new_phone_number
     rescue Exception => ex
@@ -504,6 +528,28 @@ class Campaign < ActiveRecord::Base
     true
   end
 
+  def create_contact_form(description = '', return_url = '', forwarding_email = '', forwarding_bcc_email = '', custom1_text = '', custom2_text = '', custom3_text = '', custom4_text = '', need_name = true, need_address = true, need_phone = true, need_email = true, work_category = true, work_description = true, date_requested = true, time_requested = true, other_information = true)
+    form = self.contact_forms.build
+    form.forwarding_email = forwarding_email
+    form.forwarding_bcc_email = forwarding_bcc_email
+    form.custom1_text = custom1_text
+    form.custom2_text = custom2_text
+    form.custom3_text = custom3_text
+    form.custom4_text = custom4_text
+    form.return_url = return_url
+    form.need_name = need_name
+    form.need_address = need_address
+    form.need_phone = need_phone
+    form.need_email = need_email
+    form.work_category = work_category
+    form.work_description = work_description
+    form.date_requested = date_requested
+    form.time_requested = time_requested
+    form.other_information = other_information
+    form.save
+    
+    form.get_form_text()
+  end
   
   # PREDICATES
 

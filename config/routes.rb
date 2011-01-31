@@ -8,8 +8,17 @@ ActionController::Routing::Routes.draw do |map|
   map.login               "/login",                             :controller => "user_sessions",   :action => :new
   map.register            "/register",                          :controller => "users",           :action => :new
   
-  map.resources :accounts,        :member => {:report => :get}
-  map.resources :campaigns,       :member => {:lead_matrix => :get}
+  map.resources :accounts, :has_many => :campaigns, :member => {:report => :get}
+  map.resources :accounts do |account|
+    account.resources :campaigns, :member => { :enable => [:put, :post] }
+  end
+  
+  map.resources :campaigns, :has_many => :contact_forms, :member => {:lead_matrix => :get}
+  map.resources :campaigns do |campaign|
+    campaign.resources :contact_forms, :member => { :enable => [:put, :post] } 
+  end
+  
+  
   map.resources :website_visits,  :member => {:global_visitor => :get}
   map.resources :calls,           :member => {:collect => :post}
   map.resources :phone_numbers,   :member => {:connect => :post}
@@ -19,7 +28,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :keywords
   map.resources :job_statuses
   map.resources :websites
-  map.resources :contact_forms
+  map.resources :contact_forms,   :member => {:thank_you => :get, :get_html => :get}
   
   map.with_options :controller => 'home' do |home|
      home.dashboard 'dashboard', :action => 'dashboard'

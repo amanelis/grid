@@ -2,11 +2,9 @@
   jQuery(document).ready(function($) {
     $('a[rel*=facebox]').facebox()
   })
-
 %header
-  %p.right
-    = render :partial => 'shared/links'
-  %h3
+  %ul.right= render :partial => 'shared/links'
+  %h2
     = "Accounts (#{@accounts.count})"
   %h4.quiet= 'For ' + (Date.yesterday.beginning_of_month).to_s(:long) + ' to ' + Date.yesterday.to_s(:long)
 %article
@@ -16,7 +14,6 @@
     %select{:id => :account_status, :name => :account_status}
       - for status in @accounts_statuses
         %option{ :selected => status == @passed_status}= status
-
     %label
       = "Account Type: "
     %select{:id => :account_type, :name => :account_type}
@@ -26,45 +23,26 @@
         %option{ :selected => account_type == @passed_type}= account_type
     %input{:type => 'submit', :value => 'Filter'}
     #loading
-      
-  %table{:class => "pretty"}
+  %table
     %thead
       %tr
-        %th Name (Click for Details)
+        %th Company
         %th Account Type
         %th CTR
         %th Total Leads
         %th CPConv
-        /%th
     %tbody
       - @accounts.each do |account|
-        %tr{:class => cycle('odd', 'even')}
+        %tr
           %td= link_to account.name, account_path(account)
           -account_data = @accounts_data[account.id]
           -account_type = account.account_type
           %td= account_type
           -if account_type =~ /SEM|Mobile/i
             -ctr = account_data.present? ? account_data[:ctr] : 0.0
-            -if ctr > 0.75
-              %td{:class => 'green-font'}= sprintf("%.2f", ctr) + '%'
-            -elsif ctr.between?(0.5, 0.749999)
-              %td{:class => 'yellow-font'}= sprintf("%.2f", ctr) + '%'
-            -else
-              %td{:class => 'red-font'}= sprintf("%.2f", ctr) + '%'
+            %td= sprintf("%.2f", ctr) + '%'
           -else
-            %td
-          %td
-            %b= account_data.present? ? account_data[:leads] : 0
-            - if account_data.present?
-              =image_tag(Gchart.sparkline(:data => account_data[:leads_by_day], :size => '80x15', :line_colors => '0077CC', :background => "#{ current_cycle == 'even' ? 'E5ECF9' : 'FFFFFF'}"))
+            %td --
+          %td= account_data.present? ? account_data[:leads] : 0
           -cpconv = account_data.present? ? account_data[:cpconv] : 0.0
-          -if cpconv > 75
-            %td{:class => 'red-font'}
-              = ActionController::Base.helpers.number_to_currency(cpconv)
-          -elsif cpconv.between?(35, 74.999)
-            %td{:class => 'yellow-font'}= ActionController::Base.helpers.number_to_currency(cpconv)
-          -else
-            %td{:class => 'green-font'}= ActionController::Base.helpers.number_to_currency(cpconv)
-          /%td= link_to 'Show', account_path(account)
-
-        
+          %td= ActionController::Base.helpers.number_to_currency(cpconv) 

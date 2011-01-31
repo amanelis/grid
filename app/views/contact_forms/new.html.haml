@@ -1,0 +1,68 @@
+%h3 Create Form
+-form_for (@form, {:url => new_campaign_contact_form_path}, :method => :post) do |f|
+  #create.span-16.append-1
+    = f.hidden_field :campaign_id, :name => :campaign_id, :value => @campaign.id.to_s
+    = f.label "Form Description:"
+    = f.text_field :description, :placeholder => "Form for Campaign 1", :name => "description", :id => "description"
+    %br
+    = f.label "Email To (Comma Separated):"
+    = f.text_field :forwarding_email, :placeholder => "me@cityvoice.com, you@cityvoice.com", :name => "forwarding_email", :id => "forwarding_email"
+    %br
+    = f.label "BCC Email To (Comma Separated):"
+    = f.text_field :forwarding_bcc_email, :placeholder => "my_boss@cityvoice.com, your_boss@cityvoice.com", :name => "forwarding_bcc_email", :id => "forwarding_bcc_email"
+    %br
+    = f.label "Link To Return To (www.cityvoice.com/thank-you):"
+    = f.text_field :return_url, :placeholder => "www.cityvoice.com/thank_you", :name => "return_url", :id => "return_url"
+    %br
+    = f.label "Custom Field 1:"
+    = f.text_field :custom1_text, :name => "custom1_text", :id => "custom1_text"
+    %br
+    = f.label "Custom Field 2:"
+    = f.text_field :custom2_text, :name => "custom2_text", :id => "custom2_text"
+    %br
+    = f.label "Custom Field 3:"
+    = f.text_field :custom3_text, :name => "custom3_text", :id => "custom3_text"
+    %br
+    = f.label "Custom Field 4:"
+    = f.text_field :custom4_text, :name => "custom4_text", :id => "custom4_text"
+    %br
+    = f.label "Include Name?"
+    = f.check_box :need_name, :placeholder => "true", :name => "need_name", :id => "need_name"
+    %br
+    %br
+    = f.label "Include Address?"
+    = f.check_box :need_address, :placeholder => "true", :name => "need_address", :id => "need_address"
+    %br
+    %br
+    = f.label "Include Phone Number?"
+    = f.check_box :need_phone, :placeholder => "true", :name => "need_phone", :id => "need_phone"
+    %br
+    %br
+    = f.label "Include Email?"
+    = f.check_box :need_email, :placeholder => "true", :name => "need_email", :id => "need_email"
+    %br
+    %br
+    = f.label "Include Work Category?"
+    = f.check_box :work_category, :placeholder => "true", :name => "work_category", :id => "work_category"
+    %br
+    %br
+    = f.label "Include Work Description?"
+    = f.check_box :work_description, :placeholder => "true", :name => "work_description", :id => "work_description"
+    %br
+    %br
+    = f.label "Include Date Requested?"
+    = f.check_box :date_requested, :placeholder => "true", :name => "date_requested", :id => "date_requested"
+    %br
+    %br
+    = f.label "Include Time Requested?"
+    = f.check_box :time_requested, :placeholder => "true", :name => "time_requested", :id => "time_requested"
+    %br
+    %br
+    = f.label "Include Other Information?"
+    = f.check_box :other_information, :placeholder => "true", :name => "other_information", :id => "other_information"
+    %br
+    %br
+    = f.submit "Create Contact Form"
+    %br
+    %br
+  

@@ -115,4 +115,54 @@ class CampaignsController < ApplicationController
     create if request.post?
   end
 
+  def new_campaign_contact_form
+    
+  end
+  
+  def create_new_campaign_contact_form
+    @campaign = Campaign.find(params[:id])
+    if @campaign.present?
+      @form_text = @campaign.create_contact_form(params[:description], params[:return_url], params[:forwarding_email], params[:forwarding_bcc_email], params[:custom1_text], params[:custom2_text], params[:custom3_text], params[:custom4_text], params[:need_name], params[:need_address], params[:need_phone], params[:need_email], params[:work_category], params[:work_description], params[:date_requested], params[:time_requested], params[:other_information])
+      @form = @campaign.contact_forms.last
+    end
+  end
+  
+  def new
+    @industries = Industry.all.collect {|a| a.name}.sort!
+    @flavors = Campaign.flavors
+    @account = Account.find(params[:account_id])
+     if @campaign.present?
+       @campaign = @account.campaigns.build
+     end
+  end
+  
+  def create
+    @account = Account.find(params[:account_id])
+    if @account.present?
+      render :text => params[:campaign][:flavor]
+      if params[:campaign][:flavor].include? 'SEM'
+        new_campaign = SemCampaign.new
+        new_campaign.flavor = params[:campaign][:flavor]
+      elsif params[:campaign][:flavor].include? 'SEO'
+        new_campaign = SeoCampaign.new 
+        new_campaign.flavor = params[:campaign][:flavor]
+      elsif params[:campaign][:flavor].include? 'Maps'
+        new_campaign = MapsCampaign.new 
+        new_campaign.flavor = params[:campaign][:flavor]
+      else
+        new_campaign = OtherCampaign.new
+        new_campaign.flavor = params[:campaign][:flavor]
+      end
+      new_campaign.account = @account
+      new_campaign.status = 'Active'
+      new_campaign.save
+      new_campaign.name = params[:name]
+      new_campaign.campaign.industry = (params[:campaign][:industry])
+      new_campaign.campaign.url = (params[:url])
+      new_campaign.campaign.forwarding_number =  params[:forwarding_number]
+      new_campaign.campaign.area_code = (params[:area_code])
+      new_campaign.save
+    end
+  end
+  
 end
