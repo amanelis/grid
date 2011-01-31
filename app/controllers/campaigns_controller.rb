@@ -140,11 +140,21 @@ class CampaignsController < ApplicationController
     @account = Account.find(params[:account_id])
     if @account.present?
       render :text => params[:campaign][:flavor]
-      new_campaign = SemCampaign.new if params[:campaign][:flavor].include? 'SEM'
-      new_campaign = SeoCampaign.new if params[:campaign][:flavor].include? 'SEO'
-      new_campaign = MapsCampaign.new if params[:campaign][:flavor].include? 'Maps'
-      new_campaign = OtherCampaign.new if new_campaign.blank?
+      if params[:campaign][:flavor].include? 'SEM'
+        new_campaign = SemCampaign.new
+        new_campaign.flavor = params[:campaign][:flavor]
+      elsif params[:campaign][:flavor].include? 'SEO'
+        new_campaign = SeoCampaign.new 
+        new_campaign.flavor = params[:campaign][:flavor]
+      elsif params[:campaign][:flavor].include? 'Maps'
+        new_campaign = MapsCampaign.new 
+        new_campaign.flavor = params[:campaign][:flavor]
+      else
+        new_campaign = OtherCampaign.new
+        new_campaign.flavor = params[:campaign][:flavor]
+      end
       new_campaign.account = @account
+      new_campaign.status = 'Active'
       new_campaign.save
       new_campaign.name = params[:name]
       new_campaign.campaign.industry = (params[:campaign][:industry])

@@ -56,44 +56,29 @@ class Campaign < ActiveRecord::Base
   def industry=(industry)
     begin
       self.industries << Industry.find_by_name(industry)
-    rescue
-      false
+    rescue Exception =>ex
+      raise
     end
-    true
   end
 
   def url=(url)
     begin
       self.create_website(url)
-    rescue
-      false
+    rescue Exception =>ex
+      raise
     end
-    true
   end
 
   def area_code=(area_code)
     begin
       self.create_twilio_number(area_code, self.name, self.forwarding_number)
-    rescue
-      false
+    rescue Exception =>ex
+      raise
     end
-    true
   end
 
   def forwarding_number=(forwarding_number)
     forwarding_number
-  end
-  
-  def industry
-  end
-
-  def url
-  end
-
-  def area_code
-  end
-
-  def forwarding_number
   end
   
   # CLASS BEHAVIOR
