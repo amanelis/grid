@@ -9,10 +9,9 @@
       %p=activity.activity_type.caller_name
     %td.recording
       -if activity.activity_type.recorded? && activity.activity_type.recording?
-        =# link_to('Listen', activity.recording.expiring_url(14400))
         = link_to('Listen', '#')
+        =# link_to('Listen', activity.recording.expiring_url(14400))
         =# mp3_player "#{activity.recording.expiring_url(14400)}", :bg => "EEEEEE", :track => "EEEEEE", :slider => "222222", :loader => "EEEEEE"
-        MP3 Player
       -else
         = "--"
     %td.review{:class => activity.activity_type.call_status.downcase}
