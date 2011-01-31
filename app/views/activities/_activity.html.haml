@@ -9,7 +9,8 @@
       %p=activity.activity_type.caller_name
     %td.recording
       -if activity.activity_type.recorded? && activity.activity_type.recording?
-        %audio{:src => activity.activity_type.recording.expiring_url(14400), :preload => "none", :type => "audio/mpeg"}
+        %audio{:preload => "none", :type => "audio/mpeg"}
+          %source{:src => activity.activity_type.recording.expiring_url(14400)}
       -else
         N/A
     %td.review{:class => activity.activity_type.call_status.downcase}
