@@ -119,7 +119,7 @@ class PhoneNumber < ActiveRecord::Base
 
   # INSTANCE BEHAVIOR
 
-  def update_twilio_number(name, forward_to, id_caller = true, record_calls = true, transcribe_calls = false, text_calls = false, call_url = "http://grid.cityvoice.com/phone_numbers/connect/", fallback_url = "http://grid.cityvoice.com/phone_numbers/connect/", status_url = "http://grid.cityvoice.com/phone_numbers/collect/", sms_url = "http://grid.cityvoice.com/phone_numbers/sms_collect/", fallback_sms_url = "http://grid.cityvoice.com/phone_numbers/sms_collect/")
+  def update_twilio_number(name, forward_to, id_callers = true, record_calls = true, transcribe_calls = false, text_calls = false, call_url = "http://grid.cityvoice.com/phone_numbers/connect/", fallback_url = "http://grid.cityvoice.com/phone_numbers/connect/", status_url = "http://grid.cityvoice.com/phone_numbers/collect/", sms_url = "http://grid.cityvoice.com/phone_numbers/sms_collect/", fallback_sms_url = "http://grid.cityvoice.com/phone_numbers/sms_collect/")
     job_status = JobStatus.create(:name => "PhoneNumber.update_twilio_number")
     begin
       #CREATE THE NUMBER IN TWILIO (BASIC INFORMATION)
@@ -136,9 +136,9 @@ class PhoneNumber < ActiveRecord::Base
             'SmsMethod' => 'POST',
             'SmsFallbackUrl' => "#{fallback_sms_url}#{self.id}",
             'SmsFallbackMethod' => 'POST',
-            'VoiceCallerIdLookup' => id_caller
+            'VoiceCallerIdLookup' => id_callers
           }
-      update_resp = account.request("/#{self.twilio_version}/Accounts/#{ACCOUNT_SID}/IncomingPhoneNumbers/#{self.twilio_id}.json", 'PUT', d)
+      update_resp = account.request("/#{self.twilio_version}/Accounts/#{ACCOUNT_SID}/IncomingPhoneNumbers/#{self.twilio_id}.json", 'POST', d)
       raise unless update_resp.kind_of? Net::HTTPSuccess
     rescue Exception => ex
       job_status.finish_with_errors(ex)
