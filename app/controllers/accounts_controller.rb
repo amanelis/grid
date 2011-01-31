@@ -1,9 +1,8 @@
 class AccountsController < ApplicationController
-  load_and_authorize_resource
   inherit_resources
+  load_and_authorize_resource :except => [:export, :refresh_accounts]
   before_filter :load_time_zone, :only => [:show, :report, :report_client]
 
-  # /accounts
   def index
     @accounts = current_user.acquainted_accounts
     @accounts_statuses = Account.account_statuses_for(@accounts)
@@ -20,7 +19,6 @@ class AccountsController < ApplicationController
     respond("html", nil, "xml", @accounts) 
   end
 
-  # /accounts/:id
   def show
     @date_range = ''
     @total_reporting_messages = [:number_of_lead_calls_between,
@@ -94,13 +92,10 @@ class AccountsController < ApplicationController
 
   # /accounts/:id/report
   def report
-    authorize! :read, @account
   end
   
-  # /accounts/:id/report/client /.pdf
+  # /accounts/:id/report/client.pdf
   def report_client
-    authorize! :read, @account
-    
     @month_start = (Date.today - 1.month).beginning_of_month
     @month_end = (Date.today - 1.month).end_of_month
     
@@ -138,18 +133,8 @@ class AccountsController < ApplicationController
       format.html {render :layout => 'report'}
     end
   end
-
-  def weekly_perf_report
-    @accounts = Account.active.to_a
-
-    respond_to do |format|
-      format.html
-    end
-  end
   
   def send_weekly_email
-    authorize! :read, @account
-    @account = Account.find(params[:id])
     @account.send_weekly_report_now
     flash[:notice] = "You have successfully sent an email!"
     redirect_to account_path(params[:id])
