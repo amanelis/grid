@@ -2,6 +2,10 @@
   $(function(){
   $('#daterangepicker').daterangepicker({arrows:false, onchange:true}); 
   });
+  
+  jQuery(document).ready(function($) {
+  $('a[rel*=facebox]').facebox()
+  })
 %header
   %ul.right 
     = render :partial => 'shared/links'
@@ -17,7 +21,7 @@
         %br
         Export
     %li
-      %a{:href => report_client_path(params[:id])}
+      %a{:href => report_client_path(params[:id]), :rel => "facebox"}
         = image_tag ("icons/report.png")
         %br
         Report

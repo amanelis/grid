@@ -1,14 +1,15 @@
 class AccountsController < ApplicationController
-  load_and_authorize_resource # If the method is you want to authorize is not restfull, you must authorize! the action
+  load_and_authorize_resource
   inherit_resources
   before_filter :load_time_zone, :only => [:show, :report, :report_client]
 
   # /accounts
   def index
     @accounts = current_user.acquainted_accounts
-    @accounts_statuses = Account.account_statuses_for(@accounts) && @accounts_types = Account.account_types_for(@accounts)
+    @accounts_statuses = Account.account_statuses_for(@accounts)
+    @accounts_types = Account.account_types_for(@accounts)
     
-    @passed_status = params[:account_status] ||= 'Active'
+    @passed_status = params[:account_status] ||= 'Active' 
     @passed_type = params[:account_type] ||= ''
     
     @accounts = @accounts.select {|account| account.status == params[:account_status]} if params[:account_status].present?
@@ -16,7 +17,6 @@ class AccountsController < ApplicationController
 
     @accounts_data = Rails.cache.fetch("accounts_data") { Account.get_accounts_data }
     @accounts.sort! {|a,b| a.name.downcase <=> b.name.downcase}
-    
     respond("html", nil, "xml", @accounts) 
   end
 
@@ -59,7 +59,7 @@ class AccountsController < ApplicationController
       f.legend(:enabled => false)
       
       f.options[:chart][:defaultSeriesType] = "line"
-      f.series(:name=> 'Leads',       :data => (@start_date..@end_date).inject([]) { |leads, date| leads << @managed_campaigns.sum { |campaign| campaign.number_of_total_leads_between(date, date) } })
+      f.series(:name=> 'Leads', :data => (@start_date..@end_date).inject([]) { |leads, date| leads << @managed_campaigns.sum { |campaign| campaign.number_of_total_leads_between(date, date) } })
     end
     
     @campaign_summary_graph = HighChart.new('graph') do |f|
@@ -69,11 +69,11 @@ class AccountsController < ApplicationController
       f.legend(:enabled => false)
 
       f.options[:chart][:defaultSeriesType] = "column"
-      f.series(:name=> 'Leads',       :data => @managed_campaigns.collect {|campaign| campaign.number_of_total_leads_between(@start_date, @end_date) })
+      f.series(:name=> 'Leads', :data => @managed_campaigns.collect {|campaign| campaign.number_of_total_leads_between(@start_date, @end_date) })
     end
-    
-  end
 
+  end
+ 
   def new
   end
 
@@ -165,7 +165,7 @@ class AccountsController < ApplicationController
   end
 
   def export
-    can :export, Account
+    authorize! :export, Account
     @accounts = Account.find(:all, :order => "name")
     @outfile  = "accounts_" + Time.now.strftime("%m-%d-%Y") + ".csv"
     
