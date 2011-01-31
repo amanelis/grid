@@ -12,8 +12,11 @@
   %h2 New fun things are being added daily, please use the feedback button at the bottom right to report issues or suggest new features.
   
   - if @user.admin?
+    %hr
     %h3= "Total Accounts: #{@accounts}"
     %h3= "Total Active Accounts: #{@active_accounts}"
     %h3= "Total Inactive Accounts: #{@inactive_accounts}"
     %h3= "Total Reseller Accounts: #{@reseller_accounts}"
+    %h3= "?? Leads Generated Today: #{@reseller_accounts}"
+    
   

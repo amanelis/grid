@@ -57,6 +57,7 @@ margin-right:10px;
 }
 
 nav a{
+text-shadow: 0 -1px 0 #000;
 font-size:.8em;
 color:gray;
 padding:5px;
@@ -64,6 +65,7 @@ margin:5px 0 0 5px;
 }
 
 nav a:hover{
+text-shadow: 0 -1px 0 #444;
 background:gray;
 -webkit-border-radius: 4px;
    -moz-border-radius: 4px;
@@ -143,7 +145,7 @@ header li a:hover{
 	------------------
 */
 body{
-font-family: "proxima-nova-1","proxima-nova-2","Lucida Grande", "Helvetica Nueue", helvetica, sans-serif;
+font-family: "Lucida Grande", "Helvetica Nueue", helvetica, sans-serif;
 }
 
 .strong, .strong td{
