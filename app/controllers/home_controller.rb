@@ -1,5 +1,4 @@
-class HomeController < ApplicationController
-  caches_page :dashboard
+class HomeController < ApplicationController  
   
   def index
     @user = current_user
@@ -14,8 +13,7 @@ class HomeController < ApplicationController
       @inactive_accounts  = Account.inactive.count
       @reseller_accounts  = Account.reseller.count
     end
-    
-    
-    
   end
+  
+  
 end
