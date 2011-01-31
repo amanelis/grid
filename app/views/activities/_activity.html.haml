@@ -9,10 +9,10 @@
       %p=activity.activity_type.caller_name
     %td.recording
       -if activity.activity_type.recorded? && activity.activity_type.recording?
-        %audio{:preload => "none", :type => "audio/mpeg"}
-          %source{:src => activity.activity_type.recording.expiring_url(14400)}
+        = link_to('Listen', activity.recording.expiring_url(14400))
+        = mp3_player "#{activity.recording.expiring_url(14400)}", :bg => "EEEEEE", :track => "EEEEEE", :slider => "222222", :loader => "EEEEEE"
       -else
-        N/A
+        --
     %td.review{:class => activity.activity_type.call_status.downcase}
       =  "#{(activity.activity_type.call_end - activity.activity_type.call_start).to_int} seconds"
       - if activity.activity_type.duplicate?
@@ -38,8 +38,6 @@
     %td.recording
       %strong=h activity.activity_type.work_category
       %p=h activity.activity_type.work_description
-      %audio{:preload => "none", :type => "audio/mpeg"}
-        %source{:src => "http://s3.amazonaws.com/audiojs/03-its-all-about-the-crystalizabeths.mp3"}
     %td.review
       - if activity.duplicate?
         %p.duplicate= "Duplicate"
