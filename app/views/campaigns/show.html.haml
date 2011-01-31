@@ -126,7 +126,7 @@
     %h3=link_to "Submission Log (ID = #{@campaign.contact_form_id_string}, Emails: #{@campaign.contact_form_emails_string})", :href => "#"
     #fourth_rung 
       %article
-        %h4= link_to 'Create New Form', new_contact_form_path(:campaign_id => @campaign.id), :class => "submit", :name => "submit"
+        %h4= link_to 'Create New Form', new_campaign_contact_form_path(@campaign), :class => "submit", :name => "submit"
         %table
           %thead
             %tr
