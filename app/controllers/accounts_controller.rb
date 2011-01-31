@@ -33,7 +33,7 @@ class AccountsController < ApplicationController
                                  :spend_between]  
                                  
     @managed_campaigns    = @account.campaigns.active.cityvoice.to_a.sort { |a,b| a.name <=> b.name }
-    @unmanaged_campaigns  = @account.campaigns.active.unmanaged.to_a.sort { |a,b| a.name <=> b.name }           
+    @unmanaged_campaigns  = @account.campaigns.active.unmanaged.to_a.sort { |a,b| a.name <=> b.name }        
                                  
     if params[:daterange].blank?
       @start_date = Date.today.beginning_of_month
