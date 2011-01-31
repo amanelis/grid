@@ -13,9 +13,12 @@
       $.getScript("/activities.js?after=" + after)
       setTimeout(updateActivity, 7000);
     }
-
+-#:javascript
+  -#audiojs.events.ready(function() {
+    -#  var as = audiojs.createAll();
+    -#});
 %header
-  .right= will_paginate(@activities)
+  .right.pagination= will_paginate(@activities)
   %h3 Activity
 %article
   %table#activities.small
@@ -30,3 +33,4 @@
     %tbody
       - for activity in @activities
         = render activity, :locals => {:activity => activity}
+  .pagination= will_paginate(@activities)
