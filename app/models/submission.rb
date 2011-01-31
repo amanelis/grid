@@ -165,28 +165,28 @@ class Submission < ActiveRecord::Base
     post_url = 'https://www.customerlobby.com/bulk-invite'
     review_data = "#{customer_lobby_id}\t#{name}\t#{email}"
     
-    url = URI.parse("https://www.customerlobby.com/bulk-invite")
+    url = URI.parse("http://www.customerlobby.com/bulk-invitation?username=cityvoice&password=17Lincoln79&filename=customerlobby.txt")
     customer_lobby_id = '4969'
     name = 'Ben'
     email = 'ben@cityvoice.com'
-    file = File.open("#{RAILS_ROOT}/tmp/customerlobby.txt", "w") {|f| f.write("#{customer_lobby_id}\t#{name}\t#{email}")}
+    file = File.open("#{RAILS_ROOT}/tmp/customerlobby.txt", "w") {|f| f.write("#{customer_lobby_id}\t#{name}\t#{email}\n")}
     
     boundary = "AaB03x"
     post_body = []
     post_body << "--#{boundary}\r\n"
-    post_body << "Content-Disposition: form-data; name=\"datafile\"; filename=\"#{File.basename(file)}\"\r\n"
+    post_body << "Content-Disposition: attachment; filename=\"#{File.basename(file)}\"\r\n"
     post_body << "Content-Type: text/plain\r\n"
     post_body << "\r\n"
     post_body << File.read("#{RAILS_ROOT}/tmp/customerlobby.txt")
     post_body << "\r\n--#{boundary}--\r\n"
 
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true
-    req.basic_auth 'cityvoice', '17Lincoln79'
-    
-    request = Net::HTTP::Post.new(uri.request_uri)
+    http = Net::HTTP.new(url.host, url.port)
+    request = Net::HTTP::Post.new(url.request_uri)
     request.body = post_body.join
-    response = http.start {|http| http.request(request) }
+    request["Content-Type"] = "text/plain"
+    response = http.request(request)
+
+    
     url = 'https://www.googleapis.com/customsearch/v1?key=AIzaSyB7dKG1N0KawnBKHEdBe4TjeQayNIqULjk&cx=013695089876934848547:d49ftpucgri&q=air+conditioning+san+antonio&alt=json'
     
   end
