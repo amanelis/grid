@@ -28,6 +28,7 @@ gem 'twiliolib',  '2.0.7'
 gem 'cancan',  '1.4.1'
 gem 'json', '1.4.6'
 gem 'xmlparser', '0.6.81'
+gem 'inherited_resources', '1.0.6'
 
 group :test do
   gem 'rspec'
