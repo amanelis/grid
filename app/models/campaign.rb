@@ -33,54 +33,31 @@ class Campaign < ActiveRecord::Base
   ACCOUNT_SID = 'AC7fedbe5d54f77671320418d20f843330'
   ACCOUNT_TOKEN = 'a7a72b0eb3c8a41064c4fc741674a903'
 
+
   # VIRTUAL ATTRIBUTES
   
-  #GETTERS
-  def industry
-    industry
-  end
-
-  def url
-    url
-  end
-
-  def area_code
-    area_code
-  end
-
-  def forwarding_number
-    forwarding_number
-  end
-  
-  #SETTERS
-  def industry=(industry)
-    begin
-      self.industries << Industry.find_by_name(industry)
-    rescue Exception =>ex
-      raise
-    end
+  def add_industry(industry)
+    self.industries << Industry.find_by_name(industry)
+    self.save!
   end
 
   def url=(url)
-    begin
-      self.create_website(url)
-    rescue Exception =>ex
-      raise
-    end
+    self.create_website(url)
   end
 
   def area_code=(area_code)
-    begin
-      self.create_twilio_number(area_code, self.name, self.forwarding_number)
-    rescue Exception =>ex
-      raise
-    end
+    self.create_twilio_number(area_code, self.name, self.forwarding_number)
   end
 
-  def forwarding_number=(forwarding_number)
-    forwarding_number
+  def forwarding_number
+    @forwarding_number
   end
   
+  def forwarding_number=(a_forwarding_number)
+    @forwarding_number = a_forwarding_number
+  end
+
+
   # CLASS BEHAVIOR
 
   def self.orphanage
