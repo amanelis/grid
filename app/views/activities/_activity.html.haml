@@ -38,6 +38,8 @@
     %td.recording
       %strong=h activity.activity_type.work_category
       %p=h activity.activity_type.work_description
+      %audio{:preload => "none", :type => "audio/mpeg"}
+        %source{:src => "http://s3.amazonaws.com/audiojs/03-its-all-about-the-crystalizabeths.mp3"}
     %td.review
       - if activity.duplicate?
         %p.duplicate= "Duplicate"
