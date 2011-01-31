@@ -37,13 +37,45 @@
               %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_contact_between(@month_start, @month_end))
         %tfoot
           %th Totals
-          %th= @account.number_of_lead_calls_between(@month_start, @month_end)
-          %th= @account.number_of_lead_submissions_between(@month_start, @month_end)
-          %th= @account.number_of_total_leads_between(@month_start, @month_end)
-          %th= @account.number_of_total_contacts_between(@month_start, @month_end).to_s
-          %th= ActionController::Base.helpers.number_to_currency(@account.spend_between(@month_start, @month_end))
-          %th= ActionController::Base.helpers.number_to_currency(@account.cost_per_lead_between(@month_start, @month_end))
-          %th= ActionController::Base.helpers.number_to_currency(@account.cost_per_contact_between(@month_start, @month_end))
+          %th= @account.number_of_lead_calls_for_cityvoice_campaigns_between(@month_start, @month_end)
+          %th= @account.number_of_lead_submissions_for_cityvoice_campaigns_between(@month_start, @month_end)
+          %th= @account.number_of_total_leads_for_cityvoice_campaigns_between(@month_start, @month_end)
+          %th= @account.number_of_total_contacts_for_cityvoice_campaigns_between(@month_start, @month_end).to_s
+          %th= ActionController::Base.helpers.number_to_currency(@account.spend_for_cityvoice_campaigns_between(@month_start, @month_end))
+          %th= ActionController::Base.helpers.number_to_currency(@account.total_cost_per_lead_for_cityvoice_campaigns_between(@month_start, @month_end))
+          %th= ActionController::Base.helpers.number_to_currency(@account.total_cost_per_contact_for_cityvoice_campaigns_between(@month_start, @month_end))
+          
+      %table#cpl
+        %thead
+          %th Campaign Name
+          %th Calls
+          %th Forms
+          %th Total Leads
+          %th Total Contacts
+          %th Spend
+          %th Cost Per Lead
+          %th Cost Per Contact
+        %tbody
+          -@unmanaged_campaigns.each do |campaign|
+            %tr
+              %td= campaign.name
+              %td= campaign.number_of_lead_calls_between(@month_start, @month_end).to_s
+              %td= campaign.number_of_lead_submissions_between(@month_start, @month_end).to_s
+              %td= campaign.number_of_total_leads_between(@month_start, @month_end).to_s
+              %td= campaign.number_of_total_contacts_between(@month_start, @month_end).to_s
+              %td= ActionController::Base.helpers.number_to_currency(campaign.spend_between(@month_start, @month_end))
+              %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(@month_start, @month_end))
+              %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_contact_between(@month_start, @month_end))
+        %tfoot
+          %th Totals
+          %th= @account.number_of_lead_calls_for_unmanaged_campaigns_between(@month_start, @month_end)
+          %th= @account.number_of_lead_submissions_for_unmanaged_campaigns_between(@month_start, @month_end)
+          %th= @account.number_of_total_leads_for_unmanaged_campaigns_between(@month_start, @month_end)
+          %th= @account.number_of_total_contacts_for_unmanaged_campaigns_between(@month_start, @month_end).to_s
+          %th= ActionController::Base.helpers.number_to_currency(@account.spend_for_unmanaged_campaigns_between(@month_start, @month_end))
+          %th= ActionController::Base.helpers.number_to_currency(@account.total_cost_per_lead_for_unmanaged_campaigns_between(@month_start, @month_end))
+          %th= ActionController::Base.helpers.number_to_currency(@account.total_cost_per_contact_for_unmanaged_campaigns_between(@month_start, @month_end))
+
 
   
   -if @account.campaigns.sem.present?

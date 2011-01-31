@@ -51,5 +51,7 @@
   :name: twiliolib
 - :version: = 1.4.1
   :name: cancan
+- :version: = 1.0.6
+  :name: inherited_resources
 - :version: 2.3.9
   :name: rails

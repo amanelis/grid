@@ -109,11 +109,6 @@ class CampaignsController < ApplicationController
       end
     end
   end
-  
-  def create
-    @campaign = Campaign.new
-    create if request.post?
-  end
 
   def new_campaign_contact_form
     
