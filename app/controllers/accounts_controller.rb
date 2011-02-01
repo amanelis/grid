@@ -100,7 +100,7 @@ class AccountsController < ApplicationController
       f.x_axis(:categories => @managed_campaigns.collect(&:name) , :labels=>{:rotation=>-45 , :align => 'right'})
       f.legend(:enabled => false)
       
-      f.options[:chart][:defaultSeriesType] = "column"
+      f.options[:chart][:defaultSeriesType] = "bar"
       f.series(:name=> 'Total Leads', :data => @managed_campaigns.collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
     end
     
