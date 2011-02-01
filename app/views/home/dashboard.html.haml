@@ -13,3 +13,8 @@
         %p Leads Today
         %h3#leads= @leads_count
       .span-23.last=high_chart("total_daily_leads", @total_daily_leads)
+- else
+  %header
+    %h1 Dashboard
+  %article
+    %h2 New fun things are being added daily, please use the feedback button at the bottom right to report issues or suggest new features.
