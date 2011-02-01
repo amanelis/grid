@@ -15,11 +15,11 @@ class HomeController < ApplicationController
       @total_daily_leads = HighChart.new('graph') do |f|
         f.title({:text=>"Total Daily Leads"})  
         f.y_axis({:title=> {:text=> 'Daily Leads'}, :min => 0, :labels=>{:rotation=>0, :align=>'right'} })
-        f.x_axis(:categories => ((Date.yesterday - 1.month)..Date.yesterday).to_a , :labels=>{:rotation=>-45 , :align => 'right'})
+        f.x_axis(:categories => (Rails.cache.fetch("dashboard_dates") { Account.dashboard_dates }) , :labels=>{:rotation=>-45 , :align => 'right'})
         f.legend(:enabled => false)
 
         f.options[:chart][:defaultSeriesType] = "line"
-        f.series(:name=> 'Leads', :data => Rails.cache.fetch("dashboard_data") { Account.dashboard_lead_data })
+        f.series(:name=> 'Leads', :data => (Rails.cache.fetch("dashboard_data") { Account.dashboard_data }))
       end
     end
   end

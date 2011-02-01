@@ -33,7 +33,8 @@ class Account < ActiveRecord::Base
   # CLASS BEHAVIOR
 
   def self.cache_results_for_accounts
-    Rails.cache.write("dashboard_data", self.dashboard_lead_data)
+    Rails.cache.write("dashboard_dates", self.dashboard_dates)
+    Rails.cache.write("dashboard_data", self.dashboard_data)
     Rails.cache.write("accounts_data", self.get_accounts_data)
   end
 
@@ -42,9 +43,14 @@ class Account < ActiveRecord::Base
     Utilities.massage_timeline(raw_data, [:leads])
   end
   
-  def self.dashboard_lead_data
-    ((Date.yesterday - 1.month)..Date.yesterday).inject([]) { |leads, date| leads << self.active.to_a.sum { |account| account.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.number_of_total_leads_between(date, date) } } }
+  def self.dashboard_dates
+    ((Date.today - 1.month)..Date.today).to_a
   end
+  
+  def self.dashboard_data
+    self.dashboard_dates.inject([]) { |leads, date| leads << self.active.to_a.sum { |account| account.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.number_of_total_leads_between(date, date) } } }
+  end
+  
 
   def self.get_accounts_data
     self.active.inject({}) do |the_data, an_account|
