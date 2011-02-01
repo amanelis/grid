@@ -5,7 +5,7 @@ class AddGinzaFieldsToKeywordRanking < ActiveRecord::Migration
     add_column :keyword_rankings, :ginza_conversions, :integer
     add_column :keyword_rankings, :ginza_visits, :integer
     
-    KeywordsRankings.all.each do |ranking|
+    KeywordRanking.all.each do |ranking|
       ranking.date_of_ranking = Date.parse(ranking.updated_at.to_s)
       ranking.save!
     end
@@ -13,7 +13,7 @@ class AddGinzaFieldsToKeywordRanking < ActiveRecord::Migration
   end
 
   def self.down
-    remove_column :keyword_rankings, :last_keyword_update
+    remove_column :keyword_rankings, :date_of_ranking
     remove_column :keyword_rankings, :ginza_conv_percent
     remove_column :keyword_rankings, :ginza_conversions
     remove_column :keyword_rankings, :ginza_visits
