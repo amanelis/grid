@@ -13,7 +13,7 @@
   -if @account.campaigns.present?
     .span-24.last
       %h3 Cost Per Lead Summary
-      .chart.span-10.append-13.last=high_chart("highcharts_cost_per_lead", @cost_per_lead_summary_graph)
+      .chart=high_chart("highcharts_cost_per_lead", @cost_per_lead_summary_graph)
       %h3 Managed Campaigns 
       %table#cpl
         %thead
