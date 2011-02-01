@@ -443,5 +443,51 @@ class SeoCampaign < ActiveRecord::Base
       end
     end
   end
+  
+  
+  def self.update_website_keywords_with_ginza
+    job_status = JobStatus.create(:name => "SeoCampaign.update_website_keywords_with_ginza")
+    begin
+      campaigns = Campaign.find(:all, :conditions => ['campaign_style_type = ? && status = ?', 'SeoCampaign', 'Active'])
+      campaigns.each do |campaign|
+        website = campaign.website
+        if website.present? && website.ginza_global_id.present?
+          updated = Website.get_ginza_latest_ranking_date(website.ginza_global_id)
+          Website.get_ginza_latest_rankings(website.ginza_global_id).each do |g_keyword|
+            keyword = campaign.campaign_style.keywords.find_by_descriptor(g_keyword['keyword']['name'])
+            if keyword.blank?
+              #create the keyword
+              keyword = campaign.campaign_style.keywords.build
+              keyword.descriptor = g_keyword['keyword']['name']
+            end
+            keyword.ginza_keyword_id = g_keyword['keyword']['keyword_id']
+            keyword.ginza_conv_percent = g_keyword['keyword']['conversion_percent']
+            keyword.ginza_visits = g_keyword['keyword']['visits']
+            keyword.ginza_conversions = g_keyword['keyword']['conversions']
+            keyword.google_first_page = (g_keyword['keyword']['google_us'].to_i < 11) ? true : false
+            keyword.yahoo_first_page = (g_keyword['keyword']['yahoo_us'].to_i < 11) ? true : false
+            #keyword.bing_first_page = (g_keyword['keyword']['bing_us'].to_i < 11) ? true : false
+            keyword.last_keyword_update = updated
+            keyword.save!
+            
+            #create a ranking for the keyword
+            ranking = keyword.keyword_rankings.build
+            ranking.google = g_keyword['keyword']['google_us'].to_i
+            ranking.yahoo = g_keyword['keyword']['yahoo_us'].to_i
+            #ranking.bing = g_keyword['keyword']['bing_us'].to_i
+            ranking.date_of_ranking = updated
+            ranking.save!
+          end
+          website.last_keyword_update = updated
+          website.save!
+        end
+      end  
+    rescue Exception => ex
+      job_status.finish_with_errors(ex)
+      raise
+    end
+    job_status.finish_with_no_errors
+  end
+  
 
 end
