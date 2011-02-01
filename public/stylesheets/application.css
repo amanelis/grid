@@ -4,6 +4,7 @@
 */
 body{
 	background-image: url("/images/grid_background.png");
+	-webkit-font-smoothing: antialiased;
 }
 
 .error header, .error article{
