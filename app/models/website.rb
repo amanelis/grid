@@ -259,6 +259,28 @@ class Website < ActiveRecord::Base
       raise
     end
   end
+  
+  def self.associate_ginza_sites_with_grid_sites()
+    result = {:updated => 0, :skipped => 0, :errored => 0}
+    sites = Website.list_ginza_sites
+    sites.each do |site|
+      begin
+        grid_site = Website.find_by_domain("www.#{site['site']['domain']}")
+        if grid_site.present?
+          grid_site.ginza_global_id = site['site']['global_key']
+          grid_site.ginza_meta_descript = site['site']['meta_description']
+          grid_site.save
+          result[:updated] += 1
+        else
+          result[:skipped] += 1
+        end
+      rescue
+        result[:errored] += 1
+        next
+      end
+    end
+    result
+  end
 
   
 end
