@@ -90,9 +90,9 @@
       faceboxHtml  : '\
     <div id="facebox" style="display:none;"> \
       <div class="popup"> \
-        <div class="content"> \
+        <div class="content" id="facebox_content"> \
         </div> \
-        <a href="#" class="close"><img src="/facebox/closelabel.png" title="close" class="close_image" /></a> \
+        <a href="#" class="close"><img src="/images/facebox/closelabel.png" title="close" class="close_image" /></a> \
       </div> \
     </div>'
     },
@@ -107,8 +107,8 @@
         append('<div class="loading"><img src="'+$.facebox.settings.loadingImage+'"/></div>')
 
       $('#facebox').css({
-        top:	getPageScroll()[1] + (getPageHeight() / 10),
-        left:	$(window).width() / 2 - 205
+        top:  getPageScroll()[1] + (getPageHeight() / 10),
+        left: $(window).width() / 2 - 205
       }).show()
 
       $(document).bind('keydown.facebox', function(e) {
@@ -195,7 +195,7 @@
     if (self.pageYOffset) {
       yScroll = self.pageYOffset;
       xScroll = self.pageXOffset;
-    } else if (document.documentElement && document.documentElement.scrollTop) {	 // Explorer 6 Strict
+    } else if (document.documentElement && document.documentElement.scrollTop) {   // Explorer 6 Strict
       yScroll = document.documentElement.scrollTop;
       xScroll = document.documentElement.scrollLeft;
     } else if (document.body) {// all other Explorers
@@ -208,7 +208,7 @@
   // Adapted from getPageSize() by quirksmode.com
   function getPageHeight() {
     var windowHeight
-    if (self.innerHeight) {	// all except Explorer
+    if (self.innerHeight) { // all except Explorer
       windowHeight = self.innerHeight;
     } else if (document.documentElement && document.documentElement.clientHeight) { // Explorer 6 Strict Mode
       windowHeight = document.documentElement.clientHeight;
@@ -259,7 +259,7 @@
   }
 
   function fillFaceboxFromAjax(href, klass) {
-    $.get(href, function(data) { $.facebox.reveal(data, klass) })
+    $.get(href, function(data) { $.facebox.reveal(data, klass) }, 'scripts')
   }
 
   function skipOverlay() {
@@ -297,11 +297,11 @@
 
   $(document).bind('close.facebox', function() {
     $(document).unbind('keydown.facebox')
-    $('#facebox').fadeOut(function() {
+    $('#facebox').hide()/*fadeOut(function() {
       $('#facebox .content').removeClass().addClass('content')
       $('#facebox .loading').remove()
       $(document).trigger('afterClose.facebox')
-    })
+    })*/
     hideOverlay()
   })
 
