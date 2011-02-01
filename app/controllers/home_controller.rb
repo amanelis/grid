@@ -8,10 +8,9 @@ class HomeController < ApplicationController
     authorize! :read, Account
     @user = current_user
     if @user.admin?
-      @accounts           = Account.all.count
-      @active_accounts    = Account.active.count
-      @inactive_accounts  = Account.inactive.count
-      @reseller_accounts  = Account.reseller.count
+      @active_accounts  = Account.active.count
+      @users            = User.all.count
+      @leads            = Activity.today.count
     end
   end
   
