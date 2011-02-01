@@ -19,7 +19,7 @@ class HomeController < ApplicationController
         f.legend(:enabled => false)
 
         f.options[:chart][:defaultSeriesType] = "line"
-        f.series(:name=> 'Leads', :data => ((Date.yesterday - 1.month)..Date.yesterday).inject([]) { |leads, date| leads << @active_accounts.sum { |account| account.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.number_of_total_leads_between(date, date) } } })
+        f.series(:name=> 'Leads', :data => Rails.cache.fetch("dashboard_data") { Account.dashboard_lead_data })
       end
     end
   end
