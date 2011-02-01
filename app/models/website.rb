@@ -253,7 +253,8 @@ class Website < ActiveRecord::Base
   #### NEEDS TO BE SET AS AN INSTANCE VARIABLE ON WEBSITE---IN TESTING PHASE
   def self.get_ginza_latest_ranking_date(global_id = '9e082ec734be')
     begin
-      HTTParty.get("https://app.ginzametrics.com/v1/sites/#{global_id}/latest_rankings_date?api_key=#{GINZA_KEY}")
+      dates = HTTParty.get("https://app.ginzametrics.com/v1/sites/#{global_id}/latest_rankings_date?api_key=#{GINZA_KEY}").to_a.first.split('-')
+      ranking_date = Date.new(dates[0].to_i, dates[1].to_i, dates[2].to_i)
     rescue Exception => ex
       raise
     end
