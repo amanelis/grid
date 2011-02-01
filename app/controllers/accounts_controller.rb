@@ -85,10 +85,6 @@ class AccountsController < ApplicationController
   def destroy
     destroy!(:notice => "Account was successfully deleted!") { accounts_path }
   end
-
-  # /accounts/:id/report
-  def report
-  end
   
   # /accounts/:id/report/client.pdf
   def report_client
