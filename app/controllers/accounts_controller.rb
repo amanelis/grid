@@ -1,22 +1,18 @@
 class AccountsController < ApplicationController
   inherit_resources
-  load_and_authorize_resource :except => [:export, :refresh_accounts]
-  before_filter :load_time_zone, :only => [:show, :report, :report_client]
+  load_and_authorize_resource :except   => [:export, :refresh_accounts]
+  before_filter :load_time_zone, :only  => [:show, :report, :report_client]
 
   def index
-    @accounts = current_user.acquainted_accounts
-    @accounts_statuses = Account.account_statuses_for(@accounts)
-    @accounts_types = Account.account_types_for(@accounts)
-    
-    @passed_status = params[:account_status] ||= 'Active' 
-    @passed_type = params[:account_type] ||= ''
-    
-    @accounts = @accounts.select {|account| account.status == params[:account_status]} if params[:account_status].present?
-    @accounts = @accounts.select {|account| account.account_type?(params[:account_type])} if params[:account_type].present?
-
-    @accounts_data = Rails.cache.fetch("accounts_data") { Account.get_accounts_data }
+    @accounts           = current_user.acquainted_accounts
+    @accounts_statuses  = Account.account_statuses_for(@accounts)
+    @accounts_types     = Account.account_types_for(@accounts)
+    @passed_status      = params[:account_status] ||= 'Active' 
+    @passed_type        = params[:account_type] ||= ''
+    @accounts           = @accounts.select {|account| account.status == params[:account_status]} if params[:account_status].present?
+    @accounts           = @accounts.select {|account| account.account_type?(params[:account_type])} if params[:account_type].present?
+    @accounts_data      = Rails.cache.fetch("accounts_data") { Account.get_accounts_data }
     @accounts.sort! {|a,b| a.name.downcase <=> b.name.downcase}
-    respond("html", nil, "xml", @accounts) 
   end
 
   def show
