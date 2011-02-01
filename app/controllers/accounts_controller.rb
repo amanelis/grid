@@ -103,28 +103,31 @@ class AccountsController < ApplicationController
     @unmanaged_campaigns  = @account.campaigns.active.unmanaged.to_a.sort { |a,b| a.name <=> b.name }
     
     @cost_per_lead_summary_graph = HighChart.new('graph') do |f|
-      f.title({:text=>"Managed Campaign Graph"})    
-      f.y_axis({:title=> {:text=> ''}, :labels=>{:rotation=>0, :align=>'right'} })
-      f.x_axis(:categories => @managed_campaigns.collect(&:name) , :labels=>{:rotation=>0 , :align => 'right'})
-
-      f.options[:chart][:defaultSeriesType] = "bar"
+      f.title({:text=> false})    
+      f.y_axis({:title=> {:text=> 'Leads'}, :labels=>{:rotation=>0, :align=>'right'} })
+      f.x_axis(:categories => @managed_campaigns.collect(&:name) , :labels=>{:rotation=>-45 , :align => 'right'})
+      f.legend(:enabled => false)
+      
+      f.options[:chart][:defaultSeriesType] = "column"
       f.series(:name=> 'Total Leads', :data => @managed_campaigns.collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
     end
     
     @pay_per_click_summary_graph = HighChart.new('graph') do |f|
-      f.title({:text=>"Pay Per Click Graph"})    
-      f.y_axis({:title=> {:text=> ''}, :labels=>{:rotation=>0, :align=>'right'} })
-      f.x_axis(:categories => @managed_campaigns.select(&:is_sem?).collect(&:name) , :labels=>{:rotation=>0 , :align => 'right'})
-
-      f.options[:chart][:defaultSeriesType] = "bar"
+      f.title({:text=> false})    
+      f.y_axis({:title=> {:text=> 'Leads'}, :labels=>{:rotation=>0, :align=>'right'} })
+      f.x_axis(:categories => @managed_campaigns.select(&:is_sem?).collect(&:name) , :labels=>{:rotation=>-45 , :align => 'right'})
+      f.legend(:enabled => false)
+      
+      f.options[:chart][:defaultSeriesType] = "column"
       f.series(:name=> 'Total Leads', :data => @managed_campaigns.select(&:is_sem?).collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
     end
     
     @organic_campaign_summary_graph = HighChart.new('graph') do |f|
-      f.title({:text=>"Organic Campaign Graph"})    
+      f.title({:text=> false})    
       f.y_axis({:title=> {:text=> ''}, :labels=>{:rotation=>0, :align=>'right'} })
       f.x_axis(:categories => @managed_campaigns.select(&:is_seo?).collect(&:name) , :labels=>{:rotation=>0 , :align => 'right'})
-
+      f.legend(:enabled => false)
+      
       f.options[:chart][:defaultSeriesType] = "bar"
       f.series(:name=> 'Total Leads', :data => @managed_campaigns.select(&:is_seo?).collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
     end
