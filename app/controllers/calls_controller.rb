@@ -1,10 +1,6 @@
-
 class CallsController < ApplicationController
   
-  def transcribe
-    
+  def transcribe  
   end
-  
-  
-  
+    
 end
