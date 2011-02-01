@@ -1,17 +1,16 @@
 %header
   %h1 Welcome to Grid
 %article
-  %h2 New fun things are being added daily, please use the feedback button at the bottom right to report issues or suggest new features.
   
   - if @user.admin?
     %hr
     .stats
       %aside.span-7.append-1
         %p Active Accounts
-        %h3= @active_accounts
+        %h3#active_accounts= @active_accounts
       %aside.span-7.append-1
         %p Total Users
-        %h3= @active_accounts
+        %h3#users= @users
       %aside.span-7.last
         %p Leads Today
-        %h3= @active_accounts
+        %h3#leads= @leads
