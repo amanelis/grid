@@ -18,16 +18,10 @@ class ActivitiesController < ApplicationController
     
     if @activity.update_attributes(params[:activity])
       flash[:notice] = "Activity updated!"
-      respond_to do |format|
-        format.html { redirect_to activities_path }
-        format.js
-      end
+      respond("html", activities_path, "js", nil)
     else
       flash[:error] = "Something went wrong."
-      respond_to do |format|
-        format.html { redirect_to activities_path }
-        format.js
-      end
+      respond("html", activities_path, "js", nil)
     end
   end
 
