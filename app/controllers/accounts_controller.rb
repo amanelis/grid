@@ -34,7 +34,7 @@ class AccountsController < ApplicationController
     @unmanaged_campaigns  = @account.campaigns.active.unmanaged.to_a.sort { |a,b| a.name <=> b.name }        
                                  
     if params[:daterange].blank?
-      @start_date = Date.today.beginning_of_month
+      @start_date = Date.yesterday.beginning_of_month
       @end_date = Date.yesterday
     else
       dates = params[:daterange].split(' to ') || params[:daterange].split(' - ')
@@ -43,7 +43,7 @@ class AccountsController < ApplicationController
         @start_date = Date.parse(dates[0])
         @end_date = Date.parse(dates[1])
       rescue
-        @start_date = Date.today.beginning_of_month
+        @start_date = Date.yesterday.beginning_of_month
         @end_date = Date.yesterday
         flash[:error] = "The date you entered was incorrect, we set it back to <strong>#{(@start_date).to_s(:long)} to #{@end_date.to_s(:long)}</strong> for you."
         respond("html", account_path(params[:id]))
