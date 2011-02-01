@@ -1,7 +1,3 @@
-:javascript
-  audiojs.events.ready(function() {
-    audiojs.createAll();
-  });
 %header
   %h1 Welcome to Grid
 %article
@@ -9,13 +5,13 @@
   
   - if @user.admin?
     %hr
-    %h3= "Total Accounts: #{@accounts}"
-    %h3= "Total Active Accounts: #{@active_accounts}"
-    %h3= "Total Inactive Accounts: #{@inactive_accounts}"
-    %h3= "Total Reseller Accounts: #{@reseller_accounts}"
-    %h3= "?? Leads Generated Today: #{@reseller_accounts}"
-    
-    %audio{:preload => "none", :type => "audio/mpeg"}
-      %source{:src => "http://s3.amazonaws.com/audiojs/03-its-all-about-the-crystalizabeths.mp3"}
-    
-  
+    .stats
+      %aside.span-7.append-1
+        %p Active Accounts
+        %h3= @active_accounts
+      %aside.span-7.append-1
+        %p Total Users
+        %h3= @active_accounts
+      %aside.span-7.last
+        %p Leads Today
+        %h3= @active_accounts

@@ -168,12 +168,12 @@ font-weight:bold;
 font-size:1em;
 }
 
-a{
-text-decoration:none;
-}
-
-a:hover{
-text-decoration:underline;
+section a{
+	text-decoration:none;
+    -o-transition-duration: .33s;
+    -o-transition-property: color, background-color;
+    -webkit-transition-duration: .33s;
+    -webkit-transition-property: color, background;
 }
 
 header h1{
@@ -377,6 +377,28 @@ form.inline p { margin-bottom:0; }
 .answer{
 	color:green;
 }
+
+/*
+	Dashboard
+	------------------
+*/
+
+.stats{
+	text-align:center;
+	line-height:1;
+}
+
+.stats p{
+	color:#606060;
+	text-transform: uppercase;
+	margin:0;
+}
+
+.stats h3{
+	margin:6px;
+	font-weight:bold;
+}
+
 
 /*
 	Pagination

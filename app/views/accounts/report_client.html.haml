@@ -43,8 +43,8 @@
           %th= @account.number_of_total_leads_for_cityvoice_campaigns_between(@month_start, @month_end)
           %th= @account.number_of_total_contacts_for_cityvoice_campaigns_between(@month_start, @month_end).to_s
           %th= ActionController::Base.helpers.number_to_currency(@account.spend_for_cityvoice_campaigns_between(@month_start, @month_end))
-          %th= ActionController::Base.helpers.number_to_currency(@account.total_cost_per_lead_for_cityvoice_campaigns_between(@month_start, @month_end))
-          %th= ActionController::Base.helpers.number_to_currency(@account.total_cost_per_contact_for_cityvoice_campaigns_between(@month_start, @month_end))
+          %th= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_lead_for(@managed_campaigns, @month_start, @month_end))
+          %th= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_contact_for(@managed_campaigns, @month_start, @month_end))
       %h3 Unmanaged Campaigns    
       %table#cpl
         %thead
@@ -74,8 +74,8 @@
           %th= @account.number_of_total_leads_for_unmanaged_campaigns_between(@month_start, @month_end)
           %th= @account.number_of_total_contacts_for_unmanaged_campaigns_between(@month_start, @month_end).to_s
           %th= ActionController::Base.helpers.number_to_currency(@account.spend_for_unmanaged_campaigns_between(@month_start, @month_end))
-          %th= ActionController::Base.helpers.number_to_currency(@account.total_cost_per_lead_for_unmanaged_campaigns_between(@month_start, @month_end))
-          %th= ActionController::Base.helpers.number_to_currency(@account.total_cost_per_contact_for_unmanaged_campaigns_between(@month_start, @month_end))
+          %th= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_lead_for(@unmanaged_campaigns, @month_start, @month_end))
+          %th= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_contact_for(@unmanaged_campaigns, @month_start, @month_end))
 
 
   
