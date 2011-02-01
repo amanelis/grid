@@ -1,9 +1,7 @@
-%header
-  %h1 Welcome to Grid
-%article
-  
-  - if @user.admin?
-    %hr
+- if @user.admin?
+  %header
+    %h1 CityVoice Dashboard
+  %article 
     .stats
       %aside.span-7.append-1
         %p Active Accounts

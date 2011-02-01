@@ -13,7 +13,7 @@ class HomeController < ApplicationController
       @leads_count                = Activity.today.count
 
       @total_daily_leads = HighChart.new('graph') do |f|
-        f.title({:text=>"Total Daily Leads"})  
+        f.title({:text=> false})  
         f.y_axis({:title=> {:text=> 'Daily Leads'}, :min => 0, :labels=>{:rotation=>0, :align=>'right'} })
         f.x_axis(:categories => (Rails.cache.fetch("dashboard_dates") { Account.dashboard_dates }) , :labels=>{:rotation=>-45 , :align => 'right'})
         f.legend(:enabled => false)
