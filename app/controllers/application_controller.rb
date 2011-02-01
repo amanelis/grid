@@ -36,6 +36,10 @@ class ApplicationController < ActionController::Base
     def load_time_zone
       Time.zone = resource.time_zone
     end
+    
+    def load_resource_user
+      @user = current_user 
+    end
   
     def current_user_session
       return @current_user_session if defined?(@current_user_session)
