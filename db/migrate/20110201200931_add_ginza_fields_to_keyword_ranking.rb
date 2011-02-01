@@ -5,8 +5,9 @@ class AddGinzaFieldsToKeywordRanking < ActiveRecord::Migration
     add_column :keyword_rankings, :ginza_conversions, :integer
     add_column :keyword_rankings, :ginza_visits, :integer
     
+    KeywordRanking.reset_column_information
     KeywordRanking.all.each do |ranking|
-      ranking.date_of_ranking = Date.parse(ranking.updated_at.to_s)
+      ranking.date_of_ranking = ranking.updated_at.to_date
       ranking.save!
     end
     
