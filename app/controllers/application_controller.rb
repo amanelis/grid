@@ -16,6 +16,8 @@ class ApplicationController < ActionController::Base
   end
 
   private
+    # pass in the format, and then the path or object you want to render
+    # respond() will handle the rest
     # respond("html", dashboard_path, "js", root_url, "xml", @object, .................)
     def respond(*args)
       respond_to do |format|
@@ -33,6 +35,7 @@ class ApplicationController < ActionController::Base
       end
     end
     
+    # resource is refereing to the restful functions that require an instance variable of the controller name
     def load_time_zone
       Time.zone = resource.time_zone
     end
