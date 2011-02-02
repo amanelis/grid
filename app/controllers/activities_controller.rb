@@ -11,17 +11,16 @@ class ActivitiesController < ApplicationController
   
   def update
     @user     = current_user
-    @activity = Activity.find(params[:id]) 
-    params[:activity] = {}
+    @activity = Activity.find(params[:id])
     params[:activity][:review_status] = params[:call][:review_status] if params[:call]
     params[:activity][:review_status] = params[:submission][:review_status] if params[:submission]
-    
-    if @activity.update_attributes(params[:activity])
+
+    if @activity.update_attributes!(params[:activity])
       flash[:notice] = "Activity updated!"
-      respond("html", activities_path, "js", nil)
+      respond("html", activities_path)
     else
       flash[:error] = "Something went wrong."
-      respond("html", activities_path, "js", nil)
+      respond("html", activities_path)
     end
   end
 
