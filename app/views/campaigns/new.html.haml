@@ -1,43 +1,44 @@
-#create
-  %header
-    %h3 Create Campaign
-  %article
+%header
+  %h3 Create Campaign
+%article
+  #create.span-8.append-1
     -form_for @campaign, {:url => new_account_campaign_path}, :method => "post" do |f|
       %input{:type => "hidden", :id => :account_id, :name => :account_id, :value => @account.id.to_s}
       %label="Name"
       %br
-      %input{:type => "text", :placeholder => "CityVoice", :name => "name", :id => "name"}
-      %br
-      %label="Industry"
-      %br
-      %select{:name => "industry"}
-        - for industry in @industries
-          %option{ :selected => industry}= industry
-      %br
-      %label="URL"
-      %br
-      %input{:type => "text", :placeholder => "http://", :name => "url", :id => "url"}
-      %br
-      %label="Area Code"
-      %br
-      %input{:type => "text", :placeholder => "210", :name => "area_code", :id => "area_code"}
-      %br
-      %label="Forwarding Number"
-      %br
-      %input{:type => "text", :placeholder => "210 844 6400", :name => "forwarding_number", :id => "forwarding_number"}
+      %input{:type => "text", :placeholder => "CityVoice", :name => "name", :id => "name", :class => "title"}
       %br
       %label="Campaign Type"
       %br
       %select{:name => "flavor"}
         - for flavor in @flavors
           %option{ :selected => flavor}= flavor
+      -#%br
+      -#%label="Industry"
+      -#%br
+      -#%select{:name => "industry"}
+        - for industry in @industries
+          %option{ :selected => industry}= industry
+      %hr
+      -#%label="URL"
+      -#%br
+      -#%input{:type => "text", :placeholder => "http://", :name => "url", :id => "url", :class => "title"}
+      -#%br
+      %label="Forwarding Number"
       %br
+      %input{:type => "text", :placeholder => "210 844 6400", :name => "forwarding_number", :id => "forwarding_number", :class => "title"}
+      %br
+      %label="Area Code"
+      %br
+      %input{:type => "text", :placeholder => "210", :name => "area_code", :id => "area_code", :class => "title"}
       %br
       %input{:type => "submit", :value => "Create Campaign", :id => "create_campaign"}
-      %br
-      %br
-#campaign_type.span-12.last
-  %h3 Search Engine Optimization Campaign
-  %h3 Pay-per-click Campaign
-  %h3 Google Maps Campaign
-  %h3 Other Campaign
+  #helper.span-14.last
+    %h3 Campaign Types
+    %h4 SEO
+    %p.quiet Organic ranking and link building campaigns
+    %h4 SEM
+    %p.quiet Google Adwords, Facebook Ads, and other marketing platforms
+    %h4 Other
+    %p.quiet Newspaper ads and other marketing that can be easily tracked with a phone number
+    
