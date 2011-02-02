@@ -14,14 +14,8 @@ class ActivitiesController < ApplicationController
     @activity = Activity.find(params[:id])
     params[:activity][:review_status] = params[:call][:review_status] if params[:call]
     params[:activity][:review_status] = params[:submission][:review_status] if params[:submission]
-
-    if @activity.update_attributes!(params[:activity])
-      flash[:notice] = "Activity updated!"
-      respond("html", activities_path)
-    else
-      flash[:error] = "Something went wrong."
-      respond("html", activities_path)
-    end
+    @activity.update_attributes!(params[:activity]) ? flash[:notice] = "Activities updated successfully!" : flash[:error] = "Activities were not updated!"
+    respond("html", activities_path)
   end
 
 end
