@@ -3,6 +3,7 @@ class AccountsController < ApplicationController
   load_and_authorize_resource :except   => [:export, :refresh_accounts]
   before_filter :load_time_zone, :only  => [:show, :report, :report_client]
 
+
   def index
     @accounts           = current_user.acquainted_accounts
     @accounts_statuses  = Account.account_statuses_for(@accounts)
@@ -65,26 +66,8 @@ class AccountsController < ApplicationController
       f.options[:chart][:defaultSeriesType] = "column"
       f.series(:name=> 'Leads', :data => @managed_campaigns.collect {|campaign| campaign.number_of_total_leads_between(@start_date, @end_date) })
     end
-
   end
- 
-  def new
-  end
-
-  def edit
-  end
-
-  def create
-    create!(:notice => "Account was successfully created!") { accounts_path }
-  end
-
-  def update
-    update!(:notice => "Account was updated successfully!") { accounts_path }
-  end
-
-  def destroy
-    destroy!(:notice => "Account was successfully deleted!") { accounts_path }
-  end
+  
   
   # /accounts/:id/report/client.pdf
   def report_client
