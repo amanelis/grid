@@ -149,10 +149,7 @@
             -else
               =image_tag("sound.png")
               Call Recording Unavailable
-              %td.review{:class => activity.activity_type.call_status.downcase}
-                =  "#{(activity.activity_type.call_end - activity.activity_type.call_start).to_int} seconds"
-                - if activity.activity_type.duplicate?
-                  %p.duplicate= "Duplicate"
+              %td
                 - form_for activity, :url => activity_path(activity) do |f|
                   = f.select(:review_status, (activity.activity_type.review_status_options))
                   = f.submit(:update)
