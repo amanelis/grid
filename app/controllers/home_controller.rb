@@ -10,7 +10,7 @@ class HomeController < ApplicationController
       @active_accounts            = @accounts.select(&:active?)
       @active_accounts_count      = Account.active.count
       @users_count                = User.all.count
-      @leads_count                = Activity.today.count
+      @leads_count                = Activity.today.lead.count
 
       @total_daily_leads = HighChart.new('graph') do |f|
         f.title({:text=> false})  
