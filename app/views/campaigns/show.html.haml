@@ -156,5 +156,5 @@
               =image_tag("sound.png")
               Call Recording Unavailable
           %td
-            - form_for call do |f|
+            - form_for call.activity do |f|
               = f.select(:review_status, (call.review_status_options))
