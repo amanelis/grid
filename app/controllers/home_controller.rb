@@ -1,16 +1,16 @@
 class HomeController < ApplicationController
-  before_filter :load_resource_user
+  before_filter :load_resource_user, :only => [:index, :dashboard]
   
   def index
   end
   
   def dashboard  
     if @user.admin?
-      @accounts                   = current_user.acquainted_accounts
-      @active_accounts            = @accounts.select(&:active?)
-      @active_accounts_count      = Account.active.count
-      @users_count                = User.all.count
-      @leads_count                = (Rails.cache.fetch("dashboard_data") { Account.dashboard_data }).last
+      @accounts               = current_user.acquainted_accounts
+      @active_accounts        = @accounts.select(&:active?)
+      @active_accounts_count  = Account.active.count
+      @users_count            = User.all.count
+      @leads_count            = (Rails.cache.fetch("dashboard_data") { Account.dashboard_data }).last
 
       @total_daily_leads = HighChart.new('graph') do |f|
         f.title({:text=> false})  
