@@ -1,7 +1,13 @@
 :javascript
   $(function(){
-  $('#daterangepicker').daterangepicker({arrows:false}); 
+    $('#daterangepicker').daterangepicker({arrows:false}); 
   });
+  
+  $(document).ready(function() {
+    $(".edit_activity").change(function() {
+      this.submit();
+    });
+  })
 %header
   %p.right= render :partial => 'shared/lead_matrix'
   %h2 #{@campaign.name}
@@ -150,6 +156,5 @@
               =image_tag("sound.png")
               Call Recording Unavailable
               %td
-                - form_for activity, :url => activity_path(activity) do |f|
-                  = f.select(:review_status, (activity.activity_type.review_status_options))
-                  = f.submit(:update)
+                - form_for call do |f|
+                  = f.select(:review_status, (call.review_status_options))
