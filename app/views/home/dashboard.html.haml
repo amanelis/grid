@@ -1,3 +1,18 @@
+- if params[:q] == 'real'
+  :javascript
+    jQuery.ajaxSetup({
+      'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")}
+    })
+
+    $(function() {
+      setTimeout(refreshGraph, 900000);
+    });
+
+    function refreshGraph() {
+      window.location = self.location;
+      setTimeout(refreshGraph, 900000);
+    }
+
 - if @user.admin?
   %header
     %h1 CityVoice Dashboard
