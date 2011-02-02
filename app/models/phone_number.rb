@@ -119,11 +119,13 @@ class PhoneNumber < ActiveRecord::Base
 
   # INSTANCE BEHAVIOR
 
+  def get_twilio_number()
+    JSON.parse(update_resp = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{self.twilio_version}/Accounts/#{ACCOUNT_SID}/IncomingPhoneNumbers/#{self.twilio_id}.json", 'GET').body)
+  end
+  
   def update_twilio_number(name, forward_to, id_callers = true, record_calls = true, transcribe_calls = false, text_calls = false, call_url = "http://grid.cityvoice.com/phone_numbers/connect/", fallback_url = "http://grid.cityvoice.com/phone_numbers/connect/", status_url = "http://grid.cityvoice.com/phone_numbers/collect/", sms_url = "http://grid.cityvoice.com/phone_numbers/sms_collect/", fallback_sms_url = "http://grid.cityvoice.com/phone_numbers/sms_collect/")
     job_status = JobStatus.create(:name => "PhoneNumber.update_twilio_number")
     begin
-      #CREATE THE NUMBER IN TWILIO (BASIC INFORMATION)
-      account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
       #UPDATE THE TWILIO URLS
       d = { 'FriendlyName' => name,
             'VoiceUrl' => "#{call_url}#{self.id}",
@@ -138,7 +140,7 @@ class PhoneNumber < ActiveRecord::Base
             'SmsFallbackMethod' => 'POST',
             'VoiceCallerIdLookup' => id_callers
           }
-      update_resp = account.request("/#{self.twilio_version}/Accounts/#{ACCOUNT_SID}/IncomingPhoneNumbers/#{self.twilio_id}.json", 'POST', d)
+      update_resp = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{self.twilio_version}/Accounts/#{self.campaign.account.twilio_id}/IncomingPhoneNumbers/#{self.twilio_id}.json", 'POST', d)
       raise unless update_resp.kind_of? Net::HTTPSuccess
     rescue Exception => ex
       job_status.finish_with_errors(ex)

@@ -254,7 +254,7 @@ class Website < ActiveRecord::Base
   def self.get_ginza_latest_ranking_date(global_id = '9e082ec734be')
     begin
       dates = HTTParty.get("https://app.ginzametrics.com/v1/sites/#{global_id}/latest_rankings_date?api_key=#{GINZA_KEY}").to_a.first.split('-')
-      ranking_date = Date.new(dates[0].to_i, dates[1].to_i, dates[2].to_i)
+      ranking_date = Date.new(dates[0].to_i, dates[1].to_i, dates[2].to_i) unless dates[0] == "Quota exceeded"
     rescue Exception => ex
       raise
     end
@@ -265,7 +265,7 @@ class Website < ActiveRecord::Base
     sites = Website.list_ginza_sites
     sites.each do |site|
       begin
-        grid_site = Website.find_by_domain("www.#{site['site']['domain']}")
+        grid_site = Website.find_by_nickname("www.#{site['site']['domain']}")
         if grid_site.present?
           grid_site.ginza_global_id = site['site']['global_key']
           grid_site.ginza_meta_descript = site['site']['meta_description']

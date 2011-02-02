@@ -483,13 +483,13 @@ class Campaign < ActiveRecord::Base
   def create_twilio_number(phone_number, name, forward_to, id_callers = true, record_calls = true, transcribe_calls = false, text_calls = false, call_url = "http://grid.cityvoice.com/phone_numbers/connect/", fallback_url = "http://grid.cityvoice.com/phone_numbers/connect/", status_url = "http://grid.cityvoice.com/phone_numbers/collect/", sms_url = "http://grid.cityvoice.com/phone_numbers/sms_collect/", fallback_sms_url = "http://grid.cityvoice.com/phone_numbers/sms_collect/")
     job_status = JobStatus.create(:name => "Campaign.create_twilio_number")
     begin
+      self.account.create_twilio_subaccount if self.account.twilio_id.blank?
+      self.account.activate_twilio_subaccount
       #CREATE THE NUMBER IN TWILIO (BASIC INFORMATION)
-      account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
-      d = {}
-      d['PhoneNumber'] = '+1' + phone_number if phone_number.length == 10
-      d['PhoneNumber'] = '+' + phone_number if phone_number.length == 11
-      d['AreaCode'] = phone_number if phone_number.length == 3
-      resp = account.request("/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/IncomingPhoneNumbers.json", 'POST', d)
+      d = {'PhoneNumber' => "+1#{phone_number}"} if phone_number.length == 10
+      d = {'PhoneNumber' => "+#{phone_number}"} if phone_number.length == 11
+      d = {'AreaCode' => phone_number} if phone_number.length == 3
+      resp = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.account.twilio_id}/IncomingPhoneNumbers.json", 'POST', d)
       raise unless resp.kind_of? Net::HTTPSuccess
       
       #CREATE THE PHONE NUMBER IN GRID IF TWILIO CREATION WAS SUCCESSFUL
@@ -520,13 +520,14 @@ class Campaign < ActiveRecord::Base
   def inactivate_phone_number(phone_number_id)
     phone_number = self.phone_numbers.first(:conditions => ['id = ?', phone_number_id])
     return false if phone_number.blank? || phone_number.twilio_id.blank?
-    account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
-    resp = account.request("/#{phone_number.twilio_version}/Accounts/#{ACCOUNT_SID}/IncomingPhoneNumbers/#{phone_number.twilio_id}.json", 'DELETE')
+    resp = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{phone_number.twilio_version}/Accounts/#{self.account.twilio_id}/IncomingPhoneNumbers/#{phone_number.twilio_id}.json", 'DELETE')
     return false unless resp.code == '204'
     phone_number.active = false
     phone_number.save!
     true
   end
+  
+  
 
   def create_contact_form(description = '', return_url = '', forwarding_email = '', forwarding_bcc_email = '', custom1_text = '', custom2_text = '', custom3_text = '', custom4_text = '', need_name = true, need_address = true, need_phone = true, need_email = true, work_category = true, work_description = true, date_requested = true, time_requested = true, other_information = true)
     form = self.contact_forms.build
