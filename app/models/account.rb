@@ -21,14 +21,6 @@ class Account < ActiveRecord::Base
   belongs_to :account_manager
   has_many :account_users
   
-  # Twilio REST API version
-  API_VERSION = '2010-04-01'
-
-  # Twilio AccountSid and AuthToken
-  ACCOUNT_SID = 'AC7fedbe5d54f77671320418d20f843330'
-  ACCOUNT_TOKEN = 'a7a72b0eb3c8a41064c4fc741674a903'
-  
-  
   named_scope :active, :conditions => ['LCASE(status) = ?', "active"], :order => "name ASC"
   named_scope :inactive, :conditions => ['LCASE(status) = ?', "inactive"], :order => "name ASC"
   named_scope :reseller, :conditions => ['LCASE(account_type) LIKE ?', "%reseller%"]
