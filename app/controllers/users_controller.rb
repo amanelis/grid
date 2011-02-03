@@ -15,10 +15,10 @@ class UsersController < ApplicationController
     @user = User.new(params[:user])
     if @user.save 
       flash[:notice] = "Account registered!"
-      redirect_to dashboard_url)
+      redirect_to dashboard_url
     else
       flash[:error] = "There was an error creating your account!"
-      render :action => :new)
+      render :action => :new
     end
   end
   
