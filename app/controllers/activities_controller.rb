@@ -14,8 +14,16 @@ class ActivitiesController < ApplicationController
     @activity = Activity.find(params[:id])
     params[:activity][:review_status] = params[:call][:review_status] if params[:call]
     params[:activity][:review_status] = params[:submission][:review_status] if params[:submission]
-    @activity.update_attributes!(params[:activity]) ? flash[:notice] = "Activities updated successfully!" : flash[:error] = "Activities were not updated!"
-    respond("html", activities_path)
+    
+    # This is a tad messy but for now this will redirect based on what page you are updating the activity from, campaign#show or activities#index
+    # Activity is trying to be updated from the campaigns#show page, we want to redirect user back to campaign page
+    unless params[:activity][:campaign_id].blank?
+      @activity.update_attributes!(:review_status => params[:activity][:review_status]) ? flash[:notice] = "Activities updated successfully!" : flash[:error] = "Activities were not updated!"
+      respond("html", campaign_path(params[:activity][:campaign_id]))
+    else
+      @activity.update_attributes!(params[:activity]) ? flash[:notice] = "Activities updated successfully!" : flash[:error] = "Activities were not updated!"
+      respond("html", activities_path, "js", nil)
+    end
   end
 
 end
