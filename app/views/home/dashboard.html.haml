@@ -1,21 +1,35 @@
-:javascript
-  audiojs.events.ready(function() {
-        audiojs.createAll();
-      });
-%header
-  %h1 Welcome to Grid
-%article
-  %h2 New fun things are being added daily, please use the feedback button at the bottom right to report issues or suggest new features.
-  
-  - if @user.admin?
-    %hr
-    %h3= "Total Accounts: #{@accounts}"
-    %h3= "Total Active Accounts: #{@active_accounts}"
-    %h3= "Total Inactive Accounts: #{@inactive_accounts}"
-    %h3= "Total Reseller Accounts: #{@reseller_accounts}"
-    %h3= "?? Leads Generated Today: #{@reseller_accounts}"
-    
-    %audio{:preload => "none", :type => "audio/mpeg"}
-      %source{:src => "http://s3.amazonaws.com/audiojs/03-its-all-about-the-crystalizabeths.mp3"}
-    
-  
+- if params[:q] == 'real'
+  :javascript
+    jQuery.ajaxSetup({
+      'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")}
+    })
+
+    $(function() {
+      setTimeout(refreshGraph, 900000);
+    });
+
+    function refreshGraph() {
+      window.location = self.location;
+      setTimeout(refreshGraph, 900000);
+    }
+
+- if @user && @user.admin?
+  %header
+    %h1 CityVoice Dashboard
+  %article 
+    .stats
+      %aside.span-7.append-1
+        %p Active Accounts
+        %h3#active_accounts= @active_accounts_count
+      %aside.span-7.append-1
+        %p Total Users
+        %h3#users= @users_count
+      %aside.span-7.last
+        %p Leads Today
+        %h3#leads= @leads_count
+      .span-23.last=high_chart("total_daily_leads", @total_daily_leads)
+- else
+  %header
+    %h1 Dashboard
+  %article
+    %h2 New fun things are being added daily, please use the feedback button at the bottom right to report issues or suggest new features.

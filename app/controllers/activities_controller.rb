@@ -1,41 +1,27 @@
 class ActivitiesController < ApplicationController
+  inherit_resources
   load_and_authorize_resource
   
   def index  
-    @user = current_user
-    @accounts = current_user.acquainted_accounts 
-    # @activities_calls       = @accounts.collect {|account| account.phone_numbers.calls}.flatten.sort {|a,b| b.timestamp <=> a.timestamp}.paginate(:page => (params[:page] || 1), :order => 'timestamp DESC', :per_page => 150)
-    # @activities_submissions = @accounts.collect {|account| account.contact_forms.submissions}.flatten.sort {|a,b| b.timestamp <=> a.timestamp}.paginate(:page => (params[:page] || 1), :order => 'timestamp DESC', :per_page => 150)
+    @user       = current_user
+    @accounts   = current_user.acquainted_accounts 
     @activities = Activity.paginate(:page => (params[:page] || 1), :order => 'timestamp DESC', :per_page => 50)
-    
     respond("html", nil, "js", nil)
   end
   
   def update
-    @user = current_user
-    @activity = Activity.find(params[:id]) 
-    params[:activity] = {}
+    @user     = current_user
+    @activity = Activity.find(params[:id])
+    params[:activity][:review_status] = params[:call][:review_status] if params[:call]
+    params[:activity][:review_status] = params[:submission][:review_status] if params[:submission]
     
-    if params[:call]
-      params[:activity][:review_status] = params[:call][:review_status]
-    elsif params[:submission]
-      params[:activity][:review_status] = params[:submission][:review_status]
-    end
-    
-    if @activity.update_attributes(params[:activity])
-      flash[:notice] = "Activity updated!"
-      respond_to do |format|
-        format.html {redirect_to activities_path}
-        format.js
-      end
+    # This is a tad messy but for now this will redirect based on what page you are updating the activity from, campaign#show or activities#index
+    # Activity is trying to be updated from the campaigns#show page, we want to redirect user back to campaign page
+    unless params[:activity][:campaign_id].blank?
+      @activity.update_attributes!(:review_status => params[:activity][:review_status]) ? (flash[:notice] = "Activities updated successfully!", respond("html", campaign_path(params[:activity][:campaign_id]))): (flash[:error] = "Activities were not updated!", respond("html", campaign_path(params[:activity][:campaign_id])))
     else
-      flash[:error] = "Something went wrong."
-      respond_to do |format|
-        format.html {redirect_to activities_path}
-        format.js
-      end
+      @activity.update_attributes!(params[:activity]) ? (flash[:notice] = "Activities updated successfully!", respond("html", activities_path)) : (flash[:error] = "Activities were not updated!", respond("html", activities_path))
     end
-    
   end
 
 end

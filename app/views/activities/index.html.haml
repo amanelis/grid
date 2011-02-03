@@ -5,18 +5,21 @@
     })
 
     $(function() {
-      setTimeout(updateActivity, 7000);
+      setTimeout(updateActivity, 30000);
     });
 
     function updateActivity() {
       var after = $("#activities tbody tr").attr("data-time");
       $.getScript("/activities.js?after=" + after)
-      setTimeout(updateActivity, 7000);
+      setTimeout(updateActivity, 30000);
     }
--#:javascript
-  -#audiojs.events.ready(function() {
-    -#  var as = audiojs.createAll();
-    -#});
+
+:javascript
+  $(document).ready(function() {
+    $(".edit_activity").change(function() {
+      this.submit();
+    });
+  })
 %header
   .right.pagination= will_paginate(@activities)
   %h3 Activity

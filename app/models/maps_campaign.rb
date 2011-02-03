@@ -5,9 +5,7 @@ class MapsCampaign < ActiveRecord::Base
   has_many :bing_maps_campaigns, :dependent => :destroy
   has_many :map_keywords, :dependent => :destroy
 
-  GOOGLE_MAPS_API_KEY = 'ABQIAAAALQRqYHHjSnLmL7zwbG0n-BQkiq2IPuxpcd6yKI6maifg0dbT5RQMwn92qd1fSdzERnpNoeonkmJ_Cw'
-  CHART_COLORS = ["66ccff", "669966", "666666", "cc3366", "ff6633", "ffff33", "000000"]
-
+  
   # INSTANCE BEHAVIOR
 
   def number_of_visits_by_date

@@ -12,8 +12,9 @@
 %article
   -if @account.campaigns.present?
     .span-24.last
-      %h3 Cost Per Lead Summary - Managed Campaigns
+      %h3 Cost Per Lead Summary
       .chart=high_chart("highcharts_cost_per_lead", @cost_per_lead_summary_graph)
+      %h3 Managed Campaigns 
       %table#cpl
         %thead
           %th Campaign Name
@@ -37,19 +38,52 @@
               %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_contact_between(@month_start, @month_end))
         %tfoot
           %th Totals
-          %th= @account.number_of_lead_calls_between(@month_start, @month_end)
-          %th= @account.number_of_lead_submissions_between(@month_start, @month_end)
-          %th= @account.number_of_total_leads_between(@month_start, @month_end)
-          %th= @account.number_of_total_contacts_between(@month_start, @month_end).to_s
-          %th= ActionController::Base.helpers.number_to_currency(@account.spend_between(@month_start, @month_end))
-          %th= ActionController::Base.helpers.number_to_currency(@account.cost_per_lead_between(@month_start, @month_end))
-          %th= ActionController::Base.helpers.number_to_currency(@account.cost_per_contact_between(@month_start, @month_end))
+          %th= @account.number_of_lead_calls_for_cityvoice_campaigns_between(@month_start, @month_end)
+          %th= @account.number_of_lead_submissions_for_cityvoice_campaigns_between(@month_start, @month_end)
+          %th= @account.number_of_total_leads_for_cityvoice_campaigns_between(@month_start, @month_end)
+          %th= @account.number_of_total_contacts_for_cityvoice_campaigns_between(@month_start, @month_end).to_s
+          %th= ActionController::Base.helpers.number_to_currency(@account.spend_for_cityvoice_campaigns_between(@month_start, @month_end))
+          %th= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_lead_for(@managed_campaigns, @month_start, @month_end))
+          %th= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_contact_for(@managed_campaigns, @month_start, @month_end))
+      %h3 Unmanaged Campaigns    
+      %table#cpl
+        %thead
+          %th Campaign Name
+          %th Calls
+          %th Forms
+          %th Total Leads
+          %th Total Contacts
+          %th Spend
+          %th Cost Per Lead
+          %th Cost Per Contact
+        %tbody
+          -@unmanaged_campaigns.each do |campaign|
+            %tr
+              %td= campaign.name
+              %td= campaign.number_of_lead_calls_between(@month_start, @month_end).to_s
+              %td= campaign.number_of_lead_submissions_between(@month_start, @month_end).to_s
+              %td= campaign.number_of_total_leads_between(@month_start, @month_end).to_s
+              %td= campaign.number_of_total_contacts_between(@month_start, @month_end).to_s
+              %td= ActionController::Base.helpers.number_to_currency(campaign.spend_between(@month_start, @month_end))
+              %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(@month_start, @month_end))
+              %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_contact_between(@month_start, @month_end))
+        %tfoot
+          %th Totals
+          %th= @account.number_of_lead_calls_for_unmanaged_campaigns_between(@month_start, @month_end)
+          %th= @account.number_of_lead_submissions_for_unmanaged_campaigns_between(@month_start, @month_end)
+          %th= @account.number_of_total_leads_for_unmanaged_campaigns_between(@month_start, @month_end)
+          %th= @account.number_of_total_contacts_for_unmanaged_campaigns_between(@month_start, @month_end).to_s
+          %th= ActionController::Base.helpers.number_to_currency(@account.spend_for_unmanaged_campaigns_between(@month_start, @month_end))
+          %th= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_lead_for(@unmanaged_campaigns, @month_start, @month_end))
+          %th= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_contact_for(@unmanaged_campaigns, @month_start, @month_end))
+
 
   
   -if @account.campaigns.sem.present?
     %section#pay_per_click
+    %hr
       %h3 Pay Per Click Summary
-      .chart=high_chart("highcharts_pay_per_click", @pay_per_click_summary_graph)
+      .chart.span-23.last=high_chart("highcharts_pay_per_click", @pay_per_click_summary_graph)
       %table
         %thead
           %th Campaign Name
@@ -80,6 +114,7 @@
 
   -if @account.campaigns.seo.present?
     %section#organic_campaigns
+    %hr
       %h3 Organic Campaigns Summary
       %table
         %thead
@@ -125,6 +160,7 @@
 
   -if @account.campaigns.maps.present?
     %section#maps_campaigns
+    %hr
       %h3 Maps Campaigns Summary
       %table
         %thead
@@ -195,8 +231,8 @@
   /Begin of Calls Section
   -@account.campaigns.each do |campaign|
     -if campaign.calls.between(@month_start, @month_end).present?
-      %h3
-        = "Calls for " + campaign.name + " " + "(#{@account.time_zone})"
+      %hr
+      %h3= "Calls for " + campaign.name + " " + "(#{@account.time_zone})"
       %article
         %table
           %thead

@@ -33,7 +33,8 @@ class Account < ActiveRecord::Base
   # CLASS BEHAVIOR
 
   def self.cache_results_for_accounts
-    # Rails.cache.write("admin_data", self.combined_timeline_data)
+    Rails.cache.write("dashboard_dates", self.dashboard_dates)
+    Rails.cache.write("dashboard_data", self.dashboard_data)
     Rails.cache.write("accounts_data", self.get_accounts_data)
   end
 
@@ -41,6 +42,15 @@ class Account < ActiveRecord::Base
     raw_data = Utilities.merge_and_sum_timeline_data(self.active.collect { |account| account.number_of_leads_by_date }, :leads)
     Utilities.massage_timeline(raw_data, [:leads])
   end
+  
+  def self.dashboard_dates
+    ((Date.today - 1.month)..Date.today).to_a
+  end
+  
+  def self.dashboard_data
+    self.dashboard_dates.inject([]) { |leads, date| leads << self.active.to_a.sum { |account| account.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.number_of_total_leads_between(date, date) } } }
+  end
+  
 
   def self.get_accounts_data
     self.active.inject({}) do |the_data, an_account|
@@ -92,6 +102,26 @@ class Account < ActiveRecord::Base
 
   def self.accounts_receiving_weekly_reports
     self.active.to_a.select { |account| account.receive_weekly_report? && account.valid_reporting_emails.present? }
+  end
+  
+  def self.get_twilio_subaccounts
+    JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts.json?", 'GET').body)['accounts']
+  end
+  
+  def self.get_active_twilio_subaccounts
+    JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts.json?Status=active", 'GET').body)['accounts']
+  end
+  
+  def self.get_suspended_subaccounts
+    JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts.json?Status=suspended", 'GET').body)['accounts']
+  end
+  
+  def self.get_closed_subaccounts
+    JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts.json?Status=closed", 'GET').body)['accounts']
+  end
+  
+  def self.get_all_twilio_numbers
+    JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/IncomingPhoneNumbers.json?", 'GET').body)['incoming_phone_numbers']
   end
   
     
@@ -245,16 +275,32 @@ class Account < ActiveRecord::Base
     self.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.number_of_all_calls_between(start_date, end_date) }
   end
 
+  def number_of_all_calls_for_unmanaged_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.unmanaged.to_a.sum { |campaign| campaign.number_of_all_calls_between(start_date, end_date) }
+  end
+
   def number_of_lead_calls_for_cityvoice_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.number_of_lead_calls_between(start_date, end_date) }
+  end
+
+  def number_of_lead_calls_for_unmanaged_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.unmanaged.to_a.sum { |campaign| campaign.number_of_lead_calls_between(start_date, end_date) }
   end
 
   def number_of_all_submissions_for_cityvoice_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.number_of_all_submissions_between(start_date, end_date) }
   end
 
+  def number_of_all_submissions_for_unmanaged_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.unmanaged.to_a.sum { |campaign| campaign.number_of_all_submissions_between(start_date, end_date) }
+  end
+
   def number_of_lead_submissions_for_cityvoice_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.number_of_lead_submissions_between(start_date, end_date) }
+  end
+
+  def number_of_lead_submissions_for_unmanaged_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.unmanaged.to_a.sum { |campaign| campaign.number_of_lead_submissions_between(start_date, end_date) }
   end
 
   def sem_cost_per_click_between(start_date = Date.yesterday, end_date = Date.yesterday)
@@ -277,12 +323,24 @@ class Account < ActiveRecord::Base
     self.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.total_revenue_between(start_date, end_date) }
   end
   
+  def total_revenue_for_unmanaged_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.unmanaged.to_a.sum { |campaign| campaign.total_revenue_between(start_date, end_date) }
+  end
+  
   def number_of_total_leads_for_cityvoice_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.number_of_total_leads_between(start_date, end_date) }
   end
 
+  def number_of_total_leads_for_unmanaged_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.unmanaged.to_a.sum { |campaign| campaign.number_of_total_leads_between(start_date, end_date) }
+  end
+
   def number_of_total_contacts_for_cityvoice_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.number_of_total_contacts_between(start_date, end_date) }
+  end
+
+  def number_of_total_contacts_for_unmanaged_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.unmanaged.to_a.sum { |campaign| campaign.number_of_total_contacts_between(start_date, end_date) }
   end
 
   def number_of_total_leads_by_day_between(start_date = Date.yesterday, end_date = Date.yesterday)
@@ -305,6 +363,30 @@ class Account < ActiveRecord::Base
     (total_contacts = self.number_of_total_contacts_between(start_date, end_date)) > 0 ? self.spend_between(start_date, end_date) / total_contacts : 0.0
   end
 
+  def spend_for_cityvoice_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.spend_between(start_date, end_date) }
+  end
+
+  def total_cost_per_lead_for_cityvoice_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.cost_per_lead_between(start_date, end_date) }
+  end
+
+  def total_cost_per_contact_for_cityvoice_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.cost_per_contact_between(start_date, end_date) }
+  end
+
+  def spend_for_unmanaged_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.unmanaged.to_a.sum { |campaign| campaign.spend_between(start_date, end_date) }
+  end
+
+  def total_cost_per_lead_for_unmanaged_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.unmanaged.to_a.sum { |campaign| campaign.cost_per_lead_between(start_date, end_date) }
+  end
+
+  def total_cost_per_contact_for_unmanaged_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.unmanaged.to_a.sum { |campaign| campaign.cost_per_contact_between(start_date, end_date) }
+  end
+
   # NOTE...these methods don't really make sense at this level in the hierarchy.
 
   def number_of_answered_calls_between(start_date = Date.yesterday, end_date = Date.yesterday)
@@ -323,6 +405,35 @@ class Account < ActiveRecord::Base
     self.campaigns.active.to_a.sum { |campaign| campaign.number_of_other_calls_between(start_date, end_date) }
   end
   
+  def create_twilio_subaccount
+    resp = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts.json?", 'POST', {'FriendlyName' => self.name})
+    raise unless resp.kind_of? Net::HTTPSuccess
+    self.update_attribute(:twilio_id, JSON.parse(resp.body)['sid'])
+  end
+  
+  def get_twilio_subaccount
+    JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.twilio_id}.json?", 'GET').body)
+  end
+  
+  def get_twilio_subaccount_status
+    JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.twilio_id}.json?", 'GET').body)['status']
+  end
+  
+  def get_subaccount_twilio_numbers
+    JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.twilio_id}/IncomingPhoneNumbers.json?", 'GET').body)['incoming_phone_numbers']
+  end
+  
+  def suspend_twilio_subaccount
+    raise unless Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.twilio_id}.json?", 'POST', {'Status' => 'suspended'}).kind_of? Net::HTTPSuccess
+  end
+  
+  def activate_twilio_subaccount
+    raise unless Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.twilio_id}.json?", 'POST', {'Status' => 'active'}).kind_of? Net::HTTPSuccess
+  end
+  
+  def close_twilio_subaccount
+    raise unless Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.twilio_id}.json?", 'POST', {'Status' => 'closed'}).kind_of? Net::HTTPSuccess
+  end
   
   # PREDICATES
   
@@ -351,5 +462,7 @@ class Account < ActiveRecord::Base
     end
     exception
   end
+  
+  
   
 end

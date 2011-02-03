@@ -109,11 +109,6 @@ class CampaignsController < ApplicationController
       end
     end
   end
-  
-  def create
-    @campaign = Campaign.new
-    create if request.post?
-  end
 
   def new_campaign_contact_form
     
@@ -131,38 +126,40 @@ class CampaignsController < ApplicationController
     @industries = Industry.all.collect {|a| a.name}.sort!
     @flavors = Campaign.flavors
     @account = Account.find(params[:account_id])
-     if @campaign.present?
-       @campaign = @account.campaigns.build
-     end
+    if @campaign.present?
+      @campaign = @account.campaigns.build
+    end
   end
   
   def create
     @account = Account.find(params[:account_id])
     if @account.present?
-      render :text => params[:campaign][:flavor]
-      if params[:campaign][:flavor].include? 'SEM'
+      if params[:flavor].include? 'SEM'
         new_campaign = SemCampaign.new
-        new_campaign.flavor = params[:campaign][:flavor]
-      elsif params[:campaign][:flavor].include? 'SEO'
+        new_campaign.flavor = params[:flavor]
+      elsif params[:flavor].include? 'SEO'
         new_campaign = SeoCampaign.new 
-        new_campaign.flavor = params[:campaign][:flavor]
-      elsif params[:campaign][:flavor].include? 'Maps'
+        new_campaign.flavor = params[:flavor]
+      elsif params[:flavor].include? 'Maps'
         new_campaign = MapsCampaign.new 
-        new_campaign.flavor = params[:campaign][:flavor]
+        new_campaign.flavor = params[:flavor]
       else
         new_campaign = OtherCampaign.new
-        new_campaign.flavor = params[:campaign][:flavor]
+        new_campaign.flavor = params[:flavor]
       end
+      
       new_campaign.account = @account
       new_campaign.status = 'Active'
       new_campaign.save
       new_campaign.name = params[:name]
-      new_campaign.campaign.industry = (params[:campaign][:industry])
-      new_campaign.campaign.url = (params[:url])
-      new_campaign.campaign.forwarding_number =  params[:forwarding_number]
-      new_campaign.campaign.area_code = (params[:area_code])
+      new_campaign.campaign.industry = (params[:industry])
+      #Needs to be Uncommented when we roll out
+      #new_campaign.campaign.url = (params[:url])
+      #new_campaign.campaign.forwarding_number =  params[:forwarding_number]
+      #new_campaign.campaign.area_code = (params[:area_code])
       new_campaign.save
-    end
+      redirect_to "/campaigns/#{new_campaign.campaign.id}"
+    end  
   end
   
 end
