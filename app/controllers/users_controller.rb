@@ -13,12 +13,7 @@ class UsersController < ApplicationController
   
   def create
     @user = User.new(params[:user])
-    if @user.save
-      flash[:notice] = "Account registered!"
-      redirect_back_or_default dashboard_url
-    else
-      render :action => :new
-    end
+    @user.save ? (flash[:notice] = "Account registered!", redirect_back_or_default dashboard_url) : (flash[:error] = "There was an error creating your account!", render :action => :new)
   end
   
   def show
@@ -28,13 +23,7 @@ class UsersController < ApplicationController
   
   def update
     @user = User.find_by_id(params[:user][:id])
-    if @user.update_attributes(params[:user])
-      flash[:notice] = "Account updated!"
-      redirect_to user_path(@user)
-    else
-      flash[:notice] = "Error on updating account!"
-      redirect_to person_url
-    end
+    @user.update_attributes(params[:user]) ? (flash[:notice] = "Account updated!", redirect_to user_path(@user)) : (flash[:notice] = "Error on updating account!", redirect_to person_url)
   end
 end
 
