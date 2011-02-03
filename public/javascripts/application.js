@@ -38,5 +38,4 @@ function show_report(id) {
   var message = '<div style="width:960px;" id="report_message"><center>Please wait<br/><img src="/images/facebox/loading.gif"/></center></div>';
   $.facebox(message);
   $("#report_message").load(url);
-	window.location = url;
 }
