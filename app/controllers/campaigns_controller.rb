@@ -10,7 +10,8 @@ class CampaignsController < ApplicationController
     @sorted_dates = @timeline.keys.sort
     @title = @campaign.account.name
     @date_range = ''
-    
+ 
+=begin   
     if @campaign.is_sem?
       @chart = GoogleVisualr::Gauge.new
       @chart.add_column('string' , 'Label')
@@ -36,6 +37,7 @@ class CampaignsController < ApplicationController
       @chart.width  = 250
 	    @chart.height = 250
     end
+=end
     
     if params[:daterange].blank?
       @start_date = Date.today.beginning_of_month
