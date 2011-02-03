@@ -21,6 +21,7 @@ class Notifier < ActionMailer::Base
     date ||= Date.today.beginning_of_week
     previous ||= 6
     bcc_list ||= ["dev@cityvoice.com", "reporting@cityvoice.com"]
+    from_email = account.account_manager_complete? ? "#{account.account_manager.name} <#{account.account_manager.email}>" : "CityVoice <support@cityvoice.com>"
 
     recipients    email_list
     bcc           bcc_list
@@ -28,7 +29,7 @@ class Notifier < ActionMailer::Base
     from          "CityVoice <support@cityvoice.com>"
     sent_on       Time.now
     content_type  "multipart/alternative"
-    body          :account_report_data => account.previous_days_report_data(date, previous)
+    body          :account_report_data => account.weekly_reporting_data(date, previous)
   end
 
   def new_form_submission(submission)
