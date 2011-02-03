@@ -13,7 +13,13 @@ class UsersController < ApplicationController
   
   def create
     @user = User.new(params[:user])
-    @user.save ? (flash[:notice] = "Account registered!", redirect_to dashboard_url) : (flash[:error] = "There was an error creating your account!", render :action => :new)
+    if @user.save 
+      flash[:notice] = "Account registered!"
+      redirect_to dashboard_url)
+    else
+      flash[:error] = "There was an error creating your account!"
+      render :action => :new)
+    end
   end
   
   def show
