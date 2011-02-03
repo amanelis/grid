@@ -13,7 +13,7 @@
       setTimeout(refreshGraph, 900000);
     }
 
-- if @user.admin?
+- if @user && @user.admin?
   %header
     %h1 CityVoice Dashboard
   %article 
