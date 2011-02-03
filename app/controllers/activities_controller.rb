@@ -22,7 +22,7 @@ class ActivitiesController < ApplicationController
       respond("html", campaign_path(params[:activity][:campaign_id]))
     else
       @activity.update_attributes!(params[:activity]) ? flash[:notice] = "Activities updated successfully!" : flash[:error] = "Activities were not updated!"
-      respond("html", activities_path, "js", nil)
+      respond("html", activities_path)
     end
   end
 
