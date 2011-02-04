@@ -26,7 +26,7 @@ class Notifier < ActionMailer::Base
     recipients    email_list
     bcc           bcc_list
     subject       "Weekly Report"  
-    from          "CityVoice <support@cityvoice.com>"
+    from          from_email
     sent_on       Time.now
     content_type  "multipart/alternative"
     body          :account_report_data => account.weekly_reporting_data(date, previous)
