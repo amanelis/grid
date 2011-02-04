@@ -125,6 +125,7 @@ class CampaignsController < ApplicationController
   end
   
   def new
+    @campaign = Campaign.new
     @industries = Industry.all.collect {|a| a.name}.sort!
     @flavors = Campaign.flavors
     @account = Account.find(params[:account_id])
