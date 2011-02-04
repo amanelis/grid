@@ -6,7 +6,6 @@ class UsersController < ApplicationController
     @current_user.admin? ? @users = User.all : @users = User.find_by_id(@current_user.id)
   end
   
-  
   def new
     @user = User.new
   end
