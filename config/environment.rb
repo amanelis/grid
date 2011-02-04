@@ -8,6 +8,7 @@ require File.join(File.dirname(__FILE__), 'boot')
 
 Rails::Initializer.run do |config|
   
+  
   # Settings in config/environments/* take precedence over those specified here.
   # Application configuration should go into files in config/initializers
   # -- all .rb files in that directory are automatically loaded.
@@ -47,7 +48,6 @@ Rails::Initializer.run do |config|
   config.gem 'twiliolib', :version => '2.0.7'
   config.gem 'cancan', :version => '1.4.1'
   config.gem 'inherited_resources', :version => '1.0.6'
-  config.gem 'doc_raptor', :version => '0.1.3'
 =end
 
   # Only load the plugins named here, in the order given (default is alphabetical).

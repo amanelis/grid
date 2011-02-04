@@ -137,6 +137,29 @@ class Account < ActiveRecord::Base
     self.last_weekly_report_sent.present? ? self.last_weekly_report_sent.beginning_of_week == DateTime.now.beginning_of_week : false
   end
   
+  def weekly_reporting_data(date = Date.today, previous = 0)
+    end_date = date - 1.day
+    start_date = (previous == 0 ? end_date.beginning_of_month : end_date - previous.days)
+    data = {}
+    data[:account_name] = self.name
+    data[:start_date] = start_date
+    data[:end_date] = end_date
+    data[:all_calls] = self.number_of_all_calls_for_cityvoice_campaigns_between(start_date, end_date)
+    data[:lead_calls] = self.number_of_lead_calls_for_cityvoice_campaigns_between(start_date, end_date)
+    data[:all_submissions] = self.number_of_all_submissions_for_cityvoice_campaigns_between(start_date, end_date)
+    data[:lead_submissions] = self.number_of_lead_submissions_for_cityvoice_campaigns_between(start_date, end_date)
+    if self.account_manager_complete?
+      data[:account_manager_name] = self.account_manager.name
+      data[:account_manager_phone_number] = self.account_manager.phone_number
+      data[:account_manager_email] = self.account_manager.email
+    else
+      data[:account_manager_name] = "your account manager"
+      data[:account_manager_phone_number] = "(210) 691-0100"
+      data[:account_manager_email] = "support@cityvoice.com"
+    end
+    data
+  end
+  
   def previous_days_report_data(date = Date.today, previous = 0)
     end_date = date - 1.day
     start_date = (previous == 0 ? end_date.beginning_of_month : end_date - previous.days)
@@ -443,6 +466,14 @@ class Account < ActiveRecord::Base
   
   def account_type?(type)
     self.account_type.split(';').include?(type)
+  end
+  
+  def account_manager_complete?
+    return false unless self.account_manager.present?
+    return false unless self.account_manager.name.present?
+    return false unless self.account_manager.phone_number.present?
+    return false unless self.account_manager.email.present?
+    true
   end
   
   
