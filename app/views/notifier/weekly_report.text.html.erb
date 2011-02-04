@@ -187,7 +187,7 @@
 				  <p>
 				    For questions, contact <%= @account_report_data[:account_manager_name] %>
 				    <br><%= @account_report_data[:account_manager_phone_number] %>
-				    <br><%= mail_to, @account_report_data[:account_manager_email] %>
+				    <br><%= mail_to(@account_report_data[:account_manager_email]) %>
 				  </p>
 					<!--<p>
 					   This newsletter was sent to CUSTOMER@EMAIL.COM
