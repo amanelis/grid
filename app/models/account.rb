@@ -146,7 +146,7 @@ class Account < ActiveRecord::Base
     data[:end_date] = end_date
     data[:all_calls] = self.number_of_all_calls_for_cityvoice_campaigns_between(start_date, end_date)
     data[:lead_calls] = self.number_of_lead_calls_for_cityvoice_campaigns_between(start_date, end_date)
-    data[:all_sumissions] = self.number_of_all_submissions_for_cityvoice_campaigns_between(start_date, end_date)
+    data[:all_submissions] = self.number_of_all_submissions_for_cityvoice_campaigns_between(start_date, end_date)
     data[:lead_submissions] = self.number_of_lead_submissions_for_cityvoice_campaigns_between(start_date, end_date)
     if self.account_manager_complete?
       data[:account_manager_name] = self.account_manager.name
