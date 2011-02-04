@@ -3,7 +3,7 @@
   %h4.quiet Edit Account
 %article
   #details.span-11.append-1
-    - form_for (@current_user, :url => person_path) do |f|
+    - form_for (@user, :url => person_path) do |f|
       %h3 User Details
       = f.label :email
       %br
@@ -21,7 +21,7 @@
       = f.submit "Save", :class => 'button'
       %br
       %br
-      - if @current_user.account_manager? || @current_user.admin?
+      - if @user.account_manager? || @user.admin?
         %h3 Account Manager Details
         %label Name
         %br
