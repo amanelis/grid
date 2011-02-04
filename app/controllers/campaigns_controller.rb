@@ -2,8 +2,6 @@ class CampaignsController < ApplicationController
   load_and_authorize_resource
 
   def show  
-    @campaign = Campaign.find(params[:id])
-    authorize! :read, @campaign
     
     Time.zone = @campaign.account.time_zone
     @timeline = @campaign.campaign_style.combined_timeline_data
@@ -66,7 +64,6 @@ class CampaignsController < ApplicationController
   end
   
   def update
-    @campaign = Campaign.find(params[:id])
     
     if params[:campaign][:adopting_phone_number].present?
       @phone_number = PhoneNumber.find(params[:campaign][:adopting_phone_number])
