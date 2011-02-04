@@ -1,8 +1,7 @@
-class CampaignsController < ApplicationController
+class CampaignsController < InheritedResources::Base
   load_and_authorize_resource
 
   def show  
-    
     Time.zone = @campaign.account.time_zone
     @timeline = @campaign.campaign_style.combined_timeline_data
     @sorted_dates = @timeline.keys.sort
