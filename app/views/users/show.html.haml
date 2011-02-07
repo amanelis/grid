@@ -3,7 +3,7 @@
   %h4.quiet Edit Account
 %article
   #details.span-11.append-1
-    - form_for (@current_user, :url => person_path) do |f|
+    - form_for (@user, :url => person_path) do |f|
       %h3 User Details
       = f.label :email
       %br
@@ -21,7 +21,7 @@
       = f.submit "Save", :class => 'button'
       %br
       %br
-      - if @current_user.account_manager? || @current_user.admin?
+      - if @user.account_manager? || @user.admin?
         %h3 Account Manager Details
         %label Name
         %br
@@ -36,15 +36,20 @@
       %h4 
         Group Account Manager - CityVoice
         %a.delete Delete
+        
       %h3 Add Role
       %label Account Type
       %br
-      %input{:type => "radio"} Group Account Manager
-      %br
-      %input{:type => "radio"} Admin
-      %br
-      %input{:type => "radio"} User
-      %br
+      -form_for(@user) do |f|
+        = f.radio_button :admin, 'Admin', :checked => (@user.admin? ? true : false)
+        %label Admin
+        %br
+        = f.radio_button :account_managers, 'Account Manager', :checked => (@user.account_manager? ? true : false)
+        %label Account Manager
+        %br
+        = f.radio_button :account_users, 'User', :checked => (@user.account_user? ? true : false)
+        %label User
+        %br
       %br
       %label Account Manager
       %br

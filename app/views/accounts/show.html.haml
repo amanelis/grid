@@ -12,11 +12,13 @@
           = image_tag ("icons/email.png")
           %br
           Email
+
     %li
       %a{:onclick => "confirm_export_report(#{params[:id]});"}
         = image_tag ("icons/export.png")
         %br
         Export
+
     %li
       %a{:onclick => "show_report(#{params[:id]});"}
         = image_tag ("icons/report.png")

@@ -23,6 +23,7 @@ class Ability
         can :export, Account
         can :report, Account
         can :report_client, Account
+        can :create, Campaign
       end 
       
       if user.account_user?
@@ -44,6 +45,7 @@ class Ability
         
         can :report, Account
         can :report_client, Account
+        can :create, Campaign
       end
 
     end

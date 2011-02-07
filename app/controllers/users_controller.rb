@@ -6,7 +6,6 @@ class UsersController < ApplicationController
     @current_user.admin? ? @users = User.all : @users = User.find_by_id(@current_user.id)
   end
   
-  
   def new
     @user = User.new
   end
@@ -22,7 +21,6 @@ class UsersController < ApplicationController
   end
   
   def show
-    @current_user = current_user
     @user = User.find(params[:id])
   end
   
@@ -37,5 +35,4 @@ class UsersController < ApplicationController
     end
   end
 end
-
 

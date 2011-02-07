@@ -1,16 +1,14 @@
-class CampaignsController < ApplicationController
+class CampaignsController < InheritedResources::Base
   load_and_authorize_resource
 
   def show  
-    @campaign = Campaign.find(params[:id])
-    authorize! :read, @campaign
-    
     Time.zone = @campaign.account.time_zone
     @timeline = @campaign.campaign_style.combined_timeline_data
     @sorted_dates = @timeline.keys.sort
     @title = @campaign.account.name
     @date_range = ''
-    
+ 
+=begin   
     if @campaign.is_sem?
       @chart = GoogleVisualr::Gauge.new
       @chart.add_column('string' , 'Label')
@@ -36,6 +34,7 @@ class CampaignsController < ApplicationController
       @chart.width  = 250
 	    @chart.height = 250
     end
+=end
     
     if params[:daterange].blank?
       @start_date = Date.today.beginning_of_month
@@ -64,7 +63,6 @@ class CampaignsController < ApplicationController
   end
   
   def update
-    @campaign = Campaign.find(params[:id])
     
     if params[:campaign][:adopting_phone_number].present?
       @phone_number = PhoneNumber.find(params[:campaign][:adopting_phone_number])
@@ -123,6 +121,7 @@ class CampaignsController < ApplicationController
   end
   
   def new
+    @campaign = Campaign.new
     @industries = Industry.all.collect {|a| a.name}.sort!
     @flavors = Campaign.flavors
     @account = Account.find(params[:account_id])

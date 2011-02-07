@@ -84,7 +84,7 @@ class AccountsController < ApplicationController
       f.legend(:enabled => false)
       
       f.options[:chart][:defaultSeriesType] = "column"
-      f.series(:name=> 'Total Leads', :data => @managed_campaigns.collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
+      f.series(:name=> 'Total Leads', :data => @managed_campaigns.collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end)}, :animation => false )
     end
     
     @pay_per_click_summary_graph = HighChart.new('graph') do |f|
@@ -94,7 +94,7 @@ class AccountsController < ApplicationController
       f.legend(:enabled => false)
       
       f.options[:chart][:defaultSeriesType] = "column"
-      f.series(:name=> 'Total Leads', :data => @managed_campaigns.select(&:is_sem?).collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
+      f.series(:name=> 'Total Leads', :data => @managed_campaigns.select(&:is_sem?).collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end)}, :animation => false )
     end
     
     @organic_campaign_summary_graph = HighChart.new('graph') do |f|
@@ -104,7 +104,7 @@ class AccountsController < ApplicationController
       f.legend(:enabled => false)
       
       f.options[:chart][:defaultSeriesType] = "bar"
-      f.series(:name=> 'Total Leads', :data => @managed_campaigns.select(&:is_seo?).collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end) })
+      f.series(:name=> 'Total Leads', :data => @managed_campaigns.select(&:is_seo?).collect {|campaign| campaign.number_of_total_leads_between(@month_start, @month_end)}, :animation => false )
     end
     
     respond_to do |format|
