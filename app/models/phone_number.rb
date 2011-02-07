@@ -46,7 +46,7 @@ class PhoneNumber < ActiveRecord::Base
     begin
       sf_campaigns = Salesforce::Clientcampaign.all
       sf_campaigns.each do |sf_campaign|
-        local_campaign = Campaign.find_by_name(sf_campaign.name)
+        local_campaign = Campaign.find_by_salesforce_id(sf_campaign.id)
         if local_campaign.present?
           if sf_campaign.primary_tracking_number__c.present?
             number = sf_campaign.primary_tracking_number__c.gsub('(', '').gsub(')', '').gsub('-', '').gsub(' ', '')

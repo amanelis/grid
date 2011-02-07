@@ -49,6 +49,7 @@ Rails::Initializer.run do |config|
   config.gem "inherited_resources", :version => '1.0.6'
   #config.gem "curb", :version => '0.7.10'
   #config.gem "rest-client", :version => '1.6.1'
+  
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named
   # config.plugins = [ :exception_notification, :ssl_requirement, :all ]

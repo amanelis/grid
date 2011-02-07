@@ -10,7 +10,7 @@ class MapKeyword < ActiveRecord::Base
     begin
       sf_campaigns = Salesforce::Clientcampaign.find_all_by_campaign_type__c('Local Maps')
       sf_campaigns.each do |sf_campaign|
-        local_map_campaign = Campaign.find_by_name(sf_campaign.name).try(:campaign_style)
+        local_map_campaign = Campaign.find_by_salesforce_id(sf_campaign.id).try(:campaign_style)
         if sf_campaign.keywords__c.present? && local_map_campaign.present?
           keywords = sf_campaign.keywords__c.gsub(', ', ',')
           keywords = keywords.split(',')
