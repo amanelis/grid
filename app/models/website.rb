@@ -46,6 +46,37 @@ class Website < ActiveRecord::Base
     job_status.finish_with_no_errors
   end
   
+  #### GINZA CLASS METHODS
+  def self.list_ginza_sites
+    begin
+      HTTParty.get("https://app.ginzametrics.com/v1/list_sites?api_key=#{GINZA_KEY}").to_a
+    rescue Exception => ex
+      raise
+    end
+  end
+  
+  def self.associate_ginza_sites_with_grid_sites()
+    result = {:updated => 0, :skipped => 0, :errored => 0}
+    sites = Website.list_ginza_sites
+    sites.each do |site|
+      begin
+        grid_site = Website.find_by_nickname("www.#{site['site']['domain']}")
+        if grid_site.present?
+          grid_site.ginza_global_id = site['site']['global_key']
+          grid_site.ginza_meta_descript = site['site']['meta_description']
+          grid_site.save
+          result[:updated] += 1
+        else
+          result[:skipped] += 1
+        end
+      rescue
+        result[:errored] += 1
+        next
+      end
+    end
+    result
+  end
+  
 
   # INSTANCE BEHAVIOR
 
@@ -214,70 +245,43 @@ class Website < ActiveRecord::Base
     return map_url
   end
   
-  
-  
-  #### NEEDS TO BE SET AS AN CLASS VARIABLE ON WEBSITE---IN TESTING PHASE
-  def self.list_ginza_sites
+  #### GINZA INSTANCE METHODS
+  def get_ginza_site_keyword_count
     begin
-      HTTParty.get("https://app.ginzametrics.com/v1/list_sites?api_key=#{GINZA_KEY}").to_a
+      HTTParty.get("https://app.ginzametrics.com/v1/sites/#{self.ginza_global_id}/active_keywords?api_key=#{GINZA_KEY}").parsed_response
     rescue Exception => ex
       raise
     end
   end
   
-  #### NEEDS TO BE SET AS AN INSTANCE VARIABLE ON WEBSITE---IN TESTING PHASE
-  def self.get_ginza_site_keyword_count(global_id = '9e082ec734be')
+  def get_ginza_latest_rankings
     begin
-      HTTParty.get("https://app.ginzametrics.com/v1/sites/#{global_id}/active_keywords?api_key=#{GINZA_KEY}").parsed_response
+      HTTParty.get("https://app.ginzametrics.com/v1/sites/#{self.ginza_global_id}/latest_rankings?api_key=#{GINZA_KEY}&count=100").to_a
     rescue Exception => ex
       raise
     end
   end
   
-  #### NEEDS TO BE SET AS AN INSTANCE VARIABLE ON WEBSITE---IN TESTING PHASE
-  def self.get_ginza_latest_rankings(global_id = '9e082ec734be')
+  def get_ginza_latest_ranking_date
     begin
-      HTTParty.get("https://app.ginzametrics.com/v1/sites/#{global_id}/latest_rankings?api_key=#{GINZA_KEY}&count=100").to_a
-    rescue Exception => ex
-      raise
-    end
-  end
-  
-  
-  #### NEEDS TO BE SET AS AN INSTANCE VARIABLE ON WEBSITE---IN TESTING PHASE
-  def self.get_ginza_latest_ranking_date(global_id = '9e082ec734be')
-    begin
-      dates = HTTParty.get("https://app.ginzametrics.com/v1/sites/#{global_id}/latest_rankings_date?api_key=#{GINZA_KEY}").to_a.first.split('-')
-      ranking_date = Date.new(dates[0].to_i, dates[1].to_i, dates[2].to_i) unless dates[0] == "Quota exceeded"
-    rescue Exception => ex
-      raise
-    end
-  end
-  
-  def self.associate_ginza_sites_with_grid_sites()
-    result = {:updated => 0, :skipped => 0, :errored => 0}
-    sites = Website.list_ginza_sites
-    sites.each do |site|
-      begin
-        grid_site = Website.find_by_nickname("www.#{site['site']['domain']}")
-        if grid_site.present?
-          grid_site.ginza_global_id = site['site']['global_key']
-          grid_site.ginza_meta_descript = site['site']['meta_description']
-          grid_site.save
-          result[:updated] += 1
-        else
-          result[:skipped] += 1
-        end
-      rescue
-        result[:errored] += 1
-        next
+      response = HTTParty.get("https://app.ginzametrics.com/v1/sites/#{self.ginza_global_id}/latest_rankings_date?api_key=#{GINZA_KEY}").to_a.first
+      if response != "Quota exceeded"
+        dates = response.split('-') unless 
+        ranking_date = Date.new(dates[0].to_i, dates[1].to_i, dates[2].to_i)
       end
+    rescue Exception => ex
+      raise
     end
-    result
   end
   
-  def create_ginza_site
-    #curl https://app.ginzametrics.com/v1/accounts/#{GINZA_KEY}/add_site -d api_key=#{GINZA_KEY} -d format=json -d url=self.nickname -d market=MKT
+  #TESTING GINZA METHODS
+  
+  def create_ginza_site(global_id = '9e082ec734be')
+    #HTTParty.get("https://app.ginzametrics.com/v1/accounts/#{GINZA_ACCOUNT_ID}/add_site?api_key=#{GINZA_KEY}&format=json&url=www.johnlandscaping.com&market=US")
+  end
+  
+  def add_ginza_keywords(keywords = "")
+    HTTParty.get("https://app.ginzametrics.com/v1/sites/#{self.ginza_global_id}/add_keywords?api_key=#{GINZA_KEY}&format=json&keywords=\"kw1, kw2\"")
   end
   
   
