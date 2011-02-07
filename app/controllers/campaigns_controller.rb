@@ -39,10 +39,6 @@ class CampaignsController < InheritedResources::Base
     if params[:daterange].blank?
       @start_date = Date.today.beginning_of_month
       @end_date = Date.yesterday
-      
-      respond_to do |format|
-        format.html # show.html.erb
-      end
     else
       # Parse the date the GET request has received
       dates = params[:daterange].split(' to ') || params[:daterange].split(' - ')
