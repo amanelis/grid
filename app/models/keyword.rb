@@ -211,7 +211,7 @@ class Keyword < ActiveRecord::Base
     end
   end
   
-  def most_recent_ranking
+  def most_recent_ranking()
     self.keyword_rankings.last
   end
   
