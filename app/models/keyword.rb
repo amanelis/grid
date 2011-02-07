@@ -157,21 +157,21 @@ class Keyword < ActiveRecord::Base
     self.most_recent_ranking_between(start_date, end_date).bing
   end
   
-  def most_recent_google_ranking()
-    if self.most_recent_ranking().present?
-      (ranking = self.most_recent_ranking().google) > 50 ? '>50' : ranking
+  def most_recent_google_ranking
+    if self.most_recent_ranking.present?
+      (ranking = self.most_recent_ranking.google) > 50 ? '>50' : ranking
     end
   end
 
-  def most_recent_yahoo_ranking()
-    if self.most_recent_ranking().present?
-      (ranking = self.most_recent_ranking().yahoo) > 50 ? '>50' : ranking
+  def most_recent_yahoo_ranking
+    if self.most_recent_ranking.present?
+      (ranking = self.most_recent_ranking.yahoo) > 50 ? '>50' : ranking
     end
   end
 
-  def most_recent_bing_ranking()
-    if self.most_recent_ranking().present?
-      (ranking = self.most_recent_ranking().bing) > 50 ? '>50' : ranking
+  def most_recent_bing_ranking
+    if self.most_recent_ranking.present?
+      (ranking = self.most_recent_ranking.bing) > 50 ? '>50' : ranking
     end
   end
 
