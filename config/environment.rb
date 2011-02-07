@@ -7,8 +7,6 @@ RAILS_GEM_VERSION = '2.3.9' unless defined? RAILS_GEM_VERSION
 require File.join(File.dirname(__FILE__), 'boot')
 
 Rails::Initializer.run do |config|
-  
-  
   # Settings in config/environments/* take precedence over those specified here.
   # Application configuration should go into files in config/initializers
   # -- all .rb files in that directory are automatically loaded.
@@ -17,12 +15,11 @@ Rails::Initializer.run do |config|
   # config.load_paths += %W( #{RAILS_ROOT}/extras )
 
   # Specify gems that this application depends on and have them installed with rake gems:install
-=begin
   config.gem "bj"
   config.gem "hpricot", :version => '0.6', :source => "http://code.whytheluckystiff.net"
   config.gem "sqlite3-ruby", :lib => "sqlite3"
   config.gem "aws-s3", :lib => "aws/s3"
-  config.gem 'johnreilly-activerecord-activesalesforce-adapter', :source => 'http://gems.github.com', :lib => 'activerecord-activesalesforce-adapter'
+  #config.gem 'johnreilly-activerecord-activesalesforce-adapter', :source => 'http://gems.github.com', :lib => 'activerecord-activesalesforce-adapter'
   config.gem 'hpricot', :version => '0.8.2'
   config.gem 'httparty', :version => '0.6.1'
   config.gem 'nokogiri', :version => '1.4.3.1'
@@ -50,7 +47,7 @@ Rails::Initializer.run do |config|
   config.gem 'inherited_resources', :version => '1.0.6'
   config.gem "curb", :version => '0.7.10'
   config.gem "rest-client", :version => '1.6.1'
-=end
+
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named
   # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
