@@ -1,20 +1,14 @@
 class WebsiteVisitsController < ApplicationController
+  inherit_resources
   load_and_authorize_resource
   
   def index
-    authorize! :read, WebsiteVisit
-    @website_visit = WebsiteVisit.all
   end
 
   def show
-    @website_visit = WebsiteVisit.find(params[:id])
-    authorize! :read, @website_visit
-    
     if params[:daterangepicker].blank?
       @start_date = @website_visit.website.first_visit_date_by_visitor(@website_visit.visitor_id)
       @end_date = Date.yesterday
-      
-      respond("html", nil)
     else
       dates = params[:daterangepicker].split(' - ')
       begin
@@ -25,8 +19,6 @@ class WebsiteVisitsController < ApplicationController
         @end_date = Date.yesterday
         @end_date = Date.yesterday
       end
-      
-      respond("html", nil)
     end
   end
   
@@ -39,7 +31,6 @@ class WebsiteVisitsController < ApplicationController
     if params[:daterangepicker].blank?
       @start_date = @website_visit.website.first_visit_date_by_visitor(@website_visit.visitor_id)
       @end_date = Date.yesterday
-      respond("html", nil)
     else
       dates = params[:daterangepicker].split(' - ')
       begin
@@ -50,19 +41,16 @@ class WebsiteVisitsController < ApplicationController
         @end_date = Date.yesterday
         @end_date = Date.yesterday
       end
-      
-      respond("html", nil)
     end
   end
   
   private
+    def sort_column
+      WebsiteVisit.column_names.include?(params[:sort]) ? params[:sort] : "visitor_id"
+    end
 
-  def sort_column
-    WebsiteVisit.column_names.include?(params[:sort]) ? params[:sort] : "visitor_id"
-  end
-
-  def sort_direction
-    %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
-  end
+    def sort_direction
+      %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
+    end
   
 end

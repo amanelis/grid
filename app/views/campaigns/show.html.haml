@@ -86,12 +86,12 @@
             %tr
               %td= link_to keyword.descriptor, keyword_path(keyword)
               %td= keyword.most_recent_ranking().created_at.strftime("%m/%d/%y %I:%M %p") if keyword.most_recent_ranking().present?
-              %td= keyword.most_recent_google_ranking() 
-              %td= keyword.google_ranking_change_between() 
+              %td= keyword.most_recent_google_ranking_between(@start_date, @end_date) 
+              %td= keyword.google_ranking_change_between(@start_date, @end_date) 
               %td= keyword.most_recent_yahoo_ranking() 
-              %td= keyword.yahoo_ranking_change_between() 
+              %td= keyword.yahoo_ranking_change_between(@start_date, @end_date) 
               %td= keyword.most_recent_bing_ranking() 
-              %td= keyword.bing_ranking_change_between()    
+              %td= keyword.bing_ranking_change_between(@start_date, @end_date)    
   - if can? :update, @campaign
     %h3 Phone Numbers On Campaign
     %table

@@ -46,3 +46,4 @@
           %td= account_data.present? ? account_data[:leads] : 0
           -cpconv = account_data.present? ? account_data[:cpconv] : 0.0
           %td= ActionController::Base.helpers.number_to_currency(cpconv) 
+  -#= link_to "Create New Account", "#", :class => "button"
