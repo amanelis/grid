@@ -522,6 +522,7 @@ class Campaign < ActiveRecord::Base
 
   def create_contact_form(description = '',  forwarding_email = '', forwarding_bcc_email = '', custom1_text = '', custom2_text = '', custom3_text = '', custom4_text = '', need_name = true, need_address = true, need_phone = true, need_email = true, work_category = true, work_description = true, date_requested = true, time_requested = true, other_information = true)
     form = self.contact_forms.build
+    form.return_url = 'http://grid.cityvoice.com/thank_you'
     form.forwarding_email = forwarding_email
     form.forwarding_bcc_email = forwarding_bcc_email
     form.custom1_text = custom1_text
@@ -538,7 +539,7 @@ class Campaign < ActiveRecord::Base
     form.time_requested = time_requested
     form.other_information = other_information
     form.html_block = form.get_form_text if form.save!
-    form.update_attribute(:return_url, "http://gid.cityvoice.com/contact_forms/#{form.id}/thank_you")
+    form.update_attribute(:return_url, "http://grid.cityvoice.com/contact_forms/#{form.id}/thank_you")
     form
   end
   
