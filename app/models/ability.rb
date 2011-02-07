@@ -45,7 +45,6 @@ class Ability
         
         can :report, Account
         can :report_client, Account
-        can :create, Campaign
       end
 
     end
