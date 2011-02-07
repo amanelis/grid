@@ -1,4 +1,25 @@
 %header
   %h2 Create a new Account
 %article
+  %h3 Account Information
+  %label Name
+  %br
   %input{:type => "text", :placeholder => "CityVoice", :name => "name", :id => "name", :class => "title"}
+  %br
+  %label Industry
+  %br
+  %input{:type => "text", :placeholder => "Marketing", :class => "title"}
+  %hr
+  %h3 Create User
+  %br
+  %label Email
+  %br
+  %input{:type => "text", :placeholder => "support@cityvoice.com", :class => "title"}
+  %br
+  %label Role
+  %br
+  %input{:type => "text", :placeholder => "Admin", :class => "title"}
+  %br
+  = link_to "Create Account", "#", :class => "button"
+  
+  
