@@ -6,6 +6,62 @@ class SeoCampaign < ActiveRecord::Base
 
   # CLASS BEHAVIOR
 
+  
+  def self.update_website_keywords_with_ginza
+    test_status = "Began Running"
+    job_status = JobStatus.create(:name => "SeoCampaign.update_website_keywords_with_ginza")
+    begin
+      #Make sure sites are current
+      Website.associate_ginza_sites_with_grid_sites
+      
+      campaigns = Campaign.find(:all, :conditions => ['campaign_style_type = ? && status = ?', 'SeoCampaign', 'Active'])
+      campaigns.each do |campaign|
+        website = campaign.website
+        website.update_attribute(:last_keyword_update, Date.yesterday) if website.present? && website.last_keyword_update.blank?
+        #Change Date.today when we get past 240 websites or Ginza takes off the 10 queries/hr shit.
+        if website.present? && website.ginza_global_id.present?
+          updated = website.get_ginza_latest_ranking_date
+          test_status = "Met Ginza Query Limit at #{Time.now}" if updated.blank?
+          if updated.present? && website.last_keyword_update < updated
+            puts "Started #{website.nickname}"
+            website.get_ginza_latest_rankings.each do |g_keyword|
+              keyword = campaign.campaign_style.keywords.find_by_descriptor(g_keyword['keyword']['name'])
+              if keyword.blank?
+                #create the keyword
+                keyword = campaign.campaign_style.keywords.build
+                keyword.descriptor = g_keyword['keyword']['name']
+              end
+              keyword.ginza_keyword_id = g_keyword['keyword']['keyword_id']
+              keyword.google_first_page = (g_keyword['keyword']['google_us'].to_i < 11) ? true : false
+              keyword.yahoo_first_page = (g_keyword['keyword']['yahoo_us'].to_i < 11) ? true : false
+              #keyword.bing_first_page = (g_keyword['keyword']['bing_us'].to_i < 11) ? true : false
+              keyword.last_ranking_update = updated
+              keyword.save!
+              
+              #create a ranking for the keyword
+              ranking = keyword.keyword_rankings.build
+              ranking.google = (g_keyword['keyword']['google_us'].to_i < 100) ? g_keyword['keyword']['google_us'].to_i : 9999
+              ranking.yahoo = (g_keyword['keyword']['yahoo_us'].to_i  < 100) ? g_keyword['keyword']['yahoo_us'].to_i : 9999
+              #ranking.bing = (g_keyword['keyword']['bing_us'].to_i  < 100) ? g_keyword['keyword']['bing_us'].to_i : 9999
+              ranking.ginza_conv_percent = g_keyword['keyword']['conversion_percent'].to_f
+              ranking.ginza_visits = g_keyword['keyword']['visits'].to_i 
+              ranking.ginza_conversions = g_keyword['keyword']['conversions'].to_i 
+              ranking.date_of_ranking = updated
+              ranking.save!
+              test_status = "Ran through all of the websites" 
+            end
+            website.update_attribute(:last_keyword_update, updated)
+          end
+        end
+      end  
+    rescue Exception => ex
+      job_status.finish_with_errors(ex)
+      raise
+    end
+    job_status.finish_with_no_errors
+    test_status
+  end
+  
   def self.update_inbound_links
     job_status = JobStatus.create(:name => "SeoCampaign.update_inbound_links")
     exception = nil
@@ -439,59 +495,6 @@ class SeoCampaign < ActiveRecord::Base
     end
   end
   
-  def self.update_website_keywords_with_ginza
-    test_status = "Began Running"
-    job_status = JobStatus.create(:name => "SeoCampaign.update_website_keywords_with_ginza")
-    begin
-      #Make sure sites are current
-      Website.associate_ginza_sites_with_grid_sites
-      
-      campaigns = Campaign.find(:all, :conditions => ['campaign_style_type = ? && status = ?', 'SeoCampaign', 'Active'])
-      campaigns.each do |campaign|
-        website = campaign.website
-        website.update_attribute(:last_keyword_update, Date.yesterday) if website.present? && website.last_keyword_update.blank?
-        #Change Date.today when we get past 240 websites or Ginza takes off the 10 queries/hr shit.
-        if website.present? && website.ginza_global_id.present?
-          updated = Website.get_ginza_latest_ranking_date(website.ginza_global_id)
-          test_status = "Met Ginza Query Limit" if updated.blank?
-          if updated.present? && website.last_keyword_update < updated
-            Website.get_ginza_latest_rankings(website.ginza_global_id).each do |g_keyword|
-              keyword = campaign.campaign_style.keywords.find_by_descriptor(g_keyword['keyword']['name'])
-              if keyword.blank?
-                #create the keyword
-                keyword = campaign.campaign_style.keywords.build
-                keyword.descriptor = g_keyword['keyword']['name']
-              end
-              keyword.ginza_keyword_id = g_keyword['keyword']['keyword_id']
-              keyword.google_first_page = (g_keyword['keyword']['google_us'].to_i < 11) ? true : false
-              keyword.yahoo_first_page = (g_keyword['keyword']['yahoo_us'].to_i < 11) ? true : false
-              #keyword.bing_first_page = (g_keyword['keyword']['bing_us'].to_i < 11) ? true : false
-              keyword.last_ranking_update = updated
-              keyword.save!
-              
-              #create a ranking for the keyword
-              ranking = keyword.keyword_rankings.build
-              ranking.google = (g_keyword['keyword']['google_us'].to_i < 100) ? g_keyword['keyword']['google_us'].to_i : 9999
-              ranking.yahoo = (g_keyword['keyword']['yahoo_us'].to_i  < 100) ? g_keyword['keyword']['yahoo_us'].to_i : 9999
-              #ranking.bing = (g_keyword['keyword']['bing_us'].to_i  < 100) ? g_keyword['keyword']['bing_us'].to_i : 9999
-              ranking.ginza_conv_percent = g_keyword['keyword']['conversion_percent'].to_f
-              ranking.ginza_visits = g_keyword['keyword']['visits'].to_i 
-              ranking.ginza_conversions = g_keyword['keyword']['conversions'].to_i 
-              ranking.date_of_ranking = updated
-              ranking.save!
-              test_status = "Ran through all of the websites" 
-            end
-            website.update_attribute(:last_keyword_update, updated)
-          end
-        end
-      end  
-    rescue Exception => ex
-      job_status.finish_with_errors(ex)
-      raise
-    end
-    job_status.finish_with_no_errors
-    test_status
-  end
   
 
 end

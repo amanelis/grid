@@ -1,10 +1,7 @@
-class CampaignsController < ApplicationController
+class CampaignsController < InheritedResources::Base
   load_and_authorize_resource
 
   def show  
-    @campaign = Campaign.find(params[:id])
-    authorize! :read, @campaign
-    
     Time.zone = @campaign.account.time_zone
     @timeline = @campaign.campaign_style.combined_timeline_data
     @sorted_dates = @timeline.keys.sort
@@ -42,10 +39,6 @@ class CampaignsController < ApplicationController
     if params[:daterange].blank?
       @start_date = Date.today.beginning_of_month
       @end_date = Date.yesterday
-      
-      respond_to do |format|
-        format.html # show.html.erb
-      end
     else
       # Parse the date the GET request has received
       dates = params[:daterange].split(' to ') || params[:daterange].split(' - ')
@@ -66,7 +59,6 @@ class CampaignsController < ApplicationController
   end
   
   def update
-    @campaign = Campaign.find(params[:id])
     
     if params[:campaign][:adopting_phone_number].present?
       @phone_number = PhoneNumber.find(params[:campaign][:adopting_phone_number])
@@ -125,6 +117,7 @@ class CampaignsController < ApplicationController
   end
   
   def new
+    @campaign = Campaign.new
     @industries = Industry.all.collect {|a| a.name}.sort!
     @flavors = Campaign.flavors
     @account = Account.find(params[:account_id])

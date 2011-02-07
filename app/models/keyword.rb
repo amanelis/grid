@@ -13,7 +13,7 @@ class Keyword < ActiveRecord::Base
     begin
       sf_campaigns = Salesforce::Clientcampaign.find_all_by_campaign_type__c('SEO')
       sf_campaigns.each do |sf_campaign|
-        local_seo_campaign = Campaign.find_by_name(sf_campaign.name).try(:campaign_style)
+        local_seo_campaign = Campaign.find_by_salesforce_id(sf_campaign.id).try(:campaign_style)
         if sf_campaign.keywords__c.present? && local_seo_campaign.present?
           keywords = sf_campaign.keywords__c.split(',')
           keywords.each do |keyword|
@@ -146,32 +146,32 @@ class Keyword < ActiveRecord::Base
   end
 
   def most_recent_google_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
-    self.most_recent_ranking_between(start_date, end_date).google
+    self.most_recent_ranking_between(start_date, end_date).google if self.most_recent_ranking_between(start_date, end_date).present?
   end
 
   def most_recent_yahoo_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
-    self.most_recent_ranking_between(start_date, end_date).yahoo
+    self.most_recent_ranking_between(start_date, end_date).yahoo if self.most_recent_ranking_between(start_date, end_date).present?
   end
 
   def most_recent_bing_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
-    self.most_recent_ranking_between(start_date, end_date).bing
+    self.most_recent_ranking_between(start_date, end_date).bing if self.most_recent_ranking_between(start_date, end_date).present?
   end
   
-  def most_recent_google_ranking()
-    if self.most_recent_ranking().present?
-      (ranking = self.most_recent_ranking().google) > 50 ? '>50' : ranking
+  def most_recent_google_ranking
+    if self.most_recent_ranking.present?
+      (ranking = self.most_recent_ranking.google) > 50 ? '>50' : ranking
     end
   end
 
-  def most_recent_yahoo_ranking()
-    if self.most_recent_ranking().present?
-      (ranking = self.most_recent_ranking().yahoo) > 50 ? '>50' : ranking
+  def most_recent_yahoo_ranking
+    if self.most_recent_ranking.present?
+      (ranking = self.most_recent_ranking.yahoo) > 50 ? '>50' : ranking
     end
   end
 
-  def most_recent_bing_ranking()
-    if self.most_recent_ranking().present?
-      (ranking = self.most_recent_ranking().bing) > 50 ? '>50' : ranking
+  def most_recent_bing_ranking
+    if self.most_recent_ranking.present?
+      (ranking = self.most_recent_ranking.bing) > 50 ? '>50' : ranking
     end
   end
 
@@ -211,7 +211,7 @@ class Keyword < ActiveRecord::Base
     end
   end
   
-  def most_recent_ranking()
+  def most_recent_ranking
     self.keyword_rankings.last
   end
   

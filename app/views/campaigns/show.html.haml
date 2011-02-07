@@ -85,13 +85,13 @@
           - (@campaign.campaign_style.keywords.sort { |a,b| a.descriptor <=> b.descriptor }).each do |keyword|
             %tr
               %td= link_to keyword.descriptor, keyword_path(keyword)
-              %td= keyword.most_recent_ranking().created_at.strftime("%m/%d/%y %I:%M %p") if keyword.most_recent_ranking().present?
-              %td= keyword.most_recent_google_ranking() 
-              %td= keyword.google_ranking_change_between() 
-              %td= keyword.most_recent_yahoo_ranking() 
-              %td= keyword.yahoo_ranking_change_between() 
-              %td= keyword.most_recent_bing_ranking() 
-              %td= keyword.bing_ranking_change_between()    
+              %td= keyword.most_recent_ranking.created_at.strftime("%m/%d/%y %I:%M %p") if keyword.most_recent_ranking.present?
+              %td= keyword.most_recent_google_ranking_between(@start_date, @end_date) unless keyword.blank?
+              %td= keyword.google_ranking_change_between(@start_date, @end_date) 
+              %td= keyword.most_recent_yahoo_ranking
+              %td= keyword.yahoo_ranking_change_between(@start_date, @end_date) 
+              %td= keyword.most_recent_bing_ranking
+              %td= keyword.bing_ranking_change_between(@start_date, @end_date)    
   - if can? :update, @campaign
     %h3 Phone Numbers On Campaign
     %table
@@ -106,6 +106,13 @@
             %td= number.name
             %td= number.descript
             %td= number.inboundno
+    - semantic_form_for @campaign, :url => campaign_path(@campaign) do |f| 
+      = f.semantic_errors :state
+      - f.inputs do
+        %br
+        = f.input :adopting_phone_number, :label => 'Add Orphaned Phone Number', :as => :select, :collection => PhoneNumber.selectable_orphaned_phone_numbers, :include_blank => true
+      - f.buttons do
+        = f.commit_button :update
   %h3 Form Submissions
   %table
     %thead
@@ -127,7 +134,10 @@
           %td= submission.date_requested
           %td= submission.time_requested
           %td= submission.work_description
-  = link_to '+ Create Form', new_campaign_contact_form_path(@campaign), :class => "submit button", :name => "submit"
+  
+  -if can? :create, ContactForm
+    = link_to '+ Create Form', new_campaign_contact_form_path(@campaign), :class => "submit button", :name => "submit"
+  
   %h3 Call Log
   %table
     %thead
