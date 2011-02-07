@@ -276,6 +276,10 @@ class Website < ActiveRecord::Base
     result
   end
   
+  def create_ginza_site
+    #curl https://app.ginzametrics.com/v1/accounts/#{GINZA_KEY}/add_site -d api_key=#{GINZA_KEY} -d format=json -d url=self.nickname -d market=MKT
+  end
+  
   
   
 end

@@ -520,7 +520,7 @@ class Campaign < ActiveRecord::Base
   
   
 
-  def create_contact_form(description = '', return_url = '', forwarding_email = '', forwarding_bcc_email = '', custom1_text = '', custom2_text = '', custom3_text = '', custom4_text = '', need_name = true, need_address = true, need_phone = true, need_email = true, work_category = true, work_description = true, date_requested = true, time_requested = true, other_information = true)
+  def create_contact_form(description = '',  forwarding_email = '', forwarding_bcc_email = '', custom1_text = '', custom2_text = '', custom3_text = '', custom4_text = '', need_name = true, need_address = true, need_phone = true, need_email = true, work_category = true, work_description = true, date_requested = true, time_requested = true, other_information = true)
     form = self.contact_forms.build
     form.forwarding_email = forwarding_email
     form.forwarding_bcc_email = forwarding_bcc_email
@@ -528,7 +528,6 @@ class Campaign < ActiveRecord::Base
     form.custom2_text = custom2_text
     form.custom3_text = custom3_text
     form.custom4_text = custom4_text
-    form.return_url = return_url
     form.need_name = need_name
     form.need_address = need_address
     form.need_phone = need_phone
@@ -538,9 +537,9 @@ class Campaign < ActiveRecord::Base
     form.date_requested = date_requested
     form.time_requested = time_requested
     form.other_information = other_information
-    form.save
-    
-    form.get_form_text()
+    form.html_block = form.get_form_text if form.save!
+    form.update_attribute(:return_url, "http://gid.cityvoice.com/contact_forms/#{form.id}/thank_you")
+    form
   end
   
   # PREDICATES
