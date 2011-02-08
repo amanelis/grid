@@ -24,14 +24,19 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
   end
   
-  def update
+  def edit
+    @current_user = current_user
+    @user = User.find(params[:id])
+  end
+  
+  def update 
     @user = User.find_by_id(params[:user][:id])
     if @user.update_attributes(params[:user])
       flash[:notice] = "Account updated!"
-      redirect_to user_path(@user)
+      redirect_to edit_user_path(@user)
     else
-      flash[:notice] = "Error on updating account!"
-      redirect_to person_url
+      flash[:error] = "Error on updating account!"
+      redirect_to edit_user_path(@user)
     end
   end
 end
