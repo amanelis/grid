@@ -18,6 +18,9 @@ class AccountsController < ApplicationController
   
   def new
   end
+  
+  def update
+  end
 
   def show
     @total_reporting_messages = [:number_of_lead_calls_between,
