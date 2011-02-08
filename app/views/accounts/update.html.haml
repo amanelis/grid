@@ -1,0 +1,59 @@
+%header
+  %h2 Account Information
+%article
+  .span-12
+    %label Name
+    %br
+    %input{:type => "text", :placeholder => "CityVoice", :name => "name", :id => "name", :class => "title"}
+    %br
+    %label Budget
+    %br
+    %input{:type => "text", :placeholder => "One Million Dollars", :name => "name", :id => "name", :class => "title"}
+    %br
+    %label Billing Date
+    %br
+    %input{:type => "text", :placeholder => "Jan 1, 2011", :id => "datepicker", :class => "title"}
+    %br
+    %label Industry
+    %br
+    %select
+      %option Plumbing
+      %option HVAC
+      %option Other
+    %br
+    %label Type
+    %br
+    %select
+      %option SEO
+      %option SEM
+      %option Other
+    %br
+    %label Status
+    %br
+    %select
+      %option Active
+      %option Inactive
+      %option Paused
+    %br
+    %label Assign Account Manager
+    %br
+    %select
+      %option Shelton
+      %option Shaunay
+      %option - None -
+    = link_to "Create User", "#", :class => "button"
+  .span-11.last
+    %h3 Contact Info
+    %label Address
+    %br
+    %input{:type => "text", :placeholder => "112 DeZevala, San Antonio, TX 78249", :class => "title"}
+    %br
+    %label Phone
+    %br
+    %input{:type => "text", :placeholder => "(832) 477 8662", :class => "title"}
+  = link_to "Update", "#", :class => "button"
+
+:javascript 
+  	$(function() {
+  		$( "#datepicker" ).datepicker();
+  	});

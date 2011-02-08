@@ -162,7 +162,7 @@ class Submission < ActiveRecord::Base
   end
   
   def send_customer_lobby_request
-    if !self.customer_lobby_requested
+    if !self.customer_lobby_requested && self.contact_form.campaign.account.customer_lobby_id.present?
       file = File.open("#{RAILS_ROOT}/tmp/customerlobby#{self.id}.txt", "w") {|f| f.write("#{self.contact_form.campaign.account.customer_lobby_id}\t#{self.name}\t#{self.from_email}\n")}
       body = {'data_file' => File.open("#{RAILS_ROOT}/tmp/customerlobby#{self.id}.txt")} 
       res = HTTPClient.new.post('http://www.customerlobby.com/bulk-invitation?username=cityvoice&password=17Lincoln79', body)
@@ -170,7 +170,7 @@ class Submission < ActiveRecord::Base
       File.delete("#{RAILS_ROOT}/tmp/customerlobby#{self.id}.txt")
       res.body.content
     else
-      "This request has already been made."
+      "This request has already been made or Customer Lobby account doesn't exist."
     end
   end
   

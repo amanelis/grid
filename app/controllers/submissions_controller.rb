@@ -41,5 +41,10 @@ class SubmissionsController < ApplicationController
       head 400
     end
   end
+  
+  def submit_cl
+    Submission.find(params[:id]).send_customer_lobby_request
+    redirect_to request.referer
+  end
 
 end
