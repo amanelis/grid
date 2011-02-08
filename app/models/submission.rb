@@ -161,11 +161,17 @@ class Submission < ActiveRecord::Base
     true
   end
   
-  def send_customer_lobby_request(customer_lobby_id = '4969', name = 'Ben', email = 'ben@cityvoice.com')
-   # file = File.open("#{RAILS_ROOT}/tmp/customerlobby#{self.id}.txt", "w") {|f| f.write("#{self.contact_form.campaign.account.customer_lobby_id}\t#{name}\t#{email}\n")}
-   # body = {'data_file' => File.open("#{RAILS_ROOT}/tmp/customerlobby#{self.id}.txt")} 
-   # res = HTTPClient.new.post('http://www.customerlobby.com/bulk-invitation?username=cityvoice&password=17Lincoln79', body)
-   # self.update_attribute(:customer_lobby_requested => true) if res.body.include? "Accepted"
+  def send_customer_lobby_request
+    if !self.customer_lobby_requested
+      file = File.open("#{RAILS_ROOT}/tmp/customerlobby#{self.id}.txt", "w") {|f| f.write("#{self.contact_form.campaign.account.customer_lobby_id}\t#{self.name}\t#{self.from_email}\n")}
+      body = {'data_file' => File.open("#{RAILS_ROOT}/tmp/customerlobby#{self.id}.txt")} 
+      res = HTTPClient.new.post('http://www.customerlobby.com/bulk-invitation?username=cityvoice&password=17Lincoln79', body)
+      self.update_attribute(:customer_lobby_requested, true) if res.body.content.include? "Accepted"
+      File.delete("#{RAILS_ROOT}/tmp/customerlobby#{self.id}.txt")
+      res.body.content
+    else
+      "This request has already been made."
+    end
   end
   
 end
