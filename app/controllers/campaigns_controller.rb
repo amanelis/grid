@@ -1,4 +1,5 @@
-class CampaignsController < InheritedResources::Base
+class CampaignsController < ApplicationController
+  inherit_resources
   load_and_authorize_resource
 
   def show  
@@ -6,7 +7,6 @@ class CampaignsController < InheritedResources::Base
     @timeline = @campaign.campaign_style.combined_timeline_data
     @sorted_dates = @timeline.keys.sort
     @title = @campaign.account.name
-    @date_range = ''
  
 =begin   
     if @campaign.is_sem?
@@ -36,25 +36,7 @@ class CampaignsController < InheritedResources::Base
     end
 =end
     
-    if params[:daterange].blank?
-      @start_date = Date.today.beginning_of_month
-      @end_date = Date.yesterday
-    else
-      # Parse the date the GET request has received
-      dates = params[:daterange].split(' to ') || params[:daterange].split(' - ')
-      @date_range = params[:daterange]
-      
-      begin 
-        @start_date = Date.parse(dates[0])
-        @end_date = Date.parse(dates[1])
-      rescue
-        @start_date = Date.today.beginning_of_month
-        @end_date = Date.yesterday
-        flash[:error] = "Your date was incorrect, we set it back to #{@start_date} to #{@end_date}"
-        redirect_to campaign_path(params[:id])
-      end
-      
-    end
+    datepicker campaign_path(params[:id])
     
   end
   
