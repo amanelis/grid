@@ -1,8 +1,7 @@
 %header
-  %h2 Create Account
+  %h2 Account Information
 %article
   .span-12
-    %h3 Account Information
     %label Name
     %br
     %input{:type => "text", :placeholder => "CityVoice", :name => "name", :id => "name", :class => "title"}
@@ -42,6 +41,7 @@
       %option Shelton
       %option Shaunay
       %option - None -
+    = link_to "Create User", "#", :class => "button"
   .span-11.last
     %h3 Contact Info
     %label Address
@@ -51,22 +51,7 @@
     %label Phone
     %br
     %input{:type => "text", :placeholder => "(832) 477 8662", :class => "title"}
-  %hr
-  %h3 Create User
-  %p.quiet This user will an admin*
-  %label Name
-  %br
-  %input{:type => "text", :placeholder => "Shaunay", :name => "name", :id => "name", :class => "title"}
-  %br
-  %label Email
-  %br
-  %input{:type => "text", :placeholder => "support@cityvoice.com", :class => "title"}
-  %br
-  %label Password
-  %br
-  %input{:type => "password", :class => "title"}
-  %br
-  = link_to "Create Account", "#", :class => "button"
+  = link_to "Update", "#", :class => "button"
 
 :javascript 
   	$(function() {

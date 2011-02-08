@@ -15,6 +15,12 @@ class AccountsController < ApplicationController
     @accounts_data      = Rails.cache.fetch("accounts_data") { Account.get_accounts_data }
     @accounts.sort! {|a,b| a.name.downcase <=> b.name.downcase}
   end
+  
+  def new
+  end
+  
+  def update
+  end
 
   def show
     @total_reporting_messages = [:number_of_lead_calls_between,
