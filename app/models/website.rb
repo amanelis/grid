@@ -50,6 +50,7 @@ class Website < ActiveRecord::Base
   def self.list_ginza_sites
     begin
       HTTParty.get("https://app.ginzametrics.com/v1/list_sites?api_key=#{GINZA_KEY}").to_a
+      puts "Ginza Pull list_sites?"
     rescue Exception => ex
       raise
     end
@@ -58,20 +59,22 @@ class Website < ActiveRecord::Base
   def self.associate_ginza_sites_with_grid_sites()
     result = {:updated => 0, :skipped => 0, :errored => 0}
     sites = Website.list_ginza_sites
-    sites.each do |site|
-      begin
-        grid_site = Website.find_by_nickname("www.#{site['site']['domain']}")
-        if grid_site.present?
-          grid_site.ginza_global_id = site['site']['global_key']
-          grid_site.ginza_meta_descript = site['site']['meta_description']
-          grid_site.save
-          result[:updated] += 1
-        else
-          result[:skipped] += 1
+    if sites.present?
+      sites.each do |site| 
+        begin
+          grid_site = Website.find_by_nickname("www.#{site['site']['domain']}")
+          if grid_site.present?
+            grid_site.ginza_global_id = site['site']['global_key']
+            grid_site.ginza_meta_descript = site['site']['meta_description']
+            grid_site.save
+            result[:updated] += 1
+          else
+            result[:skipped] += 1
+          end
+        rescue
+          result[:errored] += 1
+          next
         end
-      rescue
-        result[:errored] += 1
-        next
       end
     end
     result
@@ -249,6 +252,7 @@ class Website < ActiveRecord::Base
   def get_ginza_site_keyword_count
     begin
       HTTParty.get("https://app.ginzametrics.com/v1/sites/#{self.ginza_global_id}/active_keywords?api_key=#{GINZA_KEY}").parsed_response
+      puts "Ginza Pull active_keywords? for #{self.nickname}"
     rescue Exception => ex
       raise
     end
@@ -256,7 +260,10 @@ class Website < ActiveRecord::Base
   
   def get_ginza_latest_rankings
     begin
-      HTTParty.get("https://app.ginzametrics.com/v1/sites/#{self.ginza_global_id}/latest_rankings?api_key=#{GINZA_KEY}&count=100").to_a
+      rankings = HTTParty.get("https://app.ginzametrics.com/v1/sites/#{self.ginza_global_id}/latest_rankings?api_key=#{GINZA_KEY}&count=100").to_a
+      puts "Ginza Query latest_rankings? for #{self.nickname}" if rankings != ["Quota exceeded"]
+      puts "Ginza EXCEEDED QUERY latest_rankings? for #{self.nickname}" if rankings == ["Quota exceeded"]
+      rankings
     rescue Exception => ex
       raise
     end
@@ -265,6 +272,7 @@ class Website < ActiveRecord::Base
   def get_ginza_latest_ranking_date
     begin
       response = HTTParty.get("https://app.ginzametrics.com/v1/sites/#{self.ginza_global_id}/latest_rankings_date?api_key=#{GINZA_KEY}").to_a.first
+      puts "Ginza Pull latest_rankings_date? for #{self.nickname}"
       if response != "Quota exceeded"
         dates = response.split('-') unless 
         ranking_date = Date.new(dates[0].to_i, dates[1].to_i, dates[2].to_i)
@@ -278,10 +286,12 @@ class Website < ActiveRecord::Base
   
   def create_ginza_site(global_id = '9e082ec734be')
     #HTTParty.get("https://app.ginzametrics.com/v1/accounts/#{GINZA_ACCOUNT_ID}/add_site?api_key=#{GINZA_KEY}&format=json&url=www.johnlandscaping.com&market=US")
+   # puts "Ginza Pull add_site? for #{self.nickname}"
   end
   
   def add_ginza_keywords(keywords = "")
     HTTParty.get("https://app.ginzametrics.com/v1/sites/#{self.ginza_global_id}/add_keywords?api_key=#{GINZA_KEY}&format=json&keywords=\"kw1, kw2\"")
+    # puts "Ginza Pull add_keywords? for #{self.nickname}"
   end
   
   

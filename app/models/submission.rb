@@ -162,35 +162,10 @@ class Submission < ActiveRecord::Base
   end
   
   def send_customer_lobby_request(customer_lobby_id = '4969', name = 'Ben', email = 'ben@cityvoice.com')
-    #post_url = 'https://www.customerlobby.com/bulk-invite'
-    #review_data = "#{customer_lobby_id}\t#{name}\t#{email}"
-    
-    #url = URI.parse("http://www.customerlobby.com/bulk-invitation?username=cityvoice&password=17Lincoln79&data_file=customerlobby.txt")
-    #customer_lobby_id = '4969'
-    #name = 'Ben'
-    #email = 'ben@cityvoice.com'
-    #file = File.open("#{RAILS_ROOT}/tmp/customerlobby.txt", "w") {|f| f.write("#{customer_lobby_id}\t#{name}\t#{email}\n")}
-    
-    #post_body = []
-    #post_body << "Content-Type: multipart/form-data; name=\"data_file\"; boundary=AaB03x\r\n"
-    #post_body << "\r\n--AaB03x\r\n"
-    #post_body << "Content-Disposition: form-data; name=\"data_file\"; filename=\"customerlobby.txt\"\r\n"
-    #post_body << "Content-Type: text/plain\r\n"
-    #post_body << "\r\n"
-    #post_body << File.read("#{RAILS_ROOT}/tmp/customerlobby.txt")
-    #post_body << "\r\n--AaB03x--\r\n"
-    #
-    #http = Net::HTTP.new(url.host, url.port)
-    #request = Net::HTTP::Post.new(url.request_uri)
-    #request["Content-Type"] = "multipart/form-data"
-    #request.body = post_body.join
-    #response = http.request(request)
-    
-
-    
-    #url = 'https://www.googleapis.com/customsearch/v1?key=AIzaSyB7dKG1N0KawnBKHEdBe4TjeQayNIqULjk&cx=013695089876934848547:d49ftpucgri&q=air+conditioning+san+antonio&count=50&alt=json'
-    #test = HTTParty.get(url).to_a.first.second.to_a.count
-    
+    file = File.open("#{RAILS_ROOT}/tmp/customerlobby#{self.id}.txt", "w") {|f| f.write("#{self.contact_form.campaign.account.customer_lobby_id}\t#{name}\t#{email}\n")}
+    body = {'data_file' => File.open("#{RAILS_ROOT}/tmp/customerlobby#{self.id}.txt")} 
+    res = HTTPClient.new.post('http://www.customerlobby.com/bulk-invitation?username=cityvoice&password=17Lincoln79', body)
+    self.update_attribute(:customer_lobby_requested => true) if res.body.include? "Accepted"
   end
   
 end
