@@ -162,10 +162,10 @@ class Submission < ActiveRecord::Base
   end
   
   def send_customer_lobby_request(customer_lobby_id = '4969', name = 'Ben', email = 'ben@cityvoice.com')
-    file = File.open("#{RAILS_ROOT}/tmp/customerlobby#{self.id}.txt", "w") {|f| f.write("#{self.contact_form.campaign.account.customer_lobby_id}\t#{name}\t#{email}\n")}
-    body = {'data_file' => File.open("#{RAILS_ROOT}/tmp/customerlobby#{self.id}.txt")} 
-    res = HTTPClient.new.post('http://www.customerlobby.com/bulk-invitation?username=cityvoice&password=17Lincoln79', body)
-    self.update_attribute(:customer_lobby_requested => true) if res.body.include? "Accepted"
+   # file = File.open("#{RAILS_ROOT}/tmp/customerlobby#{self.id}.txt", "w") {|f| f.write("#{self.contact_form.campaign.account.customer_lobby_id}\t#{name}\t#{email}\n")}
+   # body = {'data_file' => File.open("#{RAILS_ROOT}/tmp/customerlobby#{self.id}.txt")} 
+   # res = HTTPClient.new.post('http://www.customerlobby.com/bulk-invitation?username=cityvoice&password=17Lincoln79', body)
+   # self.update_attribute(:customer_lobby_requested => true) if res.body.include? "Accepted"
   end
   
 end

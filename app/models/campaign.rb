@@ -77,7 +77,6 @@ class Campaign < ActiveRecord::Base
             if existing_campaign.blank?
               new_sem_campaign = SemCampaign.new
               new_sem_campaign.account = account
-              new_sem_campaign.salesforce_id = sf_campaign.id
             else
               new_sem_campaign = existing_campaign.campaign_style
               unless new_sem_campaign.instance_of?(SemCampaign)
@@ -87,6 +86,7 @@ class Campaign < ActiveRecord::Base
                 next
               end
             end
+            new_sem_campaign.salesforce_id = sf_campaign.id
             new_sem_campaign.status = sf_campaign.status__c
             new_sem_campaign.name = sf_campaign.name
             new_sem_campaign.zip_code = sf_campaign.zip_code__c
@@ -127,7 +127,6 @@ class Campaign < ActiveRecord::Base
             if existing_campaign.blank?
               new_seo_campaign = SeoCampaign.new
               new_seo_campaign.account = account
-              new_seo_campaign.salesforce_id = sf_campaign.id
             else
               new_seo_campaign = existing_campaign.campaign_style
               unless new_seo_campaign.instance_of?(SeoCampaign)
@@ -137,6 +136,7 @@ class Campaign < ActiveRecord::Base
                 next
               end
             end
+            new_seo_campaign.salesforce_id = sf_campaign.id
             new_seo_campaign.budget = sf_campaign.monthly_budget__c
             new_seo_campaign.cities = ''
             #new_seo_campaign.keywords = campaign.keywords__c
@@ -159,7 +159,6 @@ class Campaign < ActiveRecord::Base
             if existing_campaign.blank?
               new_maps_campaign = MapsCampaign.new
               new_maps_campaign.account = account
-              new_maps_campaign.salesforce_id = sf_campaign.id
             else
               new_maps_campaign = existing_campaign.campaign_style
               unless new_maps_campaign.instance_of?(MapsCampaign)
@@ -169,6 +168,7 @@ class Campaign < ActiveRecord::Base
                 next
               end
             end
+            new_maps_campaign.salesforce_id = sf_campaign.id
             new_maps_campaign.keywords = sf_campaign.keywords__c
             new_maps_campaign.company_name = sf_campaign.maps_company_name__c
             new_maps_campaign.zip_code = sf_campaign.zip_code__c
@@ -187,7 +187,6 @@ class Campaign < ActiveRecord::Base
             if existing_campaign.blank?
               new_other_campaign = OtherCampaign.new
               new_other_campaign.account = account
-              new_other_campaign.salesforce_id = sf_campaign.id
             else
               new_other_campaign = existing_campaign.campaign_style
               unless new_other_campaign.instance_of?(OtherCampaign)
@@ -197,6 +196,7 @@ class Campaign < ActiveRecord::Base
                 next
               end
             end
+            new_other_campaign.salesforce_id = sf_campaign.id
             new_other_campaign.zip_code = sf_campaign.zip_code__c
             new_other_campaign.status = sf_campaign.status__c
             new_other_campaign.name = sf_campaign.name
