@@ -7,6 +7,10 @@ ActionController::Routing::Routes.draw do |map|
   map.send_weekly         "/accounts/send_weekly_email/:id",    :controller => "accounts",        :action => :send_weekly_email
   map.login               "/login",                             :controller => "user_sessions",   :action => :new
   map.register            "/register",                          :controller => "users",           :action => :new
+  map.submit_cl           "/submissions/:id/submit_cl",         :controller => "submissions",     :action => :submit_cl
+  map.submit_call_cl      "/calls/:id/submit_call_cl",          :controller => "calls",           :action => :submit_call_cl
+  map.add_customer_lobby  "/accounts/:id/add_customer_lobby",   :controller => "accounts",        :action => :add_customer_lobby
+  
   
   map.resources :accounts, :has_many => :campaigns, :member => {:report => :get}
   map.resources :accounts do |account|

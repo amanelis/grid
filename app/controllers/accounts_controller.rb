@@ -124,6 +124,10 @@ class AccountsController < ApplicationController
     end
     send_data csv_data, :type => 'text/csv; charset=iso-8859-1; header=present', :disposition => "attachment; filename=#{@outfile}"
   end 
+  
+  def add_customer_lobby
+  
+  end
 
 end
 
