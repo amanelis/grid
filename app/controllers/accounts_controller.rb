@@ -15,6 +15,9 @@ class AccountsController < ApplicationController
     @accounts_data      = Rails.cache.fetch("accounts_data") { Account.get_accounts_data }
     @accounts.sort! {|a,b| a.name.downcase <=> b.name.downcase}
   end
+  
+  def new
+  end
 
   def show
     @date_range = ''
