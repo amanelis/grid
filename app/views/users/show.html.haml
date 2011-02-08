@@ -34,9 +34,12 @@
     - if @current_user.admin? || @current_user.account_manager?
       %h3 Current Roles
       %h4 
-      
-        =@current_user.roles.each do |role|
-          =role
+        -@current_user.roles.each do |role|
+          -if role.role_type_type == "AccountManager"
+            =role.role_type_type.to_s + " for " + role.role_type.group_account.name
+          -elsif role.role_type_type == "AccountUser"
+            =role.role_type_type.to_s + " for " + role.role_type.account.name
+          %br
         %a.delete Delete
         
       %h3 Add Role

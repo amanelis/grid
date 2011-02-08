@@ -17,6 +17,32 @@ class AccountsController < ApplicationController
   end
   
   def new
+    new!
+  end
+  
+  def edit
+    edit!
+  end
+  
+  def create
+    create! do |failure, success|
+      success.html ( :notice => "Yay! Account was successfully created!") { redirect_to account_path(@account) }
+      failure.html ( :notice => "Ooops, try again, your account was not saved!") { render 'new' }
+    end
+  end
+  
+  def destroy
+    destroy! do |failure, success|
+      success.html ( :notice => "Yay! Account was successfully deleted!") { redirect_to accounts_path }
+      failure.html ( :notice => "Ooops, try again, your account was not deleted!") { redirect_to account_path(@account) }
+    end 
+  end
+  
+  def update 
+    update! do |failure, success|
+      success.html ( :notice => "Yay! Account was successfully updated!") { redirect_to account_path(@account) }
+      failure.html ( :notice => "Ooops, try again, your account was not saved!") { redirect_to account_path(@account) }
+    end
   end
 
   def show
