@@ -4,13 +4,12 @@ class User < ActiveRecord::Base
   has_many :roles
   
   has_many :group_users, :through => :roles, :source => :role_type, :source_type => 'GroupUser'
-  has_many :account_managers, :through => :roles, :source => :role_type, :source_type => 'GroupUser'
   has_many :account_users, :through => :roles, :source => :role_type, :source_type => 'AccountUser'
   
   
   # INSTANCE BEHAVIOR
 
-  def deliver_password_reset_instructions!  
+  def deliver_password_reset_instructions!
     reset_perishable_token!  
     UserMailer.deliver_password_reset_instructions(self)  
   end
@@ -19,44 +18,32 @@ class User < ActiveRecord::Base
     self.group_users.present?
   end
   
-  def account_manager?
-    self.account_managers.present?
-  end
-  
   def account_user?
     self.account_users.present?
   end
   
   def acquainted_with_group_account?(group_account)
-    return true if self.admin?
-    self.group_users.any? { |group_user| group_user.group_account == group_account }
+    self.acquainted_group_accounts.include?(group_account)
   end
 
   def can_manipulate_group_account?(group_account)
-    return true if self.admin?
-    self.group_users.any? { |group_user| group_user.manipulator? && group_user.group_account == group_account }
+    self.manipulable_group_accounts.include?(group_account)
   end
 
   def acquainted_with_account?(account)
-    return true if self.admin?
-    return true if self.group_users.any? { |group_user| group_user.group_account == account.group_account }
-    self.account_users.any? { |account_user| account_user.account == account }
+    self.acquainted_accounts.include?(account)
   end
 
   def can_manipulate_account?(account)
-    return true if self.admin?
-    self.group_users.any? { |group_user| group_user.manipulator? && group_user.group_account == account.group_account }
+    self.manipulable_accounts.include?(account)
   end
 
   def acquainted_with_campaign?(campaign)
-    return true if self.admin?
-    return true if self.group_users.any? { |group_user| group_user.group_account == campaign.account.group_account }
-    self.account_users.any? { |account_user| account_user.account == campaign.account }
+    self.acquainted_campaigns.include?(campaign)
   end
   
   def can_manipulate_campaign?(campaign)
-    return true if self.admin?
-    self.group_users.any? { |group_user| group_user.manipulator? && group_user.group_account == campaign.account.group_account }
+    self.manipulable_campaigns.include?(campaign)
   end
   
   def acquainted_group_accounts
@@ -71,12 +58,12 @@ class User < ActiveRecord::Base
   
   def acquainted_accounts
     return Account.all if self.admin?
-    (self.group_users.collect { |group_user| group_user.group_account.accounts } << self.account_users.collect { |account_user| account_user.account }).flatten.uniq
+    (self.acquainted_group_accounts.collect { |group_account| group_account.accounts } << self.account_users.collect { |account_user| account_user.account }).flatten.uniq
   end
 
   def manipulable_accounts
     return Account.all if self.admin?
-    self.group_users.select(&:manipulator?).collect { |group_user| group_user.group_account.accounts }.flatten
+    self.manipulable_group_accounts.collect { |manipulable_group_account| manipulable_group_account.accounts }.flatten
   end
 
   def acquainted_campaigns
