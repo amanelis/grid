@@ -1,6 +1,6 @@
 class GroupAccount < ActiveRecord::Base
   has_many :accounts
-  has_many :account_managers
+  has_many :group_users
 
   validates_uniqueness_of :name, :case_sensitive => false
   
