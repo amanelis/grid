@@ -82,5 +82,9 @@ class User < ActiveRecord::Base
   def acquainted_campaigns
     self.acquainted_accounts.collect(&:campaigns).flatten
   end
-  
+
+  def manipulable_campaigns
+    self.manipulable_accounts.collect(&:campaigns).flatten
+  end
+    
 end
