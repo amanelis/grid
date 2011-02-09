@@ -2,7 +2,7 @@ class GroupUser < ActiveRecord::Base
   include RoleTypeMixin
   
   belongs_to :group_account
-  has_many :accounts
+  has_many :accounts, :foreign_key => "account_manager_id"
 
   validate :unique_role?
   
