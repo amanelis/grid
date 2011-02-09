@@ -1,6 +1,7 @@
 class CampaignsController < ApplicationController
   inherit_resources
-  load_and_authorize_resource :through => :account
+  load_and_authorize_resource :account
+  load_and_authorize_resource :campaign, :through => :account
 
   def show  
     Time.zone = @campaign.account.time_zone
