@@ -1,7 +1,6 @@
 class CampaignsController < ApplicationController
   inherit_resources
-  load_and_authorize_resource :account
-  load_and_authorize_resource :campaign, :through => :account
+  load_and_authorize_resource
 
   def show  
     Time.zone = @campaign.account.time_zone
@@ -100,8 +99,8 @@ class CampaignsController < ApplicationController
   end
   
   def new
-    #@account = Account.find(params[:account_id])
-    #authorize! :create_campaign, @account
+    @account = Account.find(params[:account_id])
+    authorize! :create_campaign, @account
     @campaign = Campaign.new
     @industries = Industry.all.collect {|a| a.name}.sort!
     @flavors = Campaign.flavors
@@ -113,6 +112,7 @@ class CampaignsController < ApplicationController
   
   def create
     @account = Account.find(params[:account_id])
+    authorize! :create_campaign, @account
     if @account.present?
       if params[:flavor].include? 'SEM'
         new_campaign = SemCampaign.new
