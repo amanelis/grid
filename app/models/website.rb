@@ -49,8 +49,7 @@ class Website < ActiveRecord::Base
   #### GINZA CLASS METHODS
   def self.list_ginza_sites
     begin
-      HTTParty.get("https://app.ginzametrics.com/v1/list_sites?api_key=#{GINZA_KEY}").to_a
-      puts "Ginza Pull list_sites?"
+      return HTTParty.get("https://app.ginzametrics.com/v1/list_sites?api_key=#{GINZA_KEY}").to_a
     rescue Exception => ex
       raise
     end
@@ -284,17 +283,19 @@ class Website < ActiveRecord::Base
   
   #TESTING GINZA METHODS
   
-  def create_ginza_site(global_id = '9e082ec734be')
-    #HTTParty.get("https://app.ginzametrics.com/v1/accounts/#{GINZA_ACCOUNT_ID}/add_site?api_key=#{GINZA_KEY}&format=json&url=www.johnlandscaping.com&market=US")
-   # puts "Ginza Pull add_site? for #{self.nickname}"
+  def create_ginza_site()
+    if self.ginza_global_id.blank?
+      response = HTTParty.get("https://app.ginzametrics.com/v1/accounts/#{GINZA_ACCOUNT_ID}/add_site?api_key=#{GINZA_KEY}&format=json&url=#{self.nickname}&market=US")
+      if response.to_a.first.first == "site"
+        self.ginza_global_id = response.to_a.first.second["global_key"]
+        self.ginza_meta_descript = response.to_a.first.second["meta_description"]
+        self.save
+        return true
+      else
+        puts response.to_a.first
+        return false
+      end
+    end
   end
-  
-  def add_ginza_keywords(keywords = "")
-    HTTParty.get("https://app.ginzametrics.com/v1/sites/#{self.ginza_global_id}/add_keywords?api_key=#{GINZA_KEY}&format=json&keywords=\"kw1, kw2\"")
-    # puts "Ginza Pull add_keywords? for #{self.nickname}"
-  end
-  
-  
-  
 end
 

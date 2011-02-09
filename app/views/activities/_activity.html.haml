@@ -29,7 +29,7 @@
         -#-else
           -#= link_to( image_tag("cl_submit.png", :alt => "Submit this contact to Customer Lobby"), submit_call_cl_path(activity.activity_type.id))
       -#-else
-        -#= link_to( image_tag("cl_submit.png", :alt => "Find out more about Customer Lobby"), add_customer_lobby_path(activity.activity_type.phone_number.campaign.account.id))
+        -#= link_to( image_tag("cl_findout.png", :alt => "Find out more about Customer Lobby"), add_customer_lobby_path(activity.activity_type.phone_number.campaign.account.id))
           
 - elsif activity.is_submission?
   %tr{"data-time" => "#{activity.timestamp.to_i}"}
@@ -60,5 +60,5 @@
         -#-else
           -#= link_to( image_tag("cl_submit.png", :alt => "Submit this contact to Customer Lobby"), submit_cl_path(activity.activity_type.id))
       -#-else
-        -#= link_to( image_tag("cl_submit.png", :alt => "Find out more about Customer Lobby"), add_customer_lobby_path(activity.activity_type.contact_form.campaign.account.id))
+        -#= link_to( image_tag("cl_findout.png", :alt => "Find out more about Customer Lobby"), add_customer_lobby_path(activity.activity_type.contact_form.campaign.account.id))
     

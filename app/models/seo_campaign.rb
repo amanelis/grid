@@ -6,6 +6,24 @@ class SeoCampaign < ActiveRecord::Base
 
   # CLASS BEHAVIOR
 
+  def self.update_websites_with_ginza
+    job_status = JobStatus.create(:name => "SeoCampaign.update_websites_with_ginza")
+    begin
+      Website.associate_ginza_sites_with_grid_sites
+      (Campaign.seo.select {|camp| camp.website.present? && camp.website.ginza_global_id.blank? && camp.status != "Inactive"}).each do |campaign|
+        puts "Checking #{campaign.name}"
+        if campaign.website.create_ginza_site
+          puts "Added #{campaign.website.nickname} to Ginza" #if campaign.website.create_ginza_site
+        else
+          puts "#{campaign.website.nickname} was not added to Ginza"
+        end
+      end
+    rescue Exception => ex
+      job_status.finish_with_errors(ex)
+      raise
+    end
+    job_status.finish_with_no_errors
+  end
   
   def self.update_website_keywords_with_ginza
     test_status = "Began Running"
@@ -493,6 +511,23 @@ class SeoCampaign < ActiveRecord::Base
       if this_ranking.present?
         ranking_date = this_ranking.create_at
         return ranking_date
+      end
+    end
+  end
+  
+  def add_ginza_keywords(keywords = "")
+    website = self.campaign.website
+    if website.present? && self.campaign.website.ginza_global_id.present?
+      keywords = self.keywords.select {|keyword| !keyword.in_ginza?}
+      if keywords.present?
+        keyword_string = (keywords.collect {|keyword| keyword.descriptor}).join(", ")
+        response = (HTTParty.get("https://app.ginzametrics.com/v1/sites/#{self.campaign.website.ginza_global_id}/add_keywords", :query => {:api_key => GINZA_KEY, :format => 'json', :keywords => keyword_string})).to_a.first
+        if response.include? "Keywords added"
+          keywords.each do |keyword|
+            keyword.update_attribute(:in_ginza, true)
+          end
+        else
+        end 
       end
     end
   end
