@@ -3,7 +3,8 @@ class User < ActiveRecord::Base
   
   has_many :roles
   
-  has_many :account_managers, :through => :roles, :source => :role_type, :source_type => 'AccountManager'
+  has_many :group_users, :through => :roles, :source => :role_type, :source_type => 'GroupUser'
+  has_many :account_managers, :through => :roles, :source => :role_type, :source_type => 'GroupUser'
   has_many :account_users, :through => :roles, :source => :role_type, :source_type => 'AccountUser'
   
   
