@@ -41,7 +41,6 @@ class CampaignsController < ApplicationController
   end
   
   def update
-    
     if params[:campaign][:adopting_phone_number].present?
       @phone_number = PhoneNumber.find(params[:campaign][:adopting_phone_number])
       @phone_number.update_attribute(:campaign_id, @campaign.id)
@@ -101,6 +100,7 @@ class CampaignsController < ApplicationController
   def new
     @account = Account.find(params[:account_id])
     authorize! :create_campaign, @account
+    
     @campaign = Campaign.new
     @industries = Industry.all.collect {|a| a.name}.sort!
     @flavors = Campaign.flavors
