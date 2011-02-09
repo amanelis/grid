@@ -108,7 +108,7 @@ class GroupAccount < ActiveRecord::Base
         if sf_account.owner_id.present?
           sf_account_manager = Salesforce::User.find(sf_account.owner_id)
           if sf_account_manager.present?
-            possible_account_managers = AccountManager.find_all_by_email(sf_account_manager.email)
+            possible_account_managers = GroupUser.find_all_by_email(sf_account_manager.email)
             account_manager = possible_account_managers.detect { |account_manager| account_manager.group_account == existing_account.group_account }
             existing_account.account_manager = account_manager if account_manager.present?
           end
