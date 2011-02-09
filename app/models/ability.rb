@@ -19,6 +19,10 @@ class Ability
           user.acquainted_accounts.collect(&:websites).flatten.include?(website)
         end
         
+        can :create_campaign, Account do |account|
+          user.can_manipulate_account?(account)
+        end
+        
         can :create, Campaign
         can :export, Account
         can :refresh_accounts, Account
