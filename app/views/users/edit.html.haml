@@ -25,7 +25,7 @@
     %h3 Current Roles
     %h4 
       -@user.roles.each do |role|
-        -if role.role_type_type == "AccountManager"
+        -if role.role_type_type == "GroupUser"
           =role.role_type_type.to_s + ": " + role.role_type.group_account.name
         -elsif role.role_type_type == "AccountUser"
           =role.role_type_type.to_s + ": " + role.role_type.account.name.to_s

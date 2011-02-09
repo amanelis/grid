@@ -1,4 +1,4 @@
-- if @current_user.admin? || @current_user.account_manager?
+- if @current_user.admin? || @current_user.group_user?
   %li
     %a{:onclick => "confirm_refresh_accounts();"}
       = image_tag ("icons/refresh.png")

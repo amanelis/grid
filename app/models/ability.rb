@@ -8,7 +8,7 @@ class Ability
       can :manage, :all
     else
       
-      if user.account_manager?
+      if user.group_user?
         can :read, Account do |account|
           user.acquainted_with_account?(account)
         end
@@ -22,7 +22,6 @@ class Ability
         can :create, Campaign
         can :export, Account
         can :refresh_accounts, Account
-        can :report, Account
         can :report_client, Account
       end 
       
@@ -43,7 +42,6 @@ class Ability
           user.acquainted_accounts.collect(&:websites).flatten.include?(website_visit.website)
         end
         
-        can :report, Account
         can :report_client, Account
       end
 
