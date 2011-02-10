@@ -538,8 +538,10 @@ class Campaign < ActiveRecord::Base
     form.date_requested = date_requested
     form.time_requested = time_requested
     form.other_information = other_information
-    form.html_block = form.get_form_text if form.save!
-    form.update_attribute(:return_url, "http://grid.cityvoice.com/contact_forms/#{form.id}/thank_you")
+    form.save
+    form.html_block = form.get_form_text
+    form.return_url = "http://grid.cityvoice.com/contact_forms/#{form.id}/thank_you"
+    form.save
     form
   end
   

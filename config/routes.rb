@@ -32,7 +32,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :keywords
   map.resources :job_statuses
   map.resources :websites
-  map.resources :contact_forms,   :member => {:thank_you => :get, :get_html => :get}
+  map.resources :contact_forms,   :member => {:thank_you => :get, :get_html => :get, :get_iframe => :get}
   
   map.with_options :controller => 'home' do |home|
      home.dashboard 'dashboard', :action => 'dashboard'

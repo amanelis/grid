@@ -8,6 +8,10 @@ class ContactFormsController < ApplicationController
     render :text => "Thank you for your submission."
   end
   
+  def get_iframe
+    render :text => ContactForm.find(params[:id]).get_iframe_code
+  end
+  
   def create
     @campaign = Campaign.find(params[:campaign_id])
     if @campaign.present?
@@ -30,6 +34,8 @@ class ContactFormsController < ApplicationController
   def update
     
   end
+  
+  
   
   
 end
