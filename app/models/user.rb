@@ -73,5 +73,18 @@ class User < ActiveRecord::Base
   def manipulable_campaigns
     self.manipulable_accounts.collect(&:campaigns).flatten
   end
+  
+  def manipulable_users
+    self.manipulable_role_types.collect(&:user).uniq
+  end
+  
+  def manipulable_role_types
+    (self.manipulable_group_accounts.collect { |manipulable_group_account| manipulable_group_account.group_users } << self.manipulable_accounts.collect { |manipulable_account| manipulable_account.account_users }).flatten
+  end
+  
+  def manipulable_role_types_for(user)
+    my_manipulable_role_types = self.manipulable_role_types
+    user.roles.collect(&:role_type).select { |role_type| my_manipulable_role_types.include?(role_type) }
+  end
     
 end
