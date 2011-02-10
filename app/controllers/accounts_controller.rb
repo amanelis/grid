@@ -3,7 +3,6 @@ class AccountsController < ApplicationController
   load_and_authorize_resource :except   => [:export, :refresh_accounts]
   before_filter :load_time_zone, :only  => [:show, :report, :report_client]
 
-
   def index
     @accounts           = current_user.acquainted_accounts
     @accounts_statuses  = Account.account_statuses_for(@accounts)
