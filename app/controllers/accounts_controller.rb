@@ -44,9 +44,6 @@ class AccountsController < ApplicationController
       failure.html(:notice => "Ooops, try again, your account was not saved!") {redirect_to account_path(@account)}
     end
   end
-  
-  def update
-  end
 
   def show
     @total_reporting_messages = [:number_of_lead_calls_between,
@@ -158,7 +155,6 @@ class AccountsController < ApplicationController
   end 
   
   def add_customer_lobby
-  
   end
 
 end

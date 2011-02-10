@@ -87,5 +87,5 @@
         %td= @unmanaged_total_results[@total_reporting_messages[2]].to_s
         %td= @unmanaged_total_results[@total_reporting_messages[4]].to_s
         
-  -if can? :create_campaign, @account
+  -if can? :manipulate_campaign, @account
     = link_to "+ Add Campaign", new_account_campaign_path(@account.id), :class => "button"
