@@ -1,7 +1,8 @@
 %header
-  %h2 Account Information
+  %h2 ACCOUNT NAME
 %article
   .span-12
+    %h3 Account Information
     %label Name
     %br
     %input{:type => "text", :placeholder => "CityVoice", :name => "name", :id => "name", :class => "title"}
@@ -41,7 +42,6 @@
       %option Shelton
       %option Shaunay
       %option - None -
-    = link_to "Create User", "#", :class => "button"
   .span-11.last
     %h3 Contact Info
     %label Address
@@ -51,6 +51,9 @@
     %label Phone
     %br
     %input{:type => "text", :placeholder => "(832) 477 8662", :class => "title"}
+    %h3 Users
+    = link_to "Create User", "#", :class => "button"
+  %hr
   = link_to "Update", "#", :class => "button"
 
 :javascript 
