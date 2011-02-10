@@ -35,6 +35,10 @@ class GroupAccount < ActiveRecord::Base
     WebsiteVisit.data_pull_websites_visits
     puts "Pulling Salesforce Keywords..."
     Keyword.update_keywords_from_salesforce
+    puts "Updating SEO/Ginza Websites"
+    SeoCampaign.update_websites_with_ginza
+    puts "Updating SEO/Ginza Keywords & Rankings"
+    SeoCampaign.update_website_keywords_with_ginza
     # puts "Updating Keyword Rankings..."
     # Keyword.update_keyword_rankings
     # puts "Updating Inbound Links"

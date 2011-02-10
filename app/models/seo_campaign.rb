@@ -30,15 +30,14 @@ class SeoCampaign < ActiveRecord::Base
     job_status = JobStatus.create(:name => "SeoCampaign.update_website_keywords_with_ginza")
     begin
       #Make sure sites are current
-      campaigns = Campaign.find(:all, :conditions => ['campaign_style_type = ? && status = ?', 'SeoCampaign', 'Active'])
-      campaigns.each do |campaign|
-        website = campaign.website
-        website.update_attribute(:last_keyword_update, Date.yesterday) if website.present? && website.last_keyword_update.blank?
+      (Campaign.seo.select {|camp| camp.website.present? && camp.website.ginza_global_id.blank? && camp.status != "Inactive"}).each do |campaign|
+        campaign.website.update_attribute(:last_keyword_update, Date.yesterday) if campaign.website.present? && campaign.website.last_keyword_update.blank?
         #Change Date.today when we get past 240 websites or Ginza takes off the 10 queries/hr shit.
-        if website.present? && website.ginza_global_id.present? && website.last_keyword_update != Date.today
-          rankings = website.get_ginza_latest_rankings
+        if campaign.website.present? && campaign.website.ginza_global_id.present? && campaign.website.last_keyword_update != Date.today
+          campaign.campaign_style.add_ginza_keywords
+          rankings = campaign.website.get_ginza_latest_rankings
           if rankings != ["Quota exceeded"] && rankings.present?
-            website.get_ginza_latest_rankings.each do |g_keyword|
+            campaign.website.get_ginza_latest_rankings.each do |g_keyword|
               keyword = campaign.campaign_style.keywords.find_by_descriptor(g_keyword['keyword']['name'])
               if keyword.blank?
                 #create the keyword
@@ -64,14 +63,14 @@ class SeoCampaign < ActiveRecord::Base
               ranking.save!
               test_status = "Ran through all of the websites" 
             end
-            puts "#{website.nickname} was Updated"
-            website.update_attribute(:last_keyword_update, Date.today)
+            puts "#{campaign.website.nickname} was Updated"
+            campaign.website.update_attribute(:last_keyword_update, Date.today)
           else
             test_status = "Reached Query Limit" if rankings != ["Quota exceeded"]
           end
         end
-        if website.present?
-          puts "#{website.nickname} was Previously Updated" if website.ginza_global_id.present? && website.last_keyword_update != Date.today
+        if campaign.website.present?
+          puts "#{campaign.website.nickname} was Previously Updated" if campaign.website.ginza_global_id.present? && campaign.website.last_keyword_update != Date.today
         end
       end  
     rescue Exception => ex
