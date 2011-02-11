@@ -7,12 +7,10 @@ class UsersController < ApplicationController
   end
   
   def new
-    redirect_to root_url
     @user = User.new
   end
   
   def create
-    redirect_to root_url
     @user = User.new(params[:user])
     if @user.save
       flash[:notice] = "Account registered!"
