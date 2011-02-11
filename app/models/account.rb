@@ -48,7 +48,7 @@ class Account < ActiveRecord::Base
   end
   
   def self.dashboard_data
-    self.dashboard_dates.inject([]) { |leads, date| leads << self.active.to_a.sum { |account| account.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.number_of_total_leads_between(date, date) } } }
+    self.dashboard_dates.inject([]) { |leads, date| leads << self.active.to_a.sum { |account| account.campaigns.active.managed.to_a.sum { |campaign| campaign.number_of_total_leads_between(date, date) } } }
   end
   
 
@@ -144,10 +144,10 @@ class Account < ActiveRecord::Base
     data[:account_name] = self.name
     data[:start_date] = start_date
     data[:end_date] = end_date
-    data[:all_calls] = self.number_of_all_calls_for_cityvoice_campaigns_between(start_date, end_date)
-    data[:lead_calls] = self.number_of_lead_calls_for_cityvoice_campaigns_between(start_date, end_date)
-    data[:all_submissions] = self.number_of_all_submissions_for_cityvoice_campaigns_between(start_date, end_date)
-    data[:lead_submissions] = self.number_of_lead_submissions_for_cityvoice_campaigns_between(start_date, end_date)
+    data[:all_calls] = self.number_of_all_calls_for_managed_campaigns_between(start_date, end_date)
+    data[:lead_calls] = self.number_of_lead_calls_for_managed_campaigns_between(start_date, end_date)
+    data[:all_submissions] = self.number_of_all_submissions_for_managed_campaigns_between(start_date, end_date)
+    data[:lead_submissions] = self.number_of_lead_submissions_for_managed_campaigns_between(start_date, end_date)
     if self.account_manager_complete?
       data[:account_manager_name] = self.account_manager.name
       data[:account_manager_phone_number] = self.account_manager.phone_number
@@ -163,7 +163,7 @@ class Account < ActiveRecord::Base
   def previous_days_report_data(date = Date.today, previous = 0)
     end_date = date - 1.day
     start_date = (previous == 0 ? end_date.beginning_of_month : end_date - previous.days)
-    [self.number_of_all_calls_for_cityvoice_campaigns_between(start_date, end_date), self.number_of_lead_calls_for_cityvoice_campaigns_between(start_date, end_date), self.number_of_all_submissions_for_cityvoice_campaigns_between(start_date, end_date), self.number_of_lead_submissions_for_cityvoice_campaigns_between(start_date, end_date), start_date, end_date, self.name]
+    [self.number_of_all_calls_for_managed_campaigns_between(start_date, end_date), self.number_of_lead_calls_for_managed_campaigns_between(start_date, end_date), self.number_of_all_submissions_for_managed_campaigns_between(start_date, end_date), self.number_of_lead_submissions_for_managed_campaigns_between(start_date, end_date), start_date, end_date, self.name]
   end
   
   def valid_reporting_emails
@@ -294,32 +294,32 @@ class Account < ActiveRecord::Base
     self.campaigns.active.to_a.sum { |campaign| campaign.number_of_lead_submissions_between(start_date, end_date) }
   end
 
-  def number_of_all_calls_for_cityvoice_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.number_of_all_calls_between(start_date, end_date) }
+  def number_of_all_calls_for_managed_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.managed.to_a.sum { |campaign| campaign.number_of_all_calls_between(start_date, end_date) }
   end
 
   def number_of_all_calls_for_unmanaged_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.active.unmanaged.to_a.sum { |campaign| campaign.number_of_all_calls_between(start_date, end_date) }
   end
 
-  def number_of_lead_calls_for_cityvoice_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.number_of_lead_calls_between(start_date, end_date) }
+  def number_of_lead_calls_for_managed_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.managed.to_a.sum { |campaign| campaign.number_of_lead_calls_between(start_date, end_date) }
   end
 
   def number_of_lead_calls_for_unmanaged_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.active.unmanaged.to_a.sum { |campaign| campaign.number_of_lead_calls_between(start_date, end_date) }
   end
 
-  def number_of_all_submissions_for_cityvoice_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.number_of_all_submissions_between(start_date, end_date) }
+  def number_of_all_submissions_for_managed_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.managed.to_a.sum { |campaign| campaign.number_of_all_submissions_between(start_date, end_date) }
   end
 
   def number_of_all_submissions_for_unmanaged_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.active.unmanaged.to_a.sum { |campaign| campaign.number_of_all_submissions_between(start_date, end_date) }
   end
 
-  def number_of_lead_submissions_for_cityvoice_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.number_of_lead_submissions_between(start_date, end_date) }
+  def number_of_lead_submissions_for_managed_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.managed.to_a.sum { |campaign| campaign.number_of_lead_submissions_between(start_date, end_date) }
   end
 
   def number_of_lead_submissions_for_unmanaged_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
@@ -342,24 +342,24 @@ class Account < ActiveRecord::Base
     self.campaigns.active.to_a.sum { |campaign| campaign.number_of_total_contacts_between(start_date, end_date) }
   end
 
-  def total_revenue_for_cityvoice_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.total_revenue_between(start_date, end_date) }
+  def total_revenue_for_managed_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.managed.to_a.sum { |campaign| campaign.total_revenue_between(start_date, end_date) }
   end
   
   def total_revenue_for_unmanaged_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.active.unmanaged.to_a.sum { |campaign| campaign.total_revenue_between(start_date, end_date) }
   end
   
-  def number_of_total_leads_for_cityvoice_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.number_of_total_leads_between(start_date, end_date) }
+  def number_of_total_leads_for_managed_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.managed.to_a.sum { |campaign| campaign.number_of_total_leads_between(start_date, end_date) }
   end
 
   def number_of_total_leads_for_unmanaged_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.active.unmanaged.to_a.sum { |campaign| campaign.number_of_total_leads_between(start_date, end_date) }
   end
 
-  def number_of_total_contacts_for_cityvoice_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.number_of_total_contacts_between(start_date, end_date) }
+  def number_of_total_contacts_for_managed_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.managed.to_a.sum { |campaign| campaign.number_of_total_contacts_between(start_date, end_date) }
   end
 
   def number_of_total_contacts_for_unmanaged_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
@@ -386,16 +386,16 @@ class Account < ActiveRecord::Base
     (total_contacts = self.number_of_total_contacts_between(start_date, end_date)) > 0 ? self.spend_between(start_date, end_date) / total_contacts : 0.0
   end
 
-  def spend_for_cityvoice_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.spend_between(start_date, end_date) }
+  def spend_for_managed_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.managed.to_a.sum { |campaign| campaign.spend_between(start_date, end_date) }
   end
 
-  def total_cost_per_lead_for_cityvoice_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.cost_per_lead_between(start_date, end_date) }
+  def total_cost_per_lead_for_managed_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.managed.to_a.sum { |campaign| campaign.cost_per_lead_between(start_date, end_date) }
   end
 
-  def total_cost_per_contact_for_cityvoice_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.active.cityvoice.to_a.sum { |campaign| campaign.cost_per_contact_between(start_date, end_date) }
+  def total_cost_per_contact_for_managed_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.managed.to_a.sum { |campaign| campaign.cost_per_contact_between(start_date, end_date) }
   end
 
   def spend_for_unmanaged_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)

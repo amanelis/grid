@@ -1,11 +1,11 @@
 %header
   .right
     %h2
-      %span= "$#{@account.total_revenue_for_cityvoice_campaigns_between(@month_start, @month_end)} in Revenue"
+      %span= "$#{@account.total_revenue_for_managed_campaigns_between(@month_start, @month_end)} in Revenue"
     %h3
-      %span= "#{@account.number_of_total_contacts_for_cityvoice_campaigns_between(@month_start, @month_end)} Contacts"
+      %span= "#{@account.number_of_total_contacts_for_managed_campaigns_between(@month_start, @month_end)} Contacts"
     %h3
-      %span= "#{@account.number_of_total_leads_for_cityvoice_campaigns_between(@month_start, @month_end)} Leads"
+      %span= "#{@account.number_of_total_leads_for_managed_campaigns_between(@month_start, @month_end)} Leads"
   %h1= @account.name
   %h2 CityVoice Monthly Report
   %p= @month_start.to_s(:long) + ' to ' + @month_end.to_s(:long)
@@ -38,11 +38,11 @@
               %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_contact_between(@month_start, @month_end))
         %tfoot
           %th Totals
-          %th= @account.number_of_lead_calls_for_cityvoice_campaigns_between(@month_start, @month_end)
-          %th= @account.number_of_lead_submissions_for_cityvoice_campaigns_between(@month_start, @month_end)
-          %th= @account.number_of_total_leads_for_cityvoice_campaigns_between(@month_start, @month_end)
-          %th= @account.number_of_total_contacts_for_cityvoice_campaigns_between(@month_start, @month_end).to_s
-          %th= ActionController::Base.helpers.number_to_currency(@account.spend_for_cityvoice_campaigns_between(@month_start, @month_end))
+          %th= @account.number_of_lead_calls_for_managed_campaigns_between(@month_start, @month_end)
+          %th= @account.number_of_lead_submissions_for_managed_campaigns_between(@month_start, @month_end)
+          %th= @account.number_of_total_leads_for_managed_campaigns_between(@month_start, @month_end)
+          %th= @account.number_of_total_contacts_for_managed_campaigns_between(@month_start, @month_end).to_s
+          %th= ActionController::Base.helpers.number_to_currency(@account.spend_for_managed_campaigns_between(@month_start, @month_end))
           %th= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_lead_for(@managed_campaigns, @month_start, @month_end))
           %th= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_contact_for(@managed_campaigns, @month_start, @month_end))
       %h3 Unmanaged Campaigns    

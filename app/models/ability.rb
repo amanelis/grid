@@ -22,7 +22,6 @@ class Ability
           user.can_manipulate_account?(account)
         end
         
-        
         can :export, Account
         can :refresh_accounts, Account
         can :report_client, Account
