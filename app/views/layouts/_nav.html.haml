@@ -14,7 +14,7 @@
         = link_to "Activities", activities_url
   
   %aside#account.span-6
-    = link_to @current_user.email, edit_user_path(@current_user)
+    = link_to "My Info", edit_user_path(@current_user)
     = link_to 'Logout', user_session_path, :method => :delete, :id => "logout"
   %aside#search.span-3.last
     = render :partial => 'shared/search'
