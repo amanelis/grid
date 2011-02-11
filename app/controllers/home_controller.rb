@@ -7,6 +7,8 @@ class HomeController < ApplicationController
   def dashboard  
     if current_user
       if @user.admin?
+        
+        ############### Need data
 
       elsif @user.group_user?
         @accounts               = current_user.acquainted_accounts

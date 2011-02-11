@@ -1,5 +1,7 @@
 class UsersController < ApplicationController
-  before_filter :require_user, :only => [:index, :show, :edit, :update]
+  #before_filter :require_user, :only => [:index, :show, :edit, :update, :new]
+  inherit_resources
+  load_and_authorize_resource :except => [:edit, :update]
   
   def index
     @current_user = current_user
@@ -20,17 +22,17 @@ class UsersController < ApplicationController
     end
   end
   
-  def show
-    @user = User.find(params[:id])
-  end
-  
   def edit
     @current_user = current_user
     @user = User.find(params[:id])
+    @user == @current_user ? nil : (authorize! :edit, User)
   end
   
   def update 
+    @current_user = current_user
     @user = User.find_by_id(params[:user][:id])
+    @user == @current_user ? nil : (authorize! :update, User)
+    
     if @user.update_attributes(params[:user])
       flash[:notice] = "Account updated!"
       redirect_to edit_user_path(@user)
