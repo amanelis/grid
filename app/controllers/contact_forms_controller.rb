@@ -35,6 +35,13 @@ class ContactFormsController < ApplicationController
     
   end
   
+  def index
+    @campaign = Campaign.find(params[:campaign_id])
+    if @campaign.present?
+      @forms = @campaign.contact_forms
+    end
+  end
+  
   
   
   

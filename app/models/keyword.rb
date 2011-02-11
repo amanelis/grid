@@ -22,8 +22,7 @@ class Keyword < ActiveRecord::Base
                                                                      :descriptor => keyword,
                                                                      :google_first_page => false,
                                                                      :yahoo_first_page => false,
-                                                                     :bing_first_page => false,
-                                                                     :in_ginza => false)
+                                                                     :bing_first_page => false)
             puts 'Completed: ' + keyword
           end
         end

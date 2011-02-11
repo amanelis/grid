@@ -8,7 +8,8 @@ class CampaignsController < ApplicationController
   def new
     authorize! :manipulate_campaign, @account
     @industries = Industry.all.collect {|a| a.name}.sort!
-    @flavors = Campaign.flavors
+    # Only return "Other Campaigns"....couldn't get multiple ANDs to work with select and include?
+    @flavors = Campaign.flavors.select {|a| !a.downcase.include? "seo"}.select {|a|  !a.downcase.include? "sem"}.select {|a| !a.downcase.include? 'maps'}.sort!.insert(0, 'Select...')
     if @campaign.present?
       @campaign = @account.campaigns.build
     end
@@ -19,7 +20,8 @@ class CampaignsController < ApplicationController
     if @account.present?
       campaign = @account.create_campaign(params[:flavor], params[:name], params[:industry], params[:forwarding_number], params[:area_code])
       campaign.save
-      redirect_to account_campaign_path(@account, resource, :phone_number_id => PhoneNumber.first.id)
+      
+      redirect_to account_campaign_path(@account.id, resource, :phone_number_id => PhoneNumber.first.id)
     end  
   end
 
