@@ -75,19 +75,19 @@ class User < ActiveRecord::Base
   end
 
   def acquainted_campaigns
-    self.acquainted_accounts.collect(&:campaigns).flatten
+    retrieve_campaigns_from(self.acquainted_accounts)
   end
 
   def manipulable_campaigns
-    self.manipulable_accounts.collect(&:campaigns).flatten
+    retrieve_campaigns_from(self.manipulable_accounts)
   end
   
   def acquainted_keywords
-    self.acquainted_campaigns.select(&:is_seo?).collect { |campaign| campaign.campaign_style.keywords }.flatten
+    retrieve_keywords_from(self.acquainted_campaigns)
   end
 
   def manipulable_keywords
-    self.manipulable_campaigns.select(&:is_seo?).collect { |campaign| campaign.campaign_style.keywords }.flatten
+    retrieve_keywords_from(self.manipulable_campaigns)
   end
   
   def manipulable_users
@@ -100,6 +100,19 @@ class User < ActiveRecord::Base
   
   def manipulable_role_types_for(user)
     user.roles.collect(&:role_type).select { |role_type| self.manipulable_role_types.include?(role_type) }
+  end
+
+  
+  # PRIVATE BEHAVIOR
+  
+  private
+  
+  def retrieve_campaigns_from(accounts)
+    accounts.collect(&:campaigns).flatten
+  end
+  
+  def retrieve_keywords_from(campaigns)
+    campaigns.select(&:is_seo?).collect { |campaign| campaign.campaign_style.keywords }.flatten
   end
     
 end
