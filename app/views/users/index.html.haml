@@ -18,7 +18,7 @@
             %td= link_to user.email, edit_user_path(user)
             %td= user.created_at.to_s(:long)
             %td= user.last_request_at.nil? ? "Has Not logged in" : time_ago_in_words(user.last_request_at)
-            %td= @current_user.admin? ? (link_to 'Edit', edit_user_path(user)) : nil
+            %td= link_to 'Edit', edit_user_path(user)
       - else
         %tr
           %td= @current_user.id
