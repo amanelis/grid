@@ -17,6 +17,9 @@ class Campaign < ActiveRecord::Base
   named_scope :maps, :conditions => {:campaign_style_type => MapsCampaign.name}
   named_scope :other, :conditions => {:campaign_style_type => OtherCampaign.name}
   
+  named_scope :new_managed, lambda { |flavors| {:conditions => ["LCASE(flavor) IN (#{flavors.inspect[1...-1]})"]} }
+  named_scope :new_unmanaged, lambda { |flavors| {:conditions => ["LCASE(flavor) NOT IN (#{flavors.inspect[1...-1]})"]} }
+
   named_scope :managed, :conditions => ["LCASE(flavor) IN ('seo', 'sem - all', 'sem - bing', 'sem - google', 'sem - google boost', 'sem - google mobile', 'sem - yahoo', 'local maps', 'retargeter')"]
   named_scope :unmanaged, :conditions => ["LCASE(flavor) NOT IN ('seo', 'sem - all', 'sem - bing', 'sem - google', 'sem - google boost', 'sem - google mobile', 'sem - yahoo', 'local maps', 'retargeter')"]
 
