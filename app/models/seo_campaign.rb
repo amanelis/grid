@@ -6,20 +6,6 @@ class SeoCampaign < ActiveRecord::Base
 
   # CLASS BEHAVIOR
 
-  def self.run_ginza_pulls
-    job_status = JobStatus.create(:name => "SeoCampaign.run_ginza_pulls")
-    begin
-      if JobStatus.first(:conditions => ['name = ? && status = ?', "SeoCampaign.run_ginza_pulls", "Running"]).blank?
-        SeoCampaign.update_websites_with_ginza
-        SeoCampaign.update_website_keywords_with_ginza
-      end
-    rescue Exception => ex
-      job_status.finish_with_errors(ex)
-      raise
-    end
-    job_status.finish_with_no_errors
-  end
-  
   def self.update_websites_with_ginza
     job_status = JobStatus.create(:name => "SeoCampaign.update_websites_with_ginza")
     begin
@@ -47,40 +33,42 @@ class SeoCampaign < ActiveRecord::Base
       (Campaign.seo.select {|camp| camp.website.present? && camp.website.ginza_global_id.present? && camp.status != "Inactive"}).each do |campaign|
         campaign.website.update_attribute(:last_keyword_update, Date.yesterday) if campaign.website.present? && campaign.website.last_keyword_update.blank?
         #Change Date.today when we get past 240 websites or Ginza takes off the 10 queries/hr shit.
-        if campaign.website.present? && campaign.website.ginza_global_id.present? && campaign.website.last_keyword_update != Date.today
+        if campaign.website.present? && campaign.website.ginza_global_id.present?
           campaign.campaign_style.add_ginza_keywords
-          rankings = campaign.website.get_ginza_latest_rankings
-          if rankings != ["Quota exceeded"] && rankings.present?
-            campaign.website.get_ginza_latest_rankings.each do |g_keyword|
-              keyword = campaign.campaign_style.keywords.find_by_descriptor(g_keyword['keyword']['name'])
-              if keyword.blank?
-                #create the keyword
-                keyword = campaign.campaign_style.keywords.build
-                keyword.descriptor = g_keyword['keyword']['name']
+          if campaign.website.last_keyword_update != Date.today
+            rankings = campaign.website.get_ginza_latest_rankings
+            if rankings != ["Quota exceeded"] && rankings.present?
+              campaign.website.get_ginza_latest_rankings.each do |g_keyword|
+                keyword = campaign.campaign_style.keywords.find_by_descriptor(g_keyword['keyword']['name'])
+                if keyword.blank?
+                  #create the keyword
+                  keyword = campaign.campaign_style.keywords.build
+                  keyword.descriptor = g_keyword['keyword']['name']
+                end
+                keyword.ginza_keyword_id = g_keyword['keyword']['keyword_id']
+                keyword.google_first_page = (g_keyword['keyword']['google_us'].to_i < 11) ? true : false
+                keyword.yahoo_first_page = (g_keyword['keyword']['yahoo_us'].to_i < 11) ? true : false
+                #keyword.bing_first_page = (g_keyword['keyword']['bing_us'].to_i < 11) ? true : false
+                keyword.last_ranking_update = Date.today
+                keyword.save!
+                  
+                #create a ranking for the keyword
+                ranking = keyword.keyword_rankings.build
+                ranking.google = (g_keyword['keyword']['google_us'].to_i < 100) ? g_keyword['keyword']['google_us'].to_i : 9999
+                ranking.yahoo = (g_keyword['keyword']['yahoo_us'].to_i  < 100) ? g_keyword['keyword']['yahoo_us'].to_i : 9999
+                #ranking.bing = (g_keyword['keyword']['bing_us'].to_i  < 100) ? g_keyword['keyword']['bing_us'].to_i : 9999
+                ranking.ginza_conv_percent = g_keyword['keyword']['conversion_percent'].to_f
+                ranking.ginza_visits = g_keyword['keyword']['visits'].to_i 
+                ranking.ginza_conversions = g_keyword['keyword']['conversions'].to_i 
+                ranking.date_of_ranking = Date.today
+                ranking.save!
+                test_status = "Ran through all of the websites" 
               end
-              keyword.ginza_keyword_id = g_keyword['keyword']['keyword_id']
-              keyword.google_first_page = (g_keyword['keyword']['google_us'].to_i < 11) ? true : false
-              keyword.yahoo_first_page = (g_keyword['keyword']['yahoo_us'].to_i < 11) ? true : false
-              #keyword.bing_first_page = (g_keyword['keyword']['bing_us'].to_i < 11) ? true : false
-              keyword.last_ranking_update = Date.today
-              keyword.save!
-                
-              #create a ranking for the keyword
-              ranking = keyword.keyword_rankings.build
-              ranking.google = (g_keyword['keyword']['google_us'].to_i < 100) ? g_keyword['keyword']['google_us'].to_i : 9999
-              ranking.yahoo = (g_keyword['keyword']['yahoo_us'].to_i  < 100) ? g_keyword['keyword']['yahoo_us'].to_i : 9999
-              #ranking.bing = (g_keyword['keyword']['bing_us'].to_i  < 100) ? g_keyword['keyword']['bing_us'].to_i : 9999
-              ranking.ginza_conv_percent = g_keyword['keyword']['conversion_percent'].to_f
-              ranking.ginza_visits = g_keyword['keyword']['visits'].to_i 
-              ranking.ginza_conversions = g_keyword['keyword']['conversions'].to_i 
-              ranking.date_of_ranking = Date.today
-              ranking.save!
-              test_status = "Ran through all of the websites" 
+              puts "#{campaign.website.nickname} was Updated"
+              campaign.website.update_attribute(:last_keyword_update, Date.today)
+            else
+              test_status = "Reached Query Limit" if rankings != ["Quota exceeded"]
             end
-            puts "#{campaign.website.nickname} was Updated"
-            campaign.website.update_attribute(:last_keyword_update, Date.today)
-          else
-            test_status = "Reached Query Limit" if rankings != ["Quota exceeded"]
           end
         end
         if campaign.website.present?
@@ -533,14 +521,37 @@ class SeoCampaign < ActiveRecord::Base
     if website.present? && self.campaign.website.ginza_global_id.present?
       keywords = self.keywords.select {|keyword| !keyword.in_ginza?}
       if keywords.present?
-        keyword_string = (keywords.collect {|keyword| keyword.descriptor}).join(", ")
-        response = (HTTParty.get("https://app.ginzametrics.com/v1/sites/#{self.campaign.website.ginza_global_id}/add_keywords", :query => {:api_key => GINZA_KEY, :format => 'json', :keywords => keyword_string})).to_a.first
-        if response.include? "Keywords added"
-          keywords.each do |keyword|
-            keyword.update_attribute(:in_ginza, true)
+        keyword_strings = Array.new
+        keyword_array = Array.new
+        updated_keywords = Array.new
+        keyword_string = ''
+        keywords.each do |keyword|
+          if keyword.descriptor.length > 900
+            return "Keyword: #{keyword.id} is toooooo damn long!"
           end
-        else
-        end 
+          if [keyword_string, keyword.descriptor].join(",").length > 900
+            keyword_strings << keyword_string
+            keyword_array << updated_keywords
+            keyword_string = keyword.descriptor
+            updated_keywords.clear << keyword
+          else
+            keyword_string = [keyword_string, keyword.descriptor].join(",") if keyword_string.present?
+            keyword_string = keyword.descriptor if keyword_string.blank?
+            updated_keywords << keyword
+          end
+        end
+        keyword_strings << keyword_string if keyword_string.present?
+        keyword_array << updated_keywords if keyword_string.present?
+        
+        keyword_strings.each_index do |k_index|
+          response = (HTTParty.get("https://app.ginzametrics.com/v1/sites/#{self.campaign.website.ginza_global_id}/add_keywords", :query => {:api_key => GINZA_KEY, :format => 'json', :keywords => keyword_strings[k_index]})).to_a.first
+          if response.include? "Keywords added"
+            keyword_array[k_index].each do |updated_keyword|
+              puts "Keyword Added: #{updated_keyword.descriptor}"
+              updated_keyword.update_attribute(:in_ginza, true)
+            end
+          end
+        end
       end
     end
   end

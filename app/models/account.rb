@@ -458,6 +458,34 @@ class Account < ActiveRecord::Base
     raise unless Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.twilio_id}.json?", 'POST', {'Status' => 'closed'}).kind_of? Net::HTTPSuccess
   end
   
+  def create_campaign(flavor, name, industry, forwarding_number, area_code)
+    if flavor.include? 'SEM'
+      new_campaign = SemCampaign.new
+      new_campaign.flavor = flavor
+    elsif flavor.include? 'SEO'
+      new_campaign = SeoCampaign.new 
+      new_campaign.flavor = flavor
+    elsif flavor.include? 'Maps'
+      new_campaign = MapsCampaign.new 
+      new_campaign.flavor = flavor
+    else
+      new_campaign = OtherCampaign.new
+      new_campaign.flavor = flavor
+    end
+    new_campaign.account = self
+    new_campaign.name = name
+    new_campaign.status = 'Active'
+    new_campaign.save
+    new_campaign.campaign.industry = (industry)
+    #Needs to be Uncommented when we roll out
+    #new_campaign.campaign.url = url
+    #new_campaign.campaign.forwarding_number =  forwarding_number
+    #new_campaign.campaign.area_code = area_code
+    new_campaign.save
+    new_campaign.campaign
+  end
+  
+  
   # PREDICATES
   
   def active?
