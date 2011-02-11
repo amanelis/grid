@@ -10,7 +10,6 @@ class Campaign < ActiveRecord::Base
   
   delegate :time_zone , :to => :account
   
-
   named_scope :active, :conditions => ['LCASE(status) = ? OR LCASE(status) = ?', "active", "paused"], :order => "name ASC"
   named_scope :seo, :conditions => {:campaign_style_type => SeoCampaign.name}
   named_scope :sem, :conditions => {:campaign_style_type => SemCampaign.name}
@@ -20,8 +19,11 @@ class Campaign < ActiveRecord::Base
   named_scope :new_managed, lambda { |flavors| {:conditions => ["LCASE(flavor) IN (#{flavors.inspect[1...-1]})"]} }
   named_scope :new_unmanaged, lambda { |flavors| {:conditions => ["LCASE(flavor) NOT IN (#{flavors.inspect[1...-1]})"]} }
 
-  named_scope :managed, :conditions => ["LCASE(flavor) IN ('seo', 'sem - all', 'sem - bing', 'sem - google', 'sem - google boost', 'sem - google mobile', 'sem - yahoo', 'local maps', 'retargeter')"]
-  named_scope :unmanaged, :conditions => ["LCASE(flavor) NOT IN ('seo', 'sem - all', 'sem - bing', 'sem - google', 'sem - google boost', 'sem - google mobile', 'sem - yahoo', 'local maps', 'retargeter')"]
+  named_scope :managed, lambda { {:conditions => ["LCASE(flavor) IN (#{MANAGED_FLAVORS.inspect[1...-1]})"]} }
+  named_scope :unmanaged, lambda { {:conditions => ["LCASE(flavor) NOT IN (#{MANAGED_FLAVORS.inspect[1...-1]})"]} }
+
+  # named_scope :managed, :conditions => ["LCASE(flavor) IN ('seo', 'sem - all', 'sem - bing', 'sem - google', 'sem - google boost', 'sem - google mobile', 'sem - yahoo', 'local maps', 'retargeter')"]
+  # named_scope :unmanaged, :conditions => ["LCASE(flavor) NOT IN ('seo', 'sem - all', 'sem - bing', 'sem - google', 'sem - google boost', 'sem - google mobile', 'sem - yahoo', 'local maps', 'retargeter')"]
 
   before_destroy :remove_from_many_to_many_relationships
 
