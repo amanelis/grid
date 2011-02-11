@@ -166,5 +166,12 @@ class GroupAccount < ActiveRecord::Base
        existing_account.save!
      end
    end
+   
+   
+   # INSTANCE BEHAVIOR
+   
+   def managed_campaign_flavors
+     Campaign::MANAGED_FLAVORS
+   end
          
 end

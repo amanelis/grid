@@ -16,8 +16,8 @@ class Campaign < ActiveRecord::Base
   named_scope :maps, :conditions => {:campaign_style_type => MapsCampaign.name}
   named_scope :other, :conditions => {:campaign_style_type => OtherCampaign.name}
   
-  named_scope :new_managed, lambda { |flavors| {:conditions => ["LCASE(flavor) IN (#{flavors.inspect[1...-1]})"]} }
-  named_scope :new_unmanaged, lambda { |flavors| {:conditions => ["LCASE(flavor) NOT IN (#{flavors.inspect[1...-1]})"]} }
+  named_scope :new_managed, lambda { |group_account| {:conditions => ["LCASE(flavor) IN (#{group_account.managed_campaign_flavors.inspect[1...-1]})"]} }
+  named_scope :new_unmanaged, lambda { |group_account| {:conditions => ["LCASE(flavor) NOT IN (#{group_account.managed_campaign_flavors.inspect[1...-1]})"]} }
 
   named_scope :managed, lambda { {:conditions => ["LCASE(flavor) IN (#{MANAGED_FLAVORS.inspect[1...-1]})"]} }
   named_scope :unmanaged, lambda { {:conditions => ["LCASE(flavor) NOT IN (#{MANAGED_FLAVORS.inspect[1...-1]})"]} }
