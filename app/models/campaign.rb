@@ -17,7 +17,7 @@ class Campaign < ActiveRecord::Base
   named_scope :maps, :conditions => {:campaign_style_type => MapsCampaign.name}
   named_scope :other, :conditions => {:campaign_style_type => OtherCampaign.name}
   
-  named_scope :cityvoice, :conditions => ["LCASE(flavor) IN ('seo', 'sem - all', 'sem - bing', 'sem - google', 'sem - google boost', 'sem - google mobile', 'sem - yahoo', 'local maps', 'retargeter')"]
+  named_scope :managed, :conditions => ["LCASE(flavor) IN ('seo', 'sem - all', 'sem - bing', 'sem - google', 'sem - google boost', 'sem - google mobile', 'sem - yahoo', 'local maps', 'retargeter')"]
   named_scope :unmanaged, :conditions => ["LCASE(flavor) NOT IN ('seo', 'sem - all', 'sem - bing', 'sem - google', 'sem - google boost', 'sem - google mobile', 'sem - yahoo', 'local maps', 'retargeter')"]
 
   before_destroy :remove_from_many_to_many_relationships
@@ -26,7 +26,7 @@ class Campaign < ActiveRecord::Base
 
   ORPHANAGE_NAME = 'CityVoice SEM Orphaned Campaigns'
   
-  CITYVOICE_MANAGED_FLAVORS = ['seo', 'sem - all', 'sem - bing', 'sem - google', 'sem - google boost', 'sem - google mobile', 'sem - yahoo', 'local maps', 'retargeter']
+  MANAGED_FLAVORS = ['seo', 'sem - all', 'sem - bing', 'sem - google', 'sem - google boost', 'sem - google mobile', 'sem - yahoo', 'local maps', 'retargeter']
   
 
   # VIRTUAL ATTRIBUTES
@@ -566,8 +566,8 @@ class Campaign < ActiveRecord::Base
     self.campaign_style.instance_of?(OtherCampaign)
   end
   
-  def cityvoice_managed?
-    CITYVOICE_MANAGED_FLAVORS.include?(self.flavor.downcase)
+  def managed?
+    MANAGED_FLAVORS.include?(self.flavor.downcase)
   end
   
   
