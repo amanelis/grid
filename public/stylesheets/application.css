@@ -412,6 +412,15 @@ form.inline p { margin-bottom:0; }
 }
 
 /*
+	Gridbot Background
+	------------------
+*/
+
+.gridbot {
+	background: #fff url("/images/gridbot.jpg") no-repeat right bottom;
+}
+
+/*
 	Pillbox Demo
 	------------------
 */
