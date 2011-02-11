@@ -46,6 +46,14 @@ class User < ActiveRecord::Base
     self.manipulable_campaigns.include?(campaign)
   end
   
+  def acquainted_with_keyword?(keyword)
+    self.acquainted_keywords.include?(keyword)
+  end
+  
+  def can_manipulate_keyword?(keyword)
+    self.manipulable_keywords.include?(keyword)
+  end
+  
   def acquainted_group_accounts
     return GroupAccount.all if self.admin?
     self.group_users.collect { |group_user| group_user.group_account }
@@ -72,6 +80,14 @@ class User < ActiveRecord::Base
 
   def manipulable_campaigns
     self.manipulable_accounts.collect(&:campaigns).flatten
+  end
+  
+  def acquainted_keywords
+    self.acquainted_campaigns.select(&:is_seo?).collect { |campaign| campaign.campaign_style.keywords }.flatten
+  end
+
+  def manipulable_keywords
+    self.manipulable_campaigns.select(&:is_seo?).collect { |campaign| campaign.campaign_style.keywords }.flatten
   end
   
   def manipulable_users
