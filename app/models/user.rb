@@ -55,23 +55,19 @@ class User < ActiveRecord::Base
   end
   
   def acquainted_group_accounts
-    return GroupAccount.all if self.admin?
-    self.group_users.collect { |group_user| group_user.group_account }
+    self.admin? ? GroupAccount.all : retrieve_group_accounts_from(self.group_users)
   end
   
   def manipulable_group_accounts
-    return GroupAccount.all if self.admin?
-    self.group_users.select(&:manipulator?).collect { |group_user| group_user.group_account }
+    self.admin? ? GroupAccount.all : retrieve_group_accounts_from(self.group_users.select(&:manipulator?))
   end
   
   def acquainted_accounts
-    return Account.all if self.admin?
-    (self.acquainted_group_accounts.collect { |group_account| group_account.accounts } << self.account_users.collect { |account_user| account_user.account }).flatten.uniq
+    self.admin? ? Account.all : (retrieve_accounts_from(self.acquainted_group_accounts) << retrieve_accounts_from_account_users(self.account_users)).flatten.uniq
   end
 
   def manipulable_accounts
-    return Account.all if self.admin?
-    (self.manipulable_group_accounts.collect { |manipulable_group_account| manipulable_group_account.accounts } << self.account_users.select(&:manipulator?).collect { |account_user| account_user.account }).flatten.uniq
+    self.admin? ? Account.all : (retrieve_accounts_from(self.manipulable_group_accounts) << retrieve_accounts_from_account_users(self.account_users.select(&:manipulator?))).flatten.uniq
   end
 
   def acquainted_campaigns
@@ -106,6 +102,18 @@ class User < ActiveRecord::Base
   # PRIVATE BEHAVIOR
   
   private
+  
+  def retrieve_group_accounts_from(group_users)
+    group_users.collect(&:group_accounts)
+  end
+  
+  def retrieve_accounts_from(group_accounts)
+    group_accounts.collect(&:accounts)
+  end
+  
+  def retrieve_accounts_from_account_users(account_users)
+    account_users.collect(&:account)
+  end
   
   def retrieve_campaigns_from(accounts)
     accounts.collect(&:campaigns).flatten
