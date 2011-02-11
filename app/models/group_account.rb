@@ -16,6 +16,32 @@ class GroupAccount < ActiveRecord::Base
       end
     end
   end
+  
+  def self.print_total_structure
+    GroupAccount.all.sort {|a,b| a.name.downcase <=> b.name.downcase}.each do |gaccount|
+      puts "Group Account:#{gaccount.name}"
+      puts "  Accounts" 
+      gaccount.accounts.sort {|a,b| a.name.downcase <=> b.name.downcase}.each do |account|
+        puts "  #{account.name} is #{account.status}"
+        puts "    Campaigns" if account.campaigns.present?
+        account.campaigns.sort {|a,b| a.name.downcase <=> b.name.downcase}.each do |campaign|
+          puts "    #{campaign.name} is #{campaign.status}"
+          puts "      Contact Forms" if campaign.contact_forms.present?
+          campaign.contact_forms.sort {|a,b| a.id <=> b.id}.each do |contact_form|
+            puts "        #{contact_form.description} - #{contact_form.id} - #{contact_form.forwarding_email}"
+          end
+          puts "      Phone Numbers" if campaign.phone_numbers.present?
+          campaign.phone_numbers.sort {|a,b| a.name.downcase <=> b.name.downcase}.each do |phone_number|
+            puts "        #{phone_number.name} - #{phone_number.inboundno} is #{phone_number.active}"
+          end
+          puts "      Website" if campaign.website.present?
+          puts "        #{campaign.website.nickname}" if campaign.website.present?
+          
+        end
+      end
+    end
+    nil
+  end
 
   
   # CLASS BEHAVIOR

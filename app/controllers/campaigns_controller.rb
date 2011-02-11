@@ -17,31 +17,9 @@ class CampaignsController < ApplicationController
   def create
     authorize! :manipulate_campaign, @account
     if @account.present?
-      if params[:flavor].include? 'SEM'
-        new_campaign = SemCampaign.new
-        new_campaign.flavor = params[:flavor]
-      elsif params[:flavor].include? 'SEO'
-        new_campaign = SeoCampaign.new 
-        new_campaign.flavor = params[:flavor]
-      elsif params[:flavor].include? 'Maps'
-        new_campaign = MapsCampaign.new 
-        new_campaign.flavor = params[:flavor]
-      else
-        new_campaign = OtherCampaign.new
-        new_campaign.flavor = params[:flavor]
-      end
-      
-      new_campaign.account = @account
-      new_campaign.status = 'Active'
-      new_campaign.save
-      new_campaign.name = params[:name]
-      new_campaign.campaign.industry = (params[:industry])
-      #Needs to be Uncommented when we roll out
-      #new_campaign.campaign.url = (params[:url])
-      #new_campaign.campaign.forwarding_number =  params[:forwarding_number]
-      #new_campaign.campaign.area_code = (params[:area_code])
-      new_campaign.save
-      redirect_to "/campaigns/#{new_campaign.campaign.id}"
+      campaign = @account.create_campaign(params[:flavor], params[:name], params[:industry], params[:forwarding_number], params[:area_code])
+      campaign.save
+      redirect_to account_campaign_path(@account, resource, :phone_number_id => PhoneNumber.first.id)
     end  
   end
 
