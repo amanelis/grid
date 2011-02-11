@@ -526,10 +526,11 @@ class SeoCampaign < ActiveRecord::Base
         updated_keywords = Array.new
         keyword_string = ''
         keywords.each do |keyword|
-          if keyword.descriptor.length > 900
-            return "Keyword: #{keyword.id} is toooooo damn long!"
+          if keyword.descriptor.length > 700
+            puts "Keyword: #{keyword.id} is toooooo damn long!"
+            next
           end
-          if [keyword_string, keyword.descriptor].join(",").length > 900
+          if [keyword_string, keyword.descriptor].join(",").length > 700
             keyword_strings << keyword_string
             keyword_array << updated_keywords
             keyword_string = keyword.descriptor
