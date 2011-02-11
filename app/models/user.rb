@@ -108,7 +108,7 @@ class User < ActiveRecord::Base
   end
   
   def retrieve_accounts_from(group_accounts)
-    group_accounts.collect(&:accounts)
+    group_accounts.collect(&:accounts).flatten
   end
   
   def retrieve_accounts_from_account_users(account_users)
