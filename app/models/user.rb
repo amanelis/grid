@@ -104,7 +104,7 @@ class User < ActiveRecord::Base
   private
   
   def retrieve_group_accounts_from(group_users)
-    group_users.collect(&:group_accounts)
+    group_users.collect(&:group_account)
   end
   
   def retrieve_accounts_from(group_accounts)
