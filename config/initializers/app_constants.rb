@@ -17,4 +17,7 @@ CHART_COLORS = ["66ccff", "669966", "666666", "cc3366", "ff6633", "ffff33", "000
 GINZA_KEY = '32cb93caac0403cdaad7e0683ad10cf2'
 GINZA_ACCOUNT_ID = '89891b750fec'
 
+#CLICKY
+CLICKY_KEY = 'de8f1bae61c60eb0'
+
 

@@ -12,7 +12,7 @@
   %p.right= render :partial => 'shared/lead_matrix'
   %h2 #{@campaign.name}
   #datepicker=render :partial => "shared/date_picker"
-  %p.quiet= @campaign.account.time_zone
+  %p.quiet= @campaign.time_zone
 %article
   %h3 Campaign Details
   %table

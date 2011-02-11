@@ -8,10 +8,7 @@ class Website < ActiveRecord::Base
     job_status = JobStatus.create(:name => "Website.add_websites")
     #http://stats.cityvoice.com.re.getclicky.com/api/whitelabel/sites?auth=de8f1bae61c60eb0
     begin
-      geturl = HTTParty.get("http://stats.cityvoice.com.re.getclicky.com/api/whitelabel/sites?auth=de8f1bae61c60eb0&output=json")
-      response = geturl["response"]
-      urls = response["site"]
-      urls.each do |url|
+      HTTParty.get("http://stats.cityvoice.com.re.getclicky.com/api/whitelabel/sites?auth=#{CLICKY_KEY}&output=json")["response"]["site"].each do |url|
         existing_website = Website.find_by_site_id(url['site_id'])
         if existing_website.blank?
           existing_website = Website.new
@@ -26,8 +23,7 @@ class Website < ActiveRecord::Base
         existing_website.save!
       end
 
-      sf_campaigns = Salesforce::Clientcampaign.all
-      sf_campaigns.each do |sf_campaign|
+      Salesforce::Clientcampaign.all.each do |sf_campaign|
         website = Website.find_by_nickname(sf_campaign.primary_website__c)
         if website.present?
           local_campaign = Campaign.find_by_salesforce_id(sf_campaign.id)
@@ -48,11 +44,7 @@ class Website < ActiveRecord::Base
   
   #### GINZA CLASS METHODS
   def self.list_ginza_sites
-    begin
-      return HTTParty.get("https://app.ginzametrics.com/v1/list_sites?api_key=#{GINZA_KEY}").to_a
-    rescue Exception => ex
-      raise
-    end
+    HTTParty.get("https://app.ginzametrics.com/v1/list_sites?api_key=#{GINZA_KEY}").to_a
   end
   
   def self.associate_ginza_sites_with_grid_sites()
@@ -79,7 +71,6 @@ class Website < ActiveRecord::Base
     result
   end
   
-
   # INSTANCE BEHAVIOR
 
   def visits_between(start_date = Date.yesterday, end_date = Date.yesterday)
@@ -201,25 +192,12 @@ class Website < ActiveRecord::Base
   end
 
   def get_traffic_sources(start_date = (Date.today - 30), end_date = Date.today)
-    begin
-      type = 'traffic-sources'
-      #mainurl = "http://stats.cityvoice.com.re.getclicky.com/api/stats/4?site_id=185568&sitekey=27ca05a49f331f13&type=visitors-list&visitor-details=time,time_pretty,time_total,ip_address,session_id,actions,web_browser,operating_system,screen_resolution,javascript,language,referrer_url,referrer_domain,referrer_search,geolocation,longitude,latitude,hostname,organization,campaign,custom,clicky_url,goals&date=2010-04-01,2010-04-30&source=advertising&domain=google.com"
-      mainurl = "http://stats.cityvoice.com.re.getclicky.com/api/stats/4?site_id=" + self.site_id + "&sitekey=" + self.sitekey + "&type=" + type + "&date=" + start_date.to_s + "," + end_date.to_s + "&output=json&limit=10000"
-      response = HTTParty.get(mainurl).first
-      dateblock = response["dates"]
-      itemblock = dateblock.first
-      items = itemblock["items"]
-      return items
-    rescue
-      return nil
-    end
+    HTTParty.get("http://stats.cityvoice.com.re.getclicky.com/api/stats/4?site_id=#{self.site_id}&sitekey=#{self.sitekey}&type=traffic-sources&date=#{start_date.to_s},#{end_date.to_s}&output=json&limit=10000").first["dates"].first["items"]
   end
 
   def visitors_by_location_graph(start_date = Date.today - 30.days, end_date = Date.yesterday, height = 300, width = 500, zoom = 8)
-    start_date_time = start_date.beginning_of_day
-    end_date_time = end_date.end_of_day
     map_url = ''
-    visits = self.website_visits.find(:all, :conditions => ['time_of_visit between ? AND ?', start_date_time, end_date_time])
+    visits = self.website_visits.find(:all, :conditions => ['time_of_visit between ? AND ?', start_date.beginning_of_day, end_date.end_of_day])
     if self.campaigns.first.zip_code.present? && visits.present?
       markers = Array.new()
       visits.each do |visit|
@@ -232,11 +210,8 @@ class Website < ActiveRecord::Base
       end
       if markers.present?
         #Get Geocode from Zip Code
-        url = 'http://local.yahooapis.com/MapsService/V1/geocode?appid=YD-9G7bey8_JXxQP6rxl.fBFGgCdNjoDMACQA--&zip=' + self.campaigns.first.zip_code.to_s
-        response = HTTParty.get(url)
-        long = sprintf("%.3f", response['ResultSet']['Result']['Longitude'].to_f).to_f
-        lat = sprintf("%.3f", response['ResultSet']['Result']['Latitude'].to_f).to_f
-        map = StaticGmaps::Map.new :center => [lat, long], :zoom => zoom, :size => [width, height], :map_type => :roadmap, :key => GOOGLE_MAPS_API_KEY
+        response = HTTParty.get("http://local.yahooapis.com/MapsService/V1/geocode?appid=YD-9G7bey8_JXxQP6rxl.fBFGgCdNjoDMACQA--&zip=#{self.campaigns.first.zip_code.to_s}")
+        map = StaticGmaps::Map.new :center => [sprintf("%.3f", response['ResultSet']['Result']['Latitude'].to_f).to_f, sprintf("%.3f", response['ResultSet']['Result']['Longitude'].to_f).to_f], :zoom => zoom, :size => [width, height], :map_type => :roadmap, :key => GOOGLE_MAPS_API_KEY
         map.markers.clear
         markers[0..49].each do |marker|
           map.markers << StaticGmaps::Marker.new(:latitude => sprintf("%.3f", marker["lat"]).to_f, :longitude => sprintf("%.3f", marker["long"]).to_f, :color => :blue)
@@ -251,7 +226,6 @@ class Website < ActiveRecord::Base
   def get_ginza_site_keyword_count
     begin
       HTTParty.get("https://app.ginzametrics.com/v1/sites/#{self.ginza_global_id}/active_keywords?api_key=#{GINZA_KEY}").parsed_response
-      puts "Ginza Pull active_keywords? for #{self.nickname}"
     rescue Exception => ex
       raise
     end
@@ -259,10 +233,7 @@ class Website < ActiveRecord::Base
   
   def get_ginza_latest_rankings
     begin
-      rankings = HTTParty.get("https://app.ginzametrics.com/v1/sites/#{self.ginza_global_id}/latest_rankings?api_key=#{GINZA_KEY}&count=100").to_a
-      puts "Ginza Query latest_rankings? for #{self.nickname}" if rankings != ["Quota exceeded"]
-      puts "Ginza EXCEEDED QUERY latest_rankings? for #{self.nickname}" if rankings == ["Quota exceeded"]
-      rankings
+      HTTParty.get("https://app.ginzametrics.com/v1/sites/#{self.ginza_global_id}/latest_rankings?api_key=#{GINZA_KEY}&count=100").to_a
     rescue Exception => ex
       raise
     end
@@ -293,7 +264,7 @@ class Website < ActiveRecord::Base
         return true
       else
         puts response.to_a.first
-        return false
+        return response.to_a.first
       end
     end
   end

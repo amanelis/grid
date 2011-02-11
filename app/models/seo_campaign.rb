@@ -6,6 +6,20 @@ class SeoCampaign < ActiveRecord::Base
 
   # CLASS BEHAVIOR
 
+  def self.run_ginza_pulls
+    job_status = JobStatus.create(:name => "SeoCampaign.run_ginza_pulls")
+    begin
+      if JobStatus.first(:conditions => ['name = ? && status = ?', "SeoCampaign.run_ginza_pulls", "Running"]).blank?
+        SeoCampaign.update_websites_with_ginza
+        SeoCampaign.update_website_keywords_with_ginza
+      end
+    rescue Exception => ex
+      job_status.finish_with_errors(ex)
+      raise
+    end
+    job_status.finish_with_no_errors
+  end
+  
   def self.update_websites_with_ginza
     job_status = JobStatus.create(:name => "SeoCampaign.update_websites_with_ginza")
     begin
@@ -30,7 +44,7 @@ class SeoCampaign < ActiveRecord::Base
     job_status = JobStatus.create(:name => "SeoCampaign.update_website_keywords_with_ginza")
     begin
       #Make sure sites are current
-      (Campaign.seo.select {|camp| camp.website.present? && camp.website.ginza_global_id.blank? && camp.status != "Inactive"}).each do |campaign|
+      (Campaign.seo.select {|camp| camp.website.present? && camp.website.ginza_global_id.present? && camp.status != "Inactive"}).each do |campaign|
         campaign.website.update_attribute(:last_keyword_update, Date.yesterday) if campaign.website.present? && campaign.website.last_keyword_update.blank?
         #Change Date.today when we get past 240 websites or Ginza takes off the 10 queries/hr shit.
         if campaign.website.present? && campaign.website.ginza_global_id.present? && campaign.website.last_keyword_update != Date.today

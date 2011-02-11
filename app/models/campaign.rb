@@ -7,6 +7,9 @@ class Campaign < ActiveRecord::Base
   has_many :contact_forms, :dependent => :destroy
   has_many :submissions, :through => :contact_forms, :order => "time_of_submission DESC"
   has_and_belongs_to_many :industries
+  
+  delegate :time_zone , :to => :account
+  
 
   named_scope :active, :conditions => ['LCASE(status) = ? OR LCASE(status) = ?', "active", "paused"], :order => "name ASC"
   named_scope :seo, :conditions => {:campaign_style_type => SeoCampaign.name}
@@ -24,6 +27,7 @@ class Campaign < ActiveRecord::Base
   ORPHANAGE_NAME = 'CityVoice SEM Orphaned Campaigns'
   
   CITYVOICE_MANAGED_FLAVORS = ['seo', 'sem - all', 'sem - bing', 'sem - google', 'sem - google boost', 'sem - google mobile', 'sem - yahoo', 'local maps', 'retargeter']
+  
 
   # VIRTUAL ATTRIBUTES
   
@@ -518,8 +522,6 @@ class Campaign < ActiveRecord::Base
     true
   end
   
-  
-
   def create_contact_form(description = '',  forwarding_email = '', forwarding_bcc_email = '', custom1_text = '', custom2_text = '', custom3_text = '', custom4_text = '', need_name = true, need_address = true, need_phone = true, need_email = true, work_category = true, work_description = true, date_requested = true, time_requested = true, other_information = true)
     form = self.contact_forms.build
     form.return_url = 'http://grid.cityvoice.com/thank_you'
@@ -538,10 +540,13 @@ class Campaign < ActiveRecord::Base
     form.date_requested = date_requested
     form.time_requested = time_requested
     form.other_information = other_information
-    form.html_block = form.get_form_text if form.save!
-    form.update_attribute(:return_url, "http://grid.cityvoice.com/contact_forms/#{form.id}/thank_you")
+    form.save
+    form.html_block = form.get_form_text
+    form.return_url = "http://grid.cityvoice.com/contact_forms/#{form.id}/thank_you"
+    form.save
     form
   end
+
   
   # PREDICATES
 

@@ -3,7 +3,6 @@ class AccountsController < ApplicationController
   load_and_authorize_resource :except   => [:export, :refresh_accounts]
   before_filter :load_time_zone, :only  => [:show, :report, :report_client]
 
-
   def index
     @accounts           = current_user.acquainted_accounts
     @accounts_statuses  = Account.account_statuses_for(@accounts)
@@ -43,9 +42,6 @@ class AccountsController < ApplicationController
       success.html(:notice => "Yay! Account was successfully updated!") {redirect_to account_path(@account)}
       failure.html(:notice => "Ooops, try again, your account was not saved!") {redirect_to account_path(@account)}
     end
-  end
-  
-  def update
   end
 
   def show
@@ -158,7 +154,6 @@ class AccountsController < ApplicationController
   end 
   
   def add_customer_lobby
-  
   end
 
 end

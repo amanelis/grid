@@ -1,5 +1,5 @@
 %header
-  %h3 Create Campaign
+  %h3="Create Campaign - #{@account.name}"
 %article
   #create.span-8.append-1
     -form_for @campaign, {:url => new_account_campaign_path}, :method => "post" do |f|
