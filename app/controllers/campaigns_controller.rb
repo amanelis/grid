@@ -20,13 +20,13 @@ class CampaignsController < ApplicationController
     if @account.present?
       campaign = @account.create_campaign(params[:flavor], params[:name], params[:industry], params[:forwarding_number], params[:area_code])
       campaign.save
-      
-      redirect_to account_campaign_path(@account.id, resource, :phone_number_id => PhoneNumber.first.id)
+      redirect_to account_campaign_path(@account.id, campaign.id, :phone_number => PhoneNumber.first)
     end  
   end
 
   def show    
     datepicker campaign_path(resource)
+    @phone_number = PhoneNumber.find(params[:phone_number]) unless params[:phone_number].blank?
   end
   
   def update

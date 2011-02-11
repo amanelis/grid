@@ -87,6 +87,11 @@
           %th Description
           %th Number
       %tbody
+        -if @phone_number.present?
+          %tr
+            %td= "Fake Number For Alex - Use @phone_number in your views!!!!!!"
+            %td= @phone_number.descript
+            %td= @phone_number.inboundno
         -@campaign.phone_numbers.each do |number|
           %tr
             %td= number.name
