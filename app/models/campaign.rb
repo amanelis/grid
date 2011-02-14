@@ -380,6 +380,10 @@ class Campaign < ActiveRecord::Base
   def number_of_specific_submissions_labeled_by_date(specific_submissions, label)
     specific_submissions.count(:group => "date(time_of_submission)", :order =>"time_of_submission ASC").inject({}) { |data, (key, value)| data[key.to_date] = {label => value}; data }
   end
+  
+  def most_recent_map_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
+    self.campaign_style.map_keywords.first.map_rankings.between(start_date, end_date).try(:last)
+  end
 
   def number_of_leads_by_date
     Utilities.merge_and_sum_timeline_data([self.number_of_specific_calls_labeled_by_date(self.calls.lead, :leads), self.number_of_specific_submissions_labeled_by_date(self.submissions.lead, :leads)], :leads)

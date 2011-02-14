@@ -54,30 +54,9 @@
           %td= (sprintf("%.2f", (@campaign.bounce_rate_between(@start_date, @end_date) * 100)) + '%')
           %td= (sprintf("%.2f", (@campaign.website.overall_conversion_rate_between(@start_date, @end_date) * 100)) + '%')
           %td= (sprintf("%.2f", (@campaign.website.unique_conversion_rate_between(@start_date, @end_date) * 100)) + '%')
-    -if @campaign.is_seo?
-      %h3 Keywords
-      %table
-        %thead
-          %tr
-            %th Keyword (Click for History)
-            %th Last Updated
-            %th Google
-            %th Month Change
-            %th Yahoo
-            %th Month Change
-            %th Bing
-            %th Month Change
-        %tbody
-          - (@campaign.campaign_style.keywords.sort { |a,b| a.descriptor <=> b.descriptor }).each do |keyword|
-            %tr
-              %td= link_to keyword.descriptor, keyword_path(keyword)
-              %td= keyword.most_recent_ranking().created_at.strftime("%m/%d/%y %I:%M %p") if keyword.most_recent_ranking.present?
-              %td= keyword.most_recent_google_ranking_between(@start_date, @end_date) if keyword.most_recent_google_ranking
-              %td= keyword.google_ranking_change_between(@start_date, @end_date) 
-              %td= keyword.most_recent_yahoo_ranking
-              %td= keyword.yahoo_ranking_change_between(@start_date, @end_date) 
-              %td= keyword.most_recent_bing_ranking
-              %td= keyword.bing_ranking_change_between(@start_date, @end_date)    
+  -else
+    %h4 There is no website for this campaign.
+    
   - if can? :update, @campaign
     %h3 Phone Numbers On Campaign
     %table
@@ -105,58 +84,64 @@
       - f.buttons do
         = f.commit_button :update
   %h3 Form Submissions
-  %table
-    %thead
-      %tr
-        %th Name
-        %th Email
-        %th Phone Number
-        %th Submission Time
-        %th Date Requested
-        %th Time Requested
-        %th Work Description
-    %tbody
-      -@campaign.submissions.lead.between(@start_date, @end_date).each do |submission|
+  -if @campaign.contact_forms.present?
+    %table
+      %thead
         %tr
-          %td= submission.name
-          %td= submission.from_email
-          %td= submission.phone_number
-          %td= submission.time_of_submission.in_time_zone.to_s(:short)
-          %td= submission.date_requested
-          %td= submission.time_requested
-          %td= submission.work_description
+          %th Name
+          %th Email
+          %th Phone Number
+          %th Submission Time
+          %th Date Requested
+          %th Time Requested
+          %th Work Description
+      %tbody
+        -@campaign.submissions.lead.between(@start_date, @end_date).each do |submission|
+          %tr
+            %td= submission.name
+            %td= submission.from_email
+            %td= submission.phone_number
+            %td= submission.time_of_submission.in_time_zone.to_s(:short)
+            %td= submission.date_requested
+            %td= submission.time_requested
+            %td= submission.work_description
+  -else
+    %h4 There are no contact forms for this campaign.
   
   -if can? :create, ContactForm
     = link_to '+ Create Form', new_campaign_contact_form_path(@campaign), :class => "submit button", :name => "submit"
   
   %h3 Call Log
-  %table
-    %thead
-      %tr
-        %th Caller
-        %th Caller #
-        %th Inbound #
-        %th Time of Call
-        %th Duration
-        %th Result
-        %th Recording
-        %th Review
-    %tbody
-      -@campaign.calls.between(@start_date, @end_date).each do |call|
+  -if @campaign.phone_numbers.present?
+    %table
+      %thead
         %tr
-          %td= call.caller_name
-          %td= number_to_phone(call.caller_number)
-          %td= number_to_phone(call.inboundno)
-          %td= call.call_start.in_time_zone.to_s(:short)
-          %td= call.duration
-          %td= call.call_status
-          %td
-            -if call.recorded? && call.recording?
-              = mp3_player "#{call.recording.expiring_url(14400)}"
-            -else
-              =image_tag("sound.png")
-              Call Recording Unavailable
-          %td
-            - form_for (call.activity) do |f|
-              = f.select(:review_status, (call.review_status_options))
-              = f.hidden_field(:campaign_id, {:value => params[:id]})
+          %th Caller
+          %th Caller #
+          %th Inbound #
+          %th Time of Call
+          %th Duration
+          %th Result
+          %th Recording
+          %th Review
+      %tbody
+        -@campaign.calls.between(@start_date, @end_date).each do |call|
+          %tr
+            %td= call.caller_name
+            %td= number_to_phone(call.caller_number)
+            %td= number_to_phone(call.inboundno)
+            %td= call.call_start.in_time_zone.to_s(:short)
+            %td= call.duration
+            %td= call.call_status
+            %td
+              -if call.recorded? && call.recording?
+                = mp3_player "#{call.recording.expiring_url(14400)}"
+              -else
+                =image_tag("sound.png")
+                Call Recording Unavailable
+            %td
+              - form_for (call.activity) do |f|
+                = f.select(:review_status, (call.review_status_options))
+                = f.hidden_field(:campaign_id, {:value => params[:id]})
+  -else
+    %h4 There are no phone numbers for this campaign.

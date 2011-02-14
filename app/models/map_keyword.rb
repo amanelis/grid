@@ -472,5 +472,50 @@ class MapKeyword < ActiveRecord::Base
   def self.decode_msn_bullshit(url)
     return url.gsub('\\x3a', ':').gsub('\\x2f', '/').gsub('\\x3f', '?').gsub('\\x3d', '=').gsub('\\x26', '&').gsub('\\x2520', '+')
   end
+  
+  def most_recent_google_ranking
+    ((ranking = self.most_recent_ranking.try(:google_rank)) > 100) ? '>100' : ranking
+  end
+
+  def most_recent_yahoo_ranking
+    ((ranking = self.most_recent_ranking.try(:yahoo_rank)) > 100) ? '>100' : ranking
+  end
+
+  def most_recent_bing_ranking
+    ((ranking = self.most_recent_ranking.try(:bing_rank)) > 100) ? '>100' : ranking
+  end
+  
+  def google_ranking_change_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
+    (rankings = self.map_rankings.between(start_date, end_date)).present? ? ([rankings.first.google_rank, 100].compact.min) - ([rankings.last.google_rank, 100].compact.min) : 0
+  end
+
+  def yahoo_ranking_change_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
+    (rankings = self.map_rankings.between(start_date, end_date)).present? ? ([rankings.first.yahoo_rank, 100].compact.min) - ([rankings.last.yahoo_rank, 100].compact.min) : 0
+  end
+
+  def bing_ranking_change_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
+    (rankings = self.map_rankings.between(start_date, end_date)).present? ? ([rankings.first.bing_rank, 100].compact.min) - ([rankings.last.bing_rank, 100].compact.min) : 0
+  end
+  
+  def most_recent_google_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
+    self.most_recent_ranking_between(start_date, end_date).try(:google_rank)
+  end
+
+  def most_recent_yahoo_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
+    self.most_recent_ranking_between(start_date, end_date).try(:yahoo_rank)
+  end
+
+  def most_recent_bing_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
+    self.most_recent_ranking_between(start_date, end_date).try(:bing_rank)
+  end
+  
+  
+  def most_recent_ranking()
+    self.map_rankings.last
+  end
+  
+  def most_recent_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
+    self.map_rankings.between(start_date, end_date).try(:last)
+  end
 
 end

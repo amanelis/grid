@@ -145,12 +145,12 @@
           %td= call.call_start.in_time_zone.to_s(:short)
           %td= call.duration
           %td= call.call_status
-          %td
+          %td.recording
             -if call.recorded? && call.recording?
-              = mp3_player "#{call.recording.expiring_url(14400)}"
+              = link_to('Listen', call.recording.expiring_url(14400))
+              = mp3_player "#{call.recording.expiring_url(14400)}", :bg => "EEEEEE", :track => "EEEEEE", :slider => "222222", :loader => "EEEEEE"
             -else
-              =image_tag("sound.png")
-              Call Recording Unavailable
+              = "Call Recording Unavailable"
           %td
             - form_for (call.activity) do |f|
               = f.select(:review_status, (call.review_status_options))

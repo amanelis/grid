@@ -146,78 +146,39 @@ class Keyword < ActiveRecord::Base
   end
 
   def most_recent_google_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
-    self.most_recent_ranking_between(start_date, end_date).google if self.most_recent_ranking_between(start_date, end_date).present?
+    self.most_recent_ranking_between(start_date, end_date).try(:google)
   end
 
   def most_recent_yahoo_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
-    self.most_recent_ranking_between(start_date, end_date).yahoo if self.most_recent_ranking_between(start_date, end_date).present?
+    self.most_recent_ranking_between(start_date, end_date).try(:yahoo)
   end
 
   def most_recent_bing_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
-    try(self.most_recent_ranking_between(start_date, end_date).bing) if self.most_recent_ranking_between(start_date, end_date).present?
+    self.most_recent_ranking_between(start_date, end_date).try(:bing)
   end
   
   def most_recent_google_ranking
-    if (ranking = self.most_recent_ranking).present?
-      ranking.google > 100 ? '>100' : ranking if ranking.google.present?
-    end
+    ((ranking = self.most_recent_ranking.try(:google)) > 100) ? '>100' : ranking
   end
 
   def most_recent_yahoo_ranking
-    if (ranking = self.most_recent_ranking).present?
-      ranking.yahoo > 100 ? '>100' : ranking if ranking.yahoo.present?
-    end
+    ((ranking = self.most_recent_ranking.try(:yahoo)) > 100) ? '>100' : ranking
   end
 
   def most_recent_bing_ranking
-    if (ranking = self.most_recent_ranking).present?
-      ranking.bing > 100 ? '>100' : ranking if ranking.bing.present?
-    end
+    ((ranking = self.most_recent_ranking.try(:bing)) > 100) ? '>100' : ranking
   end
 
   def google_ranking_change_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
-    first = 0
-    last = 0
-    if (rankings = self.keyword_rankings.between(start_date, end_date)).present?
-      fvalue = rankings.first.google.present? ? rankings.first.google : 99999
-      lvalue = rankings.last.google.present? ? rankings.last.google : 99999
-      first = (fvalue > 100) ? 100 : fvalue
-      last = (lvalue > 100) ? 100  : lvalue
-      result = ((first - last) > 0) ? "+" + (first - last).to_s : (first - last).to_s
-      return result
-    else
-      return 0
-    end
+    (rankings = self.keyword_rankings.between(start_date, end_date)).present? ? ([rankings.first.google, 100].compact.min) - ([rankings.last.google, 100].compact.min) : 0
   end
 
   def yahoo_ranking_change_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
-    first = 0
-    last = 0
-    if (rankings = self.keyword_rankings.between(start_date, end_date)).present?
-      fvalue = rankings.first.yahoo.present? ? rankings.first.yahoo : 99999
-      lvalue = rankings.last.yahoo.present? ? rankings.last.yahoo : 99999
-      first = (fvalue > 100) ? 100 : fvalue
-      last = (lvalue > 100) ? 100  : lvalue
-      result = ((first - last) > 0) ? "+" + (first - last).to_s : (first - last).to_s
-      return result
-    else
-      return 0
-    end
+    (rankings = self.keyword_rankings.between(start_date, end_date)).present? ? ([rankings.first.yahoo, 100].compact.min) - ([rankings.last.yahoo, 100].compact.min) : 0
   end
 
   def bing_ranking_change_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
-    first = 0
-    last = 0
-    if (rankings = self.keyword_rankings.between(start_date, end_date)).present?
-      fvalue = rankings.first.bing.present? ? rankings.first.bing : 99999
-      lvalue = rankings.last.bing.present? ? rankings.last.bing : 99999
-      first = (fvalue > 100) ? 100 : fvalue
-      last = (lvalue > 100) ? 100  : lvalue
-      result = ((first - last) > 0) ? "+" + (first - last).to_s : (first - last).to_s
-      return result
-    else
-      return 0
-    end
+    (rankings = self.keyword_rankings.between(start_date, end_date)).present? ? ([rankings.first.bing, 100].compact.min) - ([rankings.last.bing, 100].compact.min) : 0
   end
   
   def most_recent_ranking()
