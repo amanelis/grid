@@ -12,39 +12,39 @@
       window.location = self.location;
       setTimeout(refreshGraph, 900000);
     }
-
-- if @user.admin?
-  %header
-    %h1 Dashboard
-  %article 
-    .stats
-      %aside.span-7.append-1
-        %p Active Accounts
-        %h3#active_accounts= @active_accounts_count
-      %aside.span-7.append-1
-        %p Total Users
-        %h3#users= @users_count
-      %aside.span-7.last
-        %p Leads Today
-        %h3#leads= @leads_count
-      .span-23.last=#high_chart("cv_total_daily_leads", @cv_total_daily_leads)
--elsif @user.group_user? 
-  %header
-    %h1 CityVoice Dashboard
-  %article 
-    .stats
-      %aside.span-7.append-1
-        %p Active Accounts
-        %h3#active_accounts= @active_accounts_count
-      %aside.span-7.append-1
-        %p Total Users
-        %h3#users= @users_count
-      %aside.span-7.last
-        %p Leads Today
-        %h3#leads= @leads_count
-      .span-23.last=high_chart("cv_total_daily_leads", @cv_total_daily_leads)     
-- else
-  %header
-    %h1 Dashboard
-  %article
-    %h2 New fun things are being added daily, please use the feedback button at the bottom right to report issues or suggest new features.
+- if @user
+  - if @user.admin?
+    %header
+      %h1 Dashboard
+    %article 
+      .stats
+        %aside.span-7.append-1
+          %p Active Accounts
+          %h3#active_accounts= @active_accounts_count
+        %aside.span-7.append-1
+          %p Total Users
+          %h3#users= @users_count
+        %aside.span-7.last
+          %p Leads Today
+          %h3#leads= @leads_count
+        .span-23.last=#high_chart("cv_total_daily_leads", @cv_total_daily_leads)
+  -elsif @user.group_user? 
+    %header
+      %h1 CityVoice Dashboard
+    %article 
+      .stats
+        %aside.span-7.append-1
+          %p Active Accounts
+          %h3#active_accounts= @active_accounts_count
+        %aside.span-7.append-1
+          %p Total Users
+          %h3#users= @users_count
+        %aside.span-7.last
+          %p Leads Today
+          %h3#leads= @leads_count
+        .span-23.last=high_chart("cv_total_daily_leads", @cv_total_daily_leads)     
+  - else # acount.user
+    %header
+      %h1 Dashboard
+    %article
+      %h2 New fun things are being added daily, please use the feedback button at the bottom right to report issues or suggest new features.

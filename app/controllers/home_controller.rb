@@ -27,6 +27,9 @@ class HomeController < ApplicationController
           f.series(:name=> 'Leads', :data => (Rails.cache.fetch("dashboard_data") { Account.dashboard_data }))
         end
       end
+    else
+      flash[:error] = "Ooops, looks like you do not have access yet to view that page!"
+      redirect_to root_url
     end
   end
   
