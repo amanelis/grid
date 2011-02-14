@@ -55,35 +55,35 @@ class User < ActiveRecord::Base
   end
   
   def acquainted_group_accounts
-    self.admin? ? GroupAccount.all : retrieve_group_accounts_from(self.group_users)
+    self.admin? ? GroupAccount.all : retrieve_group_accounts_from_group_users(self.group_users)
   end
   
   def manipulable_group_accounts
-    self.admin? ? GroupAccount.all : retrieve_group_accounts_from(self.group_users.select(&:manipulator?))
+    self.admin? ? GroupAccount.all : retrieve_group_accounts_from_group_users(self.group_users.select(&:manipulator?))
   end
   
   def acquainted_accounts
-    self.admin? ? Account.all : (retrieve_accounts_from(self.acquainted_group_accounts) << retrieve_accounts_from_account_users(self.account_users)).flatten.uniq
+    self.admin? ? Account.all : (retrieve_accounts_from_group_accounts(self.acquainted_group_accounts) << retrieve_accounts_from_account_users(self.account_users)).flatten.uniq
   end
 
   def manipulable_accounts
-    self.admin? ? Account.all : (retrieve_accounts_from(self.manipulable_group_accounts) << retrieve_accounts_from_account_users(self.account_users.select(&:manipulator?))).flatten.uniq
+    self.admin? ? Account.all : (retrieve_accounts_from_group_accounts(self.manipulable_group_accounts) << retrieve_accounts_from_account_users(self.account_users.select(&:manipulator?))).flatten.uniq
   end
 
   def acquainted_campaigns
-    retrieve_campaigns_from(self.acquainted_accounts)
+    retrieve_campaigns_from_accounts(self.acquainted_accounts)
   end
 
   def manipulable_campaigns
-    retrieve_campaigns_from(self.manipulable_accounts)
+    retrieve_campaigns_from_accounts(self.manipulable_accounts)
   end
   
   def acquainted_keywords
-    retrieve_keywords_from(self.acquainted_campaigns)
+    retrieve_keywords_from_campaigns(self.acquainted_campaigns)
   end
 
   def manipulable_keywords
-    retrieve_keywords_from(self.manipulable_campaigns)
+    retrieve_keywords_from_campaigns(self.manipulable_campaigns)
   end
   
   def manipulable_users
@@ -103,11 +103,11 @@ class User < ActiveRecord::Base
   
   private
   
-  def retrieve_group_accounts_from(group_users)
+  def retrieve_group_accounts_from_group_users(group_users)
     group_users.collect(&:group_account)
   end
   
-  def retrieve_accounts_from(group_accounts)
+  def retrieve_accounts_from_group_accounts(group_accounts)
     group_accounts.collect(&:accounts).flatten
   end
   
@@ -115,11 +115,11 @@ class User < ActiveRecord::Base
     account_users.collect(&:account)
   end
   
-  def retrieve_campaigns_from(accounts)
+  def retrieve_campaigns_from_accounts(accounts)
     accounts.collect(&:campaigns).flatten
   end
   
-  def retrieve_keywords_from(campaigns)
+  def retrieve_keywords_from_campaigns(campaigns)
     campaigns.select(&:is_seo?).collect { |campaign| campaign.campaign_style.keywords }.flatten
   end
     
