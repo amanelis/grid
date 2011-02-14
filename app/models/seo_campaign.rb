@@ -49,14 +49,16 @@ class SeoCampaign < ActiveRecord::Base
                 keyword.google_first_page = (g_keyword['keyword']['google_us'].to_i < 11) ? true : false
                 keyword.yahoo_first_page = (g_keyword['keyword']['yahoo_us'].to_i < 11) ? true : false
                 #keyword.bing_first_page = (g_keyword['keyword']['bing_us'].to_i < 11) ? true : false
+                keyword.bing_first_page = false
                 keyword.last_ranking_update = Date.today
                 keyword.save!
                   
                 #create a ranking for the keyword
                 ranking = keyword.keyword_rankings.build
-                ranking.google = (g_keyword['keyword']['google_us'].to_i < 100) ? g_keyword['keyword']['google_us'].to_i : 9999
-                ranking.yahoo = (g_keyword['keyword']['yahoo_us'].to_i  < 100) ? g_keyword['keyword']['yahoo_us'].to_i : 9999
-                #ranking.bing = (g_keyword['keyword']['bing_us'].to_i  < 100) ? g_keyword['keyword']['bing_us'].to_i : 9999
+                ranking.google = (g_keyword['keyword']['google_us'].to_i < 100) ? g_keyword['keyword']['google_us'].to_i : 99999
+                ranking.yahoo = (g_keyword['keyword']['yahoo_us'].to_i  < 100) ? g_keyword['keyword']['yahoo_us'].to_i : 99999
+                #ranking.bing = (g_keyword['keyword']['bing_us'].to_i  < 100) ? g_keyword['keyword']['bing_us'].to_i : 99999
+                ranking.bing = 99999
                 ranking.ginza_conv_percent = g_keyword['keyword']['conversion_percent'].to_f
                 ranking.ginza_visits = g_keyword['keyword']['visits'].to_i 
                 ranking.ginza_conversions = g_keyword['keyword']['conversions'].to_i 
