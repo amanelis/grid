@@ -28,7 +28,8 @@ class HomeController < ApplicationController
         end
       end
     else
-      
+      flash[:error] = "Ooops, looks like you do not have access yet to view that page!"
+      redirect_to root_url
     end
   end
   
