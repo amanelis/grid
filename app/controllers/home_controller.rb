@@ -27,6 +27,8 @@ class HomeController < ApplicationController
           f.series(:name=> 'Leads', :data => (Rails.cache.fetch("dashboard_data") { Account.dashboard_data }))
         end
       end
+    else
+      
     end
   end
   
