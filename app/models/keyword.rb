@@ -154,30 +154,24 @@ class Keyword < ActiveRecord::Base
   end
 
   def most_recent_bing_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
-    self.most_recent_ranking_between(start_date, end_date).bing if self.most_recent_ranking_between(start_date, end_date).present?
+    try(self.most_recent_ranking_between(start_date, end_date).bing) if self.most_recent_ranking_between(start_date, end_date).present?
   end
   
   def most_recent_google_ranking
-    if self.most_recent_ranking.present? && self.most_recent_ranking.google.present?
-      return (ranking = self.most_recent_ranking.google) > 100 ? '>100' : ranking
-    else
-      return '>100'
+    if (ranking = self.most_recent_ranking).present?
+      ranking.google > 100 ? '>100' : ranking if ranking.google.present?
     end
   end
 
   def most_recent_yahoo_ranking
-    if self.most_recent_ranking.present? && self.most_recent_ranking.yahoo.present?
-      return (ranking = self.most_recent_ranking.yahoo) > 100 ? '>100' : ranking
-    else
-      return '>100'
+    if (ranking = self.most_recent_ranking).present?
+      ranking.yahoo > 100 ? '>100' : ranking if ranking.yahoo.present?
     end
   end
 
   def most_recent_bing_ranking
-    if self.most_recent_ranking.present? && self.most_recent_ranking.bing.present?
-      return (ranking = self.most_recent_ranking.bing) > 100 ? '>100' : ranking
-    else
-      return '>100'
+    if (ranking = self.most_recent_ranking).present?
+      ranking.bing > 100 ? '>100' : ranking if ranking.bing.present?
     end
   end
 
