@@ -81,6 +81,7 @@ class AccountsController < ApplicationController
   end
   
   
+  # /accounts/:id/report/client
   # /accounts/:id/report/client.pdf
   def report_client
     @month_start = (Date.today - 1.month).beginning_of_month
@@ -88,6 +89,21 @@ class AccountsController < ApplicationController
     
     @managed_campaigns    = @account.campaigns.active.managed.to_a.sort { |a,b| a.name <=> b.name }
     @unmanaged_campaigns  = @account.campaigns.active.unmanaged.to_a.sort { |a,b| a.name <=> b.name }
+    
+    @date_range = ''
+    unless params[:daterange].blank?
+      dates = params[:daterange].split(' to ') || params[:daterange].split(' - ')
+      @date_range = params[:daterange]
+      begin 
+        @month_start = Date.parse(dates[0])
+        @month_end = Date.parse(dates[1])
+      rescue
+        @start_date = @month_start
+        @end_date = @month_end
+        flash[:error] = "The date you entered was incorrect, we set it back to <strong>#{(@start_date).to_s(:long)} to #{@end_date.to_s(:long)}</strong> for you."
+        respond("html", args.first)
+      end 
+    end
     
     @cost_per_lead_summary_graph = HighChart.new('graph') do |f|
       f.title({:text=> false})    
