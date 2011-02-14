@@ -103,6 +103,10 @@ nav aside a{
 margin-right:5px;
 }
 
+#account, #search{
+	float:right;
+}
+
 #account a{
 	font-size:.8em;
 	background:none;
@@ -137,16 +141,19 @@ header ul{
 
 header li{
 	float:left;
+}
+
+section header li{
 	margin-left:24px;
 	text-align:center;
 }
 
-header li a{
+section header li a{
 	color:#000;
 	
 }
 
-header li a:hover{
+section header li a:hover{
 	opacity: .5;
 	color:#000;
 	text-decoration:none;
