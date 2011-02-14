@@ -158,56 +158,71 @@ class Keyword < ActiveRecord::Base
   end
   
   def most_recent_google_ranking
-    if self.most_recent_ranking.present?
-      (ranking = self.most_recent_ranking.google) > 50 ? '>50' : ranking
+    if self.most_recent_ranking.present? && self.most_recent_ranking.google.present?
+      return (ranking = self.most_recent_ranking.google) > 50 ? '>50' : ranking
+    else
+      return '>50'
     end
   end
 
   def most_recent_yahoo_ranking
-    if self.most_recent_ranking.present?
-      (ranking = self.most_recent_ranking.yahoo) > 50 ? '>50' : ranking
+    if self.most_recent_ranking.present? && self.most_recent_ranking.yahoo.present?
+      return (ranking = self.most_recent_ranking.yahoo) > 50 ? '>50' : ranking
+    else
+      return '>50'
     end
   end
 
   def most_recent_bing_ranking
-    if self.most_recent_ranking.present?
-      (ranking = self.most_recent_ranking.bing) > 50 ? '>50' : ranking
+    if self.most_recent_ranking.present? && self.most_recent_ranking.bing.present?
+      return (ranking = self.most_recent_ranking.bing) > 50 ? '>50' : ranking
+    else
+      return '>50'
     end
   end
 
   def google_ranking_change_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
     first = 0
     last = 0
-    first = ((value = self.keyword_rankings.between(start_date, end_date).first.google) == 99999 ? 50 : value) if self.keyword_rankings.between(start_date, end_date).present?
-    last = ((value = self.keyword_rankings.between(start_date, end_date).last.google) == 99999 ? 50 : value) if self.keyword_rankings.between(start_date, end_date).present?
-    if (first - last) > 0
-      "+" + (first - last).to_s
+    if (rankings = self.keyword_rankings.between(start_date, end_date)).present?
+      fvalue = rankings.first.google.present? ? rankings.first.google : 99999
+      lvalue = rankings.last.google.present? ? rankings.last.google : 99999
+      first = (fvalue > 50) ? 50 : fvalue
+      last = (lvalue > 50) ? 50  : lvalue
+      result = ((first - last) > 0) ? "+" + (first - last).to_s : (first - last).to_s
+      return result
     else
-      (first - last).to_s
+      return 0
     end
   end
 
   def yahoo_ranking_change_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
     first = 0
     last = 0
-    first = ((value = self.keyword_rankings.between(start_date, end_date).first.yahoo) == 99999 ? 50 : value) if self.keyword_rankings.between(start_date, end_date).present?
-    last = ((value = self.keyword_rankings.between(start_date, end_date).last.yahoo) == 99999 ? 50 : value) if self.keyword_rankings.between(start_date, end_date).present?
-    if (first - last) > 0
-      "+" + (first - last).to_s
+    if (rankings = self.keyword_rankings.between(start_date, end_date)).present?
+      fvalue = rankings.first.yahoo.present? ? rankings.first.yahoo : 99999
+      lvalue = rankings.last.yahoo.present? ? rankings.last.yahoo : 99999
+      first = (fvalue > 50) ? 50 : fvalue
+      last = (lvalue > 50) ? 50  : lvalue
+      result = ((first - last) > 0) ? "+" + (first - last).to_s : (first - last).to_s
+      return result
     else
-      (first - last).to_s
+      return 0
     end
   end
 
   def bing_ranking_change_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
     first = 0
     last = 0
-    first = ((value = self.keyword_rankings.between(start_date, end_date).first.bing) == 99999 ? 50 : value) if self.keyword_rankings.between(start_date, end_date).present?
-    last = ((value = self.keyword_rankings.between(start_date, end_date).last.bing) == 99999 ? 50 : value) if self.keyword_rankings.between(start_date, end_date).present?
-    if (first - last) > 0
-      "+" + (first - last).to_s
+    if (rankings = self.keyword_rankings.between(start_date, end_date)).present?
+      fvalue = rankings.first.bing.present? ? rankings.first.bing : 99999
+      lvalue = rankings.last.bing.present? ? rankings.last.bing : 99999
+      first = (fvalue > 50) ? 50 : fvalue
+      last = (lvalue > 50) ? 50  : lvalue
+      result = ((first - last) > 0) ? "+" + (first - last).to_s : (first - last).to_s
+      return result
     else
-      (first - last).to_s
+      return 0
     end
   end
   
