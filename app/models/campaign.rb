@@ -10,15 +10,20 @@ class Campaign < ActiveRecord::Base
   
   delegate :time_zone , :to => :account
   
-
   named_scope :active, :conditions => ['LCASE(status) = ? OR LCASE(status) = ?', "active", "paused"], :order => "name ASC"
   named_scope :seo, :conditions => {:campaign_style_type => SeoCampaign.name}
   named_scope :sem, :conditions => {:campaign_style_type => SemCampaign.name}
   named_scope :maps, :conditions => {:campaign_style_type => MapsCampaign.name}
   named_scope :other, :conditions => {:campaign_style_type => OtherCampaign.name}
   
-  named_scope :cityvoice, :conditions => ["LCASE(flavor) IN ('seo', 'sem - all', 'sem - bing', 'sem - google', 'sem - google boost', 'sem - google mobile', 'sem - yahoo', 'local maps', 'retargeter')"]
-  named_scope :unmanaged, :conditions => ["LCASE(flavor) NOT IN ('seo', 'sem - all', 'sem - bing', 'sem - google', 'sem - google boost', 'sem - google mobile', 'sem - yahoo', 'local maps', 'retargeter')"]
+  named_scope :new_managed, lambda { |group_account| {:conditions => ["LCASE(flavor) IN (#{group_account.managed_campaign_flavors.inspect[1...-1]})"]} }
+  named_scope :new_unmanaged, lambda { |group_account| {:conditions => ["LCASE(flavor) NOT IN (#{group_account.managed_campaign_flavors.inspect[1...-1]})"]} }
+
+  named_scope :managed, lambda { {:conditions => ["LCASE(flavor) IN (#{MANAGED_FLAVORS.inspect[1...-1]})"]} }
+  named_scope :unmanaged, lambda { {:conditions => ["LCASE(flavor) NOT IN (#{MANAGED_FLAVORS.inspect[1...-1]})"]} }
+
+  # named_scope :managed, :conditions => ["LCASE(flavor) IN ('seo', 'sem - all', 'sem - bing', 'sem - google', 'sem - google boost', 'sem - google mobile', 'sem - yahoo', 'local maps', 'retargeter')"]
+  # named_scope :unmanaged, :conditions => ["LCASE(flavor) NOT IN ('seo', 'sem - all', 'sem - bing', 'sem - google', 'sem - google boost', 'sem - google mobile', 'sem - yahoo', 'local maps', 'retargeter')"]
 
   before_destroy :remove_from_many_to_many_relationships
 
@@ -26,7 +31,7 @@ class Campaign < ActiveRecord::Base
 
   ORPHANAGE_NAME = 'CityVoice SEM Orphaned Campaigns'
   
-  CITYVOICE_MANAGED_FLAVORS = ['seo', 'sem - all', 'sem - bing', 'sem - google', 'sem - google boost', 'sem - google mobile', 'sem - yahoo', 'local maps', 'retargeter']
+  MANAGED_FLAVORS = ['seo', 'sem - all', 'sem - bing', 'sem - google', 'sem - google boost', 'sem - google mobile', 'sem - yahoo', 'local maps', 'retargeter']
   
 
   # VIRTUAL ATTRIBUTES
@@ -566,8 +571,8 @@ class Campaign < ActiveRecord::Base
     self.campaign_style.instance_of?(OtherCampaign)
   end
   
-  def cityvoice_managed?
-    CITYVOICE_MANAGED_FLAVORS.include?(self.flavor.downcase)
+  def managed?
+    MANAGED_FLAVORS.include?(self.flavor.downcase)
   end
   
   

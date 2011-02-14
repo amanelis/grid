@@ -54,7 +54,7 @@ class AccountsController < ApplicationController
                                  :cost_between,                      
                                  :spend_between]  
                                  
-    @managed_campaigns    = @account.campaigns.active.cityvoice.to_a.sort { |a,b| a.name <=> b.name }
+    @managed_campaigns    = @account.campaigns.active.managed.to_a.sort { |a,b| a.name <=> b.name }
     @unmanaged_campaigns  = @account.campaigns.active.unmanaged.to_a.sort { |a,b| a.name <=> b.name }        
                                  
     datepicker account_path(params[:id])
@@ -86,7 +86,7 @@ class AccountsController < ApplicationController
     @month_start = (Date.today - 1.month).beginning_of_month
     @month_end = (Date.today - 1.month).end_of_month
     
-    @managed_campaigns    = @account.campaigns.active.cityvoice.to_a.sort { |a,b| a.name <=> b.name }
+    @managed_campaigns    = @account.campaigns.active.managed.to_a.sort { |a,b| a.name <=> b.name }
     @unmanaged_campaigns  = @account.campaigns.active.unmanaged.to_a.sort { |a,b| a.name <=> b.name }
     
     @cost_per_lead_summary_graph = HighChart.new('graph') do |f|

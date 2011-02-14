@@ -1,5 +1,20 @@
-%iframe{:height => "600", :allowTransparency => "true", :frameborder => "0", :scrolling => "no", :style => {:width => "100%", :border => "none"}, :src => "http://cityvoice.wufoo.com/embed/z7x4a3/"}
-  %a{:href => "http://cityvoice.wufoo.com/forms/z7x4a3/", :title="CityVoice Template", :rel => "nofollow"} 
-    =Fill out my Wufoo form!
-    
-    
+%table
+  %thead
+    %th ID
+    %th Description
+    %th Recipients
+    %th Text 1
+    %th Text 2
+    %th Text 3
+    %th Text 4
+  %tbody
+    -@forms.each do |form|
+      %tr
+        %td=form.id
+        %td=form.description
+        %td=form.forwarding_email
+        %td=form.custom1_text
+        %td=form.custom2_text
+        %td=form.custom3_text
+        %td=form.custom4_text
+  
