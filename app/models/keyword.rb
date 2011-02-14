@@ -186,9 +186,9 @@ class Keyword < ActiveRecord::Base
     last = 0
     if (rankings = self.keyword_rankings.between(start_date, end_date)).present?
       fvalue = rankings.first.google.present? ? rankings.first.google : 99999
-      lvalue = rankings.last.google.present? ? rankings.first.google : 99999
-      first = (fvalue > 50 || fvalue == 99999) ? 50 : fvalue
-      last = (lvalue > 50 || lvalue == 99999) ? 50  : lvalue
+      lvalue = rankings.last.google.present? ? rankings.last.google : 99999
+      first = (fvalue > 50) ? 50 : fvalue
+      last = (lvalue > 50) ? 50  : lvalue
       result = ((first - last) > 0) ? "+" + (first - last).to_s : (first - last).to_s
       return result
     else
@@ -201,9 +201,9 @@ class Keyword < ActiveRecord::Base
     last = 0
     if (rankings = self.keyword_rankings.between(start_date, end_date)).present?
       fvalue = rankings.first.yahoo.present? ? rankings.first.yahoo : 99999
-      lvalue = rankings.last.yahoo.present? ? rankings.first.yahoo : 99999
-      first = (fvalue > 50 || fvalue == 99999) ? 50 : fvalue
-      last = (lvalue > 50 || lvalue == 99999) ? 50  : lvalue
+      lvalue = rankings.last.yahoo.present? ? rankings.last.yahoo : 99999
+      first = (fvalue > 50) ? 50 : fvalue
+      last = (lvalue > 50) ? 50  : lvalue
       result = ((first - last) > 0) ? "+" + (first - last).to_s : (first - last).to_s
       return result
     else
@@ -216,9 +216,9 @@ class Keyword < ActiveRecord::Base
     last = 0
     if (rankings = self.keyword_rankings.between(start_date, end_date)).present?
       fvalue = rankings.first.bing.present? ? rankings.first.bing : 99999
-      lvalue = rankings.last.bing.present? ? rankings.first.bing : 99999
-      first = (fvalue > 50 || fvalue == 99999) ? 50 : fvalue
-      last = (lvalue > 50 || lvalue == 99999) ? 50  : lvalue
+      lvalue = rankings.last.bing.present? ? rankings.last.bing : 99999
+      first = (fvalue > 50) ? 50 : fvalue
+      last = (lvalue > 50) ? 50  : lvalue
       result = ((first - last) > 0) ? "+" + (first - last).to_s : (first - last).to_s
       return result
     else
