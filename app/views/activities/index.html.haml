@@ -18,8 +18,14 @@
   $(document).ready(function() {
     $(".edit_activity").change(function() {
       this.submit();
-    });
-  })
+      });
+    
+    jQuery(document).ready(function($) {
+      $('a[rel*=facebox]').facebox()
+      })
+  });
+  
+
 %header
   .right.pagination= will_paginate(@activities)
   %h3 Activity
