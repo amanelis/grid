@@ -100,7 +100,7 @@ class AccountsController < ApplicationController
       rescue
         @start_date = @month_start
         @end_date = @month_end
-        flash[:error] = "The date you entered was incorrect, we set it back to <strong>#{(@start_date).to_s(:long)} to #{@end_date.to_s(:long)}</strong> for you."
+        flash[:error] = "The date you entered was incorrect, we set it back to <strong>#{(@month_start).to_s(:long)} to #{@end_month.to_s(:long)}</strong> for you."
         respond("html", args.first)
       end 
     end
