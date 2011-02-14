@@ -154,30 +154,24 @@ class Keyword < ActiveRecord::Base
   end
 
   def most_recent_bing_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
-    self.most_recent_ranking_between(start_date, end_date).bing if self.most_recent_ranking_between(start_date, end_date).present?
+    try(self.most_recent_ranking_between(start_date, end_date).bing) if self.most_recent_ranking_between(start_date, end_date).present?
   end
   
   def most_recent_google_ranking
-    if self.most_recent_ranking.present? && self.most_recent_ranking.google.present?
-      return (ranking = self.most_recent_ranking.google) > 50 ? '>50' : ranking
-    else
-      return '>50'
+    if (ranking = self.most_recent_ranking).present?
+      ranking.google > 100 ? '>100' : ranking if ranking.google.present?
     end
   end
 
   def most_recent_yahoo_ranking
-    if self.most_recent_ranking.present? && self.most_recent_ranking.yahoo.present?
-      return (ranking = self.most_recent_ranking.yahoo) > 50 ? '>50' : ranking
-    else
-      return '>50'
+    if (ranking = self.most_recent_ranking).present?
+      ranking.yahoo > 100 ? '>100' : ranking if ranking.yahoo.present?
     end
   end
 
   def most_recent_bing_ranking
-    if self.most_recent_ranking.present? && self.most_recent_ranking.bing.present?
-      return (ranking = self.most_recent_ranking.bing) > 50 ? '>50' : ranking
-    else
-      return '>50'
+    if (ranking = self.most_recent_ranking).present?
+      ranking.bing > 100 ? '>100' : ranking if ranking.bing.present?
     end
   end
 
@@ -187,8 +181,8 @@ class Keyword < ActiveRecord::Base
     if (rankings = self.keyword_rankings.between(start_date, end_date)).present?
       fvalue = rankings.first.google.present? ? rankings.first.google : 99999
       lvalue = rankings.last.google.present? ? rankings.last.google : 99999
-      first = (fvalue > 50) ? 50 : fvalue
-      last = (lvalue > 50) ? 50  : lvalue
+      first = (fvalue > 100) ? 100 : fvalue
+      last = (lvalue > 100) ? 100  : lvalue
       result = ((first - last) > 0) ? "+" + (first - last).to_s : (first - last).to_s
       return result
     else
@@ -202,8 +196,8 @@ class Keyword < ActiveRecord::Base
     if (rankings = self.keyword_rankings.between(start_date, end_date)).present?
       fvalue = rankings.first.yahoo.present? ? rankings.first.yahoo : 99999
       lvalue = rankings.last.yahoo.present? ? rankings.last.yahoo : 99999
-      first = (fvalue > 50) ? 50 : fvalue
-      last = (lvalue > 50) ? 50  : lvalue
+      first = (fvalue > 100) ? 100 : fvalue
+      last = (lvalue > 100) ? 100  : lvalue
       result = ((first - last) > 0) ? "+" + (first - last).to_s : (first - last).to_s
       return result
     else
@@ -217,8 +211,8 @@ class Keyword < ActiveRecord::Base
     if (rankings = self.keyword_rankings.between(start_date, end_date)).present?
       fvalue = rankings.first.bing.present? ? rankings.first.bing : 99999
       lvalue = rankings.last.bing.present? ? rankings.last.bing : 99999
-      first = (fvalue > 50) ? 50 : fvalue
-      last = (lvalue > 50) ? 50  : lvalue
+      first = (fvalue > 100) ? 100 : fvalue
+      last = (lvalue > 100) ? 100  : lvalue
       result = ((first - last) > 0) ? "+" + (first - last).to_s : (first - last).to_s
       return result
     else
