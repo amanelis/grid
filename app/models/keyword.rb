@@ -146,27 +146,27 @@ class Keyword < ActiveRecord::Base
   end
 
   def most_recent_google_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
-    self.most_recent_ranking_between(start_date, end_date).try(:google)
+    (ranking = self.most_recent_ranking_between(start_date, end_date).try(:google)).present? ? ranking : 0
   end
 
   def most_recent_yahoo_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
-    self.most_recent_ranking_between(start_date, end_date).try(:yahoo)
+    (ranking = self.most_recent_ranking_between(start_date, end_date).try(:yahoo)).present? ? ranking : 0
   end
 
   def most_recent_bing_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
-    self.most_recent_ranking_between(start_date, end_date).try(:bing)
+    (ranking = self.most_recent_ranking_between(start_date, end_date).try(:bing)).present? ? ranking : 0
   end
   
   def most_recent_google_ranking
-    ((ranking = self.most_recent_ranking.try(:google)) > 100) ? '>100' : ranking
+    ((ranking = ((first_rank = self.most_recent_ranking.try(:google)).present?) ? first_rank : 101) > 100) ? 101 : ranking
   end
 
   def most_recent_yahoo_ranking
-    ((ranking = self.most_recent_ranking.try(:yahoo)) > 100) ? '>100' : ranking
+    ((ranking = ((first_rank = self.most_recent_ranking.try(:yahoo)).present?) ? first_rank : 101) > 100) ? 101 : ranking
   end
 
   def most_recent_bing_ranking
-    ((ranking = self.most_recent_ranking.try(:bing)) > 100) ? '>100' : ranking
+    ((ranking = ((first_rank = self.most_recent_ranking.try(:bing)).present?) ? first_rank : 101) > 100) ? 101 : ranking
   end
 
   def google_ranking_change_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
