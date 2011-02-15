@@ -13,9 +13,16 @@ function export_accounts() {
 }
 
 function export_client_report(id) {
+  var from = $("#from").val();
+  var to = $("#to").val();
+
+  from.split(' ').join('+');
+  to.split(' ').join('+');
+
 	$.facebox.close();
-	url = "/accounts/" + id + "/report/client.pdf";
-	window.location = url;
+	url = "/accounts/" + id + "/report/client.pdf?from=" + from + "&to=" + to;
+  alert(url);	
+//window.location = url;
 }
 
 function confirm_export_accounts() {

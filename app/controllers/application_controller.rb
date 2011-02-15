@@ -36,20 +36,17 @@ class ApplicationController < ActionController::Base
     end
     
     def datepicker(*args)
-      @date_range = ''
-      if params[:daterange].blank?
-        @start_date = Date.yesterday.beginning_of_month
-        @end_date = Date.yesterday
+      if params[:to].blank? || params[:from].blank?
+        @start_date = Date.today - 1.month
+        @end_date = Date.today
       else
-        dates = params[:daterange].split(' to ') || params[:daterange].split(' - ')
-        @date_range = params[:daterange]
         begin 
-          @start_date = Date.parse(dates[0])
-          @end_date = Date.parse(dates[1])
+          @start_date = Date.parse(params[:from])
+          @end_date = Date.parse(params[:to])
         rescue
           @start_date = Date.yesterday.beginning_of_month
           @end_date = Date.yesterday
-          flash[:error] = "The date you entered was incorrect, we set it back to <strong>#{(@start_date).to_s(:long)} to #{@end_date.to_s(:long)}</strong> for you."
+          flash[:error] = "The date you entered was incorrect, we set it back to <strong>#{(@start_date).to_s(:medium)} to #{@end_date.to_s(:medium)}</strong> for you."
           respond("html", args.first)
         end 
       end
