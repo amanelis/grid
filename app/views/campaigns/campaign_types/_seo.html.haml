@@ -72,11 +72,11 @@
             %tr
               %td= link_to keyword.descriptor, keyword_path(keyword)
               %td= keyword.most_recent_ranking().created_at.strftime("%m/%d/%y %I:%M %p") if keyword.most_recent_ranking.present?
-              %td= keyword.most_recent_google_ranking_between(@start_date, @end_date)
+              %td= ((final_ranking = ((ranking = keyword.most_recent_google_ranking_between(@start_date, @end_date))) > 100 ? '>100' : ranking.to_s) == '0') ? '' : final_ranking
               %td= keyword.google_ranking_change_between(@start_date, @end_date) 
-              %td= keyword.most_recent_yahoo_ranking_between(@start_date, @end_date)
+              %td= ((final_ranking = ((ranking = keyword.most_recent_yahoo_ranking_between(@start_date, @end_date))) > 100 ? '>100' : ranking.to_s) == '0') ? '' : final_ranking
               %td= keyword.yahoo_ranking_change_between(@start_date, @end_date) 
-              %td= keyword.most_recent_bing_ranking_between(@start_date, @end_date)
+              %td= ((final_ranking = ((ranking = keyword.most_recent_bing_ranking_between(@start_date, @end_date))) > 100 ? '>100' : ranking.to_s) == '0') ? '' : final_ranking
               %td= keyword.bing_ranking_change_between(@start_date, @end_date)    
   - if can? :update, @campaign
     %h3 Phone Numbers On Campaign
@@ -92,13 +92,9 @@
             %td= number.name
             %td= number.descript
             %td= number.inboundno
-    - semantic_form_for @campaign, :url => campaign_path(@campaign) do |f| 
-      = f.semantic_errors :state
-      - f.inputs do
-        %br
-        = f.input :adopting_phone_number, :label => 'Add Orphaned Phone Number', :as => :select, :collection => PhoneNumber.selectable_orphaned_phone_numbers, :include_blank => true
-      - f.buttons do
-        = f.commit_button :update
+    - form_for @campaign, :url => account_campaign_path(@account, @campaign) do |f| 
+      = f.select(:adopting_phone_number, PhoneNumber.selectable_orphaned_phone_numbers, :include_blank => true)
+      = f.submit(:update)
   %h3 Form Submissions
   %table
     %thead
