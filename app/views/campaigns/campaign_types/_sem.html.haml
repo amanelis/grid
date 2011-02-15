@@ -90,7 +90,7 @@
           %th Time Requested
           %th Work Description
       %tbody
-        -@campaign.submissions.lead.between(@start_date, @end_date).each do |submission|
+        -@submissions.each do |submission|
           %tr
             %td= submission.name
             %td= submission.from_email

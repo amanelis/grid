@@ -474,15 +474,15 @@ class MapKeyword < ActiveRecord::Base
   end
   
   def most_recent_google_ranking
-    ((ranking = self.most_recent_ranking.try(:google_rank)) > 100) ? '>100' : ranking
+    ((ranking = ((first_rank = self.most_recent_ranking.try(:google_rank)).present?) ? first_rank : 101) > 100) ? 101 : ranking
   end
 
   def most_recent_yahoo_ranking
-    ((ranking = self.most_recent_ranking.try(:yahoo_rank)) > 100) ? '>100' : ranking
+    ((ranking = ((first_rank = self.most_recent_ranking.try(:yahoo_rank)).present?) ? first_rank : 101) > 100) ? 101 : ranking
   end
 
   def most_recent_bing_ranking
-    ((ranking = self.most_recent_ranking.try(:bing_rank)) > 100) ? '>100' : ranking
+    ((ranking = ((first_rank = self.most_recent_ranking.try(:bing_rank)).present?) ? first_rank : 101) > 100) ? 101 : ranking
   end
   
   def google_ranking_change_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
@@ -498,15 +498,15 @@ class MapKeyword < ActiveRecord::Base
   end
   
   def most_recent_google_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
-    self.most_recent_ranking_between(start_date, end_date).try(:google_rank)
+    (ranking = self.most_recent_ranking_between(start_date, end_date).try(:google_rank)).present? ? ranking : 0
   end
 
   def most_recent_yahoo_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
-    self.most_recent_ranking_between(start_date, end_date).try(:yahoo_rank)
+    (ranking = self.most_recent_ranking_between(start_date, end_date).try(:yahoo_rank)).present? ? ranking : 0
   end
 
   def most_recent_bing_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
-    self.most_recent_ranking_between(start_date, end_date).try(:bing_rank)
+    (ranking = self.most_recent_ranking_between(start_date, end_date).try(:bing_rank)).present? ? ranking : 0
   end
   
   
