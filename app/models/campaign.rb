@@ -6,7 +6,7 @@ class Campaign < ActiveRecord::Base
   has_many :calls, :through => :phone_numbers, :order => "call_start DESC"
   has_many :contact_forms, :dependent => :destroy
   has_many :submissions, :through => :contact_forms, :order => "time_of_submission DESC"
-  has_and_belongs_to_many :industries
+  has_and_belongs_to_many :industries, :uniq => true
   
   delegate :time_zone , :to => :account
   
