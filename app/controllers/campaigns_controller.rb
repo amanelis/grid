@@ -1,5 +1,7 @@
 class CampaignsController < ApplicationController
   inherit_resources
+  #load_and_authorize_resource :account
+  #load_and_authorize_resource :campaign, :through => :account  
   belongs_to :account
   before_filter :load_time_zone, :only  => [:show]
   
