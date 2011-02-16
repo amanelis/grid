@@ -556,44 +556,7 @@ class Campaign < ActiveRecord::Base
     form
   end
 
-  def update_temperatures
-    zips = Array.new
-    Campaign.all.each do |camp|
-      zip_code = camp.zip_code || camp.account.postal_code
-      zips.push(zip_code) if zip_code.present?
-    end
-      
-      zips.each do |zip|
-        begin
-          response = HTTParty.get("http://www.google.com/ig/api?weather=#{(zip.to_s)[0..4]}")
-          puts "#{(zip.to_s)[0..4]}"
-          forecast_date = response["xml_api_reply"]["weather"]["forecast_information"]["forecast_date"]["data"]
-          puts "--#{forecast_date}"
-          low_temp = response["xml_api_reply"]["weather"]["forecast_conditions"].first["low"]["data"]
-          puts "--#{low_temp}"
-          high_temp = response["xml_api_reply"]["weather"]["forecast_conditions"].first["high"]["data"]
-          puts "--#{high_temp}"
-          avg_temp = (low_temp.to_i + high_temp.to_i)/2
-          puts "--#{avg_temp}"
-          condition = response["xml_api_reply"]["weather"]["forecast_conditions"].first["condition"]["data"]
-          puts "--#{condition}"
-          
-          
-          response["xml_api_reply"]["weather"]["current_conditions"]["humidity"]["data"]
-          response["xml_api_reply"]["weather"]["current_conditions"]["condition"]["data"]
-          response["xml_api_reply"]["weather"]["current_conditions"]["icon"]["data"]
-          response["xml_api_reply"]["weather"]["current_conditions"]["wind_condition"]["data"]
-          response["xml_api_reply"]["weather"]["current_conditions"]["temp_f"]["data"]
-          #Google returns 3 future dates in case we want to save future forecasts.....
-          response["xml_api_reply"]["weather"]["forecast_conditions"].first["high"]["data"]
-          response["xml_api_reply"]["weather"]["forecast_conditions"].first["day_of_week"]["data"]
-          response["xml_api_reply"]["weather"]["forecast_conditions"].first["icon"]["data"]
-          response["xml_api_reply"]["weather"]["forecast_conditions"].first["condition"]["data"]
-          response["xml_api_reply"]["weather"]["forecast_conditions"].first["low"]["data"]
-        rescue
-        end
-      end
-  end
+  
   
   # PREDICATES
 

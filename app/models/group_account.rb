@@ -95,7 +95,8 @@ class GroupAccount < ActiveRecord::Base
     SemCampaign.update_sem_campaign_reports_by_campaign
     puts 'Updating Adwords Ad Level Reports'
     SemCampaign.update_sem_campaign_reports_by_ad
-    puts 'Updating Campaign.target_cities'
+    puts 'Updating DailyForecast.update_temperatures'
+    DailyForecast.update_temperatures
   end
   
   def self.pull_salesforce_accounts
