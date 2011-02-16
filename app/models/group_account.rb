@@ -1,8 +1,5 @@
 class GroupAccount < ActiveRecord::Base
   
-  require 'matrix'
-  require 'mathn'
-  
   has_many :accounts
   has_many :group_users
 
