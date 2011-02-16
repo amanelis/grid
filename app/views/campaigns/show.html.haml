@@ -10,6 +10,8 @@
   })
 %header
   %p.right= render :partial => 'shared/lead_matrix'
+  %p.right= " | "
+  %p.right= render :partial => 'shared/orphaned'
   %h2 #{@campaign.name}
   #datepicker=render :partial => "shared/date_picker"
   %p.quiet= @campaign.time_zone

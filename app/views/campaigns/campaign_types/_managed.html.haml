@@ -92,9 +92,6 @@
             %td= number.name
             %td= number.descript
             %td= number.inboundno
-    - form_for @campaign, :url => account_campaign_path(@account, @campaign) do |f| 
-      = f.select(:adopting_phone_number, PhoneNumber.selectable_orphaned_phone_numbers, :include_blank => true)
-      = f.submit(:update)
   %h3 Form Submissions
   %table
     %thead
