@@ -144,7 +144,15 @@ class AccountsController < ApplicationController
 
   def export
     authorize! :export, Account
-    @accounts = Account.find(:all, :order => "name")
+    @accounts           = current_user.acquainted_accounts
+    @accounts_statuses  = Account.account_statuses_for(@accounts)
+    @accounts_types     = Account.account_types_for(@accounts)
+    @passed_status      = params[:account_status] ||= 'Active' 
+    @passed_type        = params[:account_type] ||= ''
+    @accounts           = @accounts.select {|account| account.status == params[:account_status]} if params[:account_status].present?
+    @accounts           = @accounts.select {|account| account.account_type?(params[:account_type])} if params[:account_type].present?
+    @accounts_data      = Rails.cache.fetch("accounts_data") { Account.get_accounts_data }
+    @accounts.sort! {|a,b| a.name.downcase <=> b.name.downcase}
     @outfile  = "accounts_" + Time.now.strftime("%m-%d-%Y") + ".csv"
     
     csv_data = FasterCSV.generate do |csv|

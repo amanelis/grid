@@ -1,14 +1,16 @@
 class CampaignsController < ApplicationController
   inherit_resources
-  load_and_authorize_resource :account
-  load_and_authorize_resource :campaign, :through => :account  
+  #load_and_authorize_resource :account
+  #load_and_authorize_resource :campaign, :through => :account  
   belongs_to :account
   before_filter :load_time_zone, :only  => [:show]
   
   def new
+    @account  = Account.find(params[:account_id])   
+    @campaign = Campaign.new
     authorize! :manipulate_campaign, @account
+    
     @industries = Industry.all.collect {|a| a.name}.sort!
-    # Only return "Other Campaigns"....couldn't get multiple ANDs to work with select and include?
     @flavors = Campaign.flavors.select {|a| !a.downcase.include? "seo"}.select {|a|  !a.downcase.include? "sem"}.select {|a| !a.downcase.include? 'maps'}.sort!.insert(0, 'Select...')
     if @campaign.present?
       @campaign = @account.campaigns.build
@@ -16,7 +18,10 @@ class CampaignsController < ApplicationController
   end
   
   def create
+    @account = Account.find(params[:account_id])
     authorize! :manipulate_campaign, @account
+    
+    
     if @account.present?
       campaign = @account.create_campaign(params[:flavor], params[:name])
       campaign.industry = params[:industry]
