@@ -1,11 +1,12 @@
 - if @current_user
-  %aside.span-11
+  %aside.span-15
     - if @current_user.admin?
       = link_to "Dashboard", dashboard_url
       = link_to "Accounts", accounts_url
       = link_to "Activity", activities_url
       = link_to "Job Statuses", job_statuses_url
       = link_to "Users", users_url
+      = link_to "Search", searches_url
     - else
       = link_to "Dashboard", dashboard_url
       - if can? :read, Account
@@ -13,8 +14,7 @@
       - if can? :read, Activity
         = link_to "Activities", activities_url
   
-  %aside.span-9.last
-    = render :partial => 'shared/search'
+  %aside.span-6.last
     %ul#account
       %li= link_to "My Info", edit_user_path(@current_user)
       %li= link_to 'Logout', user_session_path, :method => :delete, :id => "logout"

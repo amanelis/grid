@@ -18,7 +18,12 @@ class CampaignsController < ApplicationController
   def create
     authorize! :manipulate_campaign, @account
     if @account.present?
-      campaign = @account.create_campaign(params[:flavor], params[:name], params[:industry], params[:forwarding_number], params[:area_code])
+      campaign = @account.create_campaign(params[:flavor], params[:name])
+      campaign.industry = params[:industry]
+      #Needs to be Uncommented when we roll out
+      #campaign.url = url
+      #campaign.forwarding_number =  params[:forwarding_number]
+      #campaign.area_code = params[:area_code]
       campaign.save
       redirect_to account_campaign_path(@account.id, campaign.id, :phone_number => PhoneNumber.first)
     end  
@@ -35,7 +40,7 @@ class CampaignsController < ApplicationController
       @phone_number = PhoneNumber.find(params[:campaign][:adopting_phone_number])
       @phone_number.update_attribute(:campaign_id, @campaign.id)
     end
-    redirect_to campaign_path(@campaign)
+    redirect_to account_campaign_path(@account, @campaign)
   end
   
   def lead_matrix
@@ -81,6 +86,9 @@ class CampaignsController < ApplicationController
       @form_text = @campaign.create_contact_form(params[:description], params[:return_url], params[:forwarding_email], params[:forwarding_bcc_email], params[:custom1_text], params[:custom2_text], params[:custom3_text], params[:custom4_text], params[:need_name], params[:need_address], params[:need_phone], params[:need_email], params[:work_category], params[:work_description], params[:date_requested], params[:time_requested], params[:other_information])
       @form = @campaign.contact_forms.last
     end
+  end
+  
+  def orphaned
   end
   
 end

@@ -577,7 +577,13 @@ class Campaign < ActiveRecord::Base
           puts "--#{avg_temp}"
           condition = response["xml_api_reply"]["weather"]["forecast_conditions"].first["condition"]["data"]
           puts "--#{condition}"
-          re
+          
+          
+          response["xml_api_reply"]["weather"]["current_conditions"]["humidity"]["data"]
+          response["xml_api_reply"]["weather"]["current_conditions"]["condition"]["data"]
+          response["xml_api_reply"]["weather"]["current_conditions"]["icon"]["data"]
+          response["xml_api_reply"]["weather"]["current_conditions"]["wind_condition"]["data"]
+          response["xml_api_reply"]["weather"]["current_conditions"]["temp_f"]["data"]
           #Google returns 3 future dates in case we want to save future forecasts.....
           response["xml_api_reply"]["weather"]["forecast_conditions"].first["high"]["data"]
           response["xml_api_reply"]["weather"]["forecast_conditions"].first["day_of_week"]["data"]
