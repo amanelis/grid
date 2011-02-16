@@ -3,73 +3,75 @@
   %h3 Campaign Details
   -if @campaign.website.present?
     - ranking = @campaign.most_recent_map_ranking_between(@start_date, @end_date)
-    %table
-      %thead
-        %th Visits
-        %th Google Reviews
-        %th Google Rating
-        %th Yahoo Reviews
-        %th Yahoo Rating
-        %th Bing Reviews
-        %th Bing Rating
-      %tbody
-        %tr
-          %td= @campaign.number_of_map_visits_between(@start_date, @end_date).to_s
-          %td= ranking.google_review_count
-          %td= ranking.google_places_ranking
-          %td= ranking.yahoo_review_count
-          %td= ranking.yahoo_review_rating
-          %td= ranking.bing_review_count
-          %td= ranking.places_rankings
+    -if ranking.present?
+      %table
+        %thead
+          %th Visits
+          %th Google Reviews
+          %th Google Rating
+          %th Yahoo Reviews
+          %th Yahoo Rating
+          %th Bing Reviews
+          -#%th Bing Rating
+        %tbody
+          %tr
+            %td= @campaign.number_of_map_visits_between(@start_date, @end_date).to_s
+            %td= ranking.google_review_count || 'Na'
+            %td= ranking.google_places_ranking || 'Na'
+            %td= ranking.yahoo_review_count || 'Na'
+            %td= ranking.yahoo_review_rating || 'Na'
+            %td= ranking.bing_review_count || 'Na'
+            -#%td= ranking.places_rankings
+            
+      %h4 Google Maps Details
+      %table
+        %thead
+          %th Coupons
+          %th Citations
+          %th User Content
+          %th Total Reviews
+          %th Insider Pages Reviews
+          %th Rating
+          %th Customer Lobby Reviews
+          %th Rating
+          %th City Search Reviews
+          %th Rating
+          %th Judys Book Reviews
+          %th Rating
+        %tbody
+          %tr
+            %td= ranking.google_coupon_count || 'Na'
+            %td= ranking.google_citation_count || 'Na'
+            %td= ranking.google_user_content_count || 'Na'
+            %td= ranking.google_review_count || 'Na'
+            %td= ranking.google_insiderpages_review_count || 'Na'
+            %td= ranking.google_insiderpages_rating || 'Na'
+            %td= ranking.google_customerlobby_review_count || 'Na'
+            %td= ranking.google_customerlobby_rating || 'Na'
+            %td= ranking.google_citysearch_review_count || 'Na'
+            %td= ranking.google_citysearch_rating || 'Na'
+            %td= ranking.google_judysbook_review_count || 'Na'
+            %td= ranking.google_judysbook_rating || 'Na'
           
-    %h4 Google Maps Details
-    %table
-      %thead
-        %th Coupons
-        %th Citations
-        %th User Content
-        %th Total Reviews
-        %th Insider Pages Reviews
-        %th Rating
-        %th Customer Lobby Reviews
-        %th Rating
-        %th City Search Reviews
-        %th Rating
-        %th Judys Book Reviews
-        %th Rating
-      %tbody
-        %tr
-          %td= ranking.google_coupon_count
-          %td= ranking.google_citation_count
-          %td= ranking.google_user_content_count
-          %td= ranking.google_review_count
-          %td= ranking.google_insiderpages_review_count
-          %td= ranking.google_insiderpages_rating
-          %td= ranking.google_customerlobby_review_count
-          %td= ranking.google_customerlobby_rating
-          %td= ranking.google_citysearch_review_count
-          %td= ranking.google_citysearch_rating
-          %td= ranking.google_judysbook_review_count
-          %td= ranking.google_judysbook_rating
-          
-    %h4 Bing Maps Details
-    %table
-      %thead
-        %th Review Count
-        %th Overall Rating
-        %th Insider Pages Reviews
-        %th Customer Lobby Reviews
-        %th City Search Reviews
-        %th Judys Book Reviews
-      %tbody
-        %tr
-          %td= ranking.bing_review_count
-          %td= ranking.places_rankings
-          %td= ranking.insider_pages_review_count
-          %td= ranking.customer_lobby_review_count
-          %td= ranking.citysearch_review_count
-          %td= ranking.judysbook_review_count
-        
+      %h4 Bing Maps Details
+      %table
+        %thead
+          %th Review Count
+          -#%th Overall Rating
+          -#%th Insider Pages Reviews
+          -#%th Customer Lobby Reviews
+          -#%th City Search Reviews
+          -#%th Judys Book Reviews
+        %tbody
+          %tr
+            %td= ranking.bing_review_count || 'Na'
+            -#%td= ranking.places_rankings
+            -#%td= ranking.insider_pages_review_count
+            -#%td= ranking.customer_lobby_review_count
+            -#%td= ranking.citysearch_review_count
+            -#%td= ranking.judysbook_review_count
+    -else
+      %h4 There are no rankings for this date range
   -else
     %h3 Campaign Has No Website Associated
     

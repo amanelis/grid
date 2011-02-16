@@ -15,7 +15,7 @@ class Keyword < ActiveRecord::Base
       sf_campaigns.each do |sf_campaign|
         local_seo_campaign = Campaign.find_by_salesforce_id(sf_campaign.id).try(:campaign_style)
         if sf_campaign.keywords__c.present? && local_seo_campaign.present?
-          keywords = sf_campaign.keywords__c.split(',')
+          keywords = sf_campaign.keywords__c.gsub(", ", ",").split(',')
           keywords.each do |keyword|
             puts 'Started: ' + keyword
             Keyword.find_or_create_by_seo_campaign_id_and_descriptor(:seo_campaign_id => local_seo_campaign.id,

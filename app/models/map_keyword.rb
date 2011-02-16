@@ -12,9 +12,7 @@ class MapKeyword < ActiveRecord::Base
       sf_campaigns.each do |sf_campaign|
         local_map_campaign = Campaign.find_by_salesforce_id(sf_campaign.id).try(:campaign_style)
         if sf_campaign.keywords__c.present? && local_map_campaign.present?
-          keywords = sf_campaign.keywords__c.gsub(', ', ',')
-          keywords = keywords.split(',')
-          keywords.each do |keyword|
+          sf_campaign.keywords__c.gsub(', ', ',').split(',').each do |keyword|
             puts 'Started: ' + keyword
             MapKeyword.find_or_create_by_maps_campaign_id_and_descriptor(:maps_campaign_id => local_map_campaign.id,
                                                                          :descriptor => keyword,
@@ -33,14 +31,29 @@ class MapKeyword < ActiveRecord::Base
   def self.update_map_rankings
     job_status = JobStatus.create(:name => "MapKeyword.update_map_rankings")
     begin
-      MapKeyword.all.each { |map_keyword| map_keyword.fetch_map_rankings }
+      keywords = MapKeyword.all.select {|map_keyword| map_keyword.maps_campaign.campaign.status != "Inactive"}
+      keywords.each { |map_keyword| map_keyword.fetch_map_rankings }
     rescue Exception => ex
       job_status.finish_with_errors(ex)
       raise
     end
     job_status.finish_with_no_errors
   end
-
+  
+  def self.clean_up_map_keywords
+    sf_campaigns = Salesforce::Clientcampaign.find_all_by_campaign_type__c('Local Maps')
+    sf_campaigns.each do |sf_campaign|
+      local_map_campaign = Campaign.find_by_salesforce_id(sf_campaign.id).try(:campaign_style)
+      if sf_campaign.keywords__c.present? && local_map_campaign.present?
+        keywords = sf_campaign.keywords__c.gsub(', ', ',').split(',')
+        keywords = keywords.split(',')
+        actual_keywords = local_map_campaign.map_keywords
+        actual_keywords.each do |keyword|
+          keyword.destroy if !keywords.index(keyword.descriptor).present?
+        end
+      end
+    end
+  end
 
   # INSTANCE BEHAVIOR
 
@@ -98,6 +111,7 @@ class MapKeyword < ActiveRecord::Base
       end
       self.ranking_updated_on = Date.today
       self.save!
+
     end
   end
 
@@ -105,61 +119,37 @@ class MapKeyword < ActiveRecord::Base
 
   def get_google_ranking
     begin
+      puts "Starting keyword: #{self.id}"
       search_keyword = self.descriptor.gsub(" ", "+")
-      start_page = "http://maps.google.com/maps?hl=en&um=1&ie=UTF-8&q=" + search_keyword + "&fb=1&gl=us&view=text&cd=2&sa=N"
-      google_url = "http://maps.google.com/maps?hl=en&um=1&ie=UTF-8&q=" + search_keyword + "&fb=1&gl=us&view=text&cd=2&sa=N"
-      page_num = 0
+      start_page, google_url = "http://maps.google.com/maps?hl=en&um=1&ie=UTF-8&q=#{search_keyword}&fb=1&gl=us&view=text&cd=2&sa=N", "http://maps.google.com/maps?hl=en&um=1&ie=UTF-8&q=#{search_keyword}&fb=1&gl=us&view=text&cd=2&sa=N"
       result = 1000
-      company_name = 'NA'
-      address = 'NA'
-      phone = 'NA'
-      page = 'NA'
-      review_count = 0
-      coupon_count = 0
-      citation_count = 0
-      user_content_count = 0
-      google_places_ranking = 0
-      google_insiderpages_review_count = 0
-      google_customerlobby_review_count = 0
-      google_citysearch_review_count = 0
-      google_judysbook_review_count = 0
-      google_yahoo_review_count = 0
-      google_insiderpages_rating = 0
-      google_customerlobby_rating = 0
-      google_citysearch_rating = 0
-      google_judysbook_rating = 0
-      google_yahoo_rating = 0
+      company_name, address, phone, page, place_url = 'NA', 'NA', 'NA', 'NA', 'NA'
+      page_num, review_count, coupon_count, citation_count, user_content_count, google_places_ranking = 0, 0, 0, 0, 0, 0
+      google_insiderpages_review_count, google_customerlobby_review_count, google_citysearch_review_count = 0, 0, 0
+      google_judysbook_review_count, google_yahoo_review_count, google_insiderpages_rating, google_customerlobby_rating = 0, 0, 0, 0
+      google_citysearch_rating, google_judysbook_rating, google_yahoo_rating = 0, 0, 0
       company = self.maps_campaign.company_name.present? ? self.maps_campaign.company_name : self.campaign.account.name
-      place_url = 'NA'
-
+      
       #If not in the 7 Pack....find the ranking!
       if result == 1000
         20.times do
           source = HTTParty.get(google_url)
           begin
-            results_start = source.index("text vcard indent block")
-            results_stop = source.index("pw res")
-            results = source[results_start..results_stop]
-            results = results.gsub("<b>", "").gsub("</b>", "").gsub("&amp;", "&").gsub("&#39;", "'")
+            results = source[source.index("text vcard indent block")..source.index("pw res")].gsub("<b>", "").gsub("</b>", "").gsub("&amp;", "&").gsub("&#39;", "'")
             if results.include? company
               whole_page = results.split("text vcard indent block")
               whole_page.delete_at(0)
               whole_page.each do |result_item|
-                result_item_block = result_item.gsub("<b>", "").gsub("</b>", "").gsub("&amp;", "&").gsub("&#39;", "'")
-                if result_item_block.include? company
-                  page_start = result_item.index("href=\"/maps")
-                  page_stop = result_item.index("&q")
-                  if page_start.present? && page_stop.present?
-                    page = result_item[page_start..page_stop]
-                    page = "http://maps.google.com" + page[6..(page.length - 2)]
-                    result = page_num + (whole_page.index(result_item) + 1)
-                    break
-                  end
+                if (result_item_block = result_item.gsub("<b>", "").gsub("</b>", "").gsub("&amp;", "&").gsub("&#39;", "'")).include? company
+                  page = result_item[result_item.index("href=\"/maps")..result_item.index("&q")]
+                  page = "http://maps.google.com" + page[6..(page.length - 2)]
+                  result = page_num + (whole_page.index(result_item) + 1)
+                  break
                 end
               end
             else
               page_num += 10
-              google_url = start_page + "&start=" + page_num.to_s()
+              google_url = "#{start_page}&start=#{page_num.to_s()}"
             end
           rescue
           end
@@ -168,8 +158,7 @@ class MapKeyword < ActiveRecord::Base
       end
 
       if page != 'NA'
-        page_source = HTTParty.get(page)
-        page_source = page_source.gsub("<b>", "").gsub("</b>", "").gsub("&amp;", "&").gsub("&#39;", "'")
+        page_source = HTTParty.get(page).gsub("<b>", "").gsub("</b>", "").gsub("&amp;", "&").gsub("&#39;", "'")
         owner_start = page_source.index('From the owner')
         if page_source.present? and owner_start.present?
           other_source = page_source[0..owner_start]
@@ -177,64 +166,34 @@ class MapKeyword < ActiveRecord::Base
 
           #Get Places Rating
           
-          rating_start = page_source.index('g:rating_override')
-          rating_end = page_source.index('rsw-stars')
-          if rating_start.present? && rating_end.present?
-            google_places_ranking = page_source[(rating_start + 19)..(rating_end - 10)]
-          end
+          google_places_ranking = page_source[(page_source.index('g:rating_override') + 19)..(page_source.index('rsw-stars') - 10)]
           #Get Company Name
-          company_start = page_source.index("pp-place-title")
-          company_block = page_source[company_start..page_source.length]
-          company_stop = company_block.index("</span>")
-          company_name = company_block[22..(company_stop - 1)]
+          company_block = page_source[page_source.index("pp-place-title")..page_source.length]
+          company_name = company_block[22..(company_block.index("</span>") - 1)]
 
           #Get Address
           address = "None"
-          address_start = company_block.index("pp-headline-address")
-          address_big_block = company_block[address_start..company_block.length]
-          address_stop = address_big_block.index("</span>")
-          if address_start.present? && address_stop.present?
-            address_block = address_big_block[0..address_stop]
-            address = address_block[27..(address_block.length - 2)]
-          end
-          address = address
-
+          address_big_block = company_block[company_block.index("pp-headline-address")..company_block.length]
+          address_block = address_big_block[0..address_big_block.index("</span>")]
+          address = address_block[27..(address_block.length - 2)]
+          
           #Get Phone
           phone = "NA"
-          phone_start = company_block.index("<nobr>")
-          phone_stop = company_block.index("</nobr>")
-          if phone_start.present? || phone_stop.present?
-            phone = company_block[(phone_start + 6)..(phone_stop - 1)]
-          end
-          phone = phone
-
+          phone = company_block[(phone_start = company_block.index("<nobr>") + 6)..(phone_stop = company_block.index("</nobr>") - 1)]
+          
           #Get Number of reviews
-          review = 0
           if company_block.include? 'More reviews by Google users'
-            review_start = company_block.index('More reviews by Google users')
-            review_block = company_block[review_start..company_block.length]
+            review_block = company_block[company_block.index('More reviews by Google users')..company_block.length]
             review_stop = review_block.index(')')
-            if review_stop.present?
-              final_block = review_block[43..(review_stop - 8)]
-              review = 2 + final_block.to_i
-            end
+            review = 2 + review_block[43..(review_block.index(')') - 8)].to_i if review_block.index(')').present?
           else
-            review_start = company_block.index("Reviews by Google users")
-            review_stop = company_block.index('Related places')
-            if review_start.present? && review_stop.present?
-              review_block = company_block[review_start..review_stop]
-              reviews = review_block.split('pp-story-item')
-              reviews.delete_at(0)
-              review = reviews.size
-            end
+            review = company_block[company_block.index("Reviews by Google users")..company_block.index('Related places')].split('pp-story-item').count - 1
           end
-          review_count = review.to_i if review.present?
+          review_count = review.to_i || 0
 
           #Get Number of coupons
-          coupons = 0
           if company_block.include? 'More offers'
-            coupon_start = company_block.index('More offers')
-            coupon_block = company_block[coupon_start..company_block.length]
+            coupon_block = company_block[company_block.index('More offers')..company_block.length]
             coupon_stop = coupon_block.index(')')
             if coupon_stop.present?
               final_block = coupon_block[13..(coupon_stop - 1)]
@@ -243,17 +202,11 @@ class MapKeyword < ActiveRecord::Base
           else
             coupon_start = company_block.index("Offers")
             coupon_stop = company_block.index('Reviews')
-            if coupon_start.present? || coupon_stop.present?
-              coupon_block = company_block[coupon_start..coupon_stop]
-              num_coupons = coupon_block.split('pp-coupons-img')
-              num_coupons.delete_at(0)
-              coupons = num_coupons.size
-            end
+            coupons = company_block[coupon_start..coupon_stop].split('pp-coupons-img').count - 1 if coupon_start.present? && coupon_stop.present?
           end
-          coupon_count = coupons.to_i if coupons.present?
+          coupon_count = coupons.to_i || 0
 
           #Get Citations
-          citations = 0
           citation_start = company_block.index("More about this place")
           if citation_start.present?
             first_block = company_block[citation_start..company_block.length]
@@ -268,84 +221,63 @@ class MapKeyword < ActiveRecord::Base
                   citations = 5 + citation_block[(count_start + 7)..(count_stop - 1)].to_i
                 end
               else
-                citation_count = citation_block.split('pp-attribution')
-                citations = citation_count.size - 1
+                citations = citation_block.split('pp-attribution').size - 1
               end
             end
           end
-          citation_count = citations.to_i if citations.present?
+          citation_count = citations.to_i || 0
 
           #Get User Content
           user_content = 0
           content_start = other_source.index("Related Maps")
-          if content_start.present?
-            first_block = other_source[content_start..(other_source.length - 1)]
-            user_content = (first_block.split('ugc-attribution').count - 1).to_i
-          end
+          user_content = (other_source[content_start..(other_source.length - 1)].split('ugc-attribution').count - 1).to_i if content_start.present?
           user_content_count = user_content.to_i if user_content.present?
         end
         
-        review_page = page + '&view=feature&mcsrc=provider_blocks&num=10&start=0&ved=0COABELUF&sa=X&ei=rU35TN-oKJOwywW_irGMBA'
-        review_source = HTTParty.get(review_page)
-        review_source = review_source.gsub("<b>", "").gsub("</b>", "").gsub("&amp;", "&").gsub("&#39;", "'")
+        review_source = HTTParty.get("#{page}&view=feature&mcsrc=provider_blocks&num=10&start=0&ved=0COABELUF&sa=X&ei=rU35TN-oKJOwywW_irGMBA").gsub("<b>", "").gsub("</b>", "").gsub("&amp;", "&").gsub("&#39;", "'")
         #Get InsiderPages Info
         insider_start = review_source.index('<span>insiderpages.com</span>')
         if insider_start.present?
           insider_block = review_source[insider_start..(review_source.length - 1)]
-          insider_stop = (insider_block.index('</span> reviews') - 1) if insider_block.present?
-          google_insiderpages_review_count = insider_block[38..insider_stop].to_i if insider_stop.present?
+          google_insiderpages_review_count = insider_block[38..(insider_block.index('</span> reviews') - 1)].to_i || 0
           
-          insider_star_end = insider_block.index('webreview')
-          insider_star_block = insider_block[0..insider_star_end]
-          google_insiderpages_rating = (insider_star_block.split('rsw-starred').count - 1)
+          google_insiderpages_rating = (insider_block[0..insider_block.index('webreview')].split('rsw-starred').count - 1) || 0
         end
         
         #Get CustomerLobby Info
         lobby_start = review_source.index('<span>customerlobby.com</span>')
         if lobby_start.present?
           lobby_block = review_source[lobby_start..(review_source.length - 1)]
-          lobby_stop = (lobby_block.index('</span> reviews') - 1)
-          google_customerlobby_review_count = lobby_block[39..lobby_stop].to_i
+          google_customerlobby_review_count = lobby_block[39..(lobby_block.index('</span> reviews') - 1)].to_i || 0
           
-          lobby_star_end = lobby_block.index('webreview')
-          lobby_star_block = lobby_block[0..lobby_star_end]
-          google_customerlobby_rating = (lobby_star_block.split('rsw-starred').count - 1)
+          google_customerlobby_rating = (lobby_block[0..lobby_block.index('webreview')].split('rsw-starred').count - 1) || 0
         end
         
         #Get CitySearch Info
         citysearch_start = review_source.index('citysearch.com</span>')
         if citysearch_start.present?
           citysearch_block = review_source[citysearch_start..(review_source.length - 1)]
-          citysearch_stop = (citysearch_block.index('</span> reviews') - 1)
-          google_citysearch_review_count = citysearch_block[30..citysearch_stop].to_i
+          google_citysearch_review_count = citysearch_block[30..(citysearch_block.index('</span> reviews') - 1)].to_i || 0
           
-          citysearch_star_end = citysearch_block.index('webreview')
-          citysearch_star_block = citysearch_block[0..citysearch_star_end]
-          google_citysearch_rating = (citysearch_star_block.split('rsw-starred').count - 1)
+          google_citysearch_rating = (citysearch_block[0..citysearch_block.index('webreview')].split('rsw-starred').count - 1) || 0
         end
         
         #Get Yahoo Info yahoo.com - 3 reviews
         yahoo_start = review_source.index('yahoo.com</span>')
         if yahoo_start.present?
           yahoo_block = review_source[yahoo_start..(review_source.length - 1)]
-          yahoo_stop = (yahoo_block.index('</span> reviews') - 1)
-          google_yahoo_review_count = yahoo_block[25..yahoo_stop].to_i
+          google_yahoo_review_count = yahoo_block[25..(yahoo_block.index('</span> reviews') - 1)].to_i || 0
           
-          yahoo_star_end = yahoo_block.index('webreview')
-          yahoo_star_block = yahoo_block[0..yahoo_star_end]
-          google_yahoo_rating = (yahoo_star_block.split('rsw-starred').count - 1)
+          google_yahoo_rating = (yahoo_block[0..yahoo_block.index('webreview')].split('rsw-starred').count - 1) || 0
         end
         
         #Get Judysbook Info yahoo.com - 3 reviews
         judysbook_start = review_source.index('judysbook.com</span>')
         if judysbook_start.present?
           judysbook_block = review_source[judysbook_start..(review_source.length - 1)]
-          judysbook_stop = (judysbook_block.index('</span> reviews') - 1)
-          google_judysbook_review_count = judysbook_block[29..judysbook_stop].to_i
+          google_judysbook_review_count = judysbook_block[29..(judysbook_block.index('</span> reviews') - 1)].to_i || 0
           
-          judysbook_star_end = judysbook_block.index('webreview')
-          judysbook_star_block = judysbook_block[0..judysbook_star_end]
-          google_judysbook_rating = (judysbook_star_block.split('rsw-starred').count - 1)
+          google_judysbook_rating = (judysbook_block[0..judysbook_block.index('webreview')].split('rsw-starred').count - 1) || 0
         end
         
       end
@@ -359,35 +291,16 @@ class MapKeyword < ActiveRecord::Base
   def get_yahoo_ranking
     search_keyword = self.descriptor
     search_city = ''
-    cities_string = self.maps_campaign.campaign.target_cities.gsub(', ', ',') if self.maps_campaign.campaign.target_cities.present?
-    cities = ''
-    cities = cities_string.split(',') if cities_string.present?
-    cities.each do |city|
-      if search_keyword.include? city
-        search_city = city
-        search_keyword.gsub(city, '')
-      end
-    end
+    search_city = "#{self.maps_campaign.campaign.account.city},#{self.maps_campaign.campaign.account.state}" if self.maps_campaign.campaign.account.city.present? && self.maps_campaign.campaign.account.state.present?
     search_keyword = search_keyword.gsub('+', '')
     company = self.maps_campaign.company_name.present? ? self.maps_campaign.company_name : self.campaign.account.name
     result = 1000
-    company_name = 'NA'
-    address = 'NA'
-    phone = 'NA'
-    map_url = 'NA'
-    review_count = 0
-    yahoo_id = 'NA'
-    categories = 'NA'
-    rating = 0
-    website_url = 'NA'
-    last_review_date = 'NA'
-    state = 'NA'
-    start_num = 0
-    url = 'http://local.yahooapis.com/LocalSearchService/V3/localSearch?appid=V.aHUKPV34F4PgtK3n9.LE_zy6gaNTOXc.g2J2Bd10mi8FtXI7CjzfbgwsZNDIMQp4Y4&query=' + search_keyword.gsub(' ', '+') + '&location=' + search_city.gsub(' ', '+') + '&output=json&results=20&start='
+    company_name, address, phone, map_url, yahoo_id, categories, website_url, last_review_date, state = 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA'
+    review_count, rating, start_num = 0, 0, 0
+    url = "http://local.yahooapis.com/LocalSearchService/V3/localSearch?appid=V.aHUKPV34F4PgtK3n9.LE_zy6gaNTOXc.g2J2Bd10mi8FtXI7CjzfbgwsZNDIMQp4Y4&query=#{search_keyword.gsub(' ', '+')}&location=#{search_city.gsub(' ', '+')}&output=json&results=20&start="
     begin
-      while start_num < 232
-        response_url = url + start_num.to_s
-        response = HTTParty.get(response_url)['ResultSet']['Result']
+      while start_num < 250
+        response = HTTParty.get(url + start_num.to_s)['ResultSet']['Result']
         index = response.find_index { |i| i['Title'] == company }
         if index.present?
           result = index + start_num
@@ -421,68 +334,55 @@ class MapKeyword < ActiveRecord::Base
 
 
   def get_bing_ranking
-    search_keyword = self.descriptor.gsub(" ", "+")
     company = self.maps_campaign.company_name.present? ? self.maps_campaign.company_name : self.campaign.account.name
     result = 1000
-    map_url = 'NA'
-    review_count = 0
-    bing_id = 'NA'
-    start_num = 0
-    url = 'http://www.bing.com/local/Default.aspx?q=' + search_keyword.gsub(' ', '+') + '&start='
+    map_url, bing_id = 'NA', 'NA'
+    review_count, rating, start_num = 0, 0, 0
+    url = "http://www.bing.com/local/Default.aspx?q=#{self.descriptor.gsub(' ', '+')}&start="
     begin
       while start_num < 250
-        response_url = url + start_num.to_s
-        response = HTTParty.get(response_url)
+        response = HTTParty.get(url + start_num.to_s)
+        response = response[response.index('Advertise here')..response.length - 1]
         if response.include? company
-          items = response.split('{Title:')
-
-          url_items = items[(items.size - 10)..(items.size - 1)]
-          index = url_items.find_index { |i| i.include? company }
+          items = response[response.index('Advertise here')..response.length - 1].split('star rating')
+          items.pop
+          index = items.find_index { |i| i.include? company }
           result = index + start_num + 1
-          url_start = url_items[index].index('Url:') + 5
-          url_end = url_items[index].index('Logging') - 3
-          map_url = MapKeyword.decode_msn_bullshit(url_items[index][url_start..url_end].downcase)
-
+          url_block = items[index][items[index].index('HeaderLink')..items[index].length - 1]
+          url_end = url_block.index('onclick')
+          map_url = MapKeyword.decode_msn_bullshit(url_block[18..url_end - 3].downcase.gsub('&amp;', '&'))
           if map_url.present?
-            id_start = map_url.index('lid=') + 4
-            id_stop = map_url.index('&q=') - 1
-            bing_id = map_url[id_start..id_stop]
+            bing_id = map_url[(map_url.index('lid=') + 4)..(map_url.index('&q=') - 1)]
             site_response = HTTParty.get(map_url)
-            review_start = site_response.index('onReviewLinkClick')
-            review_block = site_response[review_start..site_response.length - 1]
-            if review_block.present?
-              review_block_start = review_block.index('Reviews (')
-              review_block_end = review_block.index('</a>')
-              if review_block_start.present? && review_block_end.present?
-                review_count = review_block[review_block_start + 9..review_block_end - 2].to_i
-              end
-            end
+            review_block = site_response[(site_response.index('rating rating'))..site_response.length - 1]
+            rating = review_block[25..25].to_i
+            review_count = review_block[(review_block.index('Reviews (') + 9)..(review_block.index('</a>')) - 2].to_i if review_block.present?
           end
           start_num = 250
         else
           start_num += 10
         end
       end
-      return [result, map_url, review_count, bing_id]
+      return [result, map_url, review_count, bing_id, rating]
     rescue
-      return [result, map_url, review_count, bing_id]
+      return [result, map_url, review_count, bing_id, rating]
     end
   end
 
   def self.decode_msn_bullshit(url)
-    return url.gsub('\\x3a', ':').gsub('\\x2f', '/').gsub('\\x3f', '?').gsub('\\x3d', '=').gsub('\\x26', '&').gsub('\\x2520', '+')
+    return url.gsub('\\x3a', ':').gsub('\\x2f', '/').gsub('\\x3f', '?').gsub('\\x3d', '=').gsub('\\x26', '&').gsub('\\x2520', '+').gsub('&amp;', '&')
   end
   
   def most_recent_google_ranking
-    ((ranking = self.most_recent_ranking.try(:google_rank)) > 100) ? '>100' : ranking
+    ((ranking = ((first_rank = self.most_recent_ranking.try(:google_rank)).present?) ? first_rank : 101) > 100) ? 101 : ranking
   end
 
   def most_recent_yahoo_ranking
-    ((ranking = self.most_recent_ranking.try(:yahoo_rank)) > 100) ? '>100' : ranking
+    ((ranking = ((first_rank = self.most_recent_ranking.try(:yahoo_rank)).present?) ? first_rank : 101) > 100) ? 101 : ranking
   end
 
   def most_recent_bing_ranking
-    ((ranking = self.most_recent_ranking.try(:bing_rank)) > 100) ? '>100' : ranking
+    ((ranking = ((first_rank = self.most_recent_ranking.try(:bing_rank)).present?) ? first_rank : 101) > 100) ? 101 : ranking
   end
   
   def google_ranking_change_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
@@ -498,15 +398,15 @@ class MapKeyword < ActiveRecord::Base
   end
   
   def most_recent_google_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
-    self.most_recent_ranking_between(start_date, end_date).try(:google_rank)
+    (ranking = self.most_recent_ranking_between(start_date, end_date).try(:google_rank)).present? ? ranking : 0
   end
 
   def most_recent_yahoo_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
-    self.most_recent_ranking_between(start_date, end_date).try(:yahoo_rank)
+    (ranking = self.most_recent_ranking_between(start_date, end_date).try(:yahoo_rank)).present? ? ranking : 0
   end
 
   def most_recent_bing_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
-    self.most_recent_ranking_between(start_date, end_date).try(:bing_rank)
+    (ranking = self.most_recent_ranking_between(start_date, end_date).try(:bing_rank)).present? ? ranking : 0
   end
   
   
