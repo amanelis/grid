@@ -11,7 +11,7 @@
         %th Yahoo Reviews
         %th Yahoo Rating
         %th Bing Reviews
-        %th Bing Rating
+        -#%th Bing Rating
       %tbody
         %tr
           %td= @campaign.number_of_map_visits_between(@start_date, @end_date).to_s
@@ -20,7 +20,7 @@
           %td= ranking.yahoo_review_count
           %td= ranking.yahoo_review_rating
           %td= ranking.bing_review_count
-          %td= ranking.places_rankings
+          -#%td= ranking.places_rankings
           
     %h4 Google Maps Details
     %table
@@ -56,19 +56,19 @@
     %table
       %thead
         %th Review Count
-        %th Overall Rating
-        %th Insider Pages Reviews
-        %th Customer Lobby Reviews
-        %th City Search Reviews
-        %th Judys Book Reviews
+        -#%th Overall Rating
+        -#%th Insider Pages Reviews
+        -#%th Customer Lobby Reviews
+        -#%th City Search Reviews
+        -#%th Judys Book Reviews
       %tbody
         %tr
           %td= ranking.bing_review_count
-          %td= ranking.places_rankings
-          %td= ranking.insider_pages_review_count
-          %td= ranking.customer_lobby_review_count
-          %td= ranking.citysearch_review_count
-          %td= ranking.judysbook_review_count
+          -#%td= ranking.places_rankings
+          -#%td= ranking.insider_pages_review_count
+          -#%td= ranking.customer_lobby_review_count
+          -#%td= ranking.citysearch_review_count
+          -#%td= ranking.judysbook_review_count
         
   -else
     %h3 Campaign Has No Website Associated
