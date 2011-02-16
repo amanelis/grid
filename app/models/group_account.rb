@@ -53,7 +53,7 @@ class GroupAccount < ActiveRecord::Base
   end
 
   def self.dashboard_dates
-    ((Date.today - 1.month)..Date.today).to_a
+    Rails.env.development? ? (Date.yesterday..Date.today).to_a : ((Date.today - 1.month)..Date.today).to_a
   end
   
   def self.dashboard_data

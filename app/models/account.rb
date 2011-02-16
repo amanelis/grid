@@ -44,22 +44,23 @@ class Account < ActiveRecord::Base
   end
   
   def self.dashboard_dates
-    ((Date.today - 1.month)..Date.today).to_a
+    Rails.env.development? ? (Date.yesterday..Date.today).to_a : ((Date.today - 1.month)..Date.today).to_a
   end
   
   def self.dashboard_data
     self.dashboard_dates.inject([]) { |leads, date| leads << self.active.to_a.sum { |account| account.campaigns.active.managed.to_a.sum { |campaign| campaign.number_of_total_leads_between(date, date) } } }
   end
   
-
   def self.get_accounts_data
+    start_date = Rails.env.development? ? Date.yesterday - 1.day : Date.yesterday.beginning_of_month
+    end_date = Date.yesterday
     self.active.inject({}) do |the_data, an_account|
       the_data[an_account.id] = {:name => an_account.name,
                                  :account_type => an_account.account_type,
-                                 :ctr => an_account.sem_click_through_rate_between(Date.yesterday.beginning_of_month, Date.yesterday) * 100,
-                                 :leads => an_account.number_of_total_leads_between(Date.yesterday.beginning_of_month, Date.yesterday),
-                                 :cpconv => an_account.cost_per_lead_between(Date.yesterday.beginning_of_month, Date.yesterday),
-                                 :leads_by_day => an_account.number_of_total_leads_by_day_between(Date.yesterday.beginning_of_month, Date.yesterday)}
+                                 :ctr => an_account.sem_click_through_rate_between(start_date, end_date) * 100,
+                                 :leads => an_account.number_of_total_leads_between(start_date, end_date),
+                                 :cpconv => an_account.cost_per_lead_between(start_date, end_date),
+                                 :leads_by_day => an_account.number_of_total_leads_by_day_between(start_date, end_date)}
       the_data
     end
   end
