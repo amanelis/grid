@@ -17,6 +17,8 @@ class ContactForm < ActiveRecord::Base
   end
   
   def inactive?
+    return true unless self.campaign.account.active?
+    return true unless self.campaign.active?
     self.active? ? false : true
   end
 
