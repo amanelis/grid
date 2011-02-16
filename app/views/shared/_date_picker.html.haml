@@ -1,3 +1,24 @@
+%script
+  $(function(){
+  $('#to,#from').datepicker({
+  defaultDate: "+1w",
+  changeMonth: true,
+  numberOfMonths: 1,
+  dateFormat: 'M d, yy',
+  onSelect: function( selectedDate ) {
+  var option = this.id == "from" ? "minDate" : "maxDate",
+  instance = $( this ).data( "datepicker" );
+  date = $.datepicker.parseDate(
+  instance.settings.dateFormat ||
+  $.datepicker._defaults.dateFormat,
+  selectedDate, instance.settings);
+  dates.not( this ).datepicker( "option", option, date );
+  }
+  });
+  })
+
 -form_for(accounts_path, :html => {:method => "get"}) do |f|
-  = f.text_field :daterangepicker, :placeholder => "#{(@start_date).to_s(:long)}" + ' to ' + "#{@end_date.to_s(:long)}", :name => "daterange", :id => "daterangepicker", :autocomplete => "off", :value => @date_range
+  = f.text_field :from, :name => "from", :id => "from", :autocomplete => "off", :value => "#{(@start_date).to_s(:medium)}", :size => 20
+  = " to "
+  = f.text_field :to, :name => "to", :id => "to", :autocomplete => "off", :value => "#{@end_date.to_s(:medium)}", :size => 20
   = f.submit "Change Date"
