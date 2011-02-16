@@ -556,9 +556,12 @@ class Campaign < ActiveRecord::Base
     form
   end
 
-  
-  
+    
   # PREDICATES
+  
+  def active?
+    self.status.downcase == "active" || self.status.downcase == "paused"
+  end
 
   def is_seo?
     self.campaign_style.instance_of?(SeoCampaign)
