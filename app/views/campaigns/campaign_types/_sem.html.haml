@@ -1,27 +1,5 @@
 %article
-  %h3 Campaigns(In progress)
-  %table
-    %thead
-      %tr
-        %th Campaign
-        %th Clicks
-        %th Impressions
-        %th CTR
-        %th Avg. CPC
-        %th Cost
-        %th Avg. Position
-        %th Quality Score
-    %tbody
-      %tr
-        %td= link_to "Glasses", "#"
-        %td 78
-        %td 210
-        %td 38%
-        %td $40.50
-        %td $2,000.00
-        %td 1.2
-        %td 2/10
-  %h3 Campaign Details
+  %h3 Conversion Details
   %table
     %thead
       %tr
@@ -45,6 +23,28 @@
         %td= ActionController::Base.helpers.number_to_currency(@campaign.spend_between(@start_date, @end_date))
         %td= ActionController::Base.helpers.number_to_currency(@campaign.cost_per_lead_between(@start_date, @end_date))
         %td= ActionController::Base.helpers.number_to_currency(@campaign.cost_per_contact_between(@start_date, @end_date))
+  %h3 Campaigns(In progress)
+  %table
+    %thead
+      %tr
+        %th Campaign
+        %th Clicks
+        %th Impressions
+        %th CTR
+        %th Avg. CPC
+        %th Cost
+        %th Avg. Position
+        %th Quality Score
+    %tbody
+      %tr
+        %td Glasses
+        %td 78
+        %td 210
+        %td 38%
+        %td $40.50
+        %td $2,000.00
+        %td 1.2
+        %td 2/10
   -if @campaign.website.present?
     %h3 Website Statistics
     %table
