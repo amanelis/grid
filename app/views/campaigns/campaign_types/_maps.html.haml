@@ -15,11 +15,11 @@
       %tbody
         %tr
           %td= @campaign.number_of_map_visits_between(@start_date, @end_date).to_s
-          %td= ranking.google_review_count
-          %td= ranking.google_places_ranking
-          %td= ranking.yahoo_review_count
-          %td= ranking.yahoo_review_rating
-          %td= ranking.bing_review_count
+          %td= ranking.google_review_count || 'Na'
+          %td= ranking.google_places_ranking || 'Na'
+          %td= ranking.yahoo_review_count || 'Na'
+          %td= ranking.yahoo_review_rating || 'Na'
+          %td= ranking.bing_review_count || 'Na'
           -#%td= ranking.places_rankings
           
     %h4 Google Maps Details
@@ -39,18 +39,18 @@
         %th Rating
       %tbody
         %tr
-          %td= ranking.google_coupon_count
-          %td= ranking.google_citation_count
-          %td= ranking.google_user_content_count
-          %td= ranking.google_review_count
-          %td= ranking.google_insiderpages_review_count
-          %td= ranking.google_insiderpages_rating
-          %td= ranking.google_customerlobby_review_count
-          %td= ranking.google_customerlobby_rating
-          %td= ranking.google_citysearch_review_count
-          %td= ranking.google_citysearch_rating
-          %td= ranking.google_judysbook_review_count
-          %td= ranking.google_judysbook_rating
+          %td= ranking.google_coupon_count || 'Na'
+          %td= ranking.google_citation_count || 'Na'
+          %td= ranking.google_user_content_count || 'Na'
+          %td= ranking.google_review_count || 'Na'
+          %td= ranking.google_insiderpages_review_count || 'Na'
+          %td= ranking.google_insiderpages_rating || 'Na'
+          %td= ranking.google_customerlobby_review_count || 'Na'
+          %td= ranking.google_customerlobby_rating || 'Na'
+          %td= ranking.google_citysearch_review_count || 'Na'
+          %td= ranking.google_citysearch_rating || 'Na'
+          %td= ranking.google_judysbook_review_count || 'Na'
+          %td= ranking.google_judysbook_rating || 'Na'
           
     %h4 Bing Maps Details
     %table
@@ -63,7 +63,7 @@
         -#%th Judys Book Reviews
       %tbody
         %tr
-          %td= ranking.bing_review_count
+          %td= ranking.bing_review_count || 'Na'
           -#%td= ranking.places_rankings
           -#%td= ranking.insider_pages_review_count
           -#%td= ranking.customer_lobby_review_count
