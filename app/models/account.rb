@@ -476,7 +476,7 @@ class Account < ActiveRecord::Base
     new_campaign.name = name
     new_campaign.status = 'Active'
     new_campaign.save
-    new_campaign.campaign.industry = (industry)
+    new_campaign.campaign.industry = Industry.find(industry)
     #Needs to be Uncommented when we roll out
     #new_campaign.campaign.url = url
     #new_campaign.campaign.forwarding_number =  forwarding_number

@@ -69,18 +69,22 @@
             %td= number.name
             %td= number.descript
             %td= number.inboundno
-    - semantic_form_for @campaign, :url => campaign_path(@campaign) do |f| 
-      = f.semantic_errors :state
-      - f.inputs do
-        %br
-        = f.input :adopting_phone_number, :label => 'Add Orphaned Phone Number', :as => :select, :collection => PhoneNumber.selectable_orphaned_phone_numbers, :include_blank => true
-      - f.buttons do
-        = f.commit_button :update
-  - @submissions = @campaign.submissions.lead.between(@start_date, @end_date)
-  - if @submissions.present? 
-    %h3 Form Submissions
-    %table
-      %thead
+    -# form_for @campaign, :url => account_campaign_path(@account, @campaign) do |f| 
+      =# f.select(:adopting_phone_number, PhoneNumber.selectable_orphaned_phone_numbers, :include_blank => true)
+      =# f.submit(:update)
+  %h3 Form Submissions
+  %table
+    %thead
+      %tr
+        %th Name
+        %th Email
+        %th Phone Number
+        %th Submission Time
+        %th Date Requested
+        %th Time Requested
+        %th Work Description
+    %tbody
+      -@campaign.submissions.lead.between(@start_date, @end_date).each do |submission|
         %tr
           %th Name
           %th Email
@@ -90,7 +94,7 @@
           %th Time Requested
           %th Work Description
       %tbody
-        -@campaign.submissions.lead.between(@start_date, @end_date).each do |submission|
+        -@submissions.each do |submission|
           %tr
             %td= submission.name
             %td= submission.from_email
@@ -99,8 +103,6 @@
             %td= submission.date_requested
             %td= submission.time_requested
             %td= submission.work_description
-  -else
-    %h3 No submissions for this date range.
   
   -if can? :create, ContactForm
     = link_to '+ Create Form', new_campaign_contact_form_path(@campaign), :class => "submit button", :name => "submit"
