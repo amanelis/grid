@@ -18,7 +18,7 @@ class DailyForecast < ActiveRecord::Base
         forecast.high = response["xml_api_reply"]["weather"]["forecast_information"]["high"]["data"].to_i if response["xml_api_reply"]["weather"]["forecast_information"]["high"].present?
         forecast.high = response["xml_api_reply"]["weather"]["forecast_conditions"].first["high"]["data"].to_i unless response["xml_api_reply"]["weather"]["forecast_information"]["high"].present?
         forecast.condition = response["xml_api_reply"]["weather"]["current_conditions"]["condition"]["data"]
-        forecast.humidity = response["xml_api_reply"]["weather"]["current_conditions"]["humidity"]["data"]
+        forecast.humidity = response["xml_api_reply"]["weather"]["current_conditions"]["humidity"]["data"].gsub("Humidity: ", "")
         forecast.icon = "http://www.google.com#{response["xml_api_reply"]["weather"]["current_conditions"]["icon"]["data"]}"
         forecast.wind_condition = response["xml_api_reply"]["weather"]["current_conditions"]["wind_condition"]["data"]
         forecast.save!
