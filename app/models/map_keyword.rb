@@ -8,16 +8,21 @@ class MapKeyword < ActiveRecord::Base
   def self.update_keywords_from_salesforce
     job_status = JobStatus.create(:name => "MapKeyword.update_keywords_from_salesforce")
     begin
-      sf_campaigns = Salesforce::Clientcampaign.find_all_by_campaign_type__c('Local Maps')
+      sf_campaigns = Salesforce::Clientcampaign.find(:all, :conditions => ['campaign_type__c = ? AND status__c != ?', 'Local Maps', 'Inactive'])
       sf_campaigns.each do |sf_campaign|
         local_map_campaign = Campaign.find_by_salesforce_id(sf_campaign.id).try(:campaign_style)
         if sf_campaign.keywords__c.present? && local_map_campaign.present?
           sf_campaign.keywords__c.gsub(', ', ',').split(',').each do |keyword|
-            puts 'Started: ' + keyword
-            MapKeyword.find_or_create_by_maps_campaign_id_and_descriptor(:maps_campaign_id => local_map_campaign.id,
-                                                                         :descriptor => keyword,
-                                                                         :ranking_updated_on => nil)
-            puts 'Completed: ' + keyword
+            puts "Started:  #{keyword} for #{local_map_campaign.campaign.name}"
+            existing_keyword = MapKeyword.first(:conditions => ['maps_campaign_id = ? AND descriptor = ?', local_map_campaign.id, keyword])
+            if existing_keyword.blank?
+              new_keyword = local_map_campaign.map_keywords.build
+              new_keyword.descriptor = keyword
+              new_keyword.ranking_updated_on = Date.today - 7.days
+              new_keyword.save!
+              puts "Added: #{new_keyword.descriptor} for #{local_map_campaign.campaign.name}"
+            end                                                            
+            puts "Exists:  #{existing_keyword.descriptor} for #{local_map_campaign.campaign.name}"
           end
         end
       end
