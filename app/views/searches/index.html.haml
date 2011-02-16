@@ -1,74 +1,50 @@
 -if @search_accounts.blank? || @search_campaigns.blank?
-  %hs Search for Accounts or Campaigns
-  = render :partial => 'shared/search'
-
-%h3
+%header
+  .right= render :partial => 'shared/search'
+  %h3 Search
+  %h4.quiet Find Accounts and Campaigns
+%article
   -unless @search_accounts.blank?
-    %table{:class => "pretty"}
+    %h3 Accounts
+    %table
       %thead
         %tr
-          %th Name (Click for Details)
-          %th
-            Calls
-          %th
-            Forms
-          %th
-            Total Leads
-          %th
-            Cost
-          %th
-            Spend(Marked Up)
-          %th
-            Cost Per Lead
+          %th Name
+          %th Calls
+          %th Forms
+          %th Total Leads
+          %th Cost
+          %th Spend(Marked Up)
+          %th Cost Per Lead
       %tbody
         - @search_accounts.each do |account|
-          %tr{:class => cycle('odd', 'even')}
+          %tr
             %td= link_to account.name, account_path(account)
-            %td
-              = account.number_of_lead_calls_between(Date.yesterday - 1.week, Date.yesterday).to_s
-            %td
-              = account.number_of_lead_submissions_between(Date.yesterday - 1.week, Date.yesterday).to_s
-            %td
-              = account.number_of_total_leads_between(Date.yesterday - 1.week, Date.yesterday).to_s
-            %td
-              = ActionController::Base.helpers.number_to_currency(account.cost_between(Date.yesterday - 1.week, Date.yesterday))
-            %td
-              = ActionController::Base.helpers.number_to_currency(account.spend_between(Date.yesterday - 1.week, Date.yesterday))
-            %td
-              = ActionController::Base.helpers.number_to_currency(account.cost_per_lead_between(Date.yesterday - 1.week, Date.yesterday))
-%h3
+            %td= account.number_of_lead_calls_between(Date.yesterday - 1.week, Date.yesterday).to_s
+            %td= account.number_of_lead_submissions_between(Date.yesterday - 1.week, Date.yesterday).to_s
+            %td= account.number_of_total_leads_between(Date.yesterday - 1.week, Date.yesterday).to_s
+            %td= ActionController::Base.helpers.number_to_currency(account.cost_between(Date.yesterday - 1.week, Date.yesterday))
+            %td= ActionController::Base.helpers.number_to_currency(account.spend_between(Date.yesterday - 1.week, Date.yesterday))
+            %td= ActionController::Base.helpers.number_to_currency(account.cost_per_lead_between(Date.yesterday - 1.week, Date.yesterday))
   -unless @search_campaigns.blank?
-    %table{:class => "pretty"}
+    %h3 Campaigns
+    %table
       %thead
         %tr
-          %th
-            Campaign Name (Click for Details)
-          %th
-            Calls
-          %th
-            Forms
-          %th
-            Total Leads
-          %th
-            Cost
-          %th
-            Spend(Marked Up)
-          %th
-            Cost Per Lead
+          %th Name
+          %th Calls
+          %th Forms
+          %th Total Leads
+          %th Cost
+          %th Spend(Marked Up)
+          %th Cost Per Lead
       %tbody
         -@search_campaigns.each do |campaign|
-          %tr{ :class => cycle('odd', 'even')}
-            %td
-              = link_to campaign.name, campaign_path(campaign)
-            %td
-              = campaign.number_of_lead_calls_between(Date.yesterday - 1.week, Date.yesterday).to_s
-            %td
-              = campaign.number_of_lead_submissions_between(Date.yesterday - 1.week, Date.yesterday).to_s
-            %td
-              = campaign.number_of_total_leads_between(Date.yesterday - 1.week, Date.yesterday).to_s
-            %td
-              = ActionController::Base.helpers.number_to_currency(campaign.cost_between(Date.yesterday - 1.week, Date.yesterday))
-            %td
-              = ActionController::Base.helpers.number_to_currency(campaign.spend_between(Date.yesterday - 1.week, Date.yesterday))
-            %td
-              = ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(Date.yesterday - 1.week, Date.yesterday))
+          %tr
+            %td= link_to campaign.name, campaign_path(campaign)
+            %td= campaign.number_of_lead_calls_between(Date.yesterday - 1.week, Date.yesterday).to_s
+            %td= campaign.number_of_lead_submissions_between(Date.yesterday - 1.week, Date.yesterday).to_s
+            %td= campaign.number_of_total_leads_between(Date.yesterday - 1.week, Date.yesterday).to_s
+            %td= ActionController::Base.helpers.number_to_currency(campaign.cost_between(Date.yesterday - 1.week, Date.yesterday))
+            %td= ActionController::Base.helpers.number_to_currency(campaign.spend_between(Date.yesterday - 1.week, Date.yesterday))
+            %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(Date.yesterday - 1.week, Date.yesterday))

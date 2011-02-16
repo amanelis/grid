@@ -44,22 +44,23 @@ class Account < ActiveRecord::Base
   end
   
   def self.dashboard_dates
-    ((Date.today - 1.month)..Date.today).to_a
+    Rails.env.development? ? (Date.yesterday..Date.today).to_a : ((Date.today - 1.month)..Date.today).to_a
   end
   
   def self.dashboard_data
     self.dashboard_dates.inject([]) { |leads, date| leads << self.active.to_a.sum { |account| account.campaigns.active.managed.to_a.sum { |campaign| campaign.number_of_total_leads_between(date, date) } } }
   end
   
-
   def self.get_accounts_data
+    start_date = Rails.env.development? ? Date.yesterday - 1.day : Date.yesterday.beginning_of_month
+    end_date = Date.yesterday
     self.active.inject({}) do |the_data, an_account|
       the_data[an_account.id] = {:name => an_account.name,
                                  :account_type => an_account.account_type,
-                                 :ctr => an_account.sem_click_through_rate_between(Date.yesterday.beginning_of_month, Date.yesterday) * 100,
-                                 :leads => an_account.number_of_total_leads_between(Date.yesterday.beginning_of_month, Date.yesterday),
-                                 :cpconv => an_account.cost_per_lead_between(Date.yesterday.beginning_of_month, Date.yesterday),
-                                 :leads_by_day => an_account.number_of_total_leads_by_day_between(Date.yesterday.beginning_of_month, Date.yesterday)}
+                                 :ctr => an_account.sem_click_through_rate_between(start_date, end_date) * 100,
+                                 :leads => an_account.number_of_total_leads_between(start_date, end_date),
+                                 :cpconv => an_account.cost_per_lead_between(start_date, end_date),
+                                 :leads_by_day => an_account.number_of_total_leads_by_day_between(start_date, end_date)}
       the_data
     end
   end
@@ -458,7 +459,7 @@ class Account < ActiveRecord::Base
     raise unless Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.twilio_id}.json?", 'POST', {'Status' => 'closed'}).kind_of? Net::HTTPSuccess
   end
   
-  def create_campaign(flavor, name, industry, forwarding_number, area_code)
+  def create_campaign(flavor, name)
     if flavor.include? 'SEM'
       new_campaign = SemCampaign.new
       new_campaign.flavor = flavor
@@ -476,12 +477,7 @@ class Account < ActiveRecord::Base
     new_campaign.name = name
     new_campaign.status = 'Active'
     new_campaign.save
-    new_campaign.campaign.industry = Industry.find(industry)
-    #Needs to be Uncommented when we roll out
-    #new_campaign.campaign.url = url
-    #new_campaign.campaign.forwarding_number =  forwarding_number
-    #new_campaign.campaign.area_code = area_code
-    new_campaign.save
+    
     new_campaign.campaign
   end
   

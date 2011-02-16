@@ -14,7 +14,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :accounts, :has_many => :campaigns, :member => {:report => :get}
   map.resources :accounts do |account|
-    account.resources :campaigns, :member => { :enable => [:put, :post], :index => :get } do |campaign|
+    account.resources :campaigns, :member => { :enable => [:put, :post], :index => :get, :orphaned => :get } do |campaign|
       campaign.resources :contact_forms, :member => { :enable => [:put, :post], :index => :get } 
     end
   end

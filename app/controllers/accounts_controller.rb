@@ -60,13 +60,13 @@ class AccountsController < ApplicationController
     datepicker account_path(params[:id])
     
     @daily_total_leads_graph = HighChart.new('graph') do |f|
-      f.title({:text=>"Total Daily Leads"})  
-      f.y_axis({:title=> {:text=> 'Daily Leads'}, :min => 0, :labels=>{:rotation=>0, :align=>'right'} })
-      f.x_axis(:categories => ((@start_date)..(@end_date)).to_a , :labels=>{:rotation=>-45 , :align => 'right'})
+      f.title(:text => false)  
+      f.y_axis({:title=> false, :min => 0, :labels=>{:rotation=>0, :align=>'right'} })
+      f.x_axis(:type => 'datetime', :tickInterval => 7 * 24 * 3600 * 1000, :dateTimeLabelFormats =>{:week => "%b %e"})
       f.legend(:enabled => false)
       
-      f.options[:chart][:defaultSeriesType] = "line"
-      f.series(:name=> 'Leads', :data => (@start_date..@end_date).inject([]) { |leads, date| leads << @managed_campaigns.sum { |campaign| campaign.number_of_total_leads_between(date, date) } })
+      f.options[:chart][:defaultSeriesType] = "area"
+      f.series(:name=> 'Leads', :fillOpacity => '.3', :pointInterval => 24 * 3600 * 1000, :pointStart => @start_date.to_time_in_current_zone.at_beginning_of_day.utc.to_i * 1000 , :data => (@start_date..@end_date).inject([]) { |leads, date| leads << @managed_campaigns.sum { |campaign| campaign.number_of_total_leads_between(date, date) } })
     end
     
     @campaign_summary_graph = HighChart.new('graph') do |f|
@@ -144,7 +144,15 @@ class AccountsController < ApplicationController
 
   def export
     authorize! :export, Account
-    @accounts = Account.find(:all, :order => "name")
+    @accounts           = current_user.acquainted_accounts
+    @accounts_statuses  = Account.account_statuses_for(@accounts)
+    @accounts_types     = Account.account_types_for(@accounts)
+    @passed_status      = params[:account_status] ||= 'Active' 
+    @passed_type        = params[:account_type] ||= ''
+    @accounts           = @accounts.select {|account| account.status == params[:account_status]} if params[:account_status].present?
+    @accounts           = @accounts.select {|account| account.account_type?(params[:account_type])} if params[:account_type].present?
+    @accounts_data      = Rails.cache.fetch("accounts_data") { Account.get_accounts_data }
+    @accounts.sort! {|a,b| a.name.downcase <=> b.name.downcase}
     @outfile  = "accounts_" + Time.now.strftime("%m-%d-%Y") + ".csv"
     
     csv_data = FasterCSV.generate do |csv|

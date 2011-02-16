@@ -53,11 +53,11 @@ class GroupAccount < ActiveRecord::Base
   end
 
   def self.dashboard_dates
-    ((Date.today - 1.month)..Date.today).to_a
+    Rails.env.development? ? (Date.yesterday..Date.today).to_a : ((Date.today - 1.month)..Date.today).to_a
   end
   
   def self.dashboard_data
-    dashboard_data = self.all.inject({}) { |results, group_account| results[group_account] = self.dashboard_dates.inject([]) { |leads, date| leads << group_account.accounts.active.to_a.sum { |account| account.campaigns.active.managed.to_a.sum { |campaign| campaign.number_of_total_leads_between(date, date) } } }; results }
+    dashboard_data = self.all.inject({}) { |results, group_account| results[group_account.id] = self.dashboard_dates.inject([]) { |leads, date| leads << group_account.accounts.active.to_a.sum { |account| account.campaigns.active.managed.to_a.sum { |campaign| campaign.number_of_total_leads_between(date, date) } } }; results }
     dashboard_data[:admin] = self.dashboard_dates.inject([]) { |leads, date| leads << Account.all.to_a.sum { |account| account.campaigns.to_a.sum { |campaign| campaign.number_of_total_leads_between(date, date) } } }    
     dashboard_data
   end
