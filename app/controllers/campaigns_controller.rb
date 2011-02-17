@@ -7,7 +7,7 @@ class CampaignsController < ApplicationController
   before_filter :load_time_zone, :only  => [:show]
   
   def new
-    authorize! :manipulate_campaign, @account
+    authorize! :manipulate_account, @account
     
     @industries = Industry.all.collect {|a| a.name}.sort!
     @flavors = Campaign.flavors.select {|a| !a.downcase.include? "seo"}.select {|a|  !a.downcase.include? "sem"}.select {|a| !a.downcase.include? 'maps'}.sort!.insert(0, 'Select...')
@@ -17,8 +17,7 @@ class CampaignsController < ApplicationController
   end
   
   def create
-    @account = Account.find(params[:account_id])
-    authorize! :manipulate_campaign, @account
+    authorize! :manipulate_account, @account
     
     
     if @account.present?
@@ -40,6 +39,7 @@ class CampaignsController < ApplicationController
   end
   
   def update
+    authorize! :manipulate_campaign, @campaign
     if params[:campaign][:adopting_phone_number].present?
       @phone_number = PhoneNumber.find(params[:campaign][:adopting_phone_number])
       @phone_number.update_attribute(:campaign_id, @campaign.id)
@@ -80,9 +80,6 @@ class CampaignsController < ApplicationController
       end
     end
   end
-
-  def new_campaign_contact_form
-  end
   
   def create_new_campaign_contact_form
     @campaign = Campaign.find(params[:id])
@@ -93,6 +90,9 @@ class CampaignsController < ApplicationController
   end
   
   def orphaned
+  end
+  
+  def new_campaign_contact_form
   end
   
 end
