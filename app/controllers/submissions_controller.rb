@@ -34,7 +34,7 @@ class SubmissionsController < ApplicationController
         Notifier.send_later(:deliver_form_submission, @submission) unless @submission.review_status_spam? || @submission.contact_form.inactive?
       end
       @submission.update_if_duplicate
-      Account.send_later(:cache_results_for_accounts)
+      Account.send_later(:cache_results_for_group_accounts)
       redirect_to params[:submission][:retURL]
     else
       # Let's not give the (likely) bot too much info on why this failed.

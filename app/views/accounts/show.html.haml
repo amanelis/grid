@@ -14,12 +14,6 @@
         %br
         Export
 
-    %li
-      %a{:onclick => "show_report(#{params[:id]});"}
-        = image_tag ("icons/report.png")
-        %br
-        Report
-
   %h2= @account.name
   #datepicker=render :partial => "shared/date_picker"
 %article
