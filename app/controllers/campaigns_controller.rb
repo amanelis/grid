@@ -7,7 +7,7 @@ class CampaignsController < ApplicationController
   before_filter :load_time_zone, :only  => [:show]
   
   def new
-    authorize! :manipulate_campaign, @account
+    authorize! :manipulate_account, @account
     
     @industries = Industry.all.collect {|a| a.name}.sort!
     @flavors = Campaign.flavors.select {|a| !a.downcase.include? "seo"}.select {|a|  !a.downcase.include? "sem"}.select {|a| !a.downcase.include? 'maps'}.sort!.insert(0, 'Select...')
@@ -17,8 +17,7 @@ class CampaignsController < ApplicationController
   end
   
   def create
-    @account = Account.find(params[:account_id])
-    authorize! :manipulate_campaign, @account
+    authorize! :manipulate_account, @account
     
     
     if @account.present?

@@ -22,10 +22,15 @@ class Ability
           user.acquainted_accounts.collect(&:websites).flatten.include?(website_visit.website)
         end
         
-        can :manipulate_campaign, Account do |account|
+        ########## Manipulator Method #################
+        can :manipulate_account, Account do |account|
           user.can_manipulate_account?(account) ? (can :create, Campaign) : false
         end
         
+        can :manipulate_campaign, Campaign do |campaign|
+          user.can_manipulate_campaign?(campaign) ? (can :edit, Campaign) : false
+        end
+        ########## Manipulator Method #################
         
         
         can :export, Account
@@ -50,9 +55,15 @@ class Ability
           user.acquainted_accounts.collect(&:websites).flatten.include?(website_visit.website)
         end
         
-        can :manipulate_campaign, Account do |account|
+        ########## Manipulator Method #################
+        can :manipulate_account, Account do |account|
           user.can_manipulate_account?(account) ? (can :create, Campaign) : false
         end
+        
+        can :manipulate_campaign, Campaign do |campaign|
+          user.can_manipulate_campaign?(campaign) ? (can :edit, Campaign) : false
+        end
+        ########## Manipulator Method #################
         
         can :report_client, Account
       end
