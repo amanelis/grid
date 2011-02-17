@@ -1,13 +1,12 @@
 class CampaignsController < ApplicationController
   inherit_resources
-  #load_and_authorize_resource :account
-  #load_and_authorize_resource :campaign, :through => :account  
+  load_resource :campaign, :through => :account
+  load_and_authorize_resource :account
+  load_and_authorize_resource :campaign, :through => :account, :except => [:new, :create]
   belongs_to :account
   before_filter :load_time_zone, :only  => [:show]
   
   def new
-    @account  = Account.find(params[:account_id])   
-    @campaign = Campaign.new
     authorize! :manipulate_campaign, @account
     
     @industries = Industry.all.collect {|a| a.name}.sort!
