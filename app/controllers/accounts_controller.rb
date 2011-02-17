@@ -137,7 +137,7 @@ class AccountsController < ApplicationController
     authorize! :refresh_accounts, Account
     GroupAccount.pull_salesforce_accounts
     Campaign.pull_salesforce_campaigns
-    Account.cache_results_for_group_accounts
+    GroupAccount.cache_results_for_group_accounts
     flash[:notice] = "Accounts reloaded!"
     redirect_to :action => "index"
   end
