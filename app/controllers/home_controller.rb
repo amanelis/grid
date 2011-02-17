@@ -10,14 +10,14 @@ class HomeController < ApplicationController
       if @user.admin? || @user.group_user?
         @accounts               = current_user.acquainted_accounts
         @active_accounts        = @accounts.select(&:active?)
-        @active_accounts_count  = Account.active.count
+        @active_accounts_count  = @active_accounts.count
         @users_count            = User.all.count
         
         if @user.admin?
           @leads_count            = (Rails.cache.fetch("dashboard_data_hash") { GroupAccount.dashboard_data_hash })[:admin].last
         else
-          @leads_count            = @user.group_users.sum do |group_user|
-            (Rails.cache.fetch("dashboard_data_hash") { GroupAccount.dashboard_data_hash })[group_user.group_account.id].last)
+          @leads_count            = @user.group_users.to_a.sum do |group_user|
+            (Rails.cache.fetch("dashboard_data_hash") { GroupAccount.dashboard_data_hash })[group_user.group_account.id].last
           end
         end
 
