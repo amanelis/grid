@@ -10,6 +10,7 @@ class HomeController < ApplicationController
       if @user.admin? || @user.group_user?
         @accounts               = current_user.acquainted_accounts
         @active_accounts        = @accounts.select(&:active?)
+        @accounts_count         = @accounts.count
         @active_accounts_count  = @active_accounts.count
         @users_count            = User.all.count
         

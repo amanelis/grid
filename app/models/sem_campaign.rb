@@ -23,7 +23,7 @@ class SemCampaign < ActiveRecord::Base
       raise
     end
     job_status.finish_with_no_errors
-    Account.cache_results_for_group_accounts
+    GroupAccount.cache_results_for_group_accounts
   end
 
   def self.update_sem_campaign_reports_by_ad(date = Date.yesterday, hard_update = false)
@@ -36,7 +36,7 @@ class SemCampaign < ActiveRecord::Base
       raise
     end
     job_status.finish_with_no_errors
-    Account.cache_results_for_group_accounts
+    GroupAccount.cache_results_for_group_accounts
   end
 
   def self.create_all_campaign_level_reports_for_google(date = Date.yesterday)
@@ -716,7 +716,7 @@ class SemCampaign < ActiveRecord::Base
     self.campaign.website.website_visits.for_date(date).inject({}) { |data, visit| data[visit] = self.campaign.calls.snapshot(visit.time_of_visit, 60) ; data }
   end
 
-  def percentage_spent_this_month()
+  def percentage_spent_this_month
     (budget = self.monthly_budget).present? && (budget = self.monthly_budget) > 0 ? (self.spend_between(Date.today.beginning_of_month, Date.today.end_of_month) / budget.to_f) * 100 : 0
   end
 

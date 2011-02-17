@@ -57,7 +57,7 @@ class AccountsController < ApplicationController
     @managed_campaigns    = @account.campaigns.active.managed.to_a.sort { |a,b| a.name <=> b.name }
     @unmanaged_campaigns  = @account.campaigns.active.unmanaged.to_a.sort { |a,b| a.name <=> b.name }        
                                  
-    datepicker account_path(params[:id])
+    datepicker account_path(@account)
     
     @daily_total_leads_graph = HighChart.new('graph') do |f|
       f.title(:text => false)  
@@ -137,7 +137,7 @@ class AccountsController < ApplicationController
     authorize! :refresh_accounts, Account
     GroupAccount.pull_salesforce_accounts
     Campaign.pull_salesforce_campaigns
-    Account.cache_results_for_group_accounts
+    GroupAccount.cache_results_for_group_accounts
     flash[:notice] = "Accounts reloaded!"
     redirect_to :action => "index"
   end
