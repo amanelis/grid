@@ -34,7 +34,7 @@ class CampaignsController < ApplicationController
   end
 
   def show    
-    datepicker campaign_path(resource)
+    datepicker campaign_path(@campaign)
     @phone_number = PhoneNumber.find(params[:phone_number]) unless params[:phone_number].blank?
     @submissions = resource.submissions.lead.between(@start_date, @end_date)
   end
