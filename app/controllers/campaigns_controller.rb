@@ -39,6 +39,7 @@ class CampaignsController < ApplicationController
   end
   
   def update
+    authorize! :manipulate_campaign, @campaign
     if params[:campaign][:adopting_phone_number].present?
       @phone_number = PhoneNumber.find(params[:campaign][:adopting_phone_number])
       @phone_number.update_attribute(:campaign_id, @campaign.id)
@@ -79,9 +80,6 @@ class CampaignsController < ApplicationController
       end
     end
   end
-
-  def new_campaign_contact_form
-  end
   
   def create_new_campaign_contact_form
     @campaign = Campaign.find(params[:id])
@@ -92,6 +90,9 @@ class CampaignsController < ApplicationController
   end
   
   def orphaned
+  end
+  
+  def new_campaign_contact_form
   end
   
 end
