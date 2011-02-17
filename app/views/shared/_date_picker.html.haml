@@ -1,24 +1,26 @@
-%script
+:javascript
   $(function(){
-  $('#to,#from').datepicker({
-  defaultDate: "+1w",
-  changeMonth: true,
-  numberOfMonths: 1,
-  dateFormat: 'M d, yy',
-  onSelect: function( selectedDate ) {
-  var option = this.id == "from" ? "minDate" : "maxDate",
-  instance = $( this ).data( "datepicker" );
-  date = $.datepicker.parseDate(
-  instance.settings.dateFormat ||
-  $.datepicker._defaults.dateFormat,
-  selectedDate, instance.settings);
-  dates.not( this ).datepicker( "option", option, date );
-  }
-  });
-  })
+    $('#to,#from').datepicker({
+      showOtherMonths:   true,
+      showButtonPanel:   true,
+      selectOtherMonths: true,
+      dateFormat:        'M d, yy'
+    });
 
--form_for(accounts_path, :html => {:method => "get"}) do |f|
-  = f.text_field :from, :name => "from", :id => "from", :autocomplete => "off", :value => "#{(@start_date).to_s(:medium)}", :size => 20
-  = " to "
-  = f.text_field :to, :name => "to", :id => "to", :autocomplete => "off", :value => "#{@end_date.to_s(:medium)}", :size => 20
-  = f.submit "Change Date"
+    $("#show_change_dates").click(function(){
+      $('#change_dates').toggle('blind', {}, 250);
+    })
+
+  });
+
+%div
+  = "#{(@start_date).to_s(:medium)} to #{@end_date.to_s(:medium)}"
+  %a{:id => "show_change_dates"}
+    Change Dates
+
+%div{:id => 'change_dates', :style => "display:none;" }
+  -form_for(accounts_path, :html => {:method => "get"}) do |f|
+    = f.text_field :from, :name => "from", :id => "from", :autocomplete => "off", :value => "#{(@start_date).to_s(:medium)}", :size => 15
+    = " to "
+    = f.text_field :to, :name => "to", :id => "to", :autocomplete => "off", :value => "#{@end_date.to_s(:medium)}", :size => 15
+    = f.submit "Submit"
