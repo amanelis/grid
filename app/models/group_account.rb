@@ -48,7 +48,7 @@ class GroupAccount < ActiveRecord::Base
   
   def self.cache_results_for_group_accounts
     Rails.cache.write("dashboard_dates", self.dashboard_dates)
-    Rails.cache.write("dashboard_data", self.dashboard_data)
+    Rails.cache.write("dashboard_data_hash", self.dashboard_data_hash)
     Rails.cache.write("accounts_data", Account.get_accounts_data)
   end
 
@@ -56,10 +56,10 @@ class GroupAccount < ActiveRecord::Base
     Rails.env.development? ? (Date.yesterday..Date.today).to_a : ((Date.today - 1.month)..Date.today).to_a
   end
   
-  def self.dashboard_data
-    dashboard_data = self.all.inject({}) { |results, group_account| results[group_account.id] = self.dashboard_dates.inject([]) { |leads, date| leads << group_account.accounts.active.to_a.sum { |account| account.campaigns.active.managed.to_a.sum { |campaign| campaign.number_of_total_leads_between(date, date) } } }; results }
-    dashboard_data[:admin] = self.dashboard_dates.inject([]) { |leads, date| leads << Account.all.to_a.sum { |account| account.campaigns.to_a.sum { |campaign| campaign.number_of_total_leads_between(date, date) } } }    
-    dashboard_data
+  def self.dashboard_data_hash
+    dashboard_data_hash = self.all.inject({}) { |results, group_account| results[group_account.id] = self.dashboard_dates.inject([]) { |leads, date| leads << group_account.accounts.active.to_a.sum { |account| account.campaigns.active.managed.to_a.sum { |campaign| campaign.number_of_total_leads_between(date, date) } } }; results }
+    dashboard_data_hash[:admin] = self.dashboard_dates.inject([]) { |leads, date| leads << Account.all.to_a.sum { |account| account.campaigns.to_a.sum { |campaign| campaign.number_of_total_leads_between(date, date) } } }    
+    dashboard_data_hash
   end
   
   def self.pull_all_data_migrations
@@ -95,7 +95,8 @@ class GroupAccount < ActiveRecord::Base
     SemCampaign.update_sem_campaign_reports_by_campaign
     puts 'Updating Adwords Ad Level Reports'
     SemCampaign.update_sem_campaign_reports_by_ad
-    puts 'Updating Campaign.target_cities'
+    puts 'Updating DailyForecast.update_temperatures'
+    DailyForecast.update_temperatures
   end
   
   def self.pull_salesforce_accounts

@@ -27,7 +27,7 @@
         %aside.span-7.last
           %p Leads Today
           %h3#leads= @leads_count
-        .span-23.last=#high_chart("cv_total_daily_leads", @cv_total_daily_leads)
+        .span-23.last=high_chart("cv_total_daily_leads", @cv_total_daily_leads)
   -elsif @user.group_user? 
     %header
       %h1 CityVoice Dashboard
