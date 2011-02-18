@@ -1,17 +1,21 @@
 - if can? :update, @campaign
-  %h3 Phone Numbers On Campaign
-  %table
-    %thead
-      %tr
-        %th Name
-        %th Description
-        %th Number
-    %tbody
-      -@campaign.phone_numbers.each do |number|
+  %header
+    %h2 Assign Phone Numbers
+  %article
+    %h3 Current Numbers
+    %table
+      %thead
         %tr
-          %td= number.name
-          %td= number.descript
-          %td= number.inboundno
-  - form_for @campaign, :url => account_campaign_path(@account, resource) do |f| 
-    = f.select(:adopting_phone_number, PhoneNumber.selectable_orphaned_phone_numbers, :include_blank => true)
-    = f.submit(:update, :value => "Add Number")
+          %th Name
+          %th Description
+          %th Number
+      %tbody
+        -@campaign.phone_numbers.each do |number|
+          %tr
+            %td= number.name
+            %td= number.descript
+            %td= number.inboundno
+    %h3 Add Orphaned Number
+    - form_for @campaign, :url => account_campaign_path(@account, resource) do |f| 
+      = f.select(:adopting_phone_number, PhoneNumber.selectable_orphaned_phone_numbers, :include_blank => true)
+      = f.submit(:update, :value => "Add Number")
