@@ -428,6 +428,27 @@ form.inline p { margin-bottom:0; }
 }
 
 /*
+	Admin Navigation
+	------------------
+*/
+#admin{
+	background: rgba(255,255,255,.5);
+}
+
+#admin ul, #admin ul a{
+	color:#000;
+	text-decoration:none;
+}
+
+#admin ul a:hover{
+	opacity:.5;
+}
+
+#admin li{
+	margin-right:26px;
+}
+
+/*
 	Pillbox Demo
 	------------------
 */
