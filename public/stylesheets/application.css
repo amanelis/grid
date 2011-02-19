@@ -19,6 +19,16 @@ header .no-rgba{
 	background:#000;
 }
 
+/* DIRTY UL - FIX SOON */
+ul{
+	margin:0;
+	padding:0;
+}
+
+li{
+	text-align:left;
+}
+
 #toolbar ul, #toolbar ul a{
 	color:#fff;
 	text-decoration:none;
@@ -29,7 +39,7 @@ header .no-rgba{
 }
 
 #toolbar li, #admin li{
-	margin:0 26px 0 0;
+	margin:0 12px 0 0;
 }
 
 #account{
@@ -37,7 +47,7 @@ header .no-rgba{
 }
 
 #account li{
-	margin:0 0 0 26px;
+	margin:0 0 0 12px;
 }
 
 section#content{
@@ -93,11 +103,8 @@ margin-right:10px;
 }
 
 nav a{
-text-shadow: 0 -1px 0 #000;
 font-size:.8em;
-color:gray;
 padding:5px;
-margin:5px 0 0 5px;
 -o-transition-duration: .33s;
 -o-transition-property: color;
 -webkit-transition-duration: .33s;
@@ -171,7 +178,6 @@ font-family: "Lucida Grande", "Helvetica Nueue", helvetica, sans-serif;
 }
 
 nav a{
-font-weight:bold;
 font-size:1em;
 }
 
