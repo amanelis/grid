@@ -22,11 +22,10 @@
 
 %body
   .container
+    %header
+      %nav.span-23.last#toolbar=render :partial => "layouts/nav"
     - if @current_user.admin?
       =render :partial => "layouts/admin"
-    %header#navbar
-      #logo.span-2=link_to image_tag("grid_logo.png"), root_url
-      %nav=render :partial => "layouts/nav"
     =render :partial => "layouts/flash", :locals => { :flash => flash }
     %section#content
       = yield

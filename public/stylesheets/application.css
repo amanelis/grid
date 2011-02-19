@@ -11,22 +11,33 @@ body{
 	text-align:center;
 }
 
-#logo img{
-	-o-transition-duration: .33s;
-	-o-transition-property: opacity;
-	-webkit-transition-duration: .33s;
-	-webkit-transition-property: opacity;
+header{
+	background:rgba(0,0,0,.8);
 }
 
-#logo img:hover{
-opacity: 0.5;
--moz-opacity: 0.5;
-filter:alpha(opacity=50);
+header .no-rgba{
+	background:#000;
 }
 
-#navbar{
-color:white;
-background:#333;
+#toolbar ul, #toolbar ul a{
+	color:#fff;
+	text-decoration:none;
+}
+
+#toolbar ul a:hover{
+	opacity:.5;
+}
+
+#toolbar li, #admin li{
+	margin:0 26px 0 0;
+}
+
+#account{
+	float:right;
+}
+
+#account li{
+	margin:0 0 0 26px;
 }
 
 section#content{
@@ -57,6 +68,23 @@ overflow:hidden;
 }
 
 /*
+	Admin Navigation
+	------------------
+*/
+#admin{
+	background: rgba(255,255,255,.5);
+}
+
+#admin ul, #admin ul a{
+	color:#000;
+	text-decoration:none;
+}
+
+#admin ul a:hover{
+	opacity:.5;
+}
+
+/*
 	Navigation
 	------------------
 */
@@ -71,52 +99,13 @@ color:gray;
 padding:5px;
 margin:5px 0 0 5px;
 -o-transition-duration: .33s;
--o-transition-property: color, background-color, border-radius;
+-o-transition-property: color;
 -webkit-transition-duration: .33s;
--webkit-transition-property: color, background, border-radius;
--webkit-border-radius: 4px;
-   -moz-border-radius: 4px;
-        border-radius: 4px;
-}
-
-nav a:hover{
-text-shadow: 0 -1px 0 #444;
-background:gray;
+-webkit-transition-property: color;
 }
 
 .active{
 	color:#fff;
-}
-
-header nav a, nav aside a{
-color:gray;
-text-decoration:none;	
-font-weight:bold;
-}
-
-header nav a:hover, nav aside a:hover{
-color:white;
-text-decoration:none;	
-}
-
-nav aside a{
-margin-right:5px;
-}
-
-#account, #search{
-	float:right;
-}
-
-#account a{
-	font-size:.8em;
-	background:none;
-	-webkit-border-radius: none;
-	   -moz-border-radius: none;
-	        border-radius: none;
-}
-
-.no-csstransitions #account a:hover{
-	text-decoration:underline;
 }
 
 #search input[type="text"]{
@@ -425,27 +414,6 @@ form.inline p { margin-bottom:0; }
 
 .gridbot {
 	background: #fff url("/images/gridbot.jpg") no-repeat right bottom;
-}
-
-/*
-	Admin Navigation
-	------------------
-*/
-#admin{
-	background: rgba(255,255,255,.5);
-}
-
-#admin ul, #admin ul a{
-	color:#000;
-	text-decoration:none;
-}
-
-#admin ul a:hover{
-	opacity:.5;
-}
-
-#admin li{
-	margin-right:26px;
 }
 
 /*
