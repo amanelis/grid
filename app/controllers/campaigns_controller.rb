@@ -19,17 +19,20 @@ class CampaignsController < ApplicationController
   
   def create
     authorize! :manipulate_account, @account
-    
-    
-    if @account.present?
-      campaign = @account.create_campaign(params[:flavor], params[:name])
-      campaign.industry = params[:industry]
-      #Needs to be Uncommented when we roll out
-      #campaign.url = url
-      #campaign.forwarding_number =  params[:forwarding_number]
-      #campaign.area_code = params[:area_code]
-      campaign.save
-      redirect_to account_campaign_path(@account.id, campaign.id, :phone_number => PhoneNumber.first)
+    if PhoneNumber.available_numbers(params[:area_code]).blank?
+      flash[:error] = "Sorry, but there are no available numbers for the #{params[:area_code]} area code"
+      redirect_to request.referer
+    else
+      if @account.present?
+        campaign = @account.create_campaign(params[:flavor], params[:name])
+        campaign.industry = params[:industry]
+        #Needs to be Uncommented when we roll out
+        #campaign.url = url
+        #campaign.forwarding_number =  params[:forwarding_number]
+        #campaign.area_code = params[:area_code]
+        campaign.save
+        redirect_to account_campaign_path(@account.id, campaign.id, :phone_number => PhoneNumber.first)
+      end
     end  
   end
 

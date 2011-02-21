@@ -372,6 +372,14 @@ class Account < ActiveRecord::Base
   def cost_per_contact_between(start_date = Date.yesterday, end_date = Date.yesterday)
     (total_contacts = self.number_of_total_contacts_between(start_date, end_date)) > 0 ? self.spend_between(start_date, end_date) / total_contacts : 0.0
   end
+  
+  def true_cost_per_lead_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    (total_leads = self.number_of_total_leads_between(start_date, end_date)) > 0 ? self.cost_between(start_date, end_date) / total_leads : 0.0
+  end
+
+  def true_cost_per_contact_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    (total_contacts = self.number_of_total_contacts_between(start_date, end_date)) > 0 ? self.cost_between(start_date, end_date) / total_contacts : 0.0
+  end
 
   def spend_for_managed_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.active.managed.to_a.sum { |campaign| campaign.spend_between(start_date, end_date) }

@@ -20,9 +20,9 @@
         %td= @campaign.number_of_all_submissions_between(@start_date, @end_date).to_s
         %td= @campaign.number_of_total_leads_between(@start_date, @end_date).to_s
         %td= @campaign.number_of_total_contacts_between(@start_date, @end_date).to_s
-        %td= ActionController::Base.helpers.number_to_currency(@campaign.spend_between(@start_date, @end_date))
-        %td= ActionController::Base.helpers.number_to_currency(@campaign.cost_per_lead_between(@start_date, @end_date))
-        %td= ActionController::Base.helpers.number_to_currency(@campaign.cost_per_contact_between(@start_date, @end_date))
+        %td= ActionController::Base.helpers.number_to_currency(@campaign.cost_between(@start_date, @end_date))
+        %td= ActionController::Base.helpers.number_to_currency(@campaign.true_cost_per_lead_between(@start_date, @end_date))
+        %td= ActionController::Base.helpers.number_to_currency(@campaign.true_cost_per_contact_between(@start_date, @end_date))
   - adwords_campaigns = @campaign.campaign_style.google_sem_campaigns
   %h3 Adwords Campaigns(In progress)
   %table
@@ -44,7 +44,7 @@
           %td= adwords_campaign.impressions_between(@start_date, @end_date)
           %td= (sprintf("%.3f", (adwords_campaign.click_through_rate_between(@start_date, @end_date) * 100)) + '%')
           %td= "$#{sprintf("%.2f", adwords_campaign.average_cost_per_click_between(@start_date, @end_date))}"
-          %td= "$#{sprintf("%.2f", adwords_campaign.spend_between(@start_date, @end_date))}"
+          %td= "$#{sprintf("%.2f", adwords_campaign.cost_between(@start_date, @end_date))}"
           %td= sprintf("%.2f", adwords_campaign.average_position_between(@start_date, @end_date))
           %td= "#{sprintf("%.2f", adwords_campaign.average_quality_score_between(@start_date, @end_date))}/10"
   -if @campaign.website.present?

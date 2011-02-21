@@ -245,6 +245,26 @@ class Campaign < ActiveRecord::Base
     end
     total_weight > 0 ? weighted_total / total_weight : 0.0 
   end
+  
+  def self.true_weighted_cost_per_lead_for(campaigns, start_date = Date.yesterday, end_date = Date.yesterday)
+    weighted_total = 0.0
+    total_weight = 0.0
+    campaigns.each do |campaign|
+      total_weight += (weight = campaign.number_of_total_leads_between(start_date, end_date))
+      weighted_total += (campaign.true_cost_per_lead_between(start_date, end_date) * weight)
+    end
+    total_weight > 0 ? weighted_total / total_weight : 0.0 
+  end
+
+  def self.true_weighted_cost_per_contact_for(campaigns, start_date = Date.yesterday, end_date = Date.yesterday)
+    weighted_total = 0.0
+    total_weight = 0.0
+    campaigns.each do |campaign|
+      total_weight += (weight = campaign.number_of_total_contacts_between(start_date, end_date))
+      weighted_total += (campaign.true_cost_per_contact_between(start_date, end_date) * weight)
+    end
+    total_weight > 0 ? weighted_total / total_weight : 0.0 
+  end
 
 
   # INSTANCE BEHAVIOR
@@ -275,6 +295,14 @@ class Campaign < ActiveRecord::Base
 
   def cost_per_contact_between(start_date = Date.yesterday, end_date = Date.yesterday)
     (total_contacts = self.number_of_total_contacts_between(start_date, end_date)) > 0 ? self.spend_between(start_date, end_date) / total_contacts : 0.0
+  end
+  
+  def true_cost_per_lead_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    (total_leads = self.number_of_total_leads_between(start_date, end_date)) > 0 ? self.cost_between(start_date, end_date) / total_leads : 0.0
+  end
+
+  def true_cost_per_contact_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    (total_contacts = self.number_of_total_contacts_between(start_date, end_date)) > 0 ? self.cost_between(start_date, end_date) / total_contacts : 0.0
   end
 
   def number_of_answered_calls_between(start_date = Date.yesterday, end_date = Date.yesterday)
