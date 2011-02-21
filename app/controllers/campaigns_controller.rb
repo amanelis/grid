@@ -8,8 +8,6 @@ class CampaignsController < ApplicationController
   
   def new
     authorize! :manipulate_account, @account
-    
-    
     @industries = Industry.all.collect {|a| a.name}.sort!
     @flavors = Campaign.flavors.select {|a| !a.downcase.include? "seo"}.select {|a|  !a.downcase.include? "sem"}.select {|a| !a.downcase.include? 'maps'}.sort!.insert(0, 'Select...')
     if @campaign.present?
