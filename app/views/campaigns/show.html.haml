@@ -23,3 +23,6 @@
   = render :partial => 'campaigns/campaign_types/managed'
 - else
   = render :text => "Ooops, looks like that is an invalid campaign type"
+  
+-if can? :manipulate_campaign, @campaign
+  = link_to "Create Contact Form", new_campaign_contact_form_path(@campaign), :class => "button"
