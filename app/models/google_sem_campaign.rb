@@ -2,7 +2,7 @@ class GoogleSemCampaign < ActiveRecord::Base
   belongs_to :sem_campaign
   has_many :adwords_campaign_summaries, :dependent => :destroy
   has_many :adwords_ad_groups, :dependent => :destroy
-
+  has_many :adwords_ad_summaries, :through => :adwords_ad_groups
 
   # INSTANCE BEHAVIOR
 
@@ -72,6 +72,14 @@ class GoogleSemCampaign < ActiveRecord::Base
 
   def number_of_impressions_from_ads_by_date
     Utilities.merge_and_sum_timeline_data(self.adwords_ad_groups.collect { |adwords_ad_group| adwords_ad_group.number_of_impressions_by_date }, :impressions)
+  end
+  
+  def average_cost_per_click_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    (clicks = self.clicks_between(start_date, end_date)) > 0 ? self.spend_between(start_date, end_date).to_f / clicks : 0.0
+  end
+  
+  def average_quality_score_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    (count = self.adwords_ad_groups.count) > 0 ? (self.adwords_ad_groups.collect {|adwords_ad_group| adwords_ad_group.average_quality_score_between(start_date, end_date)}).sum / count : 0.0
   end
 
 end

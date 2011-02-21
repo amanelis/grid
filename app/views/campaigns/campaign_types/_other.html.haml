@@ -79,6 +79,8 @@
     -# form_for @campaign, :url => account_campaign_path(@account, @campaign) do |f| 
       =# f.select(:adopting_phone_number, PhoneNumber.selectable_orphaned_phone_numbers, :include_blank => true)
       =# f.submit(:update)
+  
+  
   %h3 Form Submissions
   -if @campaign.contact_forms.present?
     %table
@@ -140,5 +142,3 @@
                 = f.select(:review_status, (call.review_status_options))
                 = f.hidden_field(:campaign_id, {:value => params[:id]})
   .right.pagination= will_paginate(@calls)
-  -else
-    %h4 There are no phone numbers for this campaign.
