@@ -68,6 +68,10 @@ color:#000;
 background:#BBE1F7;
 }
 
+#content article{
+background: #fff;	
+}
+
 header, article, footer{
 padding:12px;
 }
@@ -442,7 +446,7 @@ form.inline p { margin-bottom:0; }
 	   -moz-border-radius: 10px 10px 0 0;
 	        border-radius: 10px 10px 0 0;
 	padding:6px;
-	background:#95AEC4;
+	background-image: url("/images/linen.jpg");
 	border-bottom:1px solid #7A7A7A;
 }
 
@@ -451,7 +455,7 @@ form.inline p { margin-bottom:0; }
 	font-weight:bold;
 	line-height:1;
 	margin:0;
-	color:#3F4953;
+	color:#fff;
 }
 
 /*

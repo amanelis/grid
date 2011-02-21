@@ -24,7 +24,7 @@
         %td= ActionController::Base.helpers.number_to_currency(@campaign.cost_per_lead_between(@start_date, @end_date))
         %td= ActionController::Base.helpers.number_to_currency(@campaign.cost_per_contact_between(@start_date, @end_date))
   - adwords_campaigns = @campaign.campaign_style.google_sem_campaigns
-  %h3 Adsense Campaigns(In progress)
+  %h3 Adwords Campaigns(In progress)
   %table
     %thead
       %tr
@@ -92,7 +92,6 @@
             %td= number.name
             %td= number.descript
             %td= number.inboundno
-
   %h3 Form Submissions
   %table
     %thead
