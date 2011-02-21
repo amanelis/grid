@@ -16,6 +16,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :accounts do |account|
     account.resources :campaigns, :member => { :enable => [:put, :post], :index => :get, :orphaned => :get } do |campaign|
       campaign.resources :contact_forms, :member => { :enable => [:put, :post], :index => :get } 
+      campaign.resources :google_sem_campaigns, :member => { :enable => [:put, :post], :index => :get, :show => :get } 
     end
   end
   

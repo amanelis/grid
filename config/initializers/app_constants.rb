@@ -20,4 +20,13 @@ GINZA_ACCOUNT_ID = '89891b750fec'
 #CLICKY
 CLICKY_KEY = 'de8f1bae61c60eb0'
 
+#GOOGLE ADWORDS
+ADWORDS_CREDENTIALS = {'developerToken' => 'HC3GEwJ4LqgyVNeNTenIVw', 
+                       'applicationToken' => '-o8E21xqBmVx7CkQ5TfAag', 
+                       'useragent' => 'Biz Search Local', 
+                       'password' => 'brayden11', 
+                       'email' => 'bizsearchlocal.jon@gmail.com', 
+                       'clientEmail' => 'bizsearchlocal.jon@gmail.com', 
+                       'environment' => 'PRODUCTION'}
+
 

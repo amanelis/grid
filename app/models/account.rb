@@ -117,7 +117,7 @@ class Account < ActiveRecord::Base
   def send_weekly_report(date = Date.today, previous = 0)
     return if valid_reporting_emails.blank?
     Notifier.deliver_weekly_report(self, self.valid_reporting_emails, date, previous)
-    self.update_attribute(:last_weekly_report_sent, DateTime.now)
+    Notifier.send_later(:deliver_weekly_report, self, self.valid_reporting_emails, date, previous)
   end
 
   def weekly_report_sent_this_week?
@@ -371,6 +371,14 @@ class Account < ActiveRecord::Base
 
   def cost_per_contact_between(start_date = Date.yesterday, end_date = Date.yesterday)
     (total_contacts = self.number_of_total_contacts_between(start_date, end_date)) > 0 ? self.spend_between(start_date, end_date) / total_contacts : 0.0
+  end
+  
+  def true_cost_per_lead_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    (total_leads = self.number_of_total_leads_between(start_date, end_date)) > 0 ? self.cost_between(start_date, end_date) / total_leads : 0.0
+  end
+
+  def true_cost_per_contact_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    (total_contacts = self.number_of_total_contacts_between(start_date, end_date)) > 0 ? self.cost_between(start_date, end_date) / total_contacts : 0.0
   end
 
   def spend_for_managed_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
