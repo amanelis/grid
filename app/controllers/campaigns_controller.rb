@@ -26,11 +26,10 @@ class CampaignsController < ApplicationController
       if @account.present?
         campaign = @account.create_campaign(params[:flavor], params[:name])
         campaign.industry = params[:industry]
-        #Needs to be Uncommented when we roll out
         #campaign.url = url
         #campaign.forwarding_number =  params[:forwarding_number]
         #campaign.area_code = params[:area_code]
-        campaign.save
+        #campaign.save
         redirect_to account_campaign_path(@account.id, campaign.id, :phone_number => PhoneNumber.first)
       end
     end  
@@ -39,6 +38,9 @@ class CampaignsController < ApplicationController
   def show   
     datepicker campaign_path(@campaign)
     @phone_number = PhoneNumber.find(params[:phone_number]) unless params[:phone_number].blank?
+    if @phone_number.present?
+      flash[:notice] = "Your new number is #{@phone_number.inboundno}"
+    end
     @submissions = resource.submissions.lead.between(@start_date, @end_date)
   end
   

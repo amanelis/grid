@@ -584,7 +584,8 @@ class Campaign < ActiveRecord::Base
     form
   end
 
-    
+ 
+   
   # PREDICATES
   
   def active?

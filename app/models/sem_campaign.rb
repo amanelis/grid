@@ -51,7 +51,7 @@ class SemCampaign < ActiveRecord::Base
       new_report.report_type = ALL_CAMPAIGN_REPORT_TYPE
       new_report.save!
 
-      adwords = AdWords::API.new(AdWords::AdWordsCredentials.new({'developerToken' => 'HC3GEwJ4LqgyVNeNTenIVw', 'applicationToken' => '-o8E21xqBmVx7CkQ5TfAag', 'useragent' => 'Biz Search Local', 'password' => 'brayden11', 'email' => 'bizsearchlocal.jon@gmail.com', 'clientEmail' => 'bizsearchlocal.jon@gmail.com', 'environment' => 'PRODUCTION', }))
+      adwords = AdWords::API.new(AdWords::AdWordsCredentials.new( ADWORDS_CREDENTIALS ))
       report_name = "All Campaigns- " + date.year.to_s + "-" + date.month.to_s + "-" + date.day.to_s
       report_srv = adwords.get_service('Report', 13)
       job = report_srv.module::DefinedReportJob.new
@@ -161,7 +161,7 @@ class SemCampaign < ActiveRecord::Base
       new_report.report_type = ALL_AD_REPORT_TYPE
       new_report.save!
 
-      adwords = AdWords::API.new(AdWords::AdWordsCredentials.new({'developerToken' => 'HC3GEwJ4LqgyVNeNTenIVw', 'applicationToken' => '-o8E21xqBmVx7CkQ5TfAag', 'useragent' => 'Biz Search Local', 'password' => 'brayden11', 'email' => 'bizsearchlocal.jon@gmail.com', 'clientEmail' => 'bizsearchlocal.jon@gmail.com', 'environment' => 'PRODUCTION', }))
+      adwords = AdWords::API.new(AdWords::AdWordsCredentials.new( ADWORDS_CREDENTIALS ))
       report_name = "All Ad- " + date.year.to_s + "-" + date.month.to_s + "-" + date.day.to_s
       report_srv = adwords.get_service('Report', 13)
       job = report_srv.module::DefinedReportJob.new
