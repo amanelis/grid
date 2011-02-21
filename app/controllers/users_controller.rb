@@ -18,6 +18,7 @@ class UsersController < ApplicationController
       flash[:notice] = "Account registered!"
       redirect_back_or_default users_path
     else
+      flash.now[:error] = "User was not able to be saved, please try again!"
       render :action => :new
     end
   end
