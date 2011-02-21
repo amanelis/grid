@@ -1,4 +1,5 @@
 class KeywordsController < ApplicationController
+  inherit_resources
   load_and_authorize_resource
   
   def index
@@ -7,7 +8,6 @@ class KeywordsController < ApplicationController
   end
   
   def show
-    @keyword  = Keyword.find(params[:id])
     @rankings = @keyword.keyword_rankings.sort { |a,b| b.created_at <=> a.created_at }
   end
   

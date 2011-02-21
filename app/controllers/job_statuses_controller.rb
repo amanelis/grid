@@ -8,7 +8,6 @@ class JobStatusesController < ApplicationController
   end
   
   def show
-    @job_status = JobStatus.find(params[:id])
   end
 
 end
