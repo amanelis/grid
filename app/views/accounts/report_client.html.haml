@@ -33,18 +33,18 @@
               %td= campaign.number_of_lead_submissions_between(@start_date, @end_date).to_s
               %td= campaign.number_of_total_leads_between(@start_date, @end_date).to_s
               %td= campaign.number_of_total_contacts_between(@start_date, @end_date).to_s
-              %td= ActionController::Base.helpers.number_to_currency(campaign.spend_between(@start_date, @end_date))
-              %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(@start_date, @end_date))
-              %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_contact_between(@start_date, @end_date))
+              %td= ActionController::Base.helpers.number_to_currency(campaign.cost_between(@start_date, @end_date))
+              %td= ActionController::Base.helpers.number_to_currency(campaign.true_cost_per_lead_between(@start_date, @end_date))
+              %td= ActionController::Base.helpers.number_to_currency(campaign.true_cost_per_contact_between(@start_date, @end_date))
         %tfoot
           %th Totals
           %th= @account.number_of_lead_calls_for_managed_campaigns_between(@start_date, @end_date)
           %th= @account.number_of_lead_submissions_for_managed_campaigns_between(@start_date, @end_date)
           %th= @account.number_of_total_leads_for_managed_campaigns_between(@start_date, @end_date)
           %th= @account.number_of_total_contacts_for_managed_campaigns_between(@start_date, @end_date).to_s
-          %th= ActionController::Base.helpers.number_to_currency(@account.spend_for_managed_campaigns_between(@start_date, @end_date))
-          %th= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_lead_for(@managed_campaigns, @start_date, @end_date))
-          %th= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_contact_for(@managed_campaigns, @start_date, @end_date))
+          %th= ActionController::Base.helpers.number_to_currency(@account.cost_for_managed_campaigns_between(@start_date, @end_date))
+          %th= ActionController::Base.helpers.number_to_currency(Campaign.true_weighted_cost_per_lead_for(@managed_campaigns, @start_date, @end_date))
+          %th= ActionController::Base.helpers.number_to_currency(Campaign.true_weighted_cost_per_contact_for(@managed_campaigns, @start_date, @end_date))
       %h3 Unmanaged Campaigns    
       %table#cpl
         %thead
@@ -73,9 +73,9 @@
           %th= @account.number_of_lead_submissions_for_unmanaged_campaigns_between(@start_date, @end_date)
           %th= @account.number_of_total_leads_for_unmanaged_campaigns_between(@start_date, @end_date)
           %th= @account.number_of_total_contacts_for_unmanaged_campaigns_between(@start_date, @end_date).to_s
-          %th= ActionController::Base.helpers.number_to_currency(@account.spend_for_unmanaged_campaigns_between(@start_date, @end_date))
-          %th= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_lead_for(@unmanaged_campaigns, @start_date, @end_date))
-          %th= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_contact_for(@unmanaged_campaigns, @start_date, @end_date))
+          %th= ActionController::Base.helpers.number_to_currency(@account.cost_for_unmanaged_campaigns_between(@start_date, @end_date))
+          %th= ActionController::Base.helpers.number_to_currency(Campaign.true_weighted_cost_per_lead_for(@unmanaged_campaigns, @start_date, @end_date))
+          %th= ActionController::Base.helpers.number_to_currency(Campaign.true_weighted_cost_per_contact_for(@unmanaged_campaigns, @start_date, @end_date))
 
 
   
@@ -102,7 +102,7 @@
               %td= campaign.campaign_style.impressions_between(@start_date, @end_date).to_s
               %td= (sprintf("%.3f", (campaign.campaign_style.click_through_rate_between(@start_date, @end_date) * 100)) + '%')
               %td= '%.2f' % campaign.campaign_style.average_position_between(@start_date, @end_date).to_s
-              %td= ActionController::Base.helpers.number_to_currency(campaign.spend_between(@start_date, @end_date))
+              %td= ActionController::Base.helpers.number_to_currency(campaign.cost_between(@start_date, @end_date))
         %tfoot
           %th Totals
           %th= @account.sem_number_of_total_leads_between(@start_date, @end_date)
@@ -110,7 +110,7 @@
           %th= @account.sem_impressions_between(@start_date, @end_date)
           %th= (sprintf("%.3f", (@account.sem_click_through_rate_between(@start_date, @end_date) * 100)) + '%')
           %th= '%.2f' % @account.sem_average_position_between(@start_date, @end_date).to_s
-          %th= ActionController::Base.helpers.number_to_currency(@account.sem_spend_between(@start_date, @end_date))
+          %th= ActionController::Base.helpers.number_to_currency(@account.sem_cost_between(@start_date, @end_date))
 
   -if @account.campaigns.seo.present?
     %section#organic_campaigns

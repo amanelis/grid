@@ -20,14 +20,15 @@
         %td= @campaign.number_of_all_submissions_between(@start_date, @end_date).to_s
         %td= @campaign.number_of_total_leads_between(@start_date, @end_date).to_s
         %td= @campaign.number_of_total_contacts_between(@start_date, @end_date).to_s
-        %td= ActionController::Base.helpers.number_to_currency(@campaign.spend_between(@start_date, @end_date))
-        %td= ActionController::Base.helpers.number_to_currency(@campaign.cost_per_lead_between(@start_date, @end_date))
-        %td= ActionController::Base.helpers.number_to_currency(@campaign.cost_per_contact_between(@start_date, @end_date))
-  %h3 Campaigns(In progress)
+        %td= ActionController::Base.helpers.number_to_currency(@campaign.cost_between(@start_date, @end_date))
+        %td= ActionController::Base.helpers.number_to_currency(@campaign.true_cost_per_lead_between(@start_date, @end_date))
+        %td= ActionController::Base.helpers.number_to_currency(@campaign.true_cost_per_contact_between(@start_date, @end_date))
+  - adwords_campaigns = @campaign.campaign_style.google_sem_campaigns
+  %h3 Adwords Campaigns(In progress)
   %table
     %thead
       %tr
-        %th Campaign
+        %th Adwords Campaign Name
         %th Clicks
         %th Impressions
         %th CTR
@@ -36,15 +37,16 @@
         %th Avg. Position
         %th Quality Score
     %tbody
-      %tr
-        %td Glasses
-        %td 78
-        %td 210
-        %td 38%
-        %td $40.50
-        %td $2,000.00
-        %td 1.2
-        %td 2/10
+      -adwords_campaigns.each do |adwords_campaign|
+        %tr
+          %td= link_to adwords_campaign.name, show_account_campaign_google_sem_campaign_path(resource.account.id, resource, adwords_campaign)
+          %td= adwords_campaign.clicks_between(@start_date, @end_date)
+          %td= adwords_campaign.impressions_between(@start_date, @end_date)
+          %td= (sprintf("%.3f", (adwords_campaign.click_through_rate_between(@start_date, @end_date) * 100)) + '%')
+          %td= "$#{sprintf("%.2f", adwords_campaign.average_cost_per_click_between(@start_date, @end_date))}"
+          %td= "$#{sprintf("%.2f", adwords_campaign.cost_between(@start_date, @end_date))}"
+          %td= sprintf("%.2f", adwords_campaign.average_position_between(@start_date, @end_date))
+          %td= "#{sprintf("%.2f", adwords_campaign.average_quality_score_between(@start_date, @end_date))}/10"
   -if @campaign.website.present?
     %h3 Website Statistics
     %table
@@ -90,7 +92,6 @@
             %td= number.name
             %td= number.descript
             %td= number.inboundno
-
   %h3 Form Submissions
   %table
     %thead

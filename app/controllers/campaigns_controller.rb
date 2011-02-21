@@ -8,7 +8,6 @@ class CampaignsController < ApplicationController
   
   def new
     authorize! :manipulate_account, @account
-    
     @industries = Industry.all.collect {|a| a.name}.sort!
     @flavors = Campaign.flavors.select {|a| !a.downcase.include? "seo"}.select {|a|  !a.downcase.include? "sem"}.select {|a| !a.downcase.include? 'maps'}.sort!.insert(0, 'Select...')
     if @campaign.present?
@@ -18,23 +17,28 @@ class CampaignsController < ApplicationController
   
   def create
     authorize! :manipulate_account, @account
-    
-    
-    if @account.present?
-      campaign = @account.create_campaign(params[:flavor], params[:name])
-      campaign.industry = params[:industry]
-      #Needs to be Uncommented when we roll out
-      #campaign.url = url
-      #campaign.forwarding_number =  params[:forwarding_number]
-      #campaign.area_code = params[:area_code]
-      campaign.save
-      redirect_to account_campaign_path(@account.id, campaign.id, :phone_number => PhoneNumber.first)
+    if PhoneNumber.available_numbers(params[:area_code]).blank?
+      flash[:error] = "Sorry, but there are no available numbers for the #{params[:area_code]} area code"
+      redirect_to request.referer
+    else
+      if @account.present?
+        campaign = @account.create_campaign(params[:flavor], params[:name])
+        campaign.industry = params[:industry]
+        #campaign.url = url
+        #campaign.forwarding_number =  params[:forwarding_number]
+        #campaign.area_code = params[:area_code]
+        #campaign.save
+        redirect_to account_campaign_path(@account.id, campaign.id, :phone_number => PhoneNumber.first)
+      end
     end  
   end
 
-  def show    
+  def show   
     datepicker campaign_path(@campaign)
     @phone_number = PhoneNumber.find(params[:phone_number]) unless params[:phone_number].blank?
+    if @phone_number.present?
+      flash[:notice] = "Your new number is #{@phone_number.inboundno}"
+    end
     @submissions = resource.submissions.lead.between(@start_date, @end_date)
   end
   
