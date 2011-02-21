@@ -10,7 +10,6 @@
   %p.right= render :partial => 'shared/orphaned'
   %h2 #{@campaign.name}
   #datepicker=render :partial => "shared/date_picker"
-  %p.quiet= @campaign.time_zone
   
 - if @campaign.is_seo?
   = render :partial => 'campaigns/campaign_types/seo'
