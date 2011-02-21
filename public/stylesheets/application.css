@@ -68,6 +68,10 @@ color:#000;
 background:#BBE1F7;
 }
 
+#content article{
+background: #fff;	
+}
+
 header, article, footer{
 padding:12px;
 }
