@@ -22,7 +22,7 @@ class HomeController < ApplicationController
           end
         end
 
-        @cv_total_daily_leads = HighChart.new('graph') do |f|
+        @total_daily_leads = HighChart.new('graph') do |f|
           f.title({:text=> false})  
           f.y_axis({:title=> {:text=> 'Daily Leads'}, :min => 0, :labels=>{:rotation=>0, :align=>'right'} })
           f.x_axis(:categories => (Rails.cache.fetch("dashboard_dates") { GroupAccount.dashboard_dates }) , :labels=>{:rotation=>-45 , :align => 'right'})

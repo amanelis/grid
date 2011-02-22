@@ -12,6 +12,7 @@
       window.location = self.location;
       setTimeout(refreshGraph, 900000);
     }
+    
 - if @user
   - if @user.admin?
     %header
@@ -27,10 +28,11 @@
         %aside.span-7.last
           %p Leads Today
           %h3#leads= @leads_count
-        .span-23.last=high_chart("cv_total_daily_leads", @cv_total_daily_leads)
+        .span-23.last=high_chart("total_daily_leads", @total_daily_leads)
+        
   -elsif @user.group_user? 
     %header
-      %h1 CityVoice Dashboard
+      %h1="#{@user.acquainted_group_accounts.collect(&:name)} Dashboard"
     %article 
       .stats
         %aside.span-7.append-1
@@ -42,8 +44,12 @@
         %aside.span-7.last
           %p Leads Today
           %h3#leads= @leads_count
-        .span-23.last=high_chart("cv_total_daily_leads", @cv_total_daily_leads)     
-  - else # acount.user
+        .span-23.last=high_chart("total_daily_leads", @total_daily_leads)     
+        
+  - elsif @user.account_user?
+    Account User 
+    
+  - else
     %header
       %h1 Dashboard
     %article
