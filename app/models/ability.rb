@@ -67,7 +67,13 @@ class Ability
         end
         
         can :manipulate_campaign, Campaign do |campaign|
-          user.can_manipulate_campaign?(campaign) ? (can :edit, Campaign) : false
+          if user.can_manipulate_campaign?(campaign) 
+            can :edit, Campaign
+            can :update, Campaign
+            can :create, ContactForm
+          else
+            false
+          end
         end
         ########## Manipulator Method #################
         
