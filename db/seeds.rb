@@ -6,12 +6,12 @@
 #   cities = City.create([{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
 #   Major.create(:name => 'Daley', :city => cities.first)
 
-User.create(:email => 'admin@cv.com', 
-            :crypted_password => '097ae996780485f8235540f02dec02e5ecca12aabd82d8990c5e25c337691faf96bfc62c412c9c955b46a46d1078c137a97c427c4a4d3a59a7a8c9c259cd9f4f',
-            :password_salt => 'e5oQEy5UCBTyo2YPXpKy',
-            :persistence_token => '543177e501dbbe8e31ce3c9f5a260138f0f9613214d56ba7f5d40a469d181c622683b1500ca38e0fe3ae4100ac4e6be5dec4540d67c59def0588d535cac03823',
-            :single_access_token => 'BC4Kq8vXAnNyvLixsEu',
-            :perishable_token => 'qUI6sIizwdf2aM0IIxCq',
+User.create!(:email => 'adminuser@cv.com', 
+            :crypted_password     => 'db95630f3ab0cfcc801a9e8716ad80b5c124f3c1035f1467706e02306aed84f7f066ff8790a88403b3a7b16b474a0ed3510a724e9af4d90299d9855f207f33fd',
+            :password_salt        => '2XiHHH3523nJLpZmAUZT',
+            :persistence_token    => '2c075021d5fa9d8a040949ec9a84dd1fc956150df7141590ffcb729e99510b89b717a0bc24ed904e0a1baf7ef53a9d82b5ee2b033f84a4b56f12c28bd6d8fd81',
+            :single_access_token  => 'BC4Kq8vXAnNyvLixsEu',
+            :perishable_token     => 'nlsDdrvdYVg3rZiix7Zf',
             :admin => 1,
             :login_count => 0,
             :last_request_at => '2011-02-21 18:54:10')
