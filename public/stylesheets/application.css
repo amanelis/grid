@@ -159,6 +159,10 @@ section header li a:hover{
 	text-decoration:none;
 }
 
+section header li a img{
+	padding-top:5px;
+}
+
 /*
 	Typography
 	------------------

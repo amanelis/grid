@@ -1,18 +1,29 @@
 %header
-  %ul.right
-    = render :partial => 'shared/links'
-    - if @account.can_send_weekly_report_now?
+  %ul.right.strong
+    - if @current_user.admin? || @current_user.group_user?
       %li
-        %a{:href => send_weekly_path(params[:id])}
-          = image_tag ("icons/email.png")
+        %a{:onclick => "confirm_refresh_accounts();"}
+          Refresh
           %br
-          Email
-
+          = image_tag ("icons/refresh.png")
+      %li
+        %a{:onclick => "confirm_export_report(#{params[:id]});"}
+          Add User
+          %br
+          = image_tag ("icons/add_account.png")
+      - if @account.can_send_weekly_report_now?
+        %li
+          %a{:href => send_weekly_path(params[:id])}
+            Email
+            %br
+            = image_tag ("icons/email.png")
+    
+    = render :partial => 'shared/links'
     %li
       %a{:onclick => "confirm_export_report(#{params[:id]});"}
-        = image_tag ("icons/export.png")
-        %br
         Export
+        %br
+        = image_tag ("icons/export.png")
 
   %h2= @account.name
   #datepicker=render :partial => "shared/date_picker"

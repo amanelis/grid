@@ -3,7 +3,13 @@
     $('a[rel*=facebox]').facebox()
   })
 %header
-  %ul.right= render :partial => 'shared/links'
+  - if @current_user.admin? || @current_user.group_user?
+    %ul.right.strong
+      %li
+        %a{:onclick => "confirm_refresh_accounts();"}
+          Refresh
+          %br
+          = image_tag ("icons/refresh.png")  
   %h2
     = "Accounts (#{@accounts.count})"
   %h4.quiet= 'For ' + (Date.yesterday.beginning_of_month).to_s(:long) + ' to ' + Date.yesterday.to_s(:long)
