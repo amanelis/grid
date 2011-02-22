@@ -384,7 +384,11 @@ class Account < ActiveRecord::Base
   def spend_for_managed_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.active.managed.to_a.sum { |campaign| campaign.spend_between(start_date, end_date) }
   end
-
+  
+  def cost_for_managed_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.managed.to_a.sum { |campaign| campaign.spend_between(start_date, end_date) }
+  end
+  
   def total_cost_per_lead_for_managed_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.active.managed.to_a.sum { |campaign| campaign.cost_per_lead_between(start_date, end_date) }
   end
@@ -394,6 +398,10 @@ class Account < ActiveRecord::Base
   end
 
   def spend_for_unmanaged_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.campaigns.active.unmanaged.to_a.sum { |campaign| campaign.spend_between(start_date, end_date) }
+  end
+  
+  def cost_for_unmanaged_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.active.unmanaged.to_a.sum { |campaign| campaign.spend_between(start_date, end_date) }
   end
 
