@@ -7,18 +7,26 @@ class HomeController < ApplicationController
   def dashboard  
     if current_user
       
-      if @user.admin? || @user.group_user?
+      if @user.admin? || @user.group_user? || @user.account_user?
         @accounts               = current_user.acquainted_accounts
         @active_accounts        = @accounts.select(&:active?)
         @accounts_count         = @accounts.count
         @active_accounts_count  = @active_accounts.count
         @users_count            = User.all.count
+        @account_users_data     = 
+        self.all.inject({}) { |results, group_account| results[group_account.id] = self.dashboard_dates.inject([]) { |leads, date| leads << group_account.accounts.active.to_a.sum { |account| account.campaigns.active.managed.to_a.sum { |campaign| campaign.number_of_total_leads_between(date, date) } } }; results }
+          (Rails.cache.fetch("dashboard_dates") { GroupAccount.dashboard_dates }).inject([]) { account_user.account.campaigns.active.to_a.sum { |campaign| campaign.number_of_total_leads_between(date, date) } }
+        
         
         if @user.admin?
           @leads_count            = (Rails.cache.fetch("dashboard_data_hash") { GroupAccount.dashboard_data_hash })[:admin].last
-        else
+        elsif @user.group_user?
           @leads_count            = @user.group_users.to_a.sum do |group_user|
             (Rails.cache.fetch("dashboard_data_hash") { GroupAccount.dashboard_data_hash })[group_user.group_account.id].last
+          end
+        else
+          @leads_count  =  @user.account_users.to_a.sum do |account_user|
+            @account_users_data.last
           end
         end
 
@@ -33,9 +41,13 @@ class HomeController < ApplicationController
 
           if @user.admin? 
             f.series(:name=> 'Leads', :data => (Rails.cache.fetch("dashboard_data_hash") { GroupAccount.dashboard_data_hash })[:admin])
-          else
+          elsif @user.group_user?
             @user.group_users.each do |group_user|
               f.series(:name=> 'Leads', :data => (Rails.cache.fetch("dashboard_data_hash") { GroupAccount.dashboard_data_hash })[group_user.group_account.id])
+            end
+          else
+            @user.account_users.each do |account_user|
+              f.series(:name=> 'Leads', :data => (Rails.cache.fetch("dashboard_data_hash") { GroupAccount.dashboard_data_hash })[account_user.group_account.id])
             end
           end
           

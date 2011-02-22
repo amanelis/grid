@@ -47,7 +47,20 @@
         .span-23.last=high_chart("total_daily_leads", @total_daily_leads)     
         
   - elsif @user.account_user?
-    Account User 
+    %header
+      %h1="#{@user.acquainted_group_accounts.collect(&:name)} Dashboard"
+    %article 
+      .stats
+        %aside.span-7.append-1
+          %p Active Accounts
+          %h3#active_accounts= @active_accounts_count
+        %aside.span-7.append-1
+          %p Total Users
+          %h3#users= @users_count
+        %aside.span-7.last
+          %p Leads Today
+          %h3#leads= @leads_count
+        .span-23.last=high_chart("total_daily_leads", @total_daily_leads)
     
   - else
     %header
