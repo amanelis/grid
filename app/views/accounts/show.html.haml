@@ -1,18 +1,11 @@
 %header
-  %ul.right
+  %ul.right.strong
     = render :partial => 'shared/links'
-    - if @account.can_send_weekly_report_now?
-      %li
-        %a{:href => send_weekly_path(params[:id])}
-          = image_tag ("icons/email.png")
-          %br
-          Email
-
     %li
       %a{:onclick => "confirm_export_report(#{params[:id]});"}
-        = image_tag ("icons/export.png")
-        %br
         Export
+        %br
+        = image_tag ("icons/export.png")
 
   %h2= @account.name
   #datepicker=render :partial => "shared/date_picker"
