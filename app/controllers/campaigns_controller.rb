@@ -8,7 +8,7 @@ class CampaignsController < ApplicationController
   
   def new
     authorize! :manipulate_account, @account
-    @industries = Industry.all.collect {|a| a.name}.sort!
+    @industries = Industry.all.collect {|a| a.name}.sort!.insert(0, 'Select...')
     @flavors = Campaign.flavors.select {|a| !a.downcase.include? "seo"}.select {|a|  !a.downcase.include? "sem"}.select {|a| !a.downcase.include? 'maps'}.sort!.insert(0, 'Select...')
     if @campaign.present?
       @campaign = @account.campaigns.build
@@ -17,11 +17,15 @@ class CampaignsController < ApplicationController
   
   def create
     authorize! :manipulate_account, @account
-    if PhoneNumber.available_numbers(params[:area_code]).blank?
-      flash[:error] = "Sorry, but there are no available numbers for the #{params[:area_code]} area code"
-      redirect_to request.referer
-    else
-      if @account.present?
+    flash[:error] = "You must select a campaign type" if params[:flavor] == 'Select...'
+    flash[:error] = "You must select an Industry" if params[:industry] == 'Select...'
+    flash[:error] = "Sorry, but there are no available numbers for the #{params[:area_code]} area code" if PhoneNumber.available_numbers(params[:area_code]).blank?
+    redirect_to request.referer if flash[:error].present?
+    if @account.present?
+      if @account.campaigns.find_by_name(params[:name]).present?
+        flash[:error] = "Sorry, but a campaign with the name #{params[:name]} already exists on this account"
+        redirect_to request.referer
+      else
         campaign = @account.create_campaign(params[:flavor], params[:name])
         campaign.industry = params[:industry]
         #campaign.url = url
@@ -30,7 +34,7 @@ class CampaignsController < ApplicationController
         #campaign.save
         redirect_to account_campaign_path(@account.id, campaign.id, :phone_number => PhoneNumber.first)
       end
-    end  
+    end 
   end
 
   def show   

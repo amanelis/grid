@@ -12,13 +12,13 @@
       %br
       %select{:name => "flavor"}
         - for flavor in @flavors
-          %option{ :selected => flavor}= flavor
+          %option= flavor
       %br
       %label="Industry"
       %br
       %select{:name => "industry"}
         - for industry in @industries
-          %option{:selected => industry}= industry
+          %option= industry
       %br
       -#%label="URL"
       -#%br
