@@ -28,7 +28,6 @@ class CampaignsController < ApplicationController
       else
         campaign = @account.create_campaign(params[:flavor], params[:name])
         campaign.industry = params[:industry]
-        #campaign.url = url
         #campaign.forwarding_number =  params[:forwarding_number]
         #campaign.area_code = params[:area_code]
         #campaign.save
