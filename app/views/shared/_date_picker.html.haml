@@ -11,6 +11,42 @@
       $('#change_dates').toggle('blind', {}, 250);
     })
 
+    $("#change_dates").change(function(){
+      var date = $("#to").datepicker('getDate');
+
+      // Simple switch case, it's here incase we need to add more to it
+      switch($("#date_range_selector").val()) {
+        case 'mtd' :
+          date.setFullYear(date.getFullYear(), date.getMonth(), 1);
+          break;
+        case '7':
+          date.setDate(date.getDate() - 7);
+          break;
+        case '31':
+          date.setDate(date.getDate() - 31);
+          break;
+        default:
+          date.setDate(date.getDate() - 31);
+      }
+
+      date = $.datepicker.formatDate('M d, yy', date, {});
+
+      $("#from").val(date);
+      $("#date_form").submit();
+    });
+
+    var one_day=86400000;
+    var to = $("#to").datepicker('getDate');
+    var from = $("#from").datepicker('getDate');
+    var range = Math.ceil((to.getTime() - from.getTime())/(one_day));
+
+    if(range > 30) {
+      $("#date_range_selector option[value='30']").attr('selected', 'selected');
+    } else if(range > 6) {
+      $("#date_range_selector option[value='7']").attr('selected', 'selected');
+    } else {
+      $("#date_range_selector option[value='mtd']").attr('selected', 'selected');
+    }
   });
 
 %h4.quiet
@@ -20,8 +56,12 @@
 
 %div{:id => 'change_dates', :style => "display:none;", :class => "box" }
   %p Change your date range.
-  -form_for(accounts_path, :html => {:method => "get"}) do |f|
+  -form_for(accounts_path, :html => {:method => "get", :id => "date_form"}) do |f|
     = f.text_field :from, :name => "from", :id => "from", :autocomplete => "off", :value => "#{(@start_date).to_s(:medium)}", :size => 15
     = " to "
     = f.text_field :to, :name => "to", :id => "to", :autocomplete => "off", :value => "#{@end_date.to_s(:medium)}", :size => 15
     = f.submit "Change Dates"
+  %select{:id => "date_range_selector" }
+    %option{:value => "31"} 31 Days
+    %option{:value => "7"} 7 Days
+    %option{:value => "mtd"} MTD
