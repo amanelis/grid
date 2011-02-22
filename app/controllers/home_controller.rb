@@ -13,9 +13,8 @@ class HomeController < ApplicationController
         @accounts_count         = @accounts.count
         @active_accounts_count  = @active_accounts.count
         @users_count            = User.all.count
-        @account_users_data     = 
-        self.all.inject({}) { |results, group_account| results[group_account.id] = self.dashboard_dates.inject([]) { |leads, date| leads << group_account.accounts.active.to_a.sum { |account| account.campaigns.active.managed.to_a.sum { |campaign| campaign.number_of_total_leads_between(date, date) } } }; results }
-          (Rails.cache.fetch("dashboard_dates") { GroupAccount.dashboard_dates }).inject([]) { account_user.account.campaigns.active.to_a.sum { |campaign| campaign.number_of_total_leads_between(date, date) } }
+        @dashboard_dates        = (Rails.cache.fetch("dashboard_dates") { GroupAccount.dashboard_dates })
+        @account_users_data     = @user.account_users.collect(&:account).inject({}) { |results, account| results[account.id] = @dashboard_dates.inject([]) { |leads, date| leads << account.campaigns.active.to_a.sum { |campaign| campaign.number_of_total_leads_between(date, date) } }; results }
         
         
         if @user.admin?
@@ -26,7 +25,7 @@ class HomeController < ApplicationController
           end
         else
           @leads_count  =  @user.account_users.to_a.sum do |account_user|
-            @account_users_data.last
+            @account_users_data[account_user.account.id].last
           end
         end
 
@@ -47,10 +46,9 @@ class HomeController < ApplicationController
             end
           else
             @user.account_users.each do |account_user|
-              f.series(:name=> 'Leads', :data => (Rails.cache.fetch("dashboard_data_hash") { GroupAccount.dashboard_data_hash })[account_user.group_account.id])
+              f.series(:name=> 'Leads', :data => @account_users_data[account_user.account.id])
             end
           end
-          
         end
       else
         ## User
