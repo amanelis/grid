@@ -142,3 +142,4 @@
                 = f.select(:review_status, (call.review_status_options))
                 = f.hidden_field(:campaign_id, {:value => params[:id]})
   .right.pagination= will_paginate(@calls) if @calls.present?
+  
