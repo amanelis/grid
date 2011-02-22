@@ -106,23 +106,13 @@
     %tbody
       -@campaign.submissions.lead.between(@start_date, @end_date).each do |submission|
         %tr
-          %th Name
-          %th Email
-          %th Phone Number
-          %th Submission Time
-          %th Date Requested
-          %th Time Requested
-          %th Work Description
-      %tbody
-        -@submissions.each do |submission|
-          %tr
-            %td= submission.name
-            %td= submission.from_email
-            %td= submission.phone_number
-            %td= submission.time_of_submission.in_time_zone.to_s(:short)
-            %td= submission.date_requested
-            %td= submission.time_requested
-            %td= submission.work_description
+          %td= submission.name
+          %td= submission.from_email
+          %td= submission.phone_number
+          %td= submission.time_of_submission.in_time_zone.to_s(:short)
+          %td= submission.date_requested
+          %td= submission.time_requested
+          %td= submission.work_description
   
   -if can? :create, ContactForm
     = link_to '+ Create Form', new_campaign_contact_form_path(@campaign), :class => "submit button", :name => "submit"
