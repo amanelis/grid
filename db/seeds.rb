@@ -6,7 +6,7 @@
 #   cities = City.create([{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
 #   Major.create(:name => 'Daley', :city => cities.first)
 
-User.create!(:email => "admin@cityvoice.com", :password =>"admin", :password_confirmation => "adminuser", :admin => 1)
+User.create!(:email => "admin@cityvoice.com", :password =>"admin", :password_confirmation => "admin", :admin => 1)
 
 =begin
 User.create!(:email => 'adminuser@cv.com', 
