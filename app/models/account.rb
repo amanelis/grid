@@ -147,12 +147,6 @@ class Account < ActiveRecord::Base
     data
   end
   
-  def previous_days_report_data(date = Date.today, previous = 0)
-    end_date = date - 1.day
-    start_date = (previous == 0 ? end_date.beginning_of_month : end_date - previous.days)
-    [self.number_of_all_calls_for_managed_campaigns_between(start_date, end_date), self.number_of_lead_calls_for_managed_campaigns_between(start_date, end_date), self.number_of_all_submissions_for_managed_campaigns_between(start_date, end_date), self.number_of_lead_submissions_for_managed_campaigns_between(start_date, end_date), start_date, end_date, self.name]
-  end
-  
   def valid_reporting_emails
     (self.reporting_emails || "").split(/, \s*/).select { |email_address| Utilities.is_valid_email_address?(email_address) }
   end
