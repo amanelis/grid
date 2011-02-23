@@ -11,7 +11,7 @@
       $('#change_dates').toggle('blind', {}, 250);
     })
 
-    $("#change_dates").change(function(){
+    $("#date_range_selector").change(function(){
       var date = $("#to").datepicker('getDate');
 
       // Simple switch case, it's here incase we need to add more to it
@@ -32,7 +32,6 @@
       date = $.datepicker.formatDate('M d, yy', date, {});
 
       $("#from").val(date);
-      $("#date_form").submit();
     });
 
     var one_day=86400000;
@@ -58,10 +57,6 @@
   %p Change your date range.
   -form_for(accounts_path, :html => {:method => "get", :id => "date_form"}) do |f|
     = f.text_field :from, :name => "from", :id => "from", :autocomplete => "off", :value => "#{(@start_date).to_s(:medium)}", :size => 15
-    = " to "
+    to
     = f.text_field :to, :name => "to", :id => "to", :autocomplete => "off", :value => "#{@end_date.to_s(:medium)}", :size => 15
     = f.submit "Change Dates"
-  %select{:id => "date_range_selector" }
-    %option{:value => "31"} 31 Days
-    %option{:value => "7"} 7 Days
-    %option{:value => "mtd"} MTD

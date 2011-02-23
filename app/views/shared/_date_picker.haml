@@ -1,3 +1,0 @@
--form_for(accounts_path, :html => {:method => "get"}) do |f|
-  = f.text_field :daterangepicker, :placeholder => "#{(@start_date).to_s(:long)} 'to' #{@end_date}", :name => "daterange", :id => "daterangepicker", :autocomplete => "off", :value => @date_range
-  = f.submit "Change"
