@@ -51,7 +51,6 @@ li{
 }
 
 section#content{
-background:white;
 margin-top:12px;
 border: 1px solid #C3C3C3;
 }
@@ -65,7 +64,7 @@ border: 1px solid #C3C3C3;
 
 #content header{
 color:#000;
-background:#BBE1F7;
+background:rgba(195,217,255,.5);
 }
 
 #content article{
