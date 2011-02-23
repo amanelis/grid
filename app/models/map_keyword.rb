@@ -21,8 +21,9 @@ class MapKeyword < ActiveRecord::Base
               new_keyword.ranking_updated_on = Date.today - 7.days
               new_keyword.save!
               puts "Added: #{new_keyword.descriptor} for #{local_map_campaign.campaign.name}"
+            else
+              puts "Exists:  #{existing_keyword.descriptor} for #{local_map_campaign.campaign.name}"
             end                                                            
-            puts "Exists:  #{existing_keyword.descriptor} for #{local_map_campaign.campaign.name}"
           end
         end
       end
