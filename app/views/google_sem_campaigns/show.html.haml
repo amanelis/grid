@@ -1,0 +1,34 @@
+:javascript
+  $(document).ready(function() {
+    $(".edit_activity").change(function() {
+      this.submit();
+    });
+  })
+%header
+  %h2= "#{@google_sem_campaign.name} Daily Summary(In progress)"
+  #datepicker=render :partial => "shared/date_picker"
+
+%table
+  %thead
+    %tr
+      %th Date
+      %th Clicks
+      %th Impressions
+      %th CTR
+      %th Avg. CPC
+      %th Cost
+      %th Avg. Position
+      %th Impression Share
+      %th Exact Match Imp Share
+  %tbody
+    -(@start_date..@end_date).reverse_each do |line_date|
+      %tr
+        %td= line_date.strftime("%m/%d/%y")
+        %td= @google_sem_campaign.clicks_between(line_date, line_date)
+        %td= @google_sem_campaign.impressions_between(line_date, line_date)
+        %td= (sprintf("%.3f", (@google_sem_campaign.click_through_rate_between(line_date, line_date) * 100)) + '%')
+        %td= "$#{sprintf("%.2f", @google_sem_campaign.average_cost_per_click_between(line_date, line_date))}"
+        %td= "$#{sprintf("%.2f", @google_sem_campaign.cost_between(line_date, line_date))}"
+        %td= sprintf("%.2f", @google_sem_campaign.average_position_between(line_date, line_date))
+        %td= (sprintf("%.0f", (@google_sem_campaign.average_impression_share_between(line_date, line_date) * 100)) + '%')
+        %td= (sprintf("%.0f", (@google_sem_campaign.average_exact_match_impression_share_between(line_date, line_date) * 100)) + '%')

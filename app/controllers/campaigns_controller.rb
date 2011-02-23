@@ -39,9 +39,6 @@ class CampaignsController < ApplicationController
   def show   
     datepicker campaign_path(@campaign)
     @phone_number = PhoneNumber.find(params[:phone_number]) unless params[:phone_number].blank?
-    if @phone_number.present?
-      flash[:notice] = "Your new number is #{@phone_number.inboundno}"
-    end
     @submissions = resource.submissions.lead.between(@start_date, @end_date)
   end
   
