@@ -12,18 +12,14 @@
       %br
       %select{:name => "flavor"}
         - for flavor in @flavors
-          %option{ :selected => flavor}= flavor
+          %option= flavor
       %br
       %label="Industry"
       %br
       %select{:name => "industry"}
         - for industry in @industries
-          %option{:selected => industry}= industry
+          %option= industry
       %br
-      -#%label="URL"
-      -#%br
-      -#%input{:type => "text", :placeholder => "http://", :name => "url", :id => "url", :class => "title"}
-      -#%br
       %label Forwarding Number
       %br
       %label.small.quiet Where you want all your calls to go to

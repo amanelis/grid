@@ -41,10 +41,6 @@ class Campaign < ActiveRecord::Base
     self.save!
   end
 
-  def url=(url)
-    self.create_website(url)
-  end
-
   def area_code=(area_code)
     self.create_twilio_number(area_code, self.name, self.forwarding_number)
   end
