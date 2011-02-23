@@ -32,8 +32,6 @@
       date = $.datepicker.formatDate('M d, yy', date, {});
 
       $("#from").val(date);
-      // Temporarily disallow this
-      //$("#date_form").submit();
     });
 
     var one_day=86400000;
@@ -62,7 +60,3 @@
     to
     = f.text_field :to, :name => "to", :id => "to", :autocomplete => "off", :value => "#{@end_date.to_s(:medium)}", :size => 15
     = f.submit "Change Dates"
-  %select{:id => "date_range_selector" }
-    %option{:value => "31"} 31 Days
-    %option{:value => "7"} 7 Days
-    %option{:value => "mtd"} MTD
