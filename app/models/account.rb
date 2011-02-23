@@ -114,7 +114,7 @@ class Account < ActiveRecord::Base
     
   # INSTANCE BEHAVIOR
   
-  def send_weekly_report(date = Date.today, previous = 0)
+  def send_weekly_report(date = Date.today, previous = self.weekly_report_mtd? ? 0 : 6)
     return if valid_reporting_emails.blank?
     Notifier.deliver_weekly_report(self, self.valid_reporting_emails, date, previous)
     Notifier.send_later(:deliver_weekly_report, self, self.valid_reporting_emails, date, previous)
@@ -124,7 +124,7 @@ class Account < ActiveRecord::Base
     self.last_weekly_report_sent.present? ? self.last_weekly_report_sent.beginning_of_week == DateTime.now.beginning_of_week : false
   end
   
-  def weekly_reporting_data(date = Date.today, previous = 0)
+  def weekly_reporting_data(date = Date.today, previous = self.weekly_report_mtd? ? 0 : 6)
     end_date = date - 1.day
     start_date = (previous == 0 ? end_date.beginning_of_month : end_date - previous.days)
     data = {}
@@ -151,7 +151,7 @@ class Account < ActiveRecord::Base
     (self.reporting_emails || "").split(/, \s*/).select { |email_address| Utilities.is_valid_email_address?(email_address) }
   end
   
-  def send_weekly_report_now(date = Date.today, previous = 0)
+  def send_weekly_report_now(date = Date.today, previous = self.weekly_report_mtd? ? 0 : 6)
     return unless self.can_send_weekly_report_now?
     Notifier.deliver_weekly_report(self, self.valid_reporting_emails, date, previous)
     self.update_attribute(:last_weekly_report_sent, DateTime.now)
