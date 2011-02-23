@@ -262,6 +262,9 @@ td p{
 	padding:0;
 }
 
+td.type img{
+	margin-left:12px;
+}
 /*
 	Buttons
 	------------------
