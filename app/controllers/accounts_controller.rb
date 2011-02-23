@@ -13,7 +13,6 @@ class AccountsController < ApplicationController
     @accounts           = @accounts.select {|account| account.account_type?(params[:account_type])} if params[:account_type].present?
     @accounts_data      = Rails.cache.fetch("accounts_data") { Account.get_accounts_data }
     @accounts.sort! {|a,b| a.name.downcase <=> b.name.downcase}
-    
     @accounts.count == 1 ? (redirect_to account_path(@accounts.first.id)) : nil
   end
   
