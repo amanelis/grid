@@ -2,7 +2,7 @@
   %tr{"data-time" => "#{activity.timestamp.to_i}"}
     %td.type= image_tag ("icons/telephone.png")
     %td.campaign
-      %p= link_to activity.activity_type.phone_number.campaign.name, campaign_path(activity.activity_type.phone_number.campaign)
+      %p= link_to activity.activity_type.phone_number.campaign.name, account_campaign_path(activity.activity_type.phone_number.campaign.account, activity.activity_type.phone_number.campaign)
       %p= activity.activity_type.phone_number.campaign.account.name
     %td.caller
       %strong=number_to_phone(activity.activity_type.caller_number)
@@ -37,7 +37,7 @@
   %tr{"data-time" => "#{activity.timestamp.to_i}"}
     %td.type= image_tag ("icons/form.png")
     %td.campaign
-      %p= link_to activity.activity_type.contact_form.campaign.name, campaign_path(activity.activity_type.contact_form.campaign)
+      %p= link_to activity.activity_type.contact_form.campaign.name, account_campaign_path(activity.activity_type.contact_form.campaign.account, activity.activity_type.contact_form.campaign)
       %p= activity.activity_type.contact_form.campaign.account.name
     %td.caller
       %strong=activity.activity_type.from_email
