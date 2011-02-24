@@ -21,11 +21,11 @@
   = javascript_include_tag '//ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js', 'modernizr', 'http://kolber.github.com/audiojs/audiojs/audio.js', 'facebox', 'highcharts', 'application'
 
 %body
-  .container
+  .container#wrapper
     %header.span-24#toolbar
-      = link_to "GRID", root_path
+      = link_to image_tag("grid_logo.png"), root_path
       - if @current_user
-        %ul#account
+        %ul
           %li= link_to "My Info", edit_user_path(@current_user)
           %li= link_to 'Logout', user_session_path, :method => :delete, :id => "logout"
       - else
@@ -34,8 +34,10 @@
     #navigation.span-4
       =render :partial => "layouts/nav"
     %section#content.span-20.last
-      =render :partial => "layouts/flash", :locals => { :flash => flash }
-      = yield
+      #yield
+        =render :partial => "layouts/flash", :locals => { :flash => flash }
+        = yield
+  .container
     %footer.span-24
       %small
         &copy; Copyright 2010

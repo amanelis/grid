@@ -18,23 +18,50 @@ menu, footer, header, nav, section, summary, time, mark, audio, video {
 	------------------
 */
 body{
-	background-image: url("/images/grid_background.png");
+	background-image: url("/images/grid_bg.png");
 	-webkit-font-smoothing: antialiased;
 }
 
-.container{
+#wrapper{
 	margin-top:40px;
+	background:#efefef;
+}
+
+#content{
 	background:#fff;
 }
 
+#yield{
+	padding:24px;
+}
+
+a{
+	text-decoration:none;
+}
 /*
 	Toolbar
 	------------------
 */
 
 #toolbar{
-	background: #572CEF;
-	border-bottom:2px solid black;
+	background: #2A476A;
+}
+
+#toolbar ul{
+	float:right;
+}
+
+#toolbar li{
+	float:left;
+	margin-left:6px;
+}
+
+#toolbar li a{
+	color:#fff;
+}
+
+#toolbar ul, #toolbar img{
+	padding:6px 12px;
 }
 
 
@@ -42,13 +69,9 @@ body{
 	Navigation
 	------------------
 */
-#navigation{
-	background:#efefef;
-}
-
 #navigation li{
-	border-bottom:solid 1px #666;
-	padding:12px 0;
+	border-bottom:solid 1px #969696;
+	padding:6px 0;
 }
 
 #navigation li a{
@@ -56,13 +79,13 @@ body{
 	color:#40474D;
 	font-weight:bold;
 	font-size:12px;
+	line-height:24px;
 	text-shadow:0 1px 0 rgba(0, 0, 0, 0.2);
-	padding:6px;
 }
 
 #navigation li img{
-	margin-left:12px;
 	float:left;
+	margin:0 12px;
 	width:24px;
 }
 
@@ -71,10 +94,13 @@ ul{
 }
 
 /*
-	Header UL Nav
+	Footer
 	------------------
 */
 
+footer{
+	padding:6px;
+}
 
 /*
 	Typography
