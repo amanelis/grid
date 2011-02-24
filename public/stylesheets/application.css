@@ -12,6 +12,7 @@ body{
 }
 
 header{
+	background:#000;
 	background:rgba(0,0,0,.8);
 }
 
@@ -64,6 +65,7 @@ border: 1px solid #C3C3C3;
 
 #content header{
 color:#000;
+background:#C3D9FF;
 background:rgba(195,217,255,.5);
 }
 
