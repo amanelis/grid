@@ -1,11 +1,6 @@
 %header
   %ul.right.strong
     - if @current_user.admin? || @current_user.group_user?
-      %li
-        %a{:onclick => "confirm_refresh_accounts();"}
-          Refresh
-          %br
-          = image_tag ("icons/refresh.png")
       - if @account.can_send_weekly_report_now?
         %li
           %a{:href => send_weekly_path(params[:id])}

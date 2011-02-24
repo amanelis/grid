@@ -25,7 +25,7 @@ ActionController::Routing::Routes.draw do |map|
     campaign.resources :contact_forms, :member => { :enable => [:put, :post]} 
   end
   
-  
+  map.resources :contact_forms,   :member => {:thank_you => :get, :get_html => :get, :get_iframe => :get}
   map.resources :website_visits,  :member => {:global_visitor => :get}
   map.resources :calls,           :member => {:collect => :post}
   map.resources :phone_numbers,   :member => {:connect => :post}
@@ -35,7 +35,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :keywords
   map.resources :job_statuses
   map.resources :websites
-  map.resources :contact_forms,   :member => {:thank_you => :get, :get_html => :get, :get_iframe => :get}
+  
   
   map.with_options :controller => 'home' do |home|
      home.dashboard 'dashboard', :action => 'dashboard'
