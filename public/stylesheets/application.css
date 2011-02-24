@@ -51,7 +51,7 @@ a{
 	float:right;
 }
 
-#toolbar li{
+#toolbar li, header li{
 	float:left;
 	margin-left:6px;
 }

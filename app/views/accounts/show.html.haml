@@ -23,7 +23,7 @@
 %article
   =high_chart("total_daily_leads_graph", @daily_total_leads_graph)
   %hr
-  #cityvoice_managed.span-11
+  #cityvoice_managed
     %h3 CityVoice Managed
     %table
       %thead
@@ -56,10 +56,10 @@
           %td= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_contact_for(@managed_campaigns, @start_date, @end_date))
     %p *Cost Per Contact - Spend / Total contacts (includes spam, hangups, etc.)
   - unless @managed_campaigns.empty?
-    #managed_graph.span-12.last=high_chart("managed_campaign_summary_graph", @campaign_summary_graph)
+    #managed_grapht=high_chart("managed_campaign_summary_graph", @campaign_summary_graph)
   %hr
   %h3 Unmanaged
-  %table.span-23.last
+  %table
     %thead
       %tr
         %th Campaigns
