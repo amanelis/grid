@@ -19,16 +19,16 @@
       %h1 Admin Dashboard
     %article 
       .stats
-        %aside.span-7.append-1
+        %aside
           %p Total Accounts
           %h3#active_accounts= @accounts_count
-        %aside.span-7.append-1
+        %aside
           %p Total Users
           %h3#users= @users_count
-        %aside.span-7.last
+        %aside
           %p Leads Today
           %h3#leads= @leads_count
-        .span-23.last=high_chart("total_daily_leads", @total_daily_leads)
+        =high_chart("total_daily_leads", @total_daily_leads)
         
   -elsif @user.group_user? 
     %header

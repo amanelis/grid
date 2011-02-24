@@ -1,3 +1,18 @@
+/*	Resets
+	------	*/
+
+html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, 
+p, blockquote, pre, a, abbr, address, cite, code, del, dfn, em, 
+img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, hr, 
+dl, dt, dd, ol, ul, li, fieldset, form, label, legend, 
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, figure, figcaption, hgroup, 
+menu, footer, header, nav, section, summary, time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
 /*
 	Layout / Backgrounds
 	------------------
@@ -7,126 +22,48 @@ body{
 	-webkit-font-smoothing: antialiased;
 }
 
-.error header, .error article{
-	text-align:center;
-}
-
-header{
-	background:#000;
-	background:rgba(0,0,0,.8);
-}
-
-header .no-rgba{
-	background:#000;
-}
-
-/* DIRTY UL - FIX SOON */
-ul{
-	margin:0;
-	padding:0;
-}
-
-li{
-	text-align:left;
-}
-
-#toolbar ul, #toolbar ul a{
-	color:#fff;
-	text-decoration:none;
-}
-
-#toolbar ul a:hover{
-	opacity:.5;
-}
-
-#toolbar li, #admin li{
-	margin:0 12px 0 0;
-}
-
-#account{
-	float:right;
-}
-
-#account li{
-	margin:0 0 0 12px;
-}
-
-section#content{
-margin-top:12px;
-border: 1px solid #C3C3C3;
-}
-
-.boxshadow section#content{
--webkit-box-shadow: 2px 2px 6px #8A8A8A;
-   -moz-box-shadow: 2px 2px 6px #8A8A8A;
-     -o-box-shadow: 2px 2px 6px #8A8A8A;
-        box-shadow: 2px 2px 6px #8A8A8A;
-}
-
-#content header{
-color:#000;
-background:#C3D9FF;
-background:rgba(195,217,255,.5);
-}
-
-#content article{
-background: #fff;	
-}
-
-header, article, footer{
-padding:12px;
-}
-
-header, article, section, footer{
-clear:both;
-overflow:hidden;
+.container{
+	margin-top:40px;
+	background:#fff;
 }
 
 /*
-	Admin Navigation
+	Toolbar
 	------------------
 */
-#admin{
-	background:#fff;
-	background: rgba(255,255,255,.5);
+
+#toolbar{
+	background: #572CEF;
+	border-bottom:2px solid black;
 }
 
-#admin ul, #admin ul a{
-	color:#000;
-	text-decoration:none;
-}
-
-#admin ul a:hover{
-	opacity:.5;
-}
 
 /*
 	Navigation
 	------------------
 */
-nav h2{
-margin-right:10px;
+#navigation{
+	background:#efefef;
 }
 
-nav a{
-font-size:.8em;
-padding:5px;
--o-transition-duration: .33s;
--o-transition-property: color;
--webkit-transition-duration: .33s;
--webkit-transition-property: color;
+#navigation li{
+	border-bottom:solid 1px #666;
+	padding:12px 0;
 }
 
-.active{
-	color:#fff;
+#navigation li a{
+	text-decoration:none;
+	color:#40474D;
+	font-weight:bold;
+	font-size:12px;
+	text-shadow:0 1px 0 rgba(0, 0, 0, 0.2);
+	padding:6px;
 }
 
-#search input[type="text"]{
-margin-left:5px;
-background-image: url("/images/search.png");
-background-position: left center;
-background-repeat: no-repeat;
-padding-left:16px;
+#navigation li img{
+	margin-left:12px;
+	float:left;
+	width:24px;
 }
 
 ul{
@@ -137,33 +74,7 @@ ul{
 	Header UL Nav
 	------------------
 */
-header ul{
-	margin:0;
-}
 
-header li{
-	float:left;
-}
-
-section header li{
-	margin-left:24px;
-	text-align:center;
-}
-
-section header li a{
-	color:#000;
-	
-}
-
-section header li a:hover{
-	opacity: .5;
-	color:#000;
-	text-decoration:none;
-}
-
-section header li a img{
-	padding-top:5px;
-}
 
 /*
 	Typography
@@ -172,56 +83,6 @@ section header li a img{
 body{
 font-family: "Lucida Grande", "Helvetica Nueue", helvetica, sans-serif;
 }
-
-.strong, .strong td{
-	font-weight:bold;
-}
-
-.large{
-	font-size:2em;
-	line-height:1.2em;
-}
-
-.small{
-	font-size:.8em;
-	line-height:1.2em;
-}
-
-nav a{
-font-size:1em;
-}
-
-section a{
-	text-decoration:none;
-    -o-transition-duration: .33s;
-    -o-transition-property: color, background-color;
-    -webkit-transition-duration: .33s;
-    -webkit-transition-property: color, background;
-}
-
-header h1{
-font-weight:700;
-}
-
-header p, header input[type="text"], header input[type="password"], header input.text, header input.title, header h3, header h2, header p, header h1, header h4, header div{
-margin: 0;
-}
-
-header input{
-margin:0;
-}
-
-.delete{
-	text-decoration:underline;
-	font-size: .8em;
-	color:#8a1f11;
-}
-
-.total td{
-	font-weight:bold;
-	border-top:black solid 2px;
-}
-
 
 /*
 	Date Picker
@@ -246,28 +107,7 @@ margin:0;
 	Tables
 	------------------
 */
-td a{
-color:#000;
-text-decoration:none;
-font-weight:bold;
-}
 
-td{
-	line-height:2em;
-}
-
-td a:hover{
-color:#0099FF;
-}
-
-td p{
-	margin:0;
-	padding:0;
-}
-
-td.type img{
-	margin-left:12px;
-}
 /*
 	Buttons
 	------------------
@@ -424,38 +264,6 @@ form.inline p { margin-bottom:0; }
 .stats h3{
 	margin:6px;
 	font-weight:bold;
-}
-
-/*
-	Pillbox Demo
-	------------------
-*/
-
-.pillbox{
-	-webkit-border-radius: 10px;
-	   -moz-border-radius: 10px;
-	        border-radius: 10px;
-	-webkit-box-shadow: 2px 2px 10px #A0A0A0;
-	   -moz-box-shadow: 2px 2px 10px #A0A0A0;
-	     -o-box-shadow: 2px 2px 10px #A0A0A0;
-	        box-shadow: 2px 2px 10px #A0A0A0;
-}
-
-.pill{
-	-webkit-border-radius: 10px 10px 0 0;
-	   -moz-border-radius: 10px 10px 0 0;
-	        border-radius: 10px 10px 0 0;
-	padding:6px;
-	background-image: url("/images/linen.jpg");
-	border-bottom:1px solid #7A7A7A;
-}
-
-.pill h2{
-	font-size:22px;
-	font-weight:bold;
-	line-height:1;
-	margin:0;
-	color:#fff;
 }
 
 /*

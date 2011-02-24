@@ -22,13 +22,23 @@
 
 %body
   .container
-    =render :partial => "layouts/nav"
-    =render :partial => "layouts/flash", :locals => { :flash => flash }
-    %section#content
+    %header.span-24#toolbar
+      = link_to "GRID", root_path
+      - if @current_user
+        %ul#account
+          %li= link_to "My Info", edit_user_path(@current_user)
+          %li= link_to 'Logout', user_session_path, :method => :delete, :id => "logout"
+      - else
+        -#= link_to "Register", register_path
+        = link_to "Login", login_path
+    #navigation.span-4
+      =render :partial => "layouts/nav"
+    %section#content.span-20.last
+      =render :partial => "layouts/flash", :locals => { :flash => flash }
       = yield
-    %footer
+    %footer.span-24
       %small
         &copy; Copyright 2010
         =link_to "CityVoice", "http://www.cityvoice.com"
         .right
-          =mail_to "alex.baldwin@cityvoice.com", "Feedback/Support", :subject => "Grid Feedback/Support"
+          =mail_to "alex.baldwin@cityvoice.com", "Help", :subject => "Grid Feedback/Support"
