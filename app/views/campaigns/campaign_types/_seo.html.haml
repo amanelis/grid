@@ -107,9 +107,8 @@
           %td= submission.date_requested
           %td= submission.time_requested
           %td= submission.work_description
-  
-  -if can? :create, ContactForm
-    = link_to '+ Create Form', new_campaign_contact_form_path(@campaign), :class => "submit button", :name => "submit"
+  -if can? :manipulate_campaign, @campaign
+    = link_to "+ Create Contact Form", new_campaign_contact_form_path(@campaign), :class => "button"
   
   %h3 Call Log
   %table

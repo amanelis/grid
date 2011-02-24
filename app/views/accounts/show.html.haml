@@ -6,11 +6,6 @@
           Refresh
           %br
           = image_tag ("icons/refresh.png")
-      %li
-        %a{:onclick => "confirm_export_report(#{params[:id]});"}
-          Add User
-          %br
-          = image_tag ("icons/add_account.png")
       - if @account.can_send_weekly_report_now?
         %li
           %a{:href => send_weekly_path(params[:id])}

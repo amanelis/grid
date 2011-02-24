@@ -6,7 +6,6 @@
   })
 %header
   %p.right= render :partial => 'shared/lead_matrix'
-  %p.right= " | "
   %p.right= render :partial => 'shared/orphaned'
   %h2 #{@campaign.name}
   #datepicker=render :partial => "shared/date_picker"
@@ -24,5 +23,3 @@
 - else
   = render :text => "Ooops, looks like that is an invalid campaign type"
   
--if can? :manipulate_campaign, @campaign
-  = link_to "Create Contact Form", new_campaign_contact_form_path(@campaign), :class => "button"
