@@ -70,6 +70,6 @@ function playSound(url) {
 
   // When facebox closes, remove the mp3_player element
   $(document).bind('close.facebox', function() {
-    $("#mp3_player").remove();
+    $("#facebox_content").empty();
   });
 }

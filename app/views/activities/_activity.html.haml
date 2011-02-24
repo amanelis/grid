@@ -9,7 +9,7 @@
       %p=activity.activity_type.caller_name
     %td.recording
       -if activity.activity_type.recorded? && activity.activity_type.recording?
-        = link_to image_tag("sound.png", :alt => "Listen"), activity.activity_type.recording.expiring_url(14400), :rel => "facebox", :onclick => "playSound('#{activity.activity_type.recording.expiring_url(14400)}');"
+        = link_to image_tag("sound.png", :alt => "Listen"), "#", :rel => "facebox", :onclick => "playSound('#{activity.activity_type.recording.expiring_url(14400)}');"
         -#= link_to('Listen', activity.activity_type.recording.expiring_url(14400))
         -#= mp3_player "#{activity.activity_type.recording.expiring_url(14400)}", :bg => "EEEEEE", :track => "EEEEEE", :slider => "222222", :loader => "EEEEEE"
         -#<img src="images/sound.png" rel="facebox" onclick="playSound('#{activity.activity_type.recording.expiring_url(14400)}');"/> 
