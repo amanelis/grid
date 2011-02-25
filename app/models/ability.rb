@@ -42,8 +42,13 @@ class Ability
             false
           end
         end
-        ########## Manipulator Method #################
         
+        can :update, Campaign do |campaign|
+           if user.can_manipulate_campaign?(campaign) 
+             can :update, Campaign
+           end
+        end
+        ########## Manipulator Method #################
         
         can :export, Account
         can :refresh_accounts, Account
@@ -80,6 +85,11 @@ class Ability
           else
             false
           end
+        end
+        can :update, Campaign do |campaign|
+           if user.can_manipulate_campaign?(campaign) 
+             can :update, Campaign
+           end
         end
         ########## Manipulator Method #################
         
