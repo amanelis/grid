@@ -37,3 +37,9 @@
       #yield
         =render :partial => "layouts/flash", :locals => { :flash => flash }
         = yield
+  .container
+    %footer
+      =mail_to "alex.baldwin@cityvoice.com", "Help", :subject => "Grid Feedback/Support"
+      %small
+        &copy; Copyright 2010
+        =link_to "CityVoice", "http://www.cityvoice.com"

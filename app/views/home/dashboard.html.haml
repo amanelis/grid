@@ -16,7 +16,9 @@
 - if @user
   - if @user.admin?
     %header
-      %h1 Admin Dashboard
+      %h1 Dashboard
+      %h2 Administrator
+      %hr
     %article 
       .stats
         %aside
@@ -28,8 +30,9 @@
         %aside
           %p Leads Today
           %h3#leads= @leads_count
-        =high_chart("total_daily_leads", @total_daily_leads)
-        
+      %hr
+      =high_chart("total_daily_leads", @total_daily_leads)
+   
   -elsif @user.group_user? 
     %header
       %h1="#{@user.acquainted_group_accounts.collect(&:name)} Dashboard"
