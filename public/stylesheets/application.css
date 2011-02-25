@@ -176,8 +176,8 @@ header h2{
 	font-weight:bold;
 }
 
-#yield header{
-	border-bottom:3px solid black;
+.header{
+	border-bottom:3px solid #000;
 }
 
 /*
