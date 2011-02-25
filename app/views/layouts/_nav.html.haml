@@ -28,4 +28,6 @@
           %li= link_to "Activities", activities_url
     - else
       -#= link_to "Register", register_path
-      = link_to "Login", login_path
+      %li
+        = image_tag("icons/dashboard.png")
+        = link_to "Login", login_path

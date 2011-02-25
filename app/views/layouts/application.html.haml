@@ -24,22 +24,21 @@
   .container#wrapper
     %header.span-24#toolbar
       = link_to image_tag("grid_logo.png"), root_path
-      - if @current_user
-        %ul
+      %ul
+        - if @current_user
           %li= link_to "My Info", edit_user_path(@current_user)
           %li= link_to 'Logout', user_session_path, :method => :delete, :id => "logout"
-      - else
-        -#= link_to "Register", register_path
-        = link_to "Login", login_path
+        - else
+          -#= link_to "Register", register_path
+          %li= link_to "Login", login_path
     #navigation.span-4
       =render :partial => "layouts/nav"
     %section#content.span-20.last
       #yield
         =render :partial => "layouts/flash", :locals => { :flash => flash }
         = yield
-  .container
+  .container#footer
     %footer
-      =mail_to "alex.baldwin@cityvoice.com", "Help", :subject => "Grid Feedback/Support"
       %small
-        &copy; Copyright 2010
-        =link_to "CityVoice", "http://www.cityvoice.com"
+        .right=mail_to "alex.baldwin@cityvoice.com", "Help", :subject => "Grid Feedback/Support", :class => "button action"
+        &copy; Copyright 2011 Grid. All rights reserved.

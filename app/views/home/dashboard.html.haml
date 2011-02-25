@@ -20,6 +20,8 @@
       %h2 Administrator
       %hr
     %article 
+      =high_chart("total_daily_leads", @total_daily_leads)
+      %hr
       .stats
         %aside
           %p Total Accounts
@@ -30,9 +32,7 @@
         %aside
           %p Leads Today
           %h3#leads= @leads_count
-      %hr
-      =high_chart("total_daily_leads", @total_daily_leads)
-   
+
   -elsif @user.group_user? 
     %header
       %h1="#{@user.acquainted_group_accounts.collect(&:name)} Dashboard"
