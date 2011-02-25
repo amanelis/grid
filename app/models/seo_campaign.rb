@@ -46,8 +46,8 @@ class SeoCampaign < ActiveRecord::Base
                   keyword.descriptor = g_keyword['keyword']['name']
                 end
                 keyword.ginza_keyword_id = g_keyword['keyword']['keyword_id']
-                keyword.google_first_page = (g_keyword['keyword']['google_us'].to_i < 11) ? true : false
-                keyword.yahoo_first_page = (g_keyword['keyword']['yahoo_us'].to_i < 11) ? true : false
+                keyword.google_first_page = (g_keyword['keyword']['google_us'].to_i < 11)
+                keyword.yahoo_first_page = (g_keyword['keyword']['yahoo_us'].to_i < 11)
                 #keyword.bing_first_page = (g_keyword['keyword']['bing_us'].to_i < 11) ? true : false
                 keyword.bing_first_page = false
                 keyword.last_ranking_update = Date.today
