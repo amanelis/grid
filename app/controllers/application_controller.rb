@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
   #CanCan rescue errors and access denied
   rescue_from CanCan::AccessDenied do |exception|
     flash[:error] = "Ooops, looks like you do not have permissions to view that page!"
-    redirect_to accounts_path
+    redirect_to dashboard_url
   end
 
   private

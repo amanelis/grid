@@ -59,7 +59,6 @@ class CampaignsController < ApplicationController
       @minutes_selected = 2
     else
       begin
-        #Default it to a number!
         @minutes_selected = (params[:minutepicker].to_i if Float(params[:minutepicker]) rescue 2)
       rescue Exception
         @minutes_selected = 2
@@ -68,15 +67,10 @@ class CampaignsController < ApplicationController
     
     if params[:datepicker].blank? 
       @date_selected = Date.yesterday
-
-      respond_to do |format|
-        format.html # show.html.erb
-      end
     else
       @campaign = Campaign.find(params[:id])
       Time.zone = @campaign.account.time_zone
       begin
-        #@date_selected = Date.strptime(params[:datepicker], '%Y/%d/%m')
         dates = params[:datepicker].split("/")
         @date_selected = Date.new(dates[2].to_i, dates[0].to_i, dates[1].to_i)
       rescue Exception

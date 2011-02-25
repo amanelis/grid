@@ -1,3 +1,5 @@
+= javascript_include_tag 'jquery.flash.js'
+
 - if params[:q] == 'real'
   :javascript
     jQuery.ajaxSetup({
@@ -18,12 +20,34 @@
   $(document).ready(function() {
     $(".edit_activity").change(function() {
       this.submit();
-      });
-    
-    jQuery(document).ready(function($) {
-      $('a[rel*=facebox]').facebox()
-      })
+    });
   });
+
+  function playSound(url) {
+    var message;
+
+    // If they have support for audio
+    if( Modernizr.audio && Modernizr.audio.mp3){
+      message = '<center><audio preload="auto" autobuffer><source src="'+url+'" /></audio></center>';
+    } else {
+      message = '<center><embed width="240px" height="20px" type="application/x-shockwave-flash" src="./player.swf" pluginspage="http://www.adobe.com/go/getflashplayer" flashvars="file='+url+'"></center>';
+    }
+
+    // show the audio
+    $.facebox(message);
+
+    if(Modernizr.audio) {
+      // initialize the audiojs
+      audiojs.events.ready(function(){
+        audiojs.createAll();
+      });
+    }
+
+    // When facebox closes, remove the mp3_player element
+    $(document).bind('close.facebox', function() {
+      $("#facebox_content").empty();
+    });
+  }
   
 
 %header

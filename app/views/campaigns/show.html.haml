@@ -5,8 +5,9 @@
     });
   })
 %header
-  %p.right= render :partial => 'shared/lead_matrix'
-  %p.right= render :partial => 'shared/orphaned'
+  -if can? :manipulate_campaign, @campaign
+    %p.right= link_to 'Assign Number', orphaned_account_campaign_path, :class => "submit", :name => "submit"
+  
   %h2 #{@campaign.name}
   #datepicker=render :partial => "shared/date_picker"
   
