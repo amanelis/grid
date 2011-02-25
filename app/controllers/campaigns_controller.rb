@@ -47,6 +47,7 @@ class CampaignsController < ApplicationController
       @phone_number = PhoneNumber.find(params[:campaign][:adopting_phone_number])
       @phone_number.update_attribute(:campaign_id, @campaign.id)
     end
+    flash[:notice] = "Account Successfully updated!"
     redirect_to account_campaign_path(@account, @campaign)
   end
   
