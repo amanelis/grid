@@ -6,6 +6,24 @@ class Keyword < ActiveRecord::Base
   has_many :keyword_rankings, :dependent => :destroy
 
 
+  # MAINTENANCE METHODS
+  
+  def self.merge_duplicate_keywords
+    count = 0
+    Keyword.all.each do |keyword|
+      keyword_id = ''
+      Keyword.all.each do |inner_keyword|
+        if inner_keyword.seo_campaign_id == keyword.seo_campaign_id && inner_keyword.descriptor.strip == keyword.descriptor && inner_keyword.id != keyword.id
+          inner_keyword.keyword_rankings.each do |ranking|
+            ranking.keyword = keyword
+            ranking.save!
+          end
+          inner_keyword.delete
+        end
+      end
+    end
+  end
+  
   # CLASS BEHAVIOR
 
   def self.update_keywords_from_salesforce
@@ -15,7 +33,7 @@ class Keyword < ActiveRecord::Base
       sf_campaigns.each do |sf_campaign|
         local_seo_campaign = Campaign.find_by_salesforce_id(sf_campaign.id).try(:campaign_style)
         if sf_campaign.keywords__c.present? && local_seo_campaign.present?
-          keywords = sf_campaign.keywords__c.gsub(", ", ",").split(',')
+          keywords = sf_campaign.keywords__c.split(',').collect(&:strip)
           keywords.each do |keyword|
             puts 'Started: ' + keyword
             Keyword.find_or_create_by_seo_campaign_id_and_descriptor(:seo_campaign_id => local_seo_campaign.id,
