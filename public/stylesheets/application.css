@@ -42,8 +42,11 @@ body{
 }
 
 #yield{
-	padding:12px 24px;
 	min-height:400px;
+}
+
+#yield header, #yield article{
+	padding:12px 24px;
 }
 
 a{
@@ -384,6 +387,20 @@ form.inline p { margin-bottom:0; }
 .stats h3{
 	margin:6px;
 	font-weight:bold;
+}
+
+/*
+	Side Panel
+	------------------
+*/
+.main{
+	width:70%;
+}
+.panel{
+	background:#efefef;
+	width:30%;
+	margin-right:0;
+	overflow:hidden;
 }
 
 /*
