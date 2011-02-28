@@ -32,6 +32,15 @@ config.action_mailer.raise_delivery_errors = false
 # Use postfix for mail delivery 
 #ActionMailer::Base.delivery_method = :sendmail
 
+ActionMailer::Base.smtp_settings = {
+  :address => 'smtp.sendgrid.net',
+  :port => 25,
+  :domain => 'cityvoice.com',
+  :authentication => :plain,
+  :user_name => 'paul.singh@cityvoice.com',
+  :password => 'c1tyvo1ce'
+}
+
 config.after_initialize do
   ExceptionNotification::Notifier.email_prefix = "[STAGING] "
 end
