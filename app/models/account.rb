@@ -116,8 +116,8 @@ class Account < ActiveRecord::Base
   
   def send_weekly_report(date = Date.today, previous = self.weekly_report_mtd? ? 0 : 6)
     return if valid_reporting_emails.blank?
-    Notifier.deliver_weekly_report(self, self.valid_reporting_emails, date, previous)
     Notifier.send_later(:deliver_weekly_report, self, self.valid_reporting_emails, date, previous)
+    self.update_attribute(:last_weekly_report_sent, DateTime.now)
   end
 
   def weekly_report_sent_this_week?
