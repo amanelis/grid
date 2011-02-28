@@ -18,3 +18,16 @@ config.action_mailer.raise_delivery_errors = false
 
 # Use the memory store - this store has no options
 config.cache_store = :memory_store
+
+ActionMailer::Base.smtp_settings = {
+  :address => 'smtp.sendgrid.net',
+  :port => 25,
+  :domain => 'cityvoice.com',
+  :authentication => :plain,
+  :user_name => 'paul.singh@cityvoice.com',
+  :password => 'c1tyvo1ce'
+}
+
+config.after_initialize do
+  ExceptionNotification::Notifier.email_prefix = "[PRODUCTION] "
+end
