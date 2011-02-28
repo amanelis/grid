@@ -12,5 +12,17 @@ module ApplicationHelper
     other_parameters.merge!({:sort => column, :direction => direction})
     link_to title, other_parameters, {:class => css_class}
   end
+  
+  def navigation(*links)
+    items = []
+    links.each do |link|
+      if (controller.controller_name.to_sym == link)
+        items << content_tag(:li, "#{link.to_s}", :class => "active")
+      else
+        items << content_tag(:li, link_to("#{link.to_s}", link))
+      end
+    end
+    content_tag :ul, items
+  end
     
 end
