@@ -1,10 +1,15 @@
 class Account < ActiveRecord::Base
   belongs_to :group_account
 	belongs_to :reseller, :class_name => "Account", :foreign_key => "reseller_id"
+	has_many :basic_channels, :dependent => :destroy
   has_many :campaigns, :dependent => :destroy
   has_many :websites, :through => :campaigns
 	has_many :clients, :class_name => "Account", :foreign_key => "reseller_id"
   has_one :adwords_client, :dependent => :destroy
+  
+  has_many :seo_campaigns, :through => :campaigns, :source => :campaign_style, :source_type => 'SeoCampaign'
+  has_many :sem_campaigns, :through => :campaigns, :source => :campaign_style, :source_type => 'SemCampaign'
+  has_many :basic_campaigns, :through => :campaigns, :source => :campaign_style, :source_type => 'BasicCampaign'
   
   has_many :phone_numbers, :through => :campaigns do
     def calls
@@ -467,7 +472,7 @@ class Account < ActiveRecord::Base
       new_campaign = MapsCampaign.new 
       new_campaign.flavor = flavor
     else
-      new_campaign = OtherCampaign.new
+      new_campaign = BasicCampaign.new
       new_campaign.flavor = flavor
     end
     new_campaign.account = self

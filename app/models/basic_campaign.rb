@@ -1,5 +1,7 @@
-class OtherCampaign < ActiveRecord::Base
+class BasicCampaign < ActiveRecord::Base
   include CampaignStyleMixin
+  
+  belongs_to :basic_channel
 
   
   def number_of_visits_by_date
