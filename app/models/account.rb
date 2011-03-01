@@ -32,7 +32,7 @@ class Account < ActiveRecord::Base
 
   attr_accessor :account_status
   
-  validates_uniqueness_of :name, :case_sensitive => false
+  validates_uniqueness_of :name, :case_sensitive => false, :scope => "group_account_id"
 
   
   # CLASS BEHAVIOR
