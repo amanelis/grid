@@ -43,20 +43,15 @@ body{
 
 #yield{
 	min-height:400px;
-}
-
-#yield article{
-	padding:12px 24px;
-}
-
-#yield header{
-	padding:12px 24px 0 24px;
+	margin:12px 24px;
 }
 
 a{
 	text-decoration:none;
 }
 
+.left{float:left !important;}
+.right{float:right !important;}
 /*
 	Toolbar
 	------------------
@@ -139,6 +134,10 @@ ul{
 #content.span-20 {
     border-left: 1px solid #C7CCD1;
     width: 789px;
+}
+
+hr{
+	background:#C7CCD1;
 }
 
 /*
@@ -407,18 +406,33 @@ form.inline p { margin-bottom:0; }
 	Channel
 	------------------
 */
-.channel{
-	width:25%;
-	height:150px;
+.channel_wrapper{
+	margin: 24px 24px 0 0;
+	width:190px;
 	float:left;
-	overflow:hidden;
+	position:relative;
+}
+.channel header h3 a{
+	color:#40474D;
+	font-size:13px;
+	text-transform: uppercase;
+	font-weight:bold;
+	text-align:center;
+}
+.channel{
+	background: #DFE1E3;
 	-webkit-border-radius: 4px;
 	   -moz-border-radius: 4px;
 	        border-radius: 4px;
 }
 
-.channel aside{
+.channel header h3, .channel article{
 	padding:6px;
+}
+
+.channel h2{
+	font-size:24px;
+	line-height:0;
 }
 
 #add{

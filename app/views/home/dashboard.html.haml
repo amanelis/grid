@@ -15,10 +15,8 @@
     
 - if @user
   - if @user.admin?
-    %header.header
-      %h1 Dashboard
-      %h2 Administrator
-      %hr
+    %header
+      %h2 Dashboard
     %article 
       =high_chart("total_daily_leads", @total_daily_leads)
       %hr
@@ -39,16 +37,16 @@
       %hr
     %article 
       .stats
-        %aside.span-7.append-1
+        %aside
           %p Active Accounts
           %h3#active_accounts= @active_accounts_count
-        %aside.span-7.append-1
+        %aside
           %p Total Users
           %h3#users= @users_count
-        %aside.span-7.last
+        %aside
           %p Leads Today
           %h3#leads= @leads_count
-        .span-23.last=high_chart("total_daily_leads", @total_daily_leads)     
+        =high_chart("total_daily_leads", @total_daily_leads)     
         
   - elsif @user.account_user?
     %header
