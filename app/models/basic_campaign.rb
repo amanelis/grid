@@ -1,4 +1,4 @@
-class OtherCampaign < ActiveRecord::Base
+class BasicCampaign < ActiveRecord::Base
   include CampaignStyleMixin
 
   

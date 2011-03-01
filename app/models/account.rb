@@ -6,6 +6,10 @@ class Account < ActiveRecord::Base
 	has_many :clients, :class_name => "Account", :foreign_key => "reseller_id"
   has_one :adwords_client, :dependent => :destroy
   
+  has_many :seo_campaigns, :through => :campaigns, :source => :campaign_style, :source_type => 'SeoCampaign'
+  has_many :sem_campaigns, :through => :campaigns, :source => :campaign_style, :source_type => 'SemCampaign'
+  has_many :basic_campaigns, :through => :campaigns, :source => :campaign_style, :source_type => 'BasicCampaign'
+  
   has_many :phone_numbers, :through => :campaigns do
     def calls
       @calls ||= Call.find_all_by_phone_number_id(self.collect(&:id))
@@ -113,6 +117,10 @@ class Account < ActiveRecord::Base
   
     
   # INSTANCE BEHAVIOR
+  
+  def channels
+    self.channels.sort!
+  end
   
   def send_weekly_report(date = Date.today, previous = self.weekly_report_mtd? ? 0 : 6)
     return if valid_reporting_emails.blank?
@@ -471,6 +479,7 @@ class Account < ActiveRecord::Base
     new_campaign = OtherCampaign.new
     new_campaign.flavor = flavor
     #end
+
     new_campaign.account = self
     new_campaign.name = name
     new_campaign.status = 'Active'
