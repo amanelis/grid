@@ -18,6 +18,10 @@ ActionController::Routing::Routes.draw do |map|
       campaign.resources :contact_forms, :member => { :enable => [:put, :post], :index => :get } 
       campaign.resources :google_sem_campaigns, :member => { :enable => [:put, :post], :index => :get, :show => :get } 
     end
+    
+    account.resources :channels do |channel|
+      channel.resources :campaigns
+    end
   end
   
   map.resources :campaigns, :has_many => :contact_forms, :member => {:lead_matrix => :get}
