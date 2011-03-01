@@ -8,11 +8,11 @@
       %label Name
       %br
       %input{:type => "text", :placeholder => "CityVoice", :name => "name", :id => "name", :class => "title"}
-      %label Campaign Type
+      %label Channel
       %br
-      %select{:name => "flavor"}
-        - for flavor in @flavors
-          %option= flavor
+      %select{:name => "basic_channel"}
+        - for basic_channel in @basic_channels
+          %option.text= basic_channel
       %br
       %label="Industry"
       %br

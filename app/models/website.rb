@@ -47,7 +47,7 @@ class Website < ActiveRecord::Base
     HTTParty.get("https://app.ginzametrics.com/v1/list_sites?api_key=#{GINZA_KEY}").to_a
   end
   
-  def self.associate_ginza_sites_with_grid_sites()
+  def self.associate_ginza_sites_with_grid_sites
     result = {:updated => 0, :skipped => 0, :errored => 0}
     sites = Website.list_ginza_sites
     if sites.present?
@@ -177,7 +177,7 @@ class Website < ActiveRecord::Base
   def visit_locations_between(start_date = Date.yesterday, end_date = Date.yesterday)
     visit_locations = Hash.new
     self.website_visits.between(start_date, end_date).each do |visit|
-      location = visit.latitude + ' ' + visit.longitude
+      location = "#{visit.latitude} #{visit.longitude}"
       visit_locations[location] = (visit_locations.has_key? location) ? visit_locations[location] + 1 : 1
     end
     visit_locations.sort { |x, y| y[1]<=>x[1] }
@@ -242,9 +242,8 @@ class Website < ActiveRecord::Base
   def get_ginza_latest_ranking_date
     begin
       response = HTTParty.get("https://app.ginzametrics.com/v1/sites/#{self.ginza_global_id}/latest_rankings_date?api_key=#{GINZA_KEY}").to_a.first
-      puts "Ginza Pull latest_rankings_date? for #{self.nickname}"
       if response != "Quota exceeded"
-        dates = response.split('-') unless 
+        dates = response.split('-')
         ranking_date = Date.new(dates[0].to_i, dates[1].to_i, dates[2].to_i)
       end
     rescue Exception => ex
@@ -263,7 +262,6 @@ class Website < ActiveRecord::Base
         self.save
         return true
       else
-        puts response.to_a.first
         return response.to_a.first
       end
     end
