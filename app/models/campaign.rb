@@ -14,7 +14,7 @@ class Campaign < ActiveRecord::Base
   named_scope :seo, :conditions => {:campaign_style_type => SeoCampaign.name}
   named_scope :sem, :conditions => {:campaign_style_type => SemCampaign.name}
   named_scope :maps, :conditions => {:campaign_style_type => MapsCampaign.name}
-  named_scope :other, :conditions => {:campaign_style_type => OtherCampaign.name}
+  named_scope :basic, :conditions => {:campaign_style_type => BasicCampaign.name}
   
   named_scope :new_managed, lambda { |group_account| {:conditions => ["LCASE(flavor) IN (#{group_account.managed_campaign_flavors.inspect[1...-1]})"]} }
   named_scope :new_unmanaged, lambda { |group_account| {:conditions => ["LCASE(flavor) NOT IN (#{group_account.managed_campaign_flavors.inspect[1...-1]})"]} }
@@ -186,28 +186,28 @@ class Campaign < ActiveRecord::Base
             new_maps_campaign.save!
             new_maps_campaign.campaign.save!
             
-          # OTHER CAMPAIGN
+          # BASIC CAMPAIGN
 
           else
             if existing_campaign.blank?
-              new_other_campaign = OtherCampaign.new
-              new_other_campaign.salesforce_id = sf_campaign.id
+              new_basic_campaign = BasicCampaign.new
+              new_basic_campaign.salesforce_id = sf_campaign.id
             else
-              new_other_campaign = existing_campaign.campaign_style
-              unless new_other_campaign.instance_of?(OtherCampaign)
+              new_basic_campaign = existing_campaign.campaign_style
+              unless new_basic_campaign.instance_of?(BasicCampaign)
                 logger.debug "\n\n**********************************"
-                logger.debug "Campaign Error on #{new_other_campaign.name}"
+                logger.debug "Campaign Error on #{new_basic_campaign.name}"
                 logger.debug "**********************************\n\n"
                 next
               end
             end
-            new_other_campaign.account = account
-            new_other_campaign.zip_code = sf_campaign.zip_code__c
-            new_other_campaign.status = sf_campaign.status__c
-            new_other_campaign.name = sf_campaign.name
-            new_other_campaign.flavor = sf_campaign.campaign_type__c
-            new_other_campaign.save!
-            new_other_campaign.campaign.save!
+            new_basic_campaign.account = account
+            new_basic_campaign.zip_code = sf_campaign.zip_code__c
+            new_basic_campaign.status = sf_campaign.status__c
+            new_basic_campaign.name = sf_campaign.name
+            new_basic_campaign.flavor = sf_campaign.campaign_type__c
+            new_basic_campaign.save!
+            new_basic_campaign.campaign.save!
           end
         end
       end
@@ -598,8 +598,8 @@ class Campaign < ActiveRecord::Base
     self.campaign_style.instance_of?(MapsCampaign)
   end
 
-  def is_other?
-    self.campaign_style.instance_of?(OtherCampaign)
+  def is_basic?
+    self.campaign_style.instance_of?(BasicCampaign)
   end
   
   def managed?
