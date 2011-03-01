@@ -10,9 +10,9 @@
       %input{:type => "text", :placeholder => "CityVoice", :name => "name", :id => "name", :class => "title"}
       %label Channel
       %br
-      %select{:name => "channel"}
-        - for channel in @channel
-          %option= channel
+      %select{:name => "basic_channel"}
+        - for basic_channel in @basic_channels
+          %option.text= basic_channel
       %br
       %label="Industry"
       %br

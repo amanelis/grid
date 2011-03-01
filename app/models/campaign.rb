@@ -63,10 +63,6 @@ class Campaign < ActiveRecord::Base
   def self.flavors
     Campaign.all.collect(&:flavor).compact.join(';').split(';').uniq.sort
   end
-  
-  def campaign_flavors
-    self.account.campaigns.collect(&:flavor).compact.join(';').split(';').uniq.sort
-  end
 
   def self.pull_salesforce_campaigns
     job_status = JobStatus.create(:name => "Campaign.pull_salesforce_campaigns")

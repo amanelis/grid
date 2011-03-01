@@ -119,10 +119,6 @@ class Account < ActiveRecord::Base
     
   # INSTANCE BEHAVIOR
   
-  def channels
-    self.channels.sort!
-  end
-  
   def send_weekly_report(date = Date.today, previous = self.weekly_report_mtd? ? 0 : 6)
     return if valid_reporting_emails.blank?
     return unless Rails.env.production?
@@ -465,27 +461,13 @@ class Account < ActiveRecord::Base
     raise unless Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.twilio_id}.json?", 'POST', {'Status' => 'closed'}).kind_of? Net::HTTPSuccess
   end
   
-  def create_campaign(channel, name)
-    #if flavor.include? 'SEM'
-    #  new_campaign = SemCampaign.new
-    #  new_campaign.flavor = flavor
-    #elsif flavor.include? 'SEO'
-    #  new_campaign = SeoCampaign.new 
-    #  new_campaign.flavor = flavor
-    #elsif flavor.include? 'Maps'
-    #  new_campaign = MapsCampaign.new 
-    #  new_campaign.flavor = flavor
-    #else
-    
-    new_campaign = OtherCampaign.new
-    new_campaign.flavor = flavor
-    #end
-
+  def create_basic_campaign(basic_channel, name)
+    new_campaign = BasicCampaign.new
     new_campaign.account = self
     new_campaign.name = name
     new_campaign.status = 'Active'
+    new_campaign.basic_channel = BasicChannel.find_by_name_and_account_id(basic_channel, self.id) 
     new_campaign.save
-    
     new_campaign.campaign
   end
   
