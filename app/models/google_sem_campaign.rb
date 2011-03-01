@@ -9,7 +9,7 @@ class GoogleSemCampaign < ActiveRecord::Base
   ALL_AD_REPORT_TYPE = "All Ad"
   ALL_CAMPAIGN_REPORT_TYPE = "All Campaign"
   
-  def self.update_sem_campaign_reports_by_campaign(date = Date.yesterday, hard_update = false)
+  def self.update_google_sem_campaign_reports_by_campaign(date = Date.yesterday, hard_update = false)
     job_status = JobStatus.create(:name => "GoogleSemCampaign.update_sem_campaign_reports_by_campaign")
     begin
       #pull the days report and save each
@@ -22,7 +22,7 @@ class GoogleSemCampaign < ActiveRecord::Base
     GroupAccount.cache_results_for_group_accounts
   end
 
-  def self.update_sem_campaign_reports_by_ad(date = Date.yesterday, hard_update = false)
+  def self.update_google_sem_campaign_reports_by_ad(date = Date.yesterday, hard_update = false)
     job_status = JobStatus.create(:name => "GoogleSemCampaign.update_sem_campaign_reports_by_ad")
     begin
       #pull the days report and save each

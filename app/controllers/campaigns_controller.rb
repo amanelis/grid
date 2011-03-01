@@ -9,8 +9,10 @@ class CampaignsController < ApplicationController
   def new
     authorize! :manipulate_account, @account
     @industries = Industry.all.collect {|a| a.name}.sort!.insert(0, 'Select...')
-    @flavors = Campaign.flavors.select {|a| !a.downcase.include? "seo"}.select {|a|  !a.downcase.include? "sem"}.select {|a| !a.downcase.include? 'maps'}.sort!.insert(0, 'Select...')
+    #@flavors = @account.channels.sort!.insert(0, '')
+    @flavors = Array.new.insert(0, 'SEO').insert(0, 'SEM').insert(0, 'Select...')
     if @campaign.present?
+      @flavors = @campaign.campaign_flavors.select {|a| !a.downcase.include? "seo"}.select {|a|  !a.downcase.include? "sem"}.select {|a| !a.downcase.include? 'maps'}.sort!.insert(0, 'SEO').insert(0, 'SEM').insert(0, 'Select...')
       @campaign = @account.campaigns.build
     end
   end
@@ -26,7 +28,11 @@ class CampaignsController < ApplicationController
         flash[:error] = "Sorry, but a campaign with the name #{params[:name]} already exists on this account"
         redirect_to request.referer
       else
-        campaign = @account.create_campaign(params[:flavor], params[:name])
+        if params[:flavor].blank?
+            campaign = @account.create_campaign(params[:new_flavor], params[:name])
+        else
+          campaign = @account.create_campaign(params[:flavor], params[:name])
+        end
         campaign.industry = params[:industry]
         #campaign.forwarding_number =  params[:forwarding_number]
         #campaign.area_code = params[:area_code]
