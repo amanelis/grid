@@ -9,6 +9,7 @@ class Ability
     else
       
       if user.group_user?
+        
         can :read, Account do |account|
           user.acquainted_with_account?(account)
         end
