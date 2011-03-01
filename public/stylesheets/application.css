@@ -412,7 +412,7 @@ form.inline p { margin-bottom:0; }
 	float:left;
 	position:relative;
 }
-.channel header h3 a{
+.channel .name a{
 	color:#40474D;
 	font-size:13px;
 	text-transform: uppercase;
@@ -420,31 +420,27 @@ form.inline p { margin-bottom:0; }
 	text-align:center;
 }
 .channel{
-	background: #DFE1E3;
+	text-align:center;
+	background: #E8E9EC;
 	-webkit-border-radius: 4px;
 	   -moz-border-radius: 4px;
 	        border-radius: 4px;
+	-webkit-box-shadow: 2px 2px 2px #B2B2B2;
+	   -moz-box-shadow: 2px 2px 2px #B2B2B2;
+	     -o-box-shadow: 2px 2px 2px #B2B2B2;
+	        box-shadow: 2px 2px 2px #B2B2B2;
 }
 
-.channel header h3, .channel article{
-	padding:6px;
+.channel img{
+	height:18px;
 }
 
-.channel h2{
+.channel .name, .channel .numbers, .channel .add{
+	margin:6px;
+}
+.channel .total{
 	font-size:24px;
-	line-height:0;
-}
-
-#add{
-	line-height:12px;
-	opacity:.5;
-}
-
-#add:hover{
-	opacity:.5;
-}
-#add img{
-	height:12px;
+	font-weight:bold;
 }
 /*
 	Pagination
