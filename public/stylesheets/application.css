@@ -404,6 +404,35 @@ form.inline p { margin-bottom:0; }
 }
 
 /*
+	Channel
+	------------------
+*/
+.channel{
+	width:25%;
+	height:150px;
+	float:left;
+	overflow:hidden;
+	-webkit-border-radius: 4px;
+	   -moz-border-radius: 4px;
+	        border-radius: 4px;
+}
+
+.channel aside{
+	padding:6px;
+}
+
+#add{
+	line-height:12px;
+	opacity:.5;
+}
+
+#add:hover{
+	opacity:.5;
+}
+#add img{
+	height:12px;
+}
+/*
 	Pagination
 	------------------
 */

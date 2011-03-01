@@ -1,60 +1,25 @@
-.main.left
-  %header
-    %ul.right.strong
-      - if @current_user.admin? || @current_user.group_user?
-        - if @account.can_send_weekly_report_now?
-          %li
-            %a{:href => send_weekly_path(params[:id])}
-              Email
-              %br
-              = image_tag ("icons/email.png")
-      %li
-        %a{:onclick => "confirm_export_report(#{params[:id]});"}
-          Export
-          %br
-          = image_tag ("icons/export.png")
+%header
+  %ul.right.strong
+    - if @current_user.admin? || @current_user.group_user?
+      - if @account.can_send_weekly_report_now?
+        %li
+          %a{:href => send_weekly_path(params[:id])}
+            Email
+            %br
+            = image_tag ("icons/email.png")
+    %li
+      %a{:onclick => "confirm_export_report(#{params[:id]});"}
+        Export
+        %br
+        = image_tag ("icons/export.png")
 
-    %h1= @account.name
-    #datepicker=render :partial => "shared/date_picker"
-  %article
-    =high_chart("total_daily_leads_graph", @daily_total_leads_graph)
-    %hr
-    #cityvoice_managed
-      %h3 CityVoice Managed
-      %table
-        %thead
-          %tr
-            %th Campaigns
-            %th Call Leads
-            %th Form Leads
-            %th Total
-            %th Cost
-            %th Cost Per Lead
-            %th Cost Per Contact*
-        %tbody
-          - @managed_total_results = Campaign.determine_totals_for(@managed_campaigns, @total_reporting_messages, @start_date, @end_date)
-          - @managed_campaigns.each do |campaign|
-            %tr
-              %td= link_to campaign.name, account_campaign_path(@account, campaign, :daterange => params[:daterange])
-              %td= campaign.number_of_lead_calls_between(@start_date, @end_date).to_s
-              %td= campaign.number_of_lead_submissions_between(@start_date, @end_date).to_s
-              %td= campaign.number_of_total_leads_between(@start_date, @end_date).to_s
-              %td= ActionController::Base.helpers.number_to_currency(campaign.spend_between(@start_date, @end_date))
-              %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(@start_date, @end_date))
-              %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_contact_between(@start_date, @end_date))
-          %tr.total
-            %td Total
-            %td= @managed_total_results[@total_reporting_messages[0]].to_s
-            %td= @managed_total_results[@total_reporting_messages[2]].to_s
-            %td= @managed_total_results[@total_reporting_messages[4]].to_s
-            %td= ActionController::Base.helpers.number_to_currency(@managed_total_results[@total_reporting_messages[7]])
-            %td= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_lead_for(@managed_campaigns, @start_date, @end_date))
-            %td= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_contact_for(@managed_campaigns, @start_date, @end_date))
-      %p *Cost Per Contact - Spend / Total contacts (includes spam, hangups, etc.)
-    - unless @managed_campaigns.empty?
-      #managed_grapht=high_chart("managed_campaign_summary_graph", @campaign_summary_graph)
-    %hr
-    %h3 Unmanaged
+  %h1= @account.name
+  #datepicker=render :partial => "shared/date_picker"
+%article
+  =high_chart("total_daily_leads_graph", @daily_total_leads_graph)
+  %hr
+  #cityvoice_managed
+    %h3 CityVoice Managed
     %table
       %thead
         %tr
@@ -62,27 +27,84 @@
           %th Call Leads
           %th Form Leads
           %th Total
-        %tbody
-        - @unmanaged_total_results = Campaign.determine_totals_for(@unmanaged_campaigns, @total_reporting_messages, @start_date, @end_date)
-        - @unmanaged_campaigns.each do |campaign|
+          %th Cost
+          %th Cost Per Lead
+          %th Cost Per Contact*
+      %tbody
+        - @managed_total_results = Campaign.determine_totals_for(@managed_campaigns, @total_reporting_messages, @start_date, @end_date)
+        - @managed_campaigns.each do |campaign|
           %tr
             %td= link_to campaign.name, account_campaign_path(@account, campaign, :daterange => params[:daterange])
             %td= campaign.number_of_lead_calls_between(@start_date, @end_date).to_s
             %td= campaign.number_of_lead_submissions_between(@start_date, @end_date).to_s
             %td= campaign.number_of_total_leads_between(@start_date, @end_date).to_s
+            %td= ActionController::Base.helpers.number_to_currency(campaign.spend_between(@start_date, @end_date))
+            %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(@start_date, @end_date))
+            %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_contact_between(@start_date, @end_date))
         %tr.total
           %td Total
-          %td= @unmanaged_total_results[@total_reporting_messages[0]].to_s
-          %td= @unmanaged_total_results[@total_reporting_messages[2]].to_s
-          %td= @unmanaged_total_results[@total_reporting_messages[4]].to_s
-        
-    -if can? :manipulate_account, @account
-      = link_to "+ Add Campaign", new_account_campaign_path(@account.id), :class => "button"
-.panel.left
-  %header
-    %h3 Users
-  %article
-    %ul
-      %li username
-      %li (list all users here)
-    = link_to "Add User", "#", :class => "button", :rel => "facebox"
+          %td= @managed_total_results[@total_reporting_messages[0]].to_s
+          %td= @managed_total_results[@total_reporting_messages[2]].to_s
+          %td= @managed_total_results[@total_reporting_messages[4]].to_s
+          %td= ActionController::Base.helpers.number_to_currency(@managed_total_results[@total_reporting_messages[7]])
+          %td= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_lead_for(@managed_campaigns, @start_date, @end_date))
+          %td= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_contact_for(@managed_campaigns, @start_date, @end_date))
+    %p *Cost Per Contact - Spend / Total contacts (includes spam, hangups, etc.)
+  - unless @managed_campaigns.empty?
+    #managed_grapht=high_chart("managed_campaign_summary_graph", @campaign_summary_graph)
+  %hr
+  %h3 Unmanaged
+  %table
+    %thead
+      %tr
+        %th Campaigns
+        %th Call Leads
+        %th Form Leads
+        %th Total
+      %tbody
+      - @unmanaged_total_results = Campaign.determine_totals_for(@unmanaged_campaigns, @total_reporting_messages, @start_date, @end_date)
+      - @unmanaged_campaigns.each do |campaign|
+        %tr
+          %td= link_to campaign.name, account_campaign_path(@account, campaign, :daterange => params[:daterange])
+          %td= campaign.number_of_lead_calls_between(@start_date, @end_date).to_s
+          %td= campaign.number_of_lead_submissions_between(@start_date, @end_date).to_s
+          %td= campaign.number_of_total_leads_between(@start_date, @end_date).to_s
+      %tr.total
+        %td Total
+        %td= @unmanaged_total_results[@total_reporting_messages[0]].to_s
+        %td= @unmanaged_total_results[@total_reporting_messages[2]].to_s
+        %td= @unmanaged_total_results[@total_reporting_messages[4]].to_s
+      
+  -if can? :manipulate_account, @account
+    = link_to "+ Add Campaign", new_account_campaign_path(@account.id), :class => "button"
+%hr
+%header
+  %h1= @account.name
+  %h2 Channels
+  #datepicker=render :partial => "shared/date_picker"
+%article
+  - @managed_total_results = Campaign.determine_totals_for(@managed_campaigns, @total_reporting_messages, @start_date, @end_date)
+  - @managed_campaigns.each do |campaign|
+    %section.channel
+      %header
+        %h3= link_to campaign.name, account_campaign_path(@account, campaign, :daterange => params[:daterange])
+        %hr
+      %article
+        %h2.strong
+          %span= campaign.number_of_total_leads_between(@start_date, @end_date).to_s
+          Leads
+        %br
+        %span
+          = ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(@start_date, @end_date))
+          per lead
+        %br
+        #add
+          = image_tag("icons/add.png")
+          = link_to "Add Campaign", new_account_campaign_path(@account.id)
+  -if can? :manipulate_account, @account
+    %section.channel
+      %header
+        %h3
+        %hr
+      %article
+        %h3 +
