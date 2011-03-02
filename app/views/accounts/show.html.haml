@@ -1,90 +1,12 @@
-%header
-  %ul.right.strong
-    - if @current_user.admin? || @current_user.group_user?
-      - if @account.can_send_weekly_report_now?
-        %li
-          %a{:href => send_weekly_path(params[:id])}
-            Email
-            %br
-            = image_tag ("icons/email.png")
-    %li
-      %a{:onclick => "confirm_export_report(#{params[:id]});"}
-        Export
-        %br
-        = image_tag ("icons/export.png")
 
-  %h1= @account.name
-  #datepicker=render :partial => "shared/date_picker"
-%article
-  =high_chart("total_daily_leads_graph", @daily_total_leads_graph)
-  %hr
-  #cityvoice_managed
-    %h3 CityVoice Managed
-    %table
-      %thead
-        %tr
-          %th Campaigns
-          %th Call Leads
-          %th Form Leads
-          %th Total
-          %th Cost
-          %th Cost Per Lead
-          %th Cost Per Contact*
-      %tbody
-        - @managed_total_results = Campaign.determine_totals_for(@managed_campaigns, @total_reporting_messages, @start_date, @end_date)
-        - @managed_campaigns.each do |campaign|
-          %tr
-            %td= link_to campaign.name, account_campaign_path(@account, campaign, :daterange => params[:daterange])
-            %td= campaign.number_of_lead_calls_between(@start_date, @end_date).to_s
-            %td= campaign.number_of_lead_submissions_between(@start_date, @end_date).to_s
-            %td= campaign.number_of_total_leads_between(@start_date, @end_date).to_s
-            %td= ActionController::Base.helpers.number_to_currency(campaign.spend_between(@start_date, @end_date))
-            %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(@start_date, @end_date))
-            %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_contact_between(@start_date, @end_date))
-        %tr.total
-          %td Total
-          %td= @managed_total_results[@total_reporting_messages[0]].to_s
-          %td= @managed_total_results[@total_reporting_messages[2]].to_s
-          %td= @managed_total_results[@total_reporting_messages[4]].to_s
-          %td= ActionController::Base.helpers.number_to_currency(@managed_total_results[@total_reporting_messages[7]])
-          %td= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_lead_for(@managed_campaigns, @start_date, @end_date))
-          %td= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_contact_for(@managed_campaigns, @start_date, @end_date))
-    %p *Cost Per Contact - Spend / Total contacts (includes spam, hangups, etc.)
-  - unless @managed_campaigns.empty?
-    #managed_grapht=high_chart("managed_campaign_summary_graph", @campaign_summary_graph)
-  %hr
-  %h3 Unmanaged
-  %table
-    %thead
-      %tr
-        %th Campaigns
-        %th Call Leads
-        %th Form Leads
-        %th Total
-      %tbody
-      - @unmanaged_total_results = Campaign.determine_totals_for(@unmanaged_campaigns, @total_reporting_messages, @start_date, @end_date)
-      - @unmanaged_campaigns.each do |campaign|
-        %tr
-          %td= link_to campaign.name, account_campaign_path(@account, campaign, :daterange => params[:daterange])
-          %td= campaign.number_of_lead_calls_between(@start_date, @end_date).to_s
-          %td= campaign.number_of_lead_submissions_between(@start_date, @end_date).to_s
-          %td= campaign.number_of_total_leads_between(@start_date, @end_date).to_s
-      %tr.total
-        %td Total
-        %td= @unmanaged_total_results[@total_reporting_messages[0]].to_s
-        %td= @unmanaged_total_results[@total_reporting_messages[2]].to_s
-        %td= @unmanaged_total_results[@total_reporting_messages[4]].to_s
-      
-  -if can? :manipulate_account, @account
-    = link_to "+ Add Campaign", new_account_campaign_path(@account.id), :class => "button"
-%hr
 %header
   %h1= @account.name
   %h2 Channels
 %article
   %table.channels
     - unless @basic_seo.present?
-      DESIGN: nifty add button or whatever looks good
+      %br
+      DESIGN: nifty add button or whatever looks good - NO SEO
     - @basic_seo.each do |channel|
       %thead
         %tr
@@ -98,7 +20,8 @@
         %td #Cost per lead betwen
         
     - unless @basic_sem.present?
-      DESIGN: nifty add button or whatever looks good
+      %br
+      DESIGN: nifty add button or whatever looks good - NO SEM
     - @basic_sem.each do |channel|
       %thead
         %tr
@@ -112,19 +35,17 @@
         %td #Cost per lead betwen
 
     - unless @basic_channels.present?
-      DESIGN: nifty add button or whatever looks good
+      %br
+      DESIGN: nifty add button or whatever looks good - NO BASIC
     - @basic_channels.each do |channel|
       %thead
         %tr
-          %th= channel.name
-          %th 5 leads
-          %th.cpl 
-            $2.50 cost per lead
-      %tr
-        %td= link_to channel.name, account_channel_path(@account, channel.id, :daterange => params[:daterange])
-        %td #Number of total leads
-        %td #Cost per lead betwen
-        
-        
-        
-        
+          %th Channel
+          %th 542 leads
+          %th.price $3.50 per lead
+      %tbody
+        %tr
+          %td= link_to channel.name, account_channel_path(@account, campaign, :daterange => params[:daterange])
+          %td #Number of total leads
+          %td.price #Cost per lead
+  = link_to "Create Channel", "#", :class => "button"
