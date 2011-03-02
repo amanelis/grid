@@ -4,20 +4,17 @@
   %h2 Channels
   #datepicker=render :partial => "shared/date_picker"
 %article
-  .half
-    =high_chart("total_daily_leads_graph", @daily_total_leads_graph)
-  .half
-    =high_chart("managed_campaign_summary_graph", @campaign_summary_graph)
-  - @managed_total_results = Campaign.determine_totals_for(@managed_campaigns, @total_reporting_messages, @start_date, @end_date)
-  - @managed_campaigns.each do |campaign|
-    %section.channel
-      %ul
-        %li Channel
-        %li 542 leads
-        %li $2.50 cost per lead
-    %br
-    %section.campaign
-      %ul
-        %li= link_to campaign.name, account_campaign_path(@account, campaign, :daterange => params[:daterange])
-        %li= campaign.number_of_total_leads_between(@start_date, @end_date).to_s
-        %li= ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(@start_date, @end_date))
+  %table.channels
+    - @managed_total_results = Campaign.determine_totals_for(@managed_campaigns, @total_reporting_messages, @start_date, @end_date)
+    - @managed_campaigns.each do |campaign|
+      %thead
+        %tr
+          %th Channel
+          %th 542 leads
+          %th $3.50 per lead
+      %tbody
+        %tr
+          %td= link_to campaign.name, account_campaign_path(@account, campaign, :daterange => params[:daterange])
+          %td= campaign.number_of_total_leads_between(@start_date, @end_date).to_s
+          %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(@start_date, @end_date))
+  = link_to "Create Channel", "#", :class => "button"
