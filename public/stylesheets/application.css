@@ -153,11 +153,19 @@ a{
 	padding:6px 12px;
 }
 
+header ul{
+	margin:0;
+}
+
 
 /*
 	Navigation
 	------------------
 */
+nav ul{
+	margin:0;
+	padding-left:0;
+}
 #navigation li{
 	border-top:1px solid #E9EAEB;
 	border-bottom:1px solid #C7CCD1;
