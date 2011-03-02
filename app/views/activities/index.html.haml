@@ -30,6 +30,7 @@
     if( Modernizr.audio && Modernizr.audio.mp3){
       message = '<center><audio preload="auto" autobuffer><source src="'+url+'" /></audio></center>';
     } else {
+      url = url.split('&').join('%26');
       message = '<center><embed width="240px" height="20px" type="application/x-shockwave-flash" src="./player.swf" pluginspage="http://www.adobe.com/go/getflashplayer" flashvars="loop=no&autostart=no&animation=no&soundFile='+url+'"></center>';
     }
 
