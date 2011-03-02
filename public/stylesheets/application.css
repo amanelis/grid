@@ -531,7 +531,10 @@ form.inline p { margin-bottom:0; }
 	------------------
 */
 
-.channels thead{
+.channels .button{
+	font-size:.8em;
+	margin:0;
+	float:right;
 }
 
 .channels thead tr{
