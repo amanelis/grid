@@ -496,8 +496,16 @@ form.inline p { margin-bottom:0; }
 	   -moz-border-radius: 0 4px 4px 0;
 	        border-radius: 0 4px 4px 0;
 	border-right:none;
+}
 
+.channels td{
+	padding-left:12px;
+	font-size:1.2em;
+}
 
+.price{
+	color:#727272;
+}
 /*
 	Pagination
 	------------------
