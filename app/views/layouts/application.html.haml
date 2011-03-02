@@ -21,13 +21,14 @@
   = javascript_include_tag '//ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js', 'modernizr', 'http://kolber.github.com/audiojs/audiojs/audio.js', 'facebox', 'highcharts', 'application'
 
 %body
-  =render :partial => "layouts/nav"
-  =render :partial => "layouts/flash", :locals => { :flash => flash }
-  %section#content
-    = yield
-  %footer
-    %small
-      &copy; Copyright 2010
-      =link_to "CityVoice", "http://www.cityvoice.com"
-      .right
-        =mail_to "alex.baldwin@cityvoice.com", "Feedback/Support", :subject => "Grid Feedback/Support"
+  .container
+    =render :partial => "layouts/nav"
+    =render :partial => "layouts/flash", :locals => { :flash => flash }
+    %section#content
+      = yield
+      %footer
+      %small
+        &copy; Copyright 2010
+        =link_to "CityVoice", "http://www.cityvoice.com"
+        .right
+          =mail_to "alex.baldwin@cityvoice.com", "Feedback/Support", :subject => "Grid Feedback/Support"
