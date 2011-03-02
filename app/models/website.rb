@@ -9,30 +9,38 @@ class Website < ActiveRecord::Base
     #http://stats.cityvoice.com.re.getclicky.com/api/whitelabel/sites?auth=de8f1bae61c60eb0
     begin
       HTTParty.get("http://stats.cityvoice.com.re.getclicky.com/api/whitelabel/sites?auth=#{CLICKY_KEY}&output=json")["response"]["site"].each do |url|
-        existing_website = Website.find_by_site_id(url['site_id'])
-        if existing_website.blank?
-          existing_website = Website.new
-          existing_website.site_id = url['site_id']
-        end
-        existing_website.domain = url["hostname"].downcase
-        existing_website.nickname = url["nickname"].downcase
-        existing_website.sitekey = url["sitekey"]
-        existing_website.database_server = url["server"]
-        existing_website.admin_sitekey = url["sitekey_admin"]
-        existing_website.is_active = true
-        existing_website.save!
-      end
-
-      Salesforce::Clientcampaign.all.each do |sf_campaign|
-        website = Website.find_by_nickname(sf_campaign.primary_website__c)
-        if website.present?
-          local_campaign = Campaign.find_by_salesforce_id(sf_campaign.id)
-          if local_campaign.present?
-            local_campaign.website = website
-            #website.campaigns << local_campaign unless local_campaign.website.present?   website.campaigns.include?(local_campaign)
-            local_campaign.save!
-            website.save!
+        begin
+          existing_website = Website.find_by_site_id(url['site_id'])
+          if existing_website.blank?
+            existing_website = Website.new
+            existing_website.site_id = url['site_id']
           end
+          existing_website.domain = url["hostname"].downcase
+          existing_website.nickname = url["nickname"].downcase
+          existing_website.sitekey = url["sitekey"]
+          existing_website.database_server = url["server"]
+          existing_website.admin_sitekey = url["sitekey_admin"]
+          existing_website.is_active = true
+          existing_website.save!
+        rescue
+          next
+        end
+      end
+      sf_campaigns = Salesforce::Clientcampaign.find(:all, :conditions => ['status__c != ? AND status__c != ?', '', 'Inactive'])
+      sf_campaigns.each do |sf_campaign|
+        begin
+          website = Website.find_by_nickname(sf_campaign.primary_website__c.gsub("http://", "")) if sf_campaign.primary_website__c.present?
+          if website.present?
+            local_campaign = Campaign.find_by_salesforce_id(sf_campaign.id)
+            if local_campaign.present?
+              local_campaign.website = website
+              #website.campaigns << local_campaign unless local_campaign.website.present?   website.campaigns.include?(local_campaign)
+              local_campaign.save!
+              website.save!
+            end
+          end
+        rescue Exception => ex
+          next
         end
       end
     rescue Exception => ex
