@@ -62,7 +62,7 @@ class AccountsController < ApplicationController
     
     @basic_seo      = @account.seo_campaigns
     @basic_sem      = @account.sem_campaigns
-    @basic_channels = @account.basic_campaigns
+    @basic_channels = @account.basic_channels
     
     @daily_total_leads_graph = HighChart.new('graph') do |f|
       f.title(:text => false)  

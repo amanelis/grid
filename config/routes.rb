@@ -1,26 +1,27 @@
 ActionController::Routing::Routes.draw do |map|
   # CUSTOM ROUTES
-  map.refresh_accounts    "/accounts/refresh_accounts",         :controller => "accounts",        :action => :refresh_accounts
-  map.report_client       "/accounts/:id/report/client",        :controller => "accounts",        :action => :report_client
-  map.report_client_pdf   "/accounts/:id/report/client.pdf",    :controller => "accounts",        :action => :report_client, :as => :client
-  map.export              "/accounts/export",                   :controller => "accounts",        :action => :export
-  map.send_weekly         "/accounts/send_weekly_email/:id",    :controller => "accounts",        :action => :send_weekly_email
-  map.login               "/login",                             :controller => "user_sessions",   :action => :new
-  map.register            "/register",                          :controller => "users",           :action => :new
-  map.submit_cl           "/submissions/:id/submit_cl",         :controller => "submissions",     :action => :submit_cl
-  map.submit_call_cl      "/calls/:id/submit_call_cl",          :controller => "calls",           :action => :submit_call_cl
-  map.add_customer_lobby  "/accounts/:id/add_customer_lobby",   :controller => "accounts",        :action => :add_customer_lobby
-  
+  map.refresh_accounts    "/accounts/refresh_accounts",                   :controller => "accounts",        :action => :refresh_accounts
+  map.report_client       "/accounts/:id/report/client",                  :controller => "accounts",        :action => :report_client
+  map.report_client_pdf   "/accounts/:id/report/client.pdf",              :controller => "accounts",        :action => :report_client, :as => :client
+  map.export              "/accounts/export",                             :controller => "accounts",        :action => :export
+  map.send_weekly         "/accounts/send_weekly_email/:id",              :controller => "accounts",        :action => :send_weekly_email
+  map.login               "/login",                                       :controller => "user_sessions",   :action => :new
+  map.register            "/register",                                    :controller => "users",           :action => :new
+  map.submit_cl           "/submissions/:id/submit_cl",                   :controller => "submissions",     :action => :submit_cl
+  map.submit_call_cl      "/calls/:id/submit_call_cl",                    :controller => "calls",           :action => :submit_call_cl
+  map.add_customer_lobby  "/accounts/:id/add_customer_lobby",             :controller => "accounts",        :action => :add_customer_lobby
+  # Fuck this shitty path...
+  map.basic_channels      "/accounts/:account_id/basic_channels/create",  :controller => "basic_channels",  :action => :create
   
   map.resources :accounts, :has_many => :campaigns, :member => {:report => :get}
   map.resources :accounts do |account|
+    account.resources :basic_channels do |basic_channel|
+      basic_channel.resources :campaign
+    end
+    
     account.resources :campaigns, :member => { :enable => [:put, :post], :index => :get, :orphaned => :get } do |campaign|
       campaign.resources :contact_forms, :member => { :enable => [:put, :post], :index => :get } 
       campaign.resources :google_sem_campaigns, :member => { :enable => [:put, :post], :index => :get, :show => :get } 
-    end
-    
-    account.resources :channels do |channel|
-      channel.resources :campaigns
     end
   end
   
