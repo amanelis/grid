@@ -22,8 +22,8 @@ class Campaign < ActiveRecord::Base
   named_scope :managed, lambda { {:conditions => ["LCASE(flavor) IN (#{MANAGED_FLAVORS.inspect[1...-1]})"]} }
   named_scope :unmanaged, lambda { {:conditions => ["LCASE(flavor) NOT IN (#{MANAGED_FLAVORS.inspect[1...-1]})"]} }
 
-  # named_scope :managed, :conditions => ["LCASE(flavor) IN ('seo', 'sem - all', 'sem - bing', 'sem - google', 'sem - google boost', 'sem - google mobile', 'sem - yahoo', 'local maps', 'retargeter')"]
-  # named_scope :unmanaged, :conditions => ["LCASE(flavor) NOT IN ('seo', 'sem - all', 'sem - bing', 'sem - google', 'sem - google boost', 'sem - google mobile', 'sem - yahoo', 'local maps', 'retargeter')"]
+  validates_presence_of :name
+  validates_uniqueness_of :name, :case_sensitive => false, :scope => "account_id"
 
   before_destroy :remove_from_many_to_many_relationships
 
