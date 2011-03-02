@@ -15,16 +15,12 @@
   %meta{:name => "viewport", :content => "width=device-width; initial-scale=1.0; maximum-scale=1.0;"}
   %link{:rel => "shortcut icon", :href => "/images/favicon.ico" }
   
-  = stylesheet_link_tag '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/themes/smoothness/jquery-ui.css', 'screen', 'facebox', 'application'
+  = stylesheet_link_tag '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/themes/smoothness/jquery-ui.css', 'screen', 'application'
   /[if IE]
     = stylesheet_link_tag 'ie'
   = javascript_include_tag '//ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js', 'modernizr', 'http://kolber.github.com/audiojs/audiojs/audio.js', 'facebox', 'highcharts', 'application'
 
 %body
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> def80d915a9ab95a0961c8f75c0fc201523a7a58
   .container#wrapper
     %header.span-24#toolbar
       = link_to image_tag("grid_logo.png"), root_path
@@ -48,24 +44,4 @@
         &copy; 2011 Grid. All rights reserved.
         %br
         A service of 
-<<<<<<< HEAD
         = link_to "CityVoice", "http://cityvoice.com"
-=======
-        = link_to "CityVoice", "http://cityvoice.com"
-          
-          
-          
-          
-=======
-  =render :partial => "layouts/nav"
-  =render :partial => "layouts/flash", :locals => { :flash => flash }
-  %section#content
-    = yield
-  %footer
-    %small
-      &copy; Copyright 2010
-      =link_to "CityVoice", "http://www.cityvoice.com"
-      .right
-        =mail_to "alex.baldwin@cityvoice.com", "Feedback/Support", :subject => "Grid Feedback/Support"
->>>>>>> 4c8ae723cea6ac35257ecbf944e8d909c44c65ab
->>>>>>> def80d915a9ab95a0961c8f75c0fc201523a7a58
