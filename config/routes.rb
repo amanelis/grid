@@ -10,7 +10,6 @@ ActionController::Routing::Routes.draw do |map|
   map.submit_cl           "/submissions/:id/submit_cl",                   :controller => "submissions",     :action => :submit_cl
   map.submit_call_cl      "/calls/:id/submit_call_cl",                    :controller => "calls",           :action => :submit_call_cl
   map.add_customer_lobby  "/accounts/:id/add_customer_lobby",             :controller => "accounts",        :action => :add_customer_lobby
-  # Fuck this shitty path...
   map.basic_channels      "/accounts/:account_id/basic_channels/create",  :controller => "basic_channels",  :action => :create
   
   map.resources :accounts, :has_many => :campaigns, :member => {:report => :get}
