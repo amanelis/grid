@@ -113,7 +113,7 @@ body{
 	min-height:400px;
 }
 
-#yield header, #yield article{
+#yield{
 	padding:12px 24px;
 }
 
@@ -262,7 +262,12 @@ header h2{
 }
 
 #yield header{
-	border-bottom:1px solid black;
+	border-bottom:1px solid #C7CCD1;
+	margin-bottom:12px;
+}
+
+header h1{
+	margin-bottom:0;
 }
 
 /*
