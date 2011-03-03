@@ -12,7 +12,6 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :accounts do |account|
     account.resources :basic_channels, :name_prefix => "" do |basic_channels|
-    #account.resources :basic_channels, :name_prefix => "account_" do |basic_channels|
       basic_channels.resources :campaigns
     end
   end
@@ -21,11 +20,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources   :website_visits,  :member => {:global_visitor => :get}
   map.resources   :calls,           :member => {:collect => :post}
   map.resources   :phone_numbers,   :member => {:connect => :post}
-  map.resources   :searches,        :only => :index
-  map.resources   :activities
-  map.resources   :keywords
-  map.resources   :job_statuses
-  map.resources   :websites
+  map.resources   :searches, :activities, :keywords, :job_statuses, :websites
   map.resources   :users,         :password_resets
   map.resource    :submission,    :only => [:index, :create, :show]
   map.resource    :person,        :controller => "users"

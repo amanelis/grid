@@ -4,6 +4,7 @@ class CampaignsController < ApplicationController
   load_and_authorize_resource :account
   load_and_authorize_resource :campaign, :through => :account, :except => [:new, :create]
   belongs_to :account
+  belongs_to :basic_channel
   before_filter :load_time_zone, :only  => [:show]
   
   def new
