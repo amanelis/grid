@@ -1,6 +1,11 @@
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
 
+$(document).ready(function($) {
+  $('a[rel*=facebox]').facebox();
+})
+
+
 function refresh_accounts() {
   $.facebox.close()
   $('#loading').html('<h3><font color="green">Loading accounts... This could take about 5 minutes depending on your connection, please be patient.</font></h3>');

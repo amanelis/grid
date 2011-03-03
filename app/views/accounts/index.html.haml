@@ -1,7 +1,3 @@
-:javascript
-  jQuery(document).ready(function($) {
-    $('a[rel*=facebox]').facebox()
-  })
 %header
   - if @current_user.admin? || @current_user.group_user?
     %ul.right.strong
