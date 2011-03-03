@@ -14,6 +14,19 @@ class BasicChannelsController < ApplicationController
   end
   
   def create
-    create!
+    create! do |success, failure|
+      success.html {
+        flash[:notice] = "Dude! Nice job creating that channel"
+        redirect_to account_path(@basic_channel.account) 
+      }
+      failure.html {
+        flash.now[:error] = "Ooops, there was an error creating that Channel"
+        render 'new'
+      }
+    end
+  end
+  
+  def destroy
+    destroy!
   end
 end

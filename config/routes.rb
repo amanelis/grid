@@ -10,18 +10,22 @@ ActionController::Routing::Routes.draw do |map|
   map.submit_cl           "/submissions/:id/submit_cl",                   :controller => "submissions",     :action => :submit_cl
   map.submit_call_cl      "/calls/:id/submit_call_cl",                    :controller => "calls",           :action => :submit_call_cl
   map.add_customer_lobby  "/accounts/:id/add_customer_lobby",             :controller => "accounts",        :action => :add_customer_lobby
-  map.basic_channels      "/accounts/:account_id/basic_channels/create",  :controller => "basic_channels",  :action => :create
   
   map.resources :accounts, :has_many => :campaigns, :member => {:report => :get}
   map.resources :accounts do |account|
-    account.resources :basic_channels do |basic_channel|
-      basic_channel.resources :campaign
+    account.resources :basic_channels do |basic_channels|
+      basic_channels.resources :campaigns, :member => { :enable => [:put, :post], :index => :get, :orphaned => :get } do |campaign|
+        campaign.resources :contact_forms, :member => { :enable => [:put, :post], :index => :get } 
+        campaign.resources :google_sem_campaigns, :member => { :enable => [:put, :post], :index => :get, :show => :get }
+      end
     end
     
+=begin
     account.resources :campaigns, :member => { :enable => [:put, :post], :index => :get, :orphaned => :get } do |campaign|
       campaign.resources :contact_forms, :member => { :enable => [:put, :post], :index => :get } 
       campaign.resources :google_sem_campaigns, :member => { :enable => [:put, :post], :index => :get, :show => :get } 
     end
+=end
   end
   
   map.resources :campaigns, :has_many => :contact_forms, :member => {:lead_matrix => :get}
@@ -42,7 +46,7 @@ ActionController::Routing::Routes.draw do |map|
   
   
   map.with_options :controller => 'home' do |home|
-     home.dashboard 'dashboard', :action => 'dashboard'
+    home.dashboard 'dashboard', :action => 'dashboard'
   end
 
   map.resources   :users,         :password_resets
