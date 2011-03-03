@@ -93,9 +93,9 @@ class GroupAccount < ActiveRecord::Base
     puts "Updating Map Keyword Rankings"
     MapKeyword.update_map_rankings
     puts 'Updating Adwords Campaign Level Reports'
-    SemCampaign.update_sem_campaign_reports_by_campaign
+    GoogleSemCampaign.update_google_sem_campaign_reports_by_campaign
     puts 'Updating Adwords Ad Level Reports'
-    SemCampaign.update_sem_campaign_reports_by_ad
+    GoogleSemCampaign.update_google_sem_campaign_reports_by_ad
     puts 'Updating DailyForecast.update_temperatures'
     DailyForecast.update_temperatures
   end
