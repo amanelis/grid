@@ -50,6 +50,23 @@ class Website < ActiveRecord::Base
     job_status.finish_with_no_errors
   end
   
+  def self.fix_salesforce_grid_websites
+    Website.all.each do |website|
+      website.campaigns.each do |campaign|
+        sf_campaign = Salesforce::Clientcampaign.first(:conditions => ['id = ?', campaign.salesforce_id])
+        if sf_campaign.present? 
+          if sf_campaign.primary_website__c.blank?
+            campaign.website = nil
+            campaign.save!
+          elsif sf_campaign.primary_website__c.gsub("http://", "") != website.nickname
+            campaign.website = nil
+            campaign.save!
+          end
+        end
+      end
+    end
+  end
+  
   #### GINZA CLASS METHODS
   def self.list_ginza_sites
     HTTParty.get("https://app.ginzametrics.com/v1/list_sites?api_key=#{GINZA_KEY}").to_a
