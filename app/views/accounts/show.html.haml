@@ -4,10 +4,6 @@
   %h2 Channels
 %article
   %table.channels
-  
-    - unless @basic_seo.present?
-      %br
-      DESIGN: nifty add button or whatever looks good - NO SEO
     %thead
       %tr
         %th SEO Channel
@@ -19,9 +15,6 @@
         %td #Number of total leads
         %td #Cost per lead betwen
         
-    - unless @basic_sem.present?
-      %br
-      DESIGN: nifty add button or whatever looks good - NO SEM
     %thead
       %tr
         %th SEM Channel
@@ -32,16 +25,14 @@
         %td= link_to seo.name, account_basic_channel_path(@account, seo, :daterange => params[:daterange])
         %td #Number of total leads
         %td #Cost per lead betwen
-        
-    - unless @basic_channels.present?
-      %br
-      DESIGN: nifty add button or whatever looks good - NO BASIC
+
     - @basic_channels.each do |channel|
       %thead
         %tr
           %th=channel.name
           %th 5 leads
           %th.cpl $2.50 cost per lead
+          %th= link_to 'X', account_basic_channel_path(@account, channel), :confirm => "This will delete this channel, are you sure?", :method => :delete
       - channel.basic_campaigns.each do |campaign|
         %tr
           %td= link_to campaign.name, account_basic_channel_campaign_path(@account, channel, campaign, :daterange => params[:daterange])
