@@ -16,6 +16,7 @@
 - if @user
   - if @user.admin?
     %header
+      %h1= @user.email
       %h2 Dashboard
     %article 
       =high_chart("total_daily_leads", @total_daily_leads)
@@ -33,8 +34,8 @@
 
   -elsif @user.group_user? 
     %header
-      %h1="#{@user.acquainted_group_accounts.collect(&:name)} Dashboard"
-      %hr
+      %h1= @user.acquainted_group_accounts.collect(&:name)
+      %h2 Dashboard
     %article 
       .stats
         %aside
@@ -50,14 +51,7 @@
         
   - elsif @user.account_user?
     %header
-      %h1="#{@user.acquainted_group_accounts.collect(&:name)} Dashboard"
-      %hr
+      %h1= @user.acquainted_group_accounts.collect(&:name)
+      %h2 Dashboard
     %article 
       =high_chart("total_daily_leads", @total_daily_leads)
-    
-  - else
-    %header
-      %h1 Dashboard
-      %hr
-    %article
-      %h2 New fun things are being added daily, please use the feedback button at the bottom right to report issues or suggest new features.

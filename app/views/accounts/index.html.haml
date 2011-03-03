@@ -10,9 +10,8 @@
           Refresh
           %br
           = image_tag ("icons/refresh.png")  
-  %h2
-    = "Accounts (#{@accounts.count})"
-  %h4.quiet= 'For ' + (Date.yesterday.beginning_of_month).to_s(:long) + ' to ' + Date.yesterday.to_s(:long)
+  %h1 Accounts
+  %h2= (Date.yesterday.beginning_of_month).to_s(:long) + ' to ' + Date.yesterday.to_s(:long)
 %article
   %form{:href => '/', :action => "accounts", :id => 'index', :name => 'index', :method => 'GET'}
     %label
