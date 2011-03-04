@@ -1,5 +1,6 @@
 class CampaignsController < ApplicationController
   inherit_resources
+  load_resource
   load_resource :accounts
   load_resource :campaigns, :through => :basic_channel
   load_resource :basic_campaign, :through => :account
@@ -7,7 +8,7 @@ class CampaignsController < ApplicationController
   
   belongs_to :account
   belongs_to :basic_channel
-  before_filter :load_time_zone, :only  => [:show]
+  #before_filter :load_time_zone, :only  => [:show]
   
   def new
     authorize! :manipulate_account, @account
@@ -42,27 +43,57 @@ class CampaignsController < ApplicationController
 =end 
   end
 
-  def show   
+  def show 
+    show!
+=begin  
     datepicker campaign_path(@basic_campaign)
     @phone_number = PhoneNumber.find(params[:phone_number]) unless params[:phone_number].blank?
     @submissions = resource.submissions.non_spam.between(@start_date, @end_date)
+=end
+  end
+  
+  def edit
+    authorize! :manipulate_campaign, @campaign
+    edit!
   end
   
   def update
+    authorize! :manipulate_campaign, @campaign
+    @campaign.update_attribute(:name, params[:basic_campaign][:name])
+    flash[:notice] = "Alright, that CAMPAIGN was updated."
+    redirect_to account_path(@account)
+=begin
+    update! do |success, failure|
+      success.html {
+        flash[:notice] = "Alright, that CAMPAIGN was updated."
+        redirect_to account_path(@account) 
+      }
+      failure.html {
+        flash.now[:error] = "Ooops, there was an error updating that CAMPAIGN, you might want to try again."
+        redirect_to account_path(@account) 
+      }
+    end
     if params[:campaign][:adopting_phone_number].present?
       @phone_number = PhoneNumber.find(params[:campaign][:adopting_phone_number])
       @phone_number.update_attribute(:campaign_id, @campaign.id)
     end
     flash[:notice] = "Account Successfully updated!"
     redirect_to account_campaign_path(@account, @campaign)
+=end
   end
   
   def destroy
-    destroy!
-  end
-  
-  def edit
-    edit!
+    authorize! :manipulate_campaign, @campaign
+    destroy! do |success, failure|
+      success.html {
+        flash[:notice] = "Alright, that CAMPAIGN was deleted."
+        redirect_to account_path(@account) 
+      }
+      failure.html {
+        flash.now[:error] = "Ooops, there was an error deleting that CAMPAIGN, you might want to try again."
+        redirect_to account_path(@account) 
+      }
+    end
   end
   
   def lead_matrix
@@ -94,6 +125,7 @@ class CampaignsController < ApplicationController
   end
   
   def create_new_campaign_contact_form
+    authorize! :manipulate_campaign, @campaign
     @campaign = Campaign.find(params[:id])
     if @campaign.present?
       @form_text = @campaign.create_contact_form(params[:description], params[:return_url], params[:forwarding_email], params[:forwarding_bcc_email], params[:custom1_text], params[:custom2_text], params[:custom3_text], params[:custom4_text], params[:need_name], params[:need_address], params[:need_phone], params[:need_email], params[:work_category], params[:work_description], params[:date_requested], params[:time_requested], params[:other_information])

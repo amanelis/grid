@@ -20,8 +20,8 @@ class BasicChannelsController < ApplicationController
         redirect_to account_path(@basic_channel.account) 
       }
       failure.html {
-        flash.now[:error] = "Ooops, there was an error updating that Channel"
-        render 'new'
+        flash[:error] = "Ooops, there was an error updating that Channel, you might want to try again."
+        redirect_to edit_basic_channel_path(@basic_channel.account)
       }
     end
   end

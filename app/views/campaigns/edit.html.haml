@@ -1,0 +1,7 @@
+- form_for @campaign, :url => basic_channel_campaign_path, :method => "put" do |f|
+  = f.label "Channel Name"
+  %br
+  = f.text_field :name
+  %br
+  %br
+  = f.submit "Update"
