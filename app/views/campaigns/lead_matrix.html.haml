@@ -43,7 +43,7 @@
                     %td
                       -if lead.class == Call 
                         -if lead.recorded? && lead.recording?
-                          = mp3_player "#{lead.recording.expiring_url(14400)}"
+                          = link_to image_tag("sound.png", :alt => "Listen"), "#", :rel => "facebox", :onclick => "playSound('#{lead.recording.expiring_url(14400)}');"
                         -else
                           =image_tag("sound.png")
                       -else

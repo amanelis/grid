@@ -3,7 +3,7 @@
   %h4.quiet= @account.name
 %article
   #create.span-8.append-1
-    -form_for @campaign, {:url => new_account_campaign_path}, :method => "post" do |f|
+    -form_for @campaign, :url => basic_channel_campaigns_path, :method => "post" do |f|
       %input{:type => "hidden", :id => :account_id, :name => :account_id, :value => @account.id.to_s}
       %label Name
       %br
@@ -11,8 +11,8 @@
       %label Channel
       %br
       %select{:name => "basic_channel"}
-        - for basic_channel in @basic_channels
-          %option.text= basic_channel
+        -# for basic_channel in @basic_channels
+          %option.text=# basic_channel
       %br
       %label="Industry"
       %br

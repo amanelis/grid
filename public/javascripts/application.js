@@ -1,6 +1,11 @@
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
 
+$(document).ready(function($) {
+  $('a[rel*=facebox]').facebox();
+})
+
+
 function refresh_accounts() {
   $.facebox.close()
   $('#loading').html('<h3><font color="green">Loading accounts... This could take about 5 minutes depending on your connection, please be patient.</font></h3>');
@@ -36,6 +41,35 @@ function confirm_refresh_accounts() {
 }
 
 function confirm_export_report(id) {
-	var message = '<center>This will export a PDF client report for previous month.<p><a href="#" onClick="export_client_report('+id+');">Yes</a> or <a href="#" onClick="$.facebox.close();">No</a></center>';
+  var message = '<center>This will export a PDF client report for previous month.<p><a href="#" onClick="export_client_report('+id+');">Yes</a> or <a href="#" onClick="$.facebox.close();">No</a></center>';
   $.facebox(message);
+}
+
+
+function playSound(url) {
+  var message;
+
+  // If they have support for audio
+  if( Modernizr.audio && Modernizr.audio.mp3){
+    message = '<center><audio preload="auto" autobuffer><source src="'+url+'" /></audio></center>';
+  } else {
+    // Remove the & from the URL passed in
+    url = url.split('&').join('%26');
+    message = '<center><embed width="240px" height="20px" type="application/x-shockwave-flash" src="./player.swf" pluginspage="http://www.adobe.com/go/getflashplayer" flashvars="loop=no&autostart=no&animation=no&soundFile='+url+'"></center>';
+  }
+
+  // show the audio
+  $.facebox(message);
+
+  if(Modernizr.audio) {
+    // initialize the audiojs
+    audiojs.events.ready(function(){
+      audiojs.createAll();
+    });
+  }
+
+  // When facebox closes, remove the mp3_player element
+  $(document).bind('close.facebox', function() {
+    $("#facebox_content").empty();
+  });
 }
