@@ -1,27 +1,28 @@
 class CampaignsController < ApplicationController
   inherit_resources
-  load_resource :campaign, :through => :account
   load_and_authorize_resource :account
-  load_and_authorize_resource :campaign, :through => :account, :except => [:new, :create]
+  load_resource :basic_campaign, :through => :account
+  load_resource :basic_channels, :through => :account, :except => [:new, :create]
+  
   belongs_to :account
   belongs_to :basic_channel
   before_filter :load_time_zone, :only  => [:show]
   
   def new
-    authorize! :manipulate_account, @account
-    @industries = Industry.all.collect {|a| a.name}.sort!.insert(0, 'Select...')
-    @basic_channels = @account.basic_channels.collect {|a| a.name}.sort!
-    if @campaign.present?
-      @campaign = @account.campaigns.build
-    end
+    #authorize! :manipulate_account, @account
+    #@campaign = Campaign.new
+    #@industries = Industry.all.collect {|a| a.name}.sort!.insert(0, 'Select...')
+   
+   
+    #@basic_channels = @account.basic_channels.collect {|a| a.name}.sort!
   end
   
   def create
     authorize! :manipulate_account, @account
-    flash[:error] = "You must select a campaign type" if params[:flavor] == 'Select...'
-    flash[:error] = "You must select an Industry" if params[:industry] == 'Select...'
-    flash[:error] = "Sorry, but there are no available numbers for the #{params[:area_code]} area code" if PhoneNumber.available_numbers(params[:area_code]).blank?
-    redirect_to request.referer if flash[:error].present?
+    # flash[:error] = "You must select a campaign type" if params[:flavor] == 'Select...'
+    # flash[:error] = "You must select an Industry" if params[:industry] == 'Select...'
+    # flash[:error] = "Sorry, but there are no available numbers for the #{params[:area_code]} area code" if PhoneNumber.available_numbers(params[:area_code]).blank?
+    # redirect_to request.referer if flash[:error].present?
     if @account.present?
       if @account.campaigns.find_by_name(params[:name]).present?
         flash[:error] = "Sorry, but a campaign with the name #{params[:name]} already exists on this account"
