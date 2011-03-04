@@ -9,8 +9,8 @@ module CampaignStyleMixin
   end
 
   def initialize(attributes={})
-    self.campaign = Campaign.new
     super(attributes)
+    self.campaign = Campaign.new
     # self.initialize_specifics(attributes)
     self
   end
