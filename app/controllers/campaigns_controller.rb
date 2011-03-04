@@ -1,6 +1,7 @@
 class CampaignsController < ApplicationController
   inherit_resources
   load_resource :accounts
+  load_resource :campaigns, :through => :basic_channel
   load_resource :basic_campaign, :through => :account
   load_resource :basic_channels, :through => :account, :except => [:new, :create]
   
@@ -21,6 +22,8 @@ class CampaignsController < ApplicationController
     bc.account = @account
     bc.basic_channel = @basic_channel
     bc.save
+    flash[:success] = "Good job you created a campaign"
+    redirect_to account_path(@account)
 =begin
     # flash[:error] = "You must select a campaign type" if params[:flavor] == 'Select...'
     # flash[:error] = "You must select an Industry" if params[:industry] == 'Select...'
@@ -40,7 +43,7 @@ class CampaignsController < ApplicationController
   end
 
   def show   
-    datepicker campaign_path(@campaign)
+    datepicker campaign_path(@basic_campaign)
     @phone_number = PhoneNumber.find(params[:phone_number]) unless params[:phone_number].blank?
     @submissions = resource.submissions.non_spam.between(@start_date, @end_date)
   end
@@ -52,6 +55,14 @@ class CampaignsController < ApplicationController
     end
     flash[:notice] = "Account Successfully updated!"
     redirect_to account_campaign_path(@account, @campaign)
+  end
+  
+  def destroy
+    destroy!
+  end
+  
+  def edit
+    edit!
   end
   
   def lead_matrix

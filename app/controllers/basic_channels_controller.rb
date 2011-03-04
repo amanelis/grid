@@ -13,6 +13,19 @@ class BasicChannelsController < ApplicationController
     @basic_channel = BasicChannel.new(:account_id => params[:account_id])
   end
   
+  def update
+    update! do |success, failure|
+      success.html {
+        flash[:notice] = "Awesome! You just created updated your channel!"
+        redirect_to account_path(@basic_channel.account) 
+      }
+      failure.html {
+        flash.now[:error] = "Ooops, there was an error updating that Channel"
+        render 'new'
+      }
+    end
+  end
+  
   def create
     create! do |success, failure|
       success.html {

@@ -4,10 +4,6 @@
 %article
   #create.span-8.append-1
     -form_for @basic_campaign, :url => basic_channel_campaigns_path do |f|
-      =# f.hidden_field :account_id, :value => @account.id
-      =# f.hidden_field :basic_channel, :value => @basic_channel.id
-    
-    
       = f.label "Name"
       %br
       = f.text_field(:name, :placeholder => "CityVoice")

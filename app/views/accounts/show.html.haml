@@ -32,12 +32,14 @@
           %th=channel.name
           %th 5 leads
           %th.cpl $2.50 cost per lead
+          %th= link_to 'Edit', edit_basic_channel_path(@account, channel)
           %th= link_to 'X', basic_channel_path(@account, channel), :confirm => "This will delete this channel, are you sure?", :method => :delete
       - channel.basic_campaigns.each do |campaign|
         %tr
           %td= link_to campaign.name, basic_channel_campaign_path(@account, channel, campaign, :daterange => params[:daterange])
           %td #Number of total leads
           %td #Cost per lead betwen
+          %th= link_to 'X', basic_channel_campaign_path(@account, channel, campaign), :confirm => "This will delete this campaign, are you sure?", :method => :delete
       
         
         
