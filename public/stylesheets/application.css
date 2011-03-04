@@ -86,7 +86,7 @@
 	------------------
 */
 body{
-	background: url("/images/grid_bg.png") repeat scroll #A9A9A9;
+	background: url("/images/grid_bg.png") repeat scroll center center #A9A9A9;
 	-webkit-font-smoothing: antialiased;
 }
 
