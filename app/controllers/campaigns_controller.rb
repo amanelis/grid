@@ -16,8 +16,11 @@ class CampaignsController < ApplicationController
   
   def create
     authorize! :manipulate_account, @account
-    bc = BasicCampaign.new(params[:basic_campaign])
-    
+    bc = BasicCampaign.new
+    bc.name = params[:basic_campaign][:name]
+    bc.account = @account
+    bc.basic_channel = @basic_channel
+    bc.save
 =begin
     # flash[:error] = "You must select a campaign type" if params[:flavor] == 'Select...'
     # flash[:error] = "You must select an Industry" if params[:industry] == 'Select...'
