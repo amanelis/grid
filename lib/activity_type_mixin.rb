@@ -7,8 +7,8 @@ module ActivityTypeMixin
       accepts_nested_attributes_for :activity
 
       def initialize(attributes={})
-        self.activity = Activity.new
         super(attributes)
+        self.activity = Activity.new
         self.initialize_specifics(attributes)
         self
       end

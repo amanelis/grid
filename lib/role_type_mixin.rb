@@ -7,8 +7,8 @@ module RoleTypeMixin
       accepts_nested_attributes_for :role
 
       def initialize(attributes={})
-        self.role = Role.new
         super(attributes)
+        self.role = Role.new
         # self.initialize_specifics(attributes)
         self
       end
