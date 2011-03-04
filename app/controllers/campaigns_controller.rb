@@ -1,6 +1,6 @@
 class CampaignsController < ApplicationController
   inherit_resources
-  load_and_authorize_resource :account
+  load_resource :accounts
   load_resource :basic_campaign, :through => :account
   load_resource :basic_channels, :through => :account, :except => [:new, :create]
   
@@ -9,16 +9,16 @@ class CampaignsController < ApplicationController
   before_filter :load_time_zone, :only  => [:show]
   
   def new
-    #authorize! :manipulate_account, @account
-    #@campaign = Campaign.new
-    #@industries = Industry.all.collect {|a| a.name}.sort!.insert(0, 'Select...')
-   
-   
-    #@basic_channels = @account.basic_channels.collect {|a| a.name}.sort!
+    authorize! :manipulate_account, @account
+    @basic_campaign = BasicCampaign.new
+    @industries = Industry.all.collect {|a| a.name}.sort!
   end
   
   def create
     authorize! :manipulate_account, @account
+    bc = BasicCampaign.new(params[:basic_campaign])
+    
+=begin
     # flash[:error] = "You must select a campaign type" if params[:flavor] == 'Select...'
     # flash[:error] = "You must select an Industry" if params[:industry] == 'Select...'
     # flash[:error] = "Sorry, but there are no available numbers for the #{params[:area_code]} area code" if PhoneNumber.available_numbers(params[:area_code]).blank?
@@ -28,14 +28,12 @@ class CampaignsController < ApplicationController
         flash[:error] = "Sorry, but a campaign with the name #{params[:name]} already exists on this account"
         redirect_to request.referer
       else
-        campaign = @account.create_basic_campaign(params[:basic_channel], params[:name])
-        campaign.industry = params[:industry]
-        #campaign.forwarding_number =  params[:forwarding_number]
-        #campaign.area_code = params[:area_code]
-        #campaign.save
+        campaign = @account.create_basic_campaign(params[:basic_channel], params[:name], :industry = params[:industry], :params[:forwarding_number], :area_code = params[:area_code])
+        campaign.save
         redirect_to account_campaign_path(@account.id, campaign.id, :phone_number => PhoneNumber.first)
       end
-    end 
+    end
+=end 
   end
 
   def show   

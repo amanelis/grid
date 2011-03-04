@@ -1,37 +1,32 @@
 %header
   %h3 Create Campaign
-  %h4.quiet= @account.name
+  %h4.quiet= "#{@account.name} #{@basic_channel.name}"
 %article
   #create.span-8.append-1
-    -form_for @campaign, :url => basic_channel_campaigns_path, :method => "post" do |f|
-      %input{:type => "hidden", :id => :account_id, :name => :account_id, :value => @account.id.to_s}
-      %label Name
+    -form_for @basic_campaign, :url => basic_channel_campaigns_path do |f|
+      =# f.hidden_field :account_id, :value => @account.id
+      =# f.hidden_field :basic_channel, :value => @basic_channel.id
+    
+    
+      = f.label "Name"
       %br
-      %input{:type => "text", :placeholder => "CityVoice", :name => "name", :id => "name", :class => "title"}
-      %label Channel
-      %br
-      %select{:name => "basic_channel"}
-        -# for basic_channel in @basic_channels
-          %option.text=# basic_channel
-      %br
-      %label="Industry"
-      %br
-      %select{:name => "industry"}
-        - for industry in @industries
-          %option= industry
+      = f.text_field(:name, :placeholder => "CityVoice")
       %br
       %label Forwarding Number
       %br
       %label.small.quiet Where you want all your calls to go to
       %br
-      %input{:type => "text", :placeholder => "2108446400", :name => "forwarding_number", :id => "forwarding_number", :class => "title", :maxlength => "10"}
+      %input{:type => "text", :placeholder => "2108446400", :class => "title", :maxlength => "10"}
       %label Area Code
       %br
       %label.small.quiet For your new tracking phone number
       %br
-      %input{:type => "text", :placeholder => "210", :name => "area_code", :id => "area_code", :class => "title", :maxlength => "3"}
-      %input{:type => "submit", :value => "Create Campaign", :id => "create_campaign", :class => "button"}
+      %input{:type => "text", :placeholder => "210", :class => "title", :maxlength => "3"}
+      %input{:type => "submit", :value => "Create Campaign", :class => "button"}
   #helper.span-13.last.box
     %h3 What is going on?
     %p.quiet By creating a campaign, you will be given a phone number to put on your marketing material. This phone number is specific to your marketing campaign and all calls can be tracked through Grid. 
     
+    
+    
+    =#:url => basic_channel_campaigns_path
