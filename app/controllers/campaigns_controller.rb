@@ -1,10 +1,10 @@
 class CampaignsController < ApplicationController
   inherit_resources
-  load_resource
-  load_resource :accounts
+  load_resource # /:id
+  load_resource :accounts 
   load_resource :campaigns, :through => :basic_channel
   load_resource :basic_campaign, :through => :account
-  load_resource :basic_channels, :through => :account, :except => [:new, :create]
+  load_resource :basic_channels, :through => :account
   
   belongs_to :account
   belongs_to :basic_channel
@@ -43,13 +43,10 @@ class CampaignsController < ApplicationController
 =end 
   end
 
-  def show 
-    show!
-=begin  
-    datepicker campaign_path(@basic_campaign)
+  def show
+    datepicker basic_channel_campaign_path(@account, @basic_channel, @campaign)
     @phone_number = PhoneNumber.find(params[:phone_number]) unless params[:phone_number].blank?
     @submissions = resource.submissions.non_spam.between(@start_date, @end_date)
-=end
   end
   
   def edit

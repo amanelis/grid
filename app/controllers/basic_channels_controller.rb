@@ -1,15 +1,12 @@
 class BasicChannelsController < ApplicationController
   inherit_resources
-  load_and_authorize_resource :basic_channel, :through => :account
+  load_resource
+  load_resource :account
+  #load_and_authorize_resource :basic_channel, :through => :account
   belongs_to :account
   
-  def index
-  end
-  
-  def show
-  end
-  
   def new
+    authorize! :manipulate_account, @account
     @basic_channel = BasicChannel.new(:account_id => params[:account_id])
   end
   

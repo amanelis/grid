@@ -31,7 +31,12 @@ class Ability
         
         ########## Manipulator Method #################
         can :manipulate_account, Account do |account|
-          user.can_manipulate_account?(account) ? (can :create, Campaign) : false
+          if user.can_manipulate_account?(account) 
+            can :create, Campaign
+            can :create, BasicChannel
+          else
+            false
+          end
         end
         
         can :manipulate_campaign, Campaign do |campaign|
