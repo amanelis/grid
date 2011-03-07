@@ -1,24 +1,4 @@
-:javascript
-  $(document).ready(function() {
-    $(".edit_activity").change(function() {
-      this.submit();
-    });
-  })
-%header
-  -if can? :manipulate_campaign, @campaign
-    %p.right=# link_to 'Assign Number', orphaned_account_campaign_path, :class => "submit", :name => "submit"
+= @campaign.name
+
   
-  %h2 #{@campaign.name}
-  #datepicker=render :partial => "shared/date_picker"
-  
-- if @campaign.is_seo?
-  = render :partial => 'campaigns/campaign_types/seo'
-- elsif @campaign.is_sem?
-  = render :partial => 'campaigns/campaign_types/sem'
-- elsif @campaign.is_basic?
-  = render :partial => 'campaigns/campaign_types/basic'
-- elsif @campaign.is_managed?
-  = render :partial => 'campaigns/campaign_types/managed'
-- else
-  = render :text => "Ooops, looks like that is an invalid campaign type"
   

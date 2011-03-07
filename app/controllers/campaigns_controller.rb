@@ -1,30 +1,32 @@
 class CampaignsController < ApplicationController
   inherit_resources
-  load_resource # /:id
+  load_resource :except => [:create]
   load_resource :accounts 
-  load_resource :campaigns, :through => :basic_channel
-  load_resource :basic_campaign, :through => :account
-  load_resource :basic_channels, :through => :account
+  load_resource :channels
   
   belongs_to :account
-  belongs_to :basic_channel
-  #before_filter :load_time_zone, :only  => [:show]
+  belongs_to :channel
   
   def new
     authorize! :manipulate_account, @account
-    @basic_campaign = BasicCampaign.new
-    @industries = Industry.all.collect {|a| a.name}.sort!
   end
   
   def create
     authorize! :manipulate_account, @account
-    bc = BasicCampaign.new
-    bc.name = params[:basic_campaign][:name]
-    bc.account = @account
-    bc.basic_channel = @basic_channel
-    bc.save
-    flash[:success] = "Good job you created a campaign"
-    redirect_to account_path(@account)
+    
+    if @channel.channel_type == "basic"
+      bc = BasicCampaign.new
+      bc.account = @account
+      bc.channel = @channel
+      bc.name    = params[:campaign][:name]
+      bc.save
+      flash[:notice] = "Good job, you just created a campaign!"
+      redirect_to channel_campaign_path(@account, @channel, @account.campaigns.last)
+    elsif @channel.channel_type == "sem"
+
+    elsif @channel.channel_type == "seo"
+      
+    end
 =begin
     # flash[:error] = "You must select a campaign type" if params[:flavor] == 'Select...'
     # flash[:error] = "You must select an Industry" if params[:industry] == 'Select...'
@@ -44,9 +46,7 @@ class CampaignsController < ApplicationController
   end
 
   def show
-    datepicker basic_channel_campaign_path(@account, @basic_channel, @campaign)
-    @phone_number = PhoneNumber.find(params[:phone_number]) unless params[:phone_number].blank?
-    @submissions = resource.submissions.non_spam.between(@start_date, @end_date)
+    authorize! :manipulate_campaign, @campaign
   end
   
   def edit
