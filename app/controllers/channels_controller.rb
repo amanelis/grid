@@ -1,8 +1,7 @@
-class BasicChannelsController < ApplicationController
+class ChannelsController < ApplicationController
   inherit_resources
   load_resource
   load_resource :account
-  #load_and_authorize_resource :basic_channel, :through => :account
   belongs_to :account
   
   def new
