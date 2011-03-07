@@ -435,7 +435,7 @@ class Account < ActiveRecord::Base
   def create_twilio_subaccount
     resp = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts.json?", 'POST', {'FriendlyName' => self.name})
     raise unless resp.kind_of? Net::HTTPSuccess
-    self.update_attribute(:twilio_id, JSON.parse(resp.body)['sid'])
+    self.update_attribute!(:twilio_id, JSON.parse(resp.body)['sid'])
   end
   
   def get_twilio_subaccount

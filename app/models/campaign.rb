@@ -513,15 +513,10 @@ class Campaign < ActiveRecord::Base
   def create_twilio_number(phone_number, name, forward_to, id_callers = true, record_calls = true, transcribe_calls = false, text_calls = false, call_url = "http://grid.cityvoice.com/phone_numbers/connect/", fallback_url = "http://grid.cityvoice.com/phone_numbers/connect/", status_url = "http://grid.cityvoice.com/phone_numbers/collect/", sms_url = "http://grid.cityvoice.com/phone_numbers/sms_collect/", fallback_sms_url = "http://grid.cityvoice.com/phone_numbers/sms_collect/")
     job_status = JobStatus.create(:name => "Campaign.create_twilio_number")
     begin
-      #
-      #
-      #
-      #
-      #self.account.create_twilio_subaccount if self.account.twilio_id.blank?
-      #
-      #
-      #
-      #
+      self.account.create_twilio_subaccount if self.account.twilio_id.blank?
+      
+      # If they get rid of the number need to check to see if there are any more numbers on account object. if there
+      # are no numbers delete account.twilio_id
       #self.account.activate_twilio_subaccount
       #CREATE THE NUMBER IN TWILIO (BASIC INFORMATION)
       d = {'PhoneNumber' => "+1#{phone_number}"} if phone_number.length == 10

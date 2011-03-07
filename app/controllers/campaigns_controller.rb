@@ -20,8 +20,10 @@ class CampaignsController < ApplicationController
       bc.channel = @channel
       bc.name    = params[:campaign][:name]
       bc.save
+      bc.campaign.save
+      number = bc.campaign.create_twilio_number(params[:campaign][:area_code], params[:campaign][:name], params[:campaign][:forward_to])
       flash[:notice] = "Good job, you just created a campaign!"
-      redirect_to channel_campaign_path(@account, @channel, @account.campaigns.last)
+      redirect_to channel_campaign_path(@account, @channel, @account.campaigns.last, :number => number)
     elsif @channel.channel_type == "sem"
 
     elsif @channel.channel_type == "seo"
