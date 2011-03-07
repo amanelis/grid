@@ -18,6 +18,11 @@
       %label.small.quiet For your new tracking phone number
       %br
       %input{:id => "campaign_area_code", :name=> "campaign[area_code]", :type => "text", :placeholder => "210", :class => "title", :maxlength => "3"}
+      %label Form forwarding email
+      %br
+      %label.small.quiet Where your forms will be submitted to
+      %br
+      %input{:id => "campaign_forwarding_email", :name=> "campaign[forwarding_email]", :type => "text", :placeholder => "me@cityvoice.com", :class => "title"}
       %input{:type => "submit", :value => "Create Campaign", :class => "button"}
   #helper.span-13.last.box
     %h3 What is going on?

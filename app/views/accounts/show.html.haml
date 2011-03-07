@@ -32,7 +32,7 @@
           %th 5 leads
           %th.cpl $2.50 cost per lead
           %th= link_to 'Edit', edit_channel_path(@account, channel)
-          %th= link_to 'X', channel_path(@account, channel), :confirm => "This will delete this channel, are you sure?", :method => :delete unless @account.channels.select(&:is_basic?).empty?
+          %th= link_to('X', channel_path(@account, channel), :confirm => "This will delete this channel, are you sure?", :method => :delete) unless @account.channels.select(&:is_basic?).empty?
       - channel.campaigns.each do |campaign|
         = render :partial => 'accounts/channel_campaign', :locals => {:campaign => campaign, :channel => channel}
       
