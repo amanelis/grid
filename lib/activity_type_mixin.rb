@@ -9,6 +9,7 @@ module ActivityTypeMixin
       def initialize(attributes={})
         super(attributes)
         self.activity = Activity.new
+        self.activity.activity_type = self
         self.initialize_specifics(attributes)
         self
       end

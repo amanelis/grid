@@ -5,8 +5,9 @@ class SemCampaign < ActiveRecord::Base
   
   named_scope :basic, :conditions => {:mobile => false}
   named_scope :mobile, :conditions => {:mobile => true}
+
   
-  # INSTANCE
+  # INSTANCE BEHAVIOR
 
   def spend_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.spend_between(start_date, end_date) }
@@ -63,6 +64,13 @@ class SemCampaign < ActiveRecord::Base
 
   def percentage_spent_this_month
     (budget = self.monthly_budget).present? && (budget = self.monthly_budget) > 0 ? (self.spend_between(Date.today.beginning_of_month, Date.today.end_of_month) / budget.to_f) * 100 : 0
+  end
+
+
+  # PREDICATES
+  
+  def proper_channel?
+    self.channel.blank? || self.channel.is_sem?
   end
 
 end

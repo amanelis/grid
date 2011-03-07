@@ -9,6 +9,7 @@ module RoleTypeMixin
       def initialize(attributes={})
         super(attributes)
         self.role = Role.new
+        self.role.role_type = self
         # self.initialize_specifics(attributes)
         self
       end
