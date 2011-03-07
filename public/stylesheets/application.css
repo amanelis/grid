@@ -86,7 +86,7 @@
 	------------------
 */
 body{
-	background: url("/images/grid_bg.png") repeat scroll center center #A9A9A9;
+	background: url("/images/birch.jpg") repeat scroll 0 0 #DDB687;
 	-webkit-font-smoothing: antialiased;
 }
 
@@ -130,7 +130,7 @@ a{
 
 #toolbar{
 	background: #2A476A;
-	background:-webkit-gradient(linear,0% 100%,0% 0%,from(rgba(27,43,62,1)),to(rgba(42,71,106,1)));
+	background:-webkit-gradient(linear,0% 100%,0% 0%,from(rgba(177,186,195,1)),to(rgba(239,240,244,1)));
 	background:-moz-linear-gradient(bottom,rgba(27,43,62,1),rgba(42,71,106,1));
 	-webkit-border-radius: 4px 4px 0 0;
 	   -moz-border-radius: 4px 4px 0 0;
@@ -147,7 +147,8 @@ a{
 }
 
 #toolbar li a{
-	color:#fff;
+	color:#3f5877;
+	text-shadow: -1px -1px #fff;
 	line-height:36px;
 	font-weight:bold;
 }
@@ -230,7 +231,7 @@ hr{
 
 footer small, footer small a{
 	font-size:12px !important;
-	color:#E1E1E1;
+	color:#444;
 }
 
 footer small a{
