@@ -12,6 +12,10 @@ class ChannelsController < ApplicationController
     authorize! :manipulate_account, @account
   end
   
+  def edit
+    authorize! :manipulate_account, @account
+  end
+  
   def update
     update! do |success, failure|
       success.html {

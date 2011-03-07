@@ -56,7 +56,7 @@ class CampaignsController < ApplicationController
   
   def update
     authorize! :manipulate_campaign, @campaign
-    @campaign.update_attribute(:name, params[:basic_campaign][:name])
+    @campaign.update_attributes(params[:campaign])
     flash[:notice] = "Alright, that CAMPAIGN was updated."
     redirect_to account_path(@account)
 =begin
