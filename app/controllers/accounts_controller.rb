@@ -59,10 +59,11 @@ class AccountsController < ApplicationController
     @unmanaged_campaigns  = @account.campaigns.active.unmanaged.to_a.sort { |a,b| a.name <=> b.name }        
                                  
     datepicker account_path(@account)
+  
+    @basic_channels = @account.channels.select(&:is_basic?)
+    @sem_channels   = @account.channels.select(&:is_sem?)
+    @seo_channels   = @account.channels.select(&:is_seo?)
     
-    @basic_seo      = @account.seo_campaigns
-    @basic_sem      = @account.sem_campaigns
-    @basic_channels = @account.basic_channels
     
     @daily_total_leads_graph = HighChart.new('graph') do |f|
       f.title(:text => false)  

@@ -10,12 +10,11 @@ ActionController::Routing::Routes.draw do |map|
   map.submit_cl           "/submissions/:id/submit_cl",         :controller => "submissions",     :action => :submit_cl
   map.submit_call_cl      "/calls/:id/submit_call_cl",          :controller => "calls",           :action => :submit_call_cl
   map.add_customer_lobby  "/accounts/:id/add_customer_lobby",   :controller => "accounts",        :action => :add_customer_lobby
-  #map.get_iframe          "/accounts/:id/campaigns/:campaign_id/contact_forms/:contact_form_id/get_iframe", :controller => "contact_forms", :action => :get_iframe
-  #map.get_html            "/accounts/:id/campaigns/:campaign_id/contact_forms/:contact_form_id/get_html", :controller => "contact_forms", :action => :get_html
+  # CUSTOM ROUTES
   
   map.resources :accounts do |account|
-    account.resources :basic_channels, :name_prefix => "" do |basic_channels|
-      basic_channels.resources :campaigns
+    account.resources :channels, :name_prefix => "" do |channels|
+      channels.resources :campaigns
     end
   end
 
@@ -29,9 +28,10 @@ ActionController::Routing::Routes.draw do |map|
   map.resource    :person,        :controller => "users"
   map.resource    :user_session
   
-  
   map.with_options :controller => 'home' do |home|
     home.dashboard 'dashboard', :action => 'dashboard'
   end
+  
+  # End point route
   map.root        :controller => "home", :action => "index" 
 end
