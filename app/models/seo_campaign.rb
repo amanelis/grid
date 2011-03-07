@@ -4,6 +4,7 @@ class SeoCampaign < ActiveRecord::Base
   has_many :inbound_links, :dependent => :destroy
   has_many :website_analyses, :class_name => "WebsiteAnalysis", :dependent => :destroy
 
+
   # CLASS BEHAVIOR
 
   def self.update_websites_with_ginza
@@ -560,5 +561,10 @@ class SeoCampaign < ActiveRecord::Base
   end
   
   
-
+  # PREDICATES
+  
+  def proper_channel?
+    self.channel.blank? || self.channel.is_seo?
+  end
+  
 end

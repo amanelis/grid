@@ -1,5 +1,6 @@
 class Campaign < ActiveRecord::Base
   belongs_to :account
+  belongs_to :channel
   belongs_to :campaign_style, :polymorphic => true
   belongs_to :website
   has_many :phone_numbers, :dependent => :destroy
@@ -24,6 +25,7 @@ class Campaign < ActiveRecord::Base
 
   validates_presence_of :name
   validates_uniqueness_of :name, :case_sensitive => false, :scope => "account_id"
+  validate :proper_channel?
 
   before_destroy :remove_from_many_to_many_relationships
 
@@ -613,6 +615,12 @@ class Campaign < ActiveRecord::Base
 
   def remove_from_many_to_many_relationships
     self.industries.each { |industry| industry.campaigns.delete(self) }
+  end
+  
+  def proper_channel?
+    unless self.campaign_style.proper_channel?
+      errors.add(:channel, "is of the incorrect channel type")
+    end
   end
 
 end
