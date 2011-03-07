@@ -16,6 +16,7 @@
 - if @user
   - if @user.admin?
     %header
+      .right= link_to "Facebox Demo", dashboard_url, :rel => "facebox"
       %h1= @user.email
       %h2 Dashboard
     %article 
