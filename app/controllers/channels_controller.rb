@@ -6,7 +6,10 @@ class ChannelsController < ApplicationController
   
   def new
     authorize! :manipulate_account, @account
-    @channel = Channel.new(:account_id => params[:account_id])
+  end
+  
+  def show
+    authorize! :manipulate_account, @account
   end
   
   def update
@@ -23,19 +26,19 @@ class ChannelsController < ApplicationController
   end
   
   def create
-    
-=begin
-    create! do |success, failure|
-      success.html {
-        flash[:notice] = "Awesome! You just created a new #{@channel.name} channel!"
-        redirect_to account_path(@channel.account) 
-      }
-      failure.html {
-        flash.now[:error] = "Ooops, there was an error creating that Channel"
-        render 'new'
-      }
+    @channel = Channel.new
+    @channel.account = @account
+    @channel.name = params[:channel][:name]
+    if params[:channel][:channel_type].include?("seo")
+      @channel.set_type_seo
+    elsif params[:channel][:channel_type].include?("sem")
+      @channel.set_type_sem
+    elsif params[:channel][:channel_type].include?("basic")
+      @channel.set_type_basic
     end
-=end
+    @channel.save
+    flash[:notice] = "Yay channel created!"
+    redirect_to account_path(@account)
   end
   
   def destroy

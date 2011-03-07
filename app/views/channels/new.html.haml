@@ -1,5 +1,10 @@
+%h3 Create a new Channel
+
 - form_for @channel do |f|
   = f.label "Name"
   = f.text_field :name
+  %br
+  = f.label "Type"
+  = f.select(:channel_type, Channel::CHANNEL_TYPE_OPTIONS, :prompt => "- Choose Type -" )
   %br
   = f.submit "Create"

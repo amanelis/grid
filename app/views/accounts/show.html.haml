@@ -3,28 +3,38 @@
   %h1= @account.name
   %h2 Channels
 %article
-  %table.channels
-    %thead
-      %tr
-        %th SEO Channel
-        %th 5 leads
-        %th.cpl $2.50 cost per lead
-    - @seo_channels.each do |seo|
-      %tr
-        %td= link_to seo.name, channel_campaign_path(@account, seo, :daterange => params[:daterange])
-        %td #Number of total leads
-        %td #Cost per lead betwen
-        
-    %thead
-      %tr
-        %th SEM Channel
-        %th 5 leads
-        %th.cpl $2.50 cost per lead
-    - @sem_channels.each do |seo|
-      %tr
-        %td= link_to seo.name, channel_campaign_path(@account, seo, :daterange => params[:daterange])
-        %td #Number of total leads
-        %td #Cost per lead betwen
+  %table.channels          
+    - @seo_channels.each do |channel|
+      %thead
+        %tr
+          %th=channel.name
+          %th 5 leads
+          %th.cpl $2.50 cost per lead
+          %th= link_to 'Edit', edit_channel_path(@account, channel)
+          %th= link_to 'X', channel_path(@account, channel), :confirm => "This will delete this channel, are you sure?", :method => :delete
+      - channel.campaigns.each do |campaign|
+        %tr
+          %td= link_to campaign.name, channel_campaign_path(@account, channel, campaign, :daterange => params[:daterange])
+          %td #Number of total leads
+          %td #Cost per lead betwen
+          %th= link_to 'Edit', edit_channel_campaign_path(@account, channel, campaign)
+          %th= link_to 'X', channel_campaign_path(@account, channel, campaign), :confirm => "This will delete this campaign, are you sure?", :method => :delete
+
+    - @sem_channels.each do |channel|
+      %thead
+        %tr
+          %th=channel.name
+          %th 5 leads
+          %th.cpl $2.50 cost per lead
+          %th= link_to 'Edit', edit_channel_path(@account, channel)
+          %th= link_to 'X', channel_path(@account, channel), :confirm => "This will delete this channel, are you sure?", :method => :delete
+      - channel.campaigns.each do |campaign|
+        %tr
+          %td= link_to campaign.name, channel_campaign_path(@account, channel, campaign, :daterange => params[:daterange])
+          %td #Number of total leads
+          %td #Cost per lead betwen
+          %th= link_to 'Edit', edit_channel_campaign_path(@account, channel, campaign)
+          %th= link_to 'X', channel_campaign_path(@account, channel, campaign), :confirm => "This will delete this campaign, are you sure?", :method => :delete
 
     - @basic_channels.each do |channel|
       %thead

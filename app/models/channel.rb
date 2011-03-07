@@ -2,7 +2,7 @@ class Channel < ActiveRecord::Base
   belongs_to :account
   has_many :campaigns
   
-  validates_presence_of :name
+  validates_presence_of :name, :channel_type
   validates_uniqueness_of :name, :case_sensitive => false, :scope => "account_id"
   
   SEO = "seo"
