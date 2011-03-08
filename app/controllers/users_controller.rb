@@ -9,6 +9,7 @@ class UsersController < ApplicationController
   end
   
   def new
+    render :layout => false
     @user = User.new
   end
   
