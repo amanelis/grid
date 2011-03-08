@@ -9,8 +9,6 @@
           %th= channel.name
           %th 5 leads
           %th.cpl $2.50 cost per lead
-          %th
-          %th= link_to 'X', channel_path(@account, channel), :confirm => "This will delete this channel, are you sure?", :method => :delete
       - channel.campaigns.each do |campaign|
         = render :partial => 'accounts/channel_campaign', :locals => {:campaign => campaign, :channel => channel}
 
@@ -20,19 +18,17 @@
           %th= channel.name
           %th 5 leads
           %th.cpl $2.50 cost per lead
-          %th
-          %th= link_to 'X', channel_path(@account, channel), :confirm => "This will delete this channel, are you sure?", :method => :delete 
       - channel.campaigns.each do |campaign|
         = render :partial => 'accounts/channel_campaign', :locals => {:campaign => campaign, :channel => channel}
 
     - @basic_channels.each do |channel|
       %thead
         %tr
-          %th= link_to channel.name, channel_path(@account, channel)
+          %th
+            = link_to channel.name, channel_path(@account, channel)
+            .right= link_to 'Edit', edit_channel_path(@account, channel)
           %th 5 leads
           %th.cpl $2.50 cost per lead
-          %th= link_to 'Edit', edit_channel_path(@account, channel)
-          %th= link_to('X', channel_path(@account, channel), :confirm => "This will delete this channel, are you sure?", :method => :delete) 
       - channel.campaigns.each do |campaign|
         = render :partial => 'accounts/channel_campaign', :locals => {:campaign => campaign, :channel => channel}
       

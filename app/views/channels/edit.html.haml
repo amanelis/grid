@@ -5,3 +5,6 @@
   %br
   %br
   = f.submit "Update"
+  
+= link_to 'X', channel_path(@account, channel), :confirm => "This will delete this channel, are you sure?", :method => :delete
+  
