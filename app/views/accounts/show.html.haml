@@ -1,6 +1,6 @@
 :javascript
   $(document).ready(function(){
-    $('.channels tr td.right').hide();
+    $('.channels tr').find('.right').hide();
     $(".channels tr").mouseenter(function(){
       $(this).find(".right").show();
     }).mouseleave(function(){
