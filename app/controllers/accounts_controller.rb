@@ -17,11 +17,11 @@ class AccountsController < ApplicationController
   end
   
   def new
-    new!
+    render :layout => false
   end
   
   def edit
-    edit!
+    render :layout => false
   end
   
   def create

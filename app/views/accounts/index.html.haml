@@ -1,6 +1,7 @@
 %header
   - if @current_user.admin? || @current_user.group_user?
     %ul.right.strong
+      %li= link_to "Create Account", new_account_path, :rel => "facebox"
       %li
         %a{:onclick => "confirm_refresh_accounts();"}
           Refresh

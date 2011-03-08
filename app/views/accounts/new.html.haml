@@ -1,73 +1,60 @@
 %header
-  %h2 Create Account
+  %h1 Create Account
 %article
-  .span-12
-    %h3 Account Information
-    %label Name
-    %br
-    %input{:type => "text", :placeholder => "CityVoice", :name => "name", :id => "name", :class => "title"}
-    %br
-    %label Budget
-    %br
-    %input{:type => "text", :placeholder => "One Million Dollars", :name => "name", :id => "name", :class => "title"}
-    %br
-    %label Billing Date
-    %br
-    %input{:type => "text", :placeholder => "Jan 1, 2011", :id => "datepicker", :class => "title"}
-    %br
-    %label Industry
-    %br
-    %select
-      %option Plumbing
-      %option HVAC
-      %option Other
-    %br
-    %label Type
-    %br
-    %select
-      %option SEO
-      %option SEM
-      %option Other
-    %br
-    %label Status
-    %br
-    %select
-      %option Active
-      %option Inactive
-      %option Paused
-    %br
-    %label Assign Account Manager
-    %br
-    %select
-      %option Shelton
-      %option Shaunay
-      %option - None -
-  .span-11.last
-    %h3 Contact Info
-    %label Address
-    %br
-    %input{:type => "text", :placeholder => "112 DeZevala, San Antonio, TX 78249", :class => "title"}
-    %br
-    %label Phone
-    %br
-    %input{:type => "text", :placeholder => "(832) 477 8662", :class => "title"}
-  %hr
-  %h3 Create User
-  %p.quiet This user will an admin*
+  %h3 Account Information
   %label Name
   %br
-  %input{:type => "text", :placeholder => "Shaunay", :name => "name", :id => "name", :class => "title"}
+  %input{:type => "text", :placeholder => "CityVoice", :name => "name", :id => "name", :class => "title"}
   %br
-  %label Email
+  %label Budget
   %br
-  %input{:type => "text", :placeholder => "support@cityvoice.com", :class => "title"}
+  %input{:type => "text", :placeholder => "One Million Dollars", :name => "name", :id => "name", :class => "title"}
   %br
-  %label Password
+  %label Billing Date
   %br
-  %input{:type => "password", :class => "title"}
+  %input{:type => "text", :placeholder => "Jan 1, 2011", :id => "datepicker", :class => "title"}
   %br
-  = link_to "Create Account", "#", :class => "button"
-
+  %label Industry
+  %br
+  %select
+    %option Plumbing
+    %option HVAC
+    %option Other
+  %br
+  %label Type
+  %br
+  %select
+    %option SEO
+    %option SEM
+    %option Other
+  %br
+  %label Status
+  %br
+  %select
+    %option Active
+    %option Inactive
+    %option Paused
+  %br
+  %label Assign Account Manager
+  %br
+  %select
+    %option Shelton
+    %option Shaunay
+    %option - None -
+  %hr
+  %h3 Contact Info
+  %label Address
+  %br
+  %input{:type => "text", :placeholder => "112 DeZevala, San Antonio, TX 78249", :class => "title"}
+  %br
+  %label Phone
+  %br
+  %input{:type => "text", :placeholder => "(832) 477 8662", :class => "title"}
+%footer
+  #submit
+    = link_to "Cancel", "#", :class => "cancel", :onclick => "$.facebox.close();"
+    = link_to "Create Account", "#", :class => "button"
+  %hr.space
 :javascript 
   	$(function() {
   		$( "#datepicker" ).datepicker();

@@ -12,6 +12,7 @@
     });
   });
 %header
+  .right= link_to "Edit", edit_account_path, :rel => "facebox"
   %h1= @account.name
 %article
   - @seo_channels.each do |channel|
