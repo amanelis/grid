@@ -21,6 +21,8 @@ class CampaignsController < ApplicationController
       bc.name    = params[:campaign][:name]
       bc.save
       bc.campaign.save
+      
+      # Uncomment to provision phone numbers **************************
       #number = bc.campaign.create_twilio_number(params[:campaign][:area_code], params[:campaign][:name], params[:campaign][:forward_to])
       form = bc.campaign.create_contact_form('', params[:campaign][:forwarding_email])
       flash[:notice] = "Good job, you just created a campaign!"

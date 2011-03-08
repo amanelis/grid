@@ -1,4 +1,15 @@
-= @campaign.name
+%h2= @account.name
+%h4= @campaign.name
 
-  
-  
+%h4 Your phone numbers:
+%p
+  - @campaign.phone_numbers.each do |number|
+    = "Your inbound Twilio number is: #{number.inboundno}, Forwarded to: #{number.forward_to}"
+    %br
+
+%br
+%br
+%h4 Your contact forms:
+%p
+  - @campaign.contact_forms.each do |form|
+    = "Your contact form ID is: #{form.id}"

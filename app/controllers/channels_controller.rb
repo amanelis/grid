@@ -37,7 +37,7 @@ class ChannelsController < ApplicationController
       @channel.set_type_seo
     elsif params[:channel][:channel_type].include?("sem")
       @channel.set_type_sem
-    elsif params[:channel][:channel_type].include?("basic")
+    elsif params[:channel][:channel_type].include?("basic") || params[:channel][:channel_type].blank?
       @channel.set_type_basic
     end
     @channel.save
