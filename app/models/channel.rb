@@ -12,47 +12,7 @@ class Channel < ActiveRecord::Base
   CHANNEL_TYPES = [SEO, SEM, BASIC]
   CHANNEL_TYPE_OPTIONS = [['SEO Channel', SEO], ['SEM Channel', SEM], ['Basic Channel', BASIC]].to_ordered_hash
   
-  DEFAULT_SEO_CHANNEL_NAME = "Website"
-  DEFAULT_SEM_CHANNEL_NAME = "Adwords"
-  DEFAULT_BASIC_CHANNEL_NAME = "Basic"
-  
   validates_inclusion_of :channel_type, :in => CHANNEL_TYPES
-  
-  
-  # CLASS BEHAVIOR
-  
-  def self.build_default_seo_channel_for(account)
-    existing_channel = account.channels.detect { |channel| channel.name == DEFAULT_SEO_CHANNEL_NAME }
-    return existing_channel if existing_channel.present?
-    new_channel = self.new
-    new_channel.account = account
-    new_channel.name = DEFAULT_SEO_CHANNEL_NAME
-    new_channel.set_type_seo
-    new_channel.save!
-    new_channel
-  end
-    
-  def self.build_default_sem_channel_for(account)
-    existing_channel = account.channels.detect { |channel| channel.name == DEFAULT_SEM_CHANNEL_NAME }
-    return existing_channel if existing_channel.present?
-    new_channel = self.new
-    new_channel.account = account
-    new_channel.name = DEFAULT_SEM_CHANNEL_NAME
-    new_channel.set_type_sem
-    new_channel.save!
-    new_channel
-  end
-    
-  def self.build_default_basic_channel_for(account)
-    existing_channel = account.channels.detect { |channel| channel.name == DEFAULT_BASIC_CHANNEL_NAME }
-    return existing_channel if existing_channel.present?
-    new_channel = self.new
-    new_channel.account = account
-    new_channel.name = DEFAULT_BASIC_CHANNEL_NAME
-    new_channel.set_type_basic
-    new_channel.save!
-    new_channel
-  end
   
   
   # INSTANCE BEHAVIOR
