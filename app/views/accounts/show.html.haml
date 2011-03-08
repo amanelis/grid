@@ -1,14 +1,14 @@
 :javascript
   $(document).ready(function(){
     // initially hide all of the edits
-    $('.channels tr').find('.right').hide();
+    $('.channels tr span.edit').hide();
     // Mouseover chained with a mouseleave
     $(".channels tr").mouseenter(function(){
       // when entering show
-      $(this).find(".right").show();
+      $(this).find("span.edit").show();
     }).mouseleave(function(){
       // when leaving hide
-      $(this).find('.right').hide();
+      $(this).find('span.edit').hide();
     });
   });
 %header
@@ -42,7 +42,7 @@
         %tr
           %th
             = link_to channel.name, channel_path(@account, channel)
-            .right= link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
+            %span.edit= link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
             %th= channel.number_of_total_leads_between(@start_date, @end_date)
             %th.cpl
               = ActionController::Base.helpers.number_to_currency(channel.weighted_cost_per_lead_between(@start_date, @end_date))
