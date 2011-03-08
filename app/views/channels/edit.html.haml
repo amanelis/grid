@@ -1,6 +1,7 @@
 - form_for @channel, :url => channel_path, :method => "put" do |f|
   %header
-    %h1 "Channel Name"
+    %h1
+      = "Edit #{@channel.name}"
   %article
     = f.label "Name"
     %br
