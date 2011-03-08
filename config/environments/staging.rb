@@ -41,8 +41,6 @@ ActionMailer::Base.smtp_settings = {
   :password => 'c1tyvo1ce'
 }
 
-=begin
 config.after_initialize do
   ExceptionNotification::Notifier.email_prefix = "[STAGING] "
 end
-=end
