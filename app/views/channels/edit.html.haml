@@ -1,10 +1,15 @@
 - form_for @channel, :url => channel_path, :method => "put" do |f|
-  = f.label "Channel Name"
-  %br
-  = f.text_field :name
-  %br
-  %br
-  = f.submit "Update"
-  
-= link_to 'X', channel_path(@account, channel), :confirm => "This will delete this channel, are you sure?", :method => :delete
+  %header
+    %h1 "Channel Name"
+  %article
+    = f.label "Name"
+    %br
+    = f.text_field :name
+    %br
+    = link_to 'X', channel_path(@account, channel), :confirm => "This will delete this channel, are you sure?", :method => :delete
+  %footer
+    #submit
+      = link_to "Cancel", "#", :class => "cancel", :onclick => "$.facebox.close();"
+      = f.submit "Update", :class => 'button'
+    %hr.space
   
