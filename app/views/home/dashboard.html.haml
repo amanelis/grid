@@ -17,9 +17,7 @@
   - if @user.admin?
     %header
       %h1 Dashboard
-    %article 
-      =high_chart("total_daily_leads", @total_daily_leads)
-      %hr
+    %article
       .stats
         %aside
           %p Total Accounts
@@ -30,6 +28,7 @@
         %aside
           %p Leads Today
           %h3#leads= @leads_count
+      =high_chart("total_daily_leads", @total_daily_leads)
 
   -elsif @user.group_user? 
     %header
