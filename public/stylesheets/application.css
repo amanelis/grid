@@ -323,6 +323,9 @@ header h2{
 	Tables
 	------------------
 */
+thead a{
+	color:#fff;
+}
 
 thead th {
 	background:#95A3B2;
@@ -535,7 +538,6 @@ form.inline p { margin-bottom:0; }
 	Channels
 	------------------
 */
-
 
 
 /*
