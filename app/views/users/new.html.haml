@@ -1,7 +1,7 @@
-%header
-  %h1 Register a New User
-%article
-  - form_for @user, :url => person_path do |f| 
+- form_for @user, :url => person_path do |f| 
+  %header
+    %h1 Register a New User
+  %article
     = f.label :email
     %br
     = f.text_field :email, :class => 'title'
@@ -13,12 +13,10 @@
     %label Confirm Password
     %br
     = f.password_field :password_confirmation, :class => 'title'
-    %br
-    = f.submit "Register", :class => 'button'
-%footer
-  #submit
-    = link_to "Cancel", "#", :class => "cancel"
-    = link_to "Submit", "#", :class => "button"
-  %hr.space
+  %footer
+    #submit
+      = link_to "Cancel", "#", :class => "cancel", :onclick => "$.facebox.close();"
+      = f.submit "Register", :class => 'button'
+    %hr.space
 
 
