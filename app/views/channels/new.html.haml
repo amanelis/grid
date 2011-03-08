@@ -6,9 +6,9 @@
     %br
     = f.text_field :name
     %br
-    = f.label "Type"
-    %br
-    = f.select(:channel_type, Channel::CHANNEL_TYPE_OPTIONS, :prompt => "- Choose Type -" )
+    =# f.label "Type"
+    -#%br
+    =# f.select(:channel_type, Channel::CHANNEL_TYPE_OPTIONS, :prompt => "- Choose Type -" )
   %footer
     #submit
       = link_to "Cancel", "#", :class => "cancel", :onclick => "$.facebox.close();"
