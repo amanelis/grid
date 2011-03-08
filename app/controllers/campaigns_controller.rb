@@ -57,7 +57,6 @@ class CampaignsController < ApplicationController
   def edit
     render :layout => false
     authorize! :manipulate_campaign, @campaign
-    edit!
   end
   
   def update
