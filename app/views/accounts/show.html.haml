@@ -36,4 +36,4 @@
       - channel.campaigns.each do |campaign|
         = render :partial => 'accounts/channel_campaign', :locals => {:campaign => campaign, :channel => channel}
       
-  = link_to "Create Channel", new_channel_path(@account), :class => "button"
+  = link_to "Create Channel", new_channel_path(@account), :class => "button", :rel => "facebox"

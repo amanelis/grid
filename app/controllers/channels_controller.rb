@@ -5,6 +5,7 @@ class ChannelsController < ApplicationController
   belongs_to :account
   
   def new
+    render :layout => false
     authorize! :manipulate_account, @account
   end
   

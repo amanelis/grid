@@ -338,6 +338,18 @@ tbody a{
 	color:#000;
 }
 
+th:first-child{
+	-webkit-border-radius: 4px 0 0 4px;
+	   -moz-border-radius: 4px 0 0 4px;
+	        border-radius: 4px 0 0 4px;
+}
+
+th:last-child{
+	-webkit-border-radius: 0 4px 4px 0;
+	   -moz-border-radius: 0 4px 4px 0;
+	        border-radius: 0 4px 4px 0;
+}
+
 /*
 	Stats
 	------------------
@@ -534,16 +546,7 @@ form.inline p { margin-bottom:0; }
 	border:1px solid black;
 }
 
-.channels th:first-child{
-	-webkit-border-radius: 4px 0 0 4px;
-	   -moz-border-radius: 4px 0 0 4px;
-	        border-radius: 4px 0 0 4px;
-}
-
 .channels th:last-child{
-	-webkit-border-radius: 0 4px 4px 0;
-	   -moz-border-radius: 0 4px 4px 0;
-	        border-radius: 0 4px 4px 0;
 	border-right:none;
 }
 

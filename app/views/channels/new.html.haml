@@ -1,10 +1,16 @@
-%h3 Create a new Channel
-
 - form_for @channel do |f|
-  = f.label "Name"
-  = f.text_field :name
-  %br
-  = f.label "Type"
-  = f.select(:channel_type, Channel::CHANNEL_TYPE_OPTIONS, :prompt => "- Choose Type -" )
-  %br
-  = f.submit "Create"
+  %header
+    %h1 Create a new Channel
+  %article
+    = f.label "Name"
+    %br
+    = f.text_field :name
+    %br
+    = f.label "Type"
+    %br
+    = f.select(:channel_type, Channel::CHANNEL_TYPE_OPTIONS, :prompt => "- Choose Type -" )
+  %footer
+    #submit
+      = link_to "Cancel", "#", :class => "cancel", :onclick => "$.facebox.close();"
+      = f.submit "Create", :class => 'button'
+    %hr.space
