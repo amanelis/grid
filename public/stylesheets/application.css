@@ -87,6 +87,15 @@
 	font-size:.9em;
 }
 
+#facebox footer #submit{
+	float:right;
+}
+
+#facebox .cancel{
+	color: #fff;
+	margin-right:12px;
+}
+
 #facebox footer hr{
 	margin-bottom:0;
 }
