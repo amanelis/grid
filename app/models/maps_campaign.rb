@@ -188,4 +188,12 @@ class MapsCampaign < ActiveRecord::Base
     end
     return search_url
   end
+  
+  
+  # PREDICATES
+  
+  def proper_channel?
+    true
+  end
+  
 end
