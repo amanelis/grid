@@ -1,22 +1,22 @@
 class Account < ActiveRecord::Base
   belongs_to :group_account
-	belongs_to :reseller, :class_name => "Account", :foreign_key => "reseller_id"
-	has_many :channels, :dependent => :destroy
+  belongs_to :reseller, :class_name => "Account", :foreign_key => "reseller_id"
+  has_many :channels, :dependent => :destroy
   has_many :campaigns, :dependent => :destroy
   has_many :websites, :through => :campaigns
-	has_many :clients, :class_name => "Account", :foreign_key => "reseller_id"
+  has_many :clients, :class_name => "Account", :foreign_key => "reseller_id"
   has_one :adwords_client, :dependent => :destroy
-  
+
   has_many :seo_campaigns, :through => :campaigns, :source => :campaign_style, :source_type => 'SeoCampaign'
   has_many :sem_campaigns, :through => :campaigns, :source => :campaign_style, :source_type => 'SemCampaign'
   has_many :basic_campaigns, :through => :campaigns, :source => :campaign_style, :source_type => 'BasicCampaign'
-  
+
   has_many :phone_numbers, :through => :campaigns do
     def calls
       @calls ||= Call.find_all_by_phone_number_id(self.collect(&:id))
     end
   end
-	
+
   has_many :contact_forms, :through => :campaigns do
     def submissions
       @submissions ||= Submission.find_all_by_contact_form_id(self.collect(&:id))
@@ -25,24 +25,24 @@ class Account < ActiveRecord::Base
 
   belongs_to :account_manager, :class_name => "GroupUser", :foreign_key => "account_manager_id"
   has_many :account_users
-  
+
   named_scope :active, :conditions => ['LCASE(status) = ?', "active"], :order => "name ASC"
   named_scope :inactive, :conditions => ['LCASE(status) = ?', "inactive"], :order => "name ASC"
   named_scope :reseller, :conditions => ['LCASE(account_type) LIKE ?', "%reseller%"]
 
   attr_accessor :account_status
-  
+
   validates_presence_of :name
   validates_uniqueness_of :name, :case_sensitive => false, :scope => "group_account_id"
 
-  
+
   # CLASS BEHAVIOR
 
   def self.combined_timeline_data
     raw_data = Utilities.merge_and_sum_timeline_data(self.active.collect { |account| account.number_of_leads_by_date }, :leads)
     Utilities.massage_timeline(raw_data, [:leads])
   end
-  
+
   def self.get_accounts_data
     start_date = Rails.env.development? ? Date.yesterday - 1.day : Date.yesterday.beginning_of_month
     end_date = Date.yesterday
@@ -64,11 +64,11 @@ class Account < ActiveRecord::Base
   def self.account_statuses
     Account.all.collect(&:status).compact.uniq
   end
-  
+
   def self.account_statuses_for(accounts)
     accounts.collect(&:status).compact.uniq
   end
-  
+
   def self.account_types
     Account.all.collect(&:account_type).compact.join(';').split(';').uniq.sort
   end
@@ -80,7 +80,7 @@ class Account < ActiveRecord::Base
   def self.get_accounts_by_status_and_account_type(status, account_type)
     Account.find(:all, :conditions => ['status = ? AND account_type LIKE ?', status, ('%' + account_type + '%')]).sort { |a,b| a.name.downcase <=> b.name.downcase }
   end
-  
+
   def self.send_weekly_reports
     job_status = JobStatus.create(:name => "Account.send_weekly_reports")
     exception = self.send_weekly_reports_to(self.accounts_receiving_weekly_reports)
@@ -96,30 +96,30 @@ class Account < ActiveRecord::Base
   def self.accounts_receiving_weekly_reports
     self.active.to_a.select { |account| account.receive_weekly_report? && account.valid_reporting_emails.present? }
   end
-  
+
   def self.get_twilio_subaccounts
     JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts.json?", 'GET').body)['accounts']
   end
-  
+
   def self.get_active_twilio_subaccounts
     JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts.json?Status=active", 'GET').body)['accounts']
   end
-  
+
   def self.get_suspended_subaccounts
     JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts.json?Status=suspended", 'GET').body)['accounts']
   end
-  
+
   def self.get_closed_subaccounts
     JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts.json?Status=closed", 'GET').body)['accounts']
   end
-  
+
   def self.get_all_twilio_numbers
     JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/IncomingPhoneNumbers.json?", 'GET').body)['incoming_phone_numbers']
   end
-  
-    
+
+
   # INSTANCE BEHAVIOR
-  
+
   def send_weekly_report(date = Date.today, previous = self.weekly_report_mtd? ? 0 : 6)
     return if valid_reporting_emails.blank?
     return unless Rails.env.production?
@@ -130,7 +130,7 @@ class Account < ActiveRecord::Base
   def weekly_report_sent_this_week?
     self.last_weekly_report_sent.present? ? self.last_weekly_report_sent.beginning_of_week == DateTime.now.beginning_of_week : false
   end
-  
+
   def weekly_reporting_data(date = Date.today, previous = self.weekly_report_mtd? ? 0 : 6)
     end_date = date - 1.day
     start_date = (previous == 0 ? end_date.beginning_of_month : end_date - previous.days)
@@ -153,21 +153,21 @@ class Account < ActiveRecord::Base
     end
     data
   end
-  
+
   def valid_reporting_emails
     (self.reporting_emails || "").split(/, \s*/).select { |email_address| Utilities.is_valid_email_address?(email_address) }
   end
-  
+
   def send_weekly_report_now(date = Date.today, previous = self.weekly_report_mtd? ? 0 : 6)
     return unless self.can_send_weekly_report_now?
     Notifier.deliver_weekly_report(self, self.valid_reporting_emails, date, previous)
     self.update_attribute(:last_weekly_report_sent, DateTime.now)
   end
-  
+
   def can_send_weekly_report_now?
     self == Account.find_by_name("CityVoice")
   end
-  
+
   def send_test_weekly_report(email_list, date = Date.today, previous = 0)
     return if email_list.blank?
     Notifier.deliver_weekly_report(self, email_list, date, previous, [])
@@ -321,7 +321,7 @@ class Account < ActiveRecord::Base
   def total_revenue_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.active.to_a.sum { |campaign| campaign.total_revenue_between(start_date, end_date) }
   end
-  
+
   def number_of_total_leads_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.active.to_a.sum { |campaign| campaign.number_of_total_leads_between(start_date, end_date) }
   end
@@ -333,11 +333,11 @@ class Account < ActiveRecord::Base
   def total_revenue_for_managed_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.active.managed.to_a.sum { |campaign| campaign.total_revenue_between(start_date, end_date) }
   end
-  
+
   def total_revenue_for_unmanaged_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.active.unmanaged.to_a.sum { |campaign| campaign.total_revenue_between(start_date, end_date) }
   end
-  
+
   def number_of_total_leads_for_managed_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.active.managed.to_a.sum { |campaign| campaign.number_of_total_leads_between(start_date, end_date) }
   end
@@ -373,7 +373,7 @@ class Account < ActiveRecord::Base
   def cost_per_contact_between(start_date = Date.yesterday, end_date = Date.yesterday)
     (total_contacts = self.number_of_total_contacts_between(start_date, end_date)) > 0 ? self.spend_between(start_date, end_date) / total_contacts : 0.0
   end
-  
+
   def true_cost_per_lead_between(start_date = Date.yesterday, end_date = Date.yesterday)
     (total_leads = self.number_of_total_leads_between(start_date, end_date)) > 0 ? self.cost_between(start_date, end_date) / total_leads : 0.0
   end
@@ -385,11 +385,11 @@ class Account < ActiveRecord::Base
   def spend_for_managed_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.active.managed.to_a.sum { |campaign| campaign.spend_between(start_date, end_date) }
   end
-  
+
   def cost_for_managed_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.active.managed.to_a.sum { |campaign| campaign.spend_between(start_date, end_date) }
   end
-  
+
   def total_cost_per_lead_for_managed_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.active.managed.to_a.sum { |campaign| campaign.cost_per_lead_between(start_date, end_date) }
   end
@@ -401,7 +401,7 @@ class Account < ActiveRecord::Base
   def spend_for_unmanaged_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.active.unmanaged.to_a.sum { |campaign| campaign.spend_between(start_date, end_date) }
   end
-  
+
   def cost_for_unmanaged_campaigns_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.active.unmanaged.to_a.sum { |campaign| campaign.spend_between(start_date, end_date) }
   end
@@ -431,47 +431,80 @@ class Account < ActiveRecord::Base
   def number_of_other_calls_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.active.to_a.sum { |campaign| campaign.number_of_other_calls_between(start_date, end_date) }
   end
-  
+
   def create_twilio_subaccount
     resp = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts.json?", 'POST', {'FriendlyName' => self.name})
     raise unless resp.kind_of? Net::HTTPSuccess
     self.update_attribute!(:twilio_id, JSON.parse(resp.body)['sid'])
   end
-  
+
   def get_twilio_subaccount
     JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.twilio_id}.json?", 'GET').body)
   end
-  
+
   def get_twilio_subaccount_status
     JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.twilio_id}.json?", 'GET').body)['status']
   end
-  
+
   def get_subaccount_twilio_numbers
     JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.twilio_id}/IncomingPhoneNumbers.json?", 'GET').body)['incoming_phone_numbers']
   end
-  
+
   def suspend_twilio_subaccount
     raise unless Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.twilio_id}.json?", 'POST', {'Status' => 'suspended'}).kind_of? Net::HTTPSuccess
   end
-  
+
   def activate_twilio_subaccount
     raise unless Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.twilio_id}.json?", 'POST', {'Status' => 'active'}).kind_of? Net::HTTPSuccess
   end
-  
+
   def close_twilio_subaccount
     raise unless Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.twilio_id}.json?", 'POST', {'Status' => 'closed'}).kind_of? Net::HTTPSuccess
   end
-  
+
+  def create_basic_campaign(basic_channel, name)
+    new_campaign = BasicCampaign.new
+    new_campaign.account = self
+    new_campaign.name = name
+    new_campaign.status = 'Active'
+    new_campaign.basic_channel = BasicChannel.find_by_name_and_account_id(basic_channel, self.id)
+    new_campaign.save
+    new_campaign.campaign
+  end
+
+  def construct_and_load_default_channels!
+    [self.construct_and_load_default_seo_channel!, self.construct_and_load_default_sem_channel!, self.construct_and_load_default_basic_channel!]
+  end
+
+  def construct_and_load_default_seo_channel!
+    seo_channel = Channel.build_default_seo_channel_for(self)
+    self.seo_campaigns.each { |seo_campaign| seo_campaign.channel = seo_channel ; seo_campaign.save! }
+    seo_channel
+  end
+
+  def construct_and_load_default_sem_channel!
+    sem_channel = Channel.build_default_sem_channel_for(self)
+    self.sem_campaigns.each { |sem_campaign| sem_campaign.channel = sem_channel ; sem_campaign.save! }
+    sem_channel
+  end
+
+  def construct_and_load_default_basic_channel!
+    basic_channel = Channel.build_default_basic_channel_for(self)
+    self.basic_campaigns.each { |basic_campaign| basic_campaign.channel = basic_channel ; basic_campaign.save! }
+    basic_channel
+  end
+
+
   # PREDICATES
-  
+
   def active?
     self.status.downcase == "active"
   end
-  
+
   def account_type?(type)
     self.account_type.split(';').include?(type)
   end
-  
+
   def account_manager_complete?
     return false unless self.account_manager.present?
     return false unless self.account_manager.name.present?
@@ -479,12 +512,12 @@ class Account < ActiveRecord::Base
     return false unless self.account_manager.email.present?
     true
   end
-  
-  
+
+
   # PRIVATE BEHAVRIOR
-  
+
   private
-  
+
   def self.send_weekly_reports_to(accounts)
     exception = nil
     accounts.each do |account|
@@ -497,7 +530,7 @@ class Account < ActiveRecord::Base
     end
     exception
   end
-  
-  
-  
+
+
+
 end
