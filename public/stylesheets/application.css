@@ -7,42 +7,22 @@
   z-index: 100;
   text-align: left;
 }
-
-
-#facebox .popup{
-  position:relative;
-  border:3px solid rgba(0,0,0,0);
-  -webkit-border-radius:5px;
-  -moz-border-radius:5px;
-  border-radius:5px;
-  -webkit-box-shadow:0 0 18px rgba(0,0,0,0.4);
-  -moz-box-shadow:0 0 18px rgba(0,0,0,0.4);
-  box-shadow:0 0 18px rgba(0,0,0,0.4);
-}
-
 #facebox .content {
   display:table;
   width: 370px;
-  padding: 10px;
   background: #fff;
   -webkit-border-radius:4px;
   -moz-border-radius:4px;
   border-radius:4px;
 }
-
 #facebox .content > p:first-child{
   margin-top:0;
 }
 #facebox .content > p:last-child{
   margin-bottom:0;
 }
-
 #facebox .close{
-  position:absolute;
-  top:5px;
-  right:5px;
-  padding:2px;
-  background:#fff;
+  display:none;
 }
 #facebox .close img{
   opacity:0.3;
@@ -58,12 +38,10 @@
 #facebox .image {
   text-align: center;
 }
-
 #facebox img {
   border: 0;
   margin: 0;
 }
-
 #facebox_overlay {
   position: fixed;
   top: 0px;
@@ -71,14 +49,46 @@
   height:100%;
   width:100%;
 }
-
 .facebox_hide {
   z-index:-100;
 }
-
 .facebox_overlayBG {
   background-color: #000;
   z-index: 99;
+}
+
+#facebox header{
+	background:-webkit-gradient(linear,0% 100%,0% 0%,from(rgba(177,186,195,1)),to(rgba(239,240,244,1)));
+	background:-moz-linear-gradient(bottom,rgba(27,43,62,1),rgba(42,71,106,1));
+	-webkit-border-radius: 4px 4px 0 0;
+	   -moz-border-radius: 4px 4px 0 0;
+	        border-radius: 4px 4px 0 0;
+}
+
+#facebox footer{
+	background:-webkit-gradient(linear,0% 100%,0% 0%,from(rgba(27,43,62,1)),to(rgba(42,71,106,1)));
+	background:-moz-linear-gradient(bottom,rgba(27,43,62,1),rgba(42,71,106,1));
+	-webkit-border-radius: 0 0 4px 4px;
+	   -moz-border-radius: 0 0 4px 4px;
+	        border-radius: 0 0 4px 4px;
+}
+
+#facebox header, #facebox article, #facebox footer{
+	padding:12px;
+}
+
+#facebox header h1{
+	font-size:18px;
+	margin-bottom:0;
+}
+
+#facebox footer .button{
+	margin:0;
+	font-size:.9em;
+}
+
+#facebox footer hr{
+	margin-bottom:0;
 }
 
 /*
@@ -252,7 +262,6 @@ font-family: "Lucida Grande", "Helvetica Nueue", helvetica, sans-serif;
 */
 
 header h1{
-	color:#2C4865;
 	font-size:24px;
 	font-weight:bold;
 }
@@ -265,10 +274,6 @@ header h2{
 #yield header{
 	border-bottom:1px solid #C7CCD1;
 	margin-bottom:12px;
-}
-
-header h1{
-	margin-bottom:0;
 }
 
 /*
@@ -527,6 +532,7 @@ form.inline p { margin-bottom:0; }
 .price{
 	color:#727272;
 }
+
 /*
 	Pagination
 	------------------
