@@ -10,8 +10,8 @@
 %header
   %h1= @account.name
 %article
-  %table.channels
-    - @seo_channels.each do |channel|
+  - @seo_channels.each do |channel|
+    %table.channels
       %thead
         %tr
           %th= channel.name
@@ -20,7 +20,8 @@
       - channel.campaigns.each do |campaign|
         = render :partial => 'accounts/channel_campaign', :locals => {:campaign => campaign, :channel => channel}
 
-    - @sem_channels.each do |channel|
+  - @sem_channels.each do |channel|
+    %table.channels
       %thead
         %tr
           %th= channel.name
@@ -29,7 +30,8 @@
       - channel.campaigns.each do |campaign|
         = render :partial => 'accounts/channel_campaign', :locals => {:campaign => campaign, :channel => channel}
 
-    - @basic_channels.each do |channel|
+  - @basic_channels.each do |channel|
+    %table.channels
       %thead
         %tr
           %th
