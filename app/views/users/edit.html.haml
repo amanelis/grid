@@ -1,29 +1,27 @@
 %header
-  %h2=@user.email
-  %h4.quiet Edit Account
+  %h1=@user.email
 %article
-  #details.span-11.append-1
-    - form_for (@user) do |f|
-      %h3 User Details
-      = f.label "Email"
-      %br
-      = f.text_field :email, :class => 'title'
-      %br
-      = f.label "Password"
-      %br
-      = f.password_field :password, :class => 'title'
-      %br
-      = f.label "Confirm Password"
-      %br
-      = f.password_field :password_confirmation, :class => 'title'
-      = f.hidden_field :id, :value => @user.id
-      %br
-      = f.submit "Save", :class => 'button'
-      %br
+  - form_for (@user) do |f|
+    %h2 Login Information
+    = f.label "Email"
+    %br
+    = f.text_field :email, :class => 'title'
+    %br
+    = f.label "Password"
+    %br
+    = f.password_field :password, :class => 'title'
+    %br
+    = f.label "Confirm Password"
+    %br
+    = f.password_field :password_confirmation, :class => 'title'
+    = f.hidden_field :id, :value => @user.id
+    %br
+    = f.submit "Save", :class => 'button'
 
-  #roles.span-11.last
-    %h3 Current Roles
-    %h4 
+  %h2 Roles
+  %h3.quiet
+    Currently:
+    %span
       -@user.roles.each do |role|
         -if role.role_type_type == "GroupUser"
           =role.role_type_type.to_s + ": " + role.role_type.group_account.name
@@ -31,19 +29,13 @@
           =role.role_type_type.to_s + ": " + role.role_type.account.name.to_s
         %br
       -if @user.admin?
-        ="Admin: manage all"
-      %br
-        
-      %h3 Role Type
-      -form_for(@user) do |f|
-        = f.radio_button :admin, 'Admin', :checked => (@user.admin? ? true : false)
-        %label Admin
-        %br
-        = f.radio_button :group_users, 'Group User', :checked => (@user.group_user? ? true : false)
-        %label Account Manager
-        %br
-        = f.radio_button :account_users, 'User', :checked => (@user.account_user? ? true : false)
-        %label User
-        %br
-      %br
-
+        ="Admin"
+  -form_for(@user) do |f|
+    = f.radio_button :admin, 'Admin', :checked => (@user.admin? ? true : false)
+    %label Admin
+    %br
+    = f.radio_button :group_users, 'Group User', :checked => (@user.group_user? ? true : false)
+    %label Account Manager
+    %br
+    = f.radio_button :account_users, 'User', :checked => (@user.account_user? ? true : false)
+    %label User
