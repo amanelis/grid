@@ -8,7 +8,6 @@ class CampaignsController < ApplicationController
   belongs_to :channel
   
   def new
-    render :layout => false
     authorize! :manipulate_account, @account
   end
   
