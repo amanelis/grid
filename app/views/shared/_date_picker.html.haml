@@ -60,3 +60,7 @@
     to
     = f.text_field :to, :name => "to", :id => "to", :autocomplete => "off", :value => "#{@end_date.to_s(:medium)}", :size => 15
     = f.submit "Change Dates"
+  %select{:id => "date_range_selector"}
+    %option{:val => "mtd"} Month to Date
+    %option{:val => "7"} Past 7 Days
+    %option{:val => "31"} Past 31 Days
