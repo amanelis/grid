@@ -13,7 +13,6 @@ class CampaignsController < ApplicationController
   
   def create
     authorize! :manipulate_account, @account
-    
     if @channel.channel_type == "basic"
       bc = BasicCampaign.new
       bc.account = @account
