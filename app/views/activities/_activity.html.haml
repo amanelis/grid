@@ -2,7 +2,8 @@
   %tr{"data-time" => "#{activity.timestamp.to_i}"}
     %td.type= image_tag ("icons/telephone.png")
     %td.campaign
-      %p= link_to activity.activity_type.phone_number.campaign.name, account_campaign_path(activity.activity_type.phone_number.campaign.account, activity.activity_type.phone_number.campaign)
+      %p=# link_to activity.activity_type.phone_number.campaign.name, channel_campaign_path(@account, @channel, @campaign, activity.activity_type.phone_number.campaign.account, activity.activity_type.phone_number.campaign)
+      %p= link_to activity.activity_type.phone_number.campaign.name, "#"
       %p= activity.activity_type.phone_number.campaign.account.name
     %td.caller
       %strong=number_to_phone(activity.activity_type.caller_number)
