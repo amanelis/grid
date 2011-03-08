@@ -45,6 +45,18 @@ class ContactForm < ActiveRecord::Base
       form_text
   end
   
+  def generate_js_snippet
+    form_text =   "<script type=\"text/javascript\">var host = document.write(unescape(\"%3Cscript src='http://localhost:3000/javascripts/form.js' type='text/javascript'%3E%3C/script%3E\"));</script>"
+    form_text +=  "<script type=\"text/javascript\">"
+    form_text +=  "var myform = new GridForm();"
+    form_text +=  "myform.initialize({"
+    form_text +=  "form_id: #{self.id}"
+    form_text +=  "});"
+    form_text +=  "myform.display();"
+    form_text +=  "</script>"
+    form_text
+  end
+  
   def get_form_snippet
     #<script type="text/javascript">var host = (("https:" == document.location.protocol) ? "https://secure." : "http://");document.write(unescape("%3Cscript src='" + host + "wufoo.com/scripts/embed/form.js' type='text/javascript'%3E%3C/script%3E"));</script>
 

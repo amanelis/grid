@@ -13,3 +13,5 @@
 %p
   - @campaign.contact_forms.each do |form|
     = "Your contact form ID is: #{form.id}"
+    %br
+    = text_area_tag 'form', form.generate_js_snippet
