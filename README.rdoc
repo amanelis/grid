@@ -3,10 +3,10 @@
 The main app can be found at http://grid.cityvoice.com as well as the staging environment http://staging.cityvoice.com
 
 == Installation
-To configure this app you must first run: 
+To configure this app you must first run:
   rake gems:install
-this will install all dependent gems for Grid so you can get going. Possible errors you will encounter are issues with two gems we have seen so far. The first Gem being daemons, you must be sure on your system that there is NO other version of daemons installed except for the version we have specified in the config/environment.rb for that gem. Be sure to: 
-  rake db:create 
+this will install all dependent gems for Grid so you can get going. Possible errors you will encounter are issues with two gems we have seen so far. The first Gem being daemons, you must be sure on your system that there is NO other version of daemons installed except for the version we have specified in the config/environment.rb for that gem. Be sure to:
+  rake db:create
   rake db:migrate
 to setup your database and migrations. If your migrations fail try switching to SQLite3 or standard database debugging or adding RAILS_ENV=development onto your migration string (I have seen very few cases when app defaults to production or test, but it can happen and appending the RAILS_ENV to migration string usually works).
 
@@ -17,3 +17,13 @@ This takes a very long time so be patient grab a cup of tea. If this fails (whic
 
 == Administrator
 From this point you should be able to create an account with no problem. In order to be an admin, you need to change the admin field in the database from 0 to 1 to enable admin access on your localhost. From here you can login after changing the value and pull some account data.
+Incase you are lazy, and need an admin account right away and a user account just run the following:
+  rake db:seed
+The accounts created are:
+  -------------------------------
+  username: admin@cityvoice.com
+  password: admin
+  -------------------------------
+  username: user@cityvoice.com
+  password: user
+  -------------------------------
