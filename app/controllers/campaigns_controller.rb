@@ -20,33 +20,15 @@ class CampaignsController < ApplicationController
       bc.name    = params[:campaign][:name]
       bc.save
       bc.campaign.save
-      
-      # Uncomment to provision phone numbers **************************
       number = bc.campaign.create_twilio_number(params[:campaign][:area_code], params[:campaign][:name], params[:campaign][:forward_to])
       form = bc.campaign.create_contact_form('', params[:campaign][:forwarding_email])
       flash[:notice] = "Good job, you just created a campaign!"
       redirect_to channel_campaign_path(@account, @channel, @account.campaigns.last, :form => form)
     elsif @channel.channel_type == "sem"
-
+      # Creating a SEM 
     elsif @channel.channel_type == "seo"
-      
+      # Creating a SEO
     end
-=begin
-    # flash[:error] = "You must select a campaign type" if params[:flavor] == 'Select...'
-    # flash[:error] = "You must select an Industry" if params[:industry] == 'Select...'
-    # flash[:error] = "Sorry, but there are no available numbers for the #{params[:area_code]} area code" if PhoneNumber.available_numbers(params[:area_code]).blank?
-    # redirect_to request.referer if flash[:error].present?
-    if @account.present?
-      if @account.campaigns.find_by_name(params[:name]).present?
-        flash[:error] = "Sorry, but a campaign with the name #{params[:name]} already exists on this account"
-        redirect_to request.referer
-      else
-        campaign = @account.create_basic_campaign(params[:basic_channel], params[:name], :industry = params[:industry], :params[:forwarding_number], :area_code = params[:area_code])
-        campaign.save
-        redirect_to account_campaign_path(@account.id, campaign.id, :phone_number => PhoneNumber.first)
-      end
-    end
-=end 
   end
 
   def show
@@ -63,26 +45,9 @@ class CampaignsController < ApplicationController
     @campaign.update_attributes(params[:campaign])
     flash[:notice] = "Alright, that CAMPAIGN was updated."
     redirect_to account_path(@account)
-=begin
-    update! do |success, failure|
-      success.html {
-        flash[:notice] = "Alright, that CAMPAIGN was updated."
-        redirect_to account_path(@account) 
-      }
-      failure.html {
-        flash.now[:error] = "Ooops, there was an error updating that CAMPAIGN, you might want to try again."
-        redirect_to account_path(@account) 
-      }
-    end
-    if params[:campaign][:adopting_phone_number].present?
-      @phone_number = PhoneNumber.find(params[:campaign][:adopting_phone_number])
-      @phone_number.update_attribute(:campaign_id, @campaign.id)
-    end
-    flash[:notice] = "Account Successfully updated!"
-    redirect_to account_campaign_path(@account, @campaign)
-=end
   end
   
+  # We want to change active status not destroy the actual campaign
   def destroy
     authorize! :manipulate_campaign, @campaign
     destroy! do |success, failure|
