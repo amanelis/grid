@@ -472,6 +472,28 @@ class Account < ActiveRecord::Base
     new_campaign.campaign
   end
   
+  def construct_and_load_default_channels!
+    [self.construct_and_load_default_seo_channel!, self.construct_and_load_default_sem_channel!, self.construct_and_load_default_basic_channel!]
+  end
+  
+  def construct_and_load_default_seo_channel!
+    seo_channel = Channel.build_default_seo_channel_for(self)
+    self.seo_campaigns.each { |seo_campaign| seo_campaign.channel = seo_channel ; seo_campaign.save! }
+    seo_channel
+  end
+  
+  def construct_and_load_default_sem_channel!
+    sem_channel = Channel.build_default_sem_channel_for(self)
+    self.sem_campaigns.each { |sem_campaign| sem_campaign.channel = sem_channel ; sem_campaign.save! }
+    sem_channel
+  end
+  
+  def construct_and_load_default_basic_channel!
+    basic_channel = Channel.build_default_basic_channel_for(self)
+    self.basic_campaigns.each { |basic_campaign| basic_campaign.channel = basic_channel ; basic_campaign.save! }
+    basic_channel
+  end
+  
   
   # PREDICATES
   
