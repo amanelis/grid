@@ -326,7 +326,9 @@ header h2{
 thead a{
 	color:#fff;
 }
-
+.edit{
+	float:right;
+}
 thead th {
 	background:#95A3B2;
 	background:-webkit-gradient(linear,0% 100%,0% 0%,from(rgba(25,25,25,1)),to(rgba(42,71,106,.6)));
