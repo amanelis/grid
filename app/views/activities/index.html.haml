@@ -23,23 +23,25 @@
     });
   });
 
-
-%header
-  .right.pagination= will_paginate(@activities)
-  %h1 Leads
-  %h2 All accounts
-%article
-  %table#activities.small
-    %thead
-      %tr
-        %th Type
-        %th Campaign
-        %th From
-        %th Content
-        %th Review
-        %th Time
-        -#%th Customer Lobby
-    %tbody
-      - for activity in @activities
-        = render activity, :locals => {:activity => activity}
-  .pagination= will_paginate(@activities)
+.span-12.colborder
+  %header
+    .right.pagination= will_paginate(@activities)
+    %h1 Leads
+  %article
+    %table#activities.small
+      %thead
+        %tr
+          %th Type
+          %th Campaign
+          %th From
+          %th Content
+          %th Review
+          %th Time
+          -#%th Customer Lobby
+      %tbody
+        - for activity in @activities
+          = render activity, :locals => {:activity => activity}
+    .pagination= will_paginate(@activities)
+.span-5.last
+  %header
+    %h1 Info
