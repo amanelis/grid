@@ -324,6 +324,20 @@ header h2{
 	------------------
 */
 
+thead th {
+	background:#95A3B2;
+	background:-webkit-gradient(linear,0% 100%,0% 0%,from(rgba(25,25,25,1)),to(rgba(42,71,106,.6)));
+	background:-moz-linear-gradient(bottom,rgba(27,43,62,.6),rgba(42,71,106,.6));
+	color:#fff;
+}
+tbody tr:nth-child(even) td, tbody tr.even td {background:#efefef;}
+tbody{
+	color:#888;
+}
+tbody a{
+	color:#000;
+}
+
 /*
 	Stats
 	------------------
