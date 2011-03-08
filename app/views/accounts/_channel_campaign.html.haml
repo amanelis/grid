@@ -1,6 +1,6 @@
 %tr
   %td
-    .right= link_to 'Edit', edit_channel_campaign_path(@account, channel, campaign)
+    .right= link_to 'Edit', edit_channel_campaign_path(@account, channel, campaign), :rel => "facebox"
     = link_to campaign.name, channel_campaign_path(@account, channel, campaign, :daterange => params[:daterange])
   %td #Number of total leads
   %td #Cost per lead between
