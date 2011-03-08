@@ -1,6 +1,6 @@
 %tr
-  %td= link_to campaign.name, channel_campaign_path(@account, channel, campaign, :daterange => params[:daterange])
+  %td
+    .right= link_to 'Edit', edit_channel_campaign_path(@account, channel, campaign)
+    = link_to campaign.name, channel_campaign_path(@account, channel, campaign, :daterange => params[:daterange])
   %td #Number of total leads
-  %td #Cost per lead betwen
-  %td= link_to 'Edit', edit_channel_campaign_path(@account, channel, campaign)
-  %td= link_to 'X', channel_campaign_path(@account, channel, campaign), :confirm => "This will delete this campaign, are you sure?", :method => :delete
+  %td #Cost per lead between
