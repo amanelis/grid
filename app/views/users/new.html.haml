@@ -1,5 +1,5 @@
 %header
-  %h3 Register a New User
+  %h1 Register a New User
 %article
   - form_for @user, :url => person_path do |f| 
     = f.label :email
@@ -15,5 +15,8 @@
     = f.password_field :password_confirmation, :class => 'title'
     %br
     = f.submit "Register", :class => 'button'
+%footer
+  = link_to "Submit", "#", :class => "button right"
+  %hr.space
 
 
