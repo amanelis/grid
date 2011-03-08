@@ -1,9 +1,13 @@
 :javascript
   $(document).ready(function(){
+    // initially hide all of the edits
     $('.channels tr').find('.right').hide();
+    // Mouseover chained with a mouseleave
     $(".channels tr").mouseenter(function(){
+      // when entering show
       $(this).find(".right").show();
     }).mouseleave(function(){
+      // when leaving hide
       $(this).find('.right').hide();
     });
   });
