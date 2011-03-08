@@ -26,7 +26,7 @@
         %tr
           %th
             = link_to channel.name, channel_path(@account, channel)
-            .right= link_to 'Edit', edit_channel_path(@account, channel)
+            .right= link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
           %th 5 leads
           %th.cpl $2.50 cost per lead
       - channel.campaigns.each do |campaign|

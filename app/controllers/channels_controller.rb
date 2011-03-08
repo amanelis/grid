@@ -14,6 +14,7 @@ class ChannelsController < ApplicationController
   end
   
   def edit
+    render :layout => false
     authorize! :manipulate_account, @account
   end
   
