@@ -510,7 +510,7 @@ class Campaign < ActiveRecord::Base
     end
   end
   
-  def create_twilio_number(phone_number, name, forward_to, id_callers = true, record_calls = true, transcribe_calls = false, text_calls = false, call_url = "http://grid.cityvoice.com/phone_numbers/connect/", fallback_url = "http://grid.cityvoice.com/phone_numbers/connect/", status_url = "http://grid.cityvoice.com/phone_numbers/collect/", sms_url = "http://grid.cityvoice.com/phone_numbers/sms_collect/", fallback_sms_url = "http://grid.cityvoice.com/phone_numbers/sms_collect/")
+  def create_twilio_number(phone_number, name, forward_to, id_callers = true, record_calls = true, transcribe_calls = false, text_calls = false, call_url = "http://#{APP_CONFIG[:host]}/phone_numbers/connect/", fallback_url = "http://#{APP_CONFIG[:host]}/phone_numbers/connect/", status_url = "http://#{APP_CONFIG[:host]}/phone_numbers/collect/", sms_url = "http://#{APP_CONFIG[:host]}/phone_numbers/sms_collect/", fallback_sms_url = "http://#{APP_CONFIG[:host]}/phone_numbers/sms_collect/")
     job_status = JobStatus.create(:name => "Campaign.create_twilio_number")
     begin
       self.account.create_twilio_subaccount if self.account.twilio_id.blank?
@@ -562,7 +562,7 @@ class Campaign < ActiveRecord::Base
   
   def create_contact_form(description = '',  forwarding_email = '', forwarding_bcc_email = '', custom1_text = '', custom2_text = '', custom3_text = '', custom4_text = '', need_name = true, need_address = false, need_phone = true, need_email = true, work_category = false, work_description = true, date_requested = false, time_requested = false, other_information = false)
     form = self.contact_forms.build
-    form.return_url = 'http://grid.cityvoice.com/thank_you'
+    form.return_url = "http://#{APP_CONFIG[:host]}/thank_you"
     form.forwarding_email = forwarding_email
     form.forwarding_bcc_email = forwarding_bcc_email
     #form.custom1_text = custom1_text
@@ -580,7 +580,7 @@ class Campaign < ActiveRecord::Base
     #form.other_information = other_information
     form.save
     form.html_block = form.get_form_text
-    form.return_url = "http://grid.cityvoice.com/contact_forms/#{form.id}/thank_you"
+    form.return_url = "http://#{APP_CONFIG[:host]}/contact_forms/#{form.id}/thank_you"
     form.save
     form
   end
