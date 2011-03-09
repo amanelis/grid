@@ -48,7 +48,7 @@ class ContactForm < ActiveRecord::Base
   def generate_js_snippet
     form_text =   "<script type=\"text/javascript\">"
     form_text +=  "var host = document.write(unescape(\"%3Cscript src='http://#{APP_CONFIG[:host]}/javascripts/form.js' type='text/javascript'%3E%3C/script%3E\"));"
-    form_text +=  "</scirpt>"
+    form_text +=  "</script>"
     form_text +=  "<script type=\"text/javascript\">"
     form_text +=  "var myform = new GridForm();"
     form_text +=  "myform.initialize({"

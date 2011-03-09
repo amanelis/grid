@@ -46,7 +46,7 @@ class ChannelsController < ApplicationController
     end
 =end
     @channel.save
-    flash[:notice] = "Yay channel created!"
+    flash[:notice] = "Good job, your channel has been created!"
     redirect_to account_path(@account)
   end
   
