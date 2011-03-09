@@ -21,7 +21,7 @@ class CampaignsController < ApplicationController
       bc.save
       bc.campaign.status = "Active"
       bc.campaign.save
-      #number = bc.campaign.create_twilio_number(params[:campaign][:area_code], params[:campaign][:name], params[:campaign][:forward_to])
+      number = bc.campaign.create_twilio_number(params[:campaign][:area_code], params[:campaign][:name], params[:campaign][:forward_to])
       form = bc.campaign.create_contact_form('', params[:campaign][:forwarding_email])
       flash[:notice] = "Good job, you just created a campaign!"
       redirect_to channel_campaign_path(@account, @channel, @account.campaigns.last, :form => form)

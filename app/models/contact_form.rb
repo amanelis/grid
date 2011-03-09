@@ -27,7 +27,7 @@ class ContactForm < ActiveRecord::Base
   end
   
   def get_form_text
-      form_text = "<form action=\"http://grid.cityvoice.com/submission\" method=\"POST\" name=\"Form1\" onSubmit=\"return checkform()\"><input type=hidden id=\"contact_form_id\" name=\"submission[contact_form_id]\" value=\"#{self.id}\"> <input type=hidden name=\"submission[retURL]\" value=\"#{self.return_url}\"><table width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"2\">"
+      form_text = "<form action=\"http://#{APP_CONFIG[:host]}/submission\" method=\"POST\" name=\"Form1\" onSubmit=\"return checkform()\"><input type=hidden id=\"contact_form_id\" name=\"submission[contact_form_id]\" value=\"#{self.id}\"> <input type=hidden name=\"submission[retURL]\" value=\"#{self.return_url}\"><table width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"2\">"
       form_text += "<tr><td><input id=\"first_name\" name=\"submission[name]\" type=\"text\" value=\"Name:\" style=\"width:100%;\" onFocus=\"javascript:this.value=\'\'\" /></td></tr>" if self.need_name == true
       #form_text += "<tr><td><textarea id=\"home_address\" name=\"submission[home_address]\" onFocus=\"javascript:this.value=\'\'\" style=\"width:100%;\" >Address:</textarea></td></tr>" if self.need_address == true
       form_text += "<tr><td><input id=\"phone_number\" name=\"submission[phone_number]\" type=\"text\"  value=\"Phone #:\" style=\"width:100%;\" onFocus=\"javascript:this.value=\'\'\" /></td></tr>" if self.need_phone == true          
@@ -47,7 +47,9 @@ class ContactForm < ActiveRecord::Base
   
   def generate_js_snippet
     form_text =   "<script type=\"text/javascript\">"
-    form_text +=  "var host = document.write(unescape(\"%3Cscript src='http://localhost:3000/javascripts/form.js' type='text/javascript'%3E%3C/script%3E\"));"
+    form_text +=  "var host = document.write(unescape(\"%3Cscript src='http://#{APP_CONFIG[:host]}/javascripts/form.js' type='text/javascript'%3E%3C/script%3E\"));"
+    form_text +=  "</scirpt>"
+    form_text +=  "<script type=\"text/javascript\">"
     form_text +=  "var myform = new GridForm();"
     form_text +=  "myform.initialize({"
     form_text +=  "form_id: #{self.id}"
@@ -72,7 +74,7 @@ class ContactForm < ActiveRecord::Base
   end
   
   def get_iframe_code
-    return "<iframe src=\"http://localhost:3000/contact_forms/#{self.id}/get_html\" width=\"300\" height=\"375\"></iframe>"
+    return "<iframe src=\"http://#{APP_CONFIG[:host]}/contact_forms/#{self.id}/get_html\" width=\"300\" height=\"375\"></iframe>"
   end
   
   
