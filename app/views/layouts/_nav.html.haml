@@ -3,16 +3,11 @@
     - if @current_user
       - if @current_user.admin?
       
-        -# Dashboard
-        - if request.url.include?("dashboard")
-          %li.active
-            = image_tag("icons/dashboard.png")
-            = link_to "Dashboard", dashboard_url
-        - else 
-          %li
-            = image_tag("icons/dashboard.png")
-            = link_to "Dashboard", dashboard_url
-            
+        -# Dashboard 
+        %li
+          = image_tag("icons/dashboard.png")
+          = link_to "Dashboard", dashboard_url
+          
         -# Accounts
         - if request.url.include?("accounts")
           %li.active
