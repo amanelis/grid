@@ -6,7 +6,7 @@
     %br
     = f.text_field :name
     %br
-    = link_to 'Delete this Channel', channel_path(@account, @channel), :class=> "button", :confirm => "This will delete this channel, are you sure?", :method => :delete
+    = link_to 'Delete this Channel', channel_path(@account, @channel), :class=> "button", :confirm => "This will delete this channel, are you sure?", :method => :delete if @channel.campaigns.count == 0
   %footer
     #submit
       = link_to "Cancel", "#", :class => "cancel", :onclick => "$.facebox.close();"
