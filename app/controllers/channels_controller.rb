@@ -35,6 +35,8 @@ class ChannelsController < ApplicationController
     @channel = Channel.new
     @channel.account = @account
     @channel.name = params[:channel][:name]
+    @channel.set_type_basic
+=begin
     if params[:channel][:channel_type].include?("seo")
       @channel.set_type_seo
     elsif params[:channel][:channel_type].include?("sem")
@@ -42,6 +44,7 @@ class ChannelsController < ApplicationController
     elsif params[:channel][:channel_type].include?("basic") || params[:channel][:channel_type].blank?
       @channel.set_type_basic
     end
+=end
     @channel.save
     flash[:notice] = "Yay channel created!"
     redirect_to account_path(@account)
