@@ -23,6 +23,7 @@ class Keyword < ActiveRecord::Base
       end
     end
   end
+
   
   # CLASS BEHAVIOR
 
@@ -52,116 +53,8 @@ class Keyword < ActiveRecord::Base
     job_status.finish_with_no_errors
   end
 
-  def self.update_keyword_rankings
-    job_status = JobStatus.create(:name => "Keyword.update_keyword_rankings")
-    begin
-      Keyword.all.each { |keyword| keyword.fetch_keyword_rankings }
-    rescue Exception => ex
-      job_status.finish_with_errors(ex)
-      raise
-    end
-    job_status.finish_with_no_errors
-  end
-
 
   # INSTANCE BEHAVIOR
-
-  def fetch_keyword_rankings
-    freshness = KeywordRanking.find(:all, :conditions => ['created_at > ? && keyword_id = ?', 1.day.ago, self.id])
-    if freshness.empty?
-      google = 99999
-      bing = 99999
-      yahoo = 99999
-      relevancy = 0.0
-      cpc = 0.0
-
-      begin
-        nickname = self.seo_campaign.website.nickname
-        if nickname.present?
-          search_positions = get_new_search_positions(nickname)
-          google = search_positions["Google"] if search_positions["Google"].present?
-          bing = search_positions["Bing"] if search_positions["Bing"].present?
-          yahoo = search_positions["Yahoo"] if search_positions["Yahoo"].present?
-          relevancy = get_relevancy if get_relevancy.present?
-          cpc = get_cpc if get_cpc.present?
-        end
-      rescue
-        
-      end
-
-      self.keyword_rankings.create(:google => google, :bing => bing, :yahoo => yahoo, :cpc => cpc, :relevancy => relevancy)
-
-    end
-  end
-
-  def get_search_positions
-    # HACK: The rails belongs_to method seems to have a bug. self.url.url should give me the URL string, but it doesn't
-    #Changed to Use Account instead of URL@url_obj = URL.find url_id
-    begin
-      url = self.build_pear_url("keyword/getsearchposition", {"url" => self.seo_campaign.website.nickname, "query" => self.descriptor, "format" => "json"})
-      HTTParty.get(url)
-    rescue
-    end
-  end
-
-  def get_new_search_positions(nickname)
-    begin
-      google = 99999
-      bing = 99999
-      yahoo = 99999
-      #rankings with www.
-      url = 'http://perl.pearanalytics.com/v2/keyword/position?keyword=' + self.descriptor.gsub(' ', '+') + '&url=' + nickname.gsub('www.', '')
-      #rankings without www.
-      url2 = 'http://perl.pearanalytics.com/v2/keyword/position?keyword=' + self.descriptor.gsub(' ', '+') + '&url=' + nickname
-      response = HTTParty.get(url)
-      response2 = HTTParty.get(url)
-      results = JSON.parse(response)['result'].to_a + JSON.parse(response2)['result'].to_a
-      results.each do |result|
-        yahoo = result.second["Yahoo"].to_i if result.second["Yahoo"].present? && result.second["Yahoo"].to_i > 0 && result.second["Yahoo"].to_i < yahoo
-        google = result.second["Google"].to_i if result.second["Google"].present? && result.second["Google"].to_i > 0 && result.second["Google"].to_i < google
-        bing = result.second["Bing"].to_i if result.second["Bing"].present? && result.second["Bing"].to_i > 0 && result.second["Bing"].to_i < bing    
-      end
-      
-      rankings = {"Google" => google, "Bing" => bing, "Yahoo" => yahoo}
-    rescue
-      puts "Error in Keyword.get_new_search_positions"
-    end
-  end
-  
-  def get_relevancy
-    # HACK: The rails belongs_to method seems to have a bug. self.url.url should give me the URL string, but it doesn't
-    begin
-      url = self.build_pear_url("keyword/getrelevancy", {"url" => self.seo_campaign.website.nickname, "keyword" => self.descriptor, "format" => "json"})
-      response = HTTParty.get(url)
-      response["relevancy"].to_f
-    rescue
-    end
-  end
-
-  def get_cpc
-    # HACK: The rails belongs_to method seems to have a bug. self.url.url should give me the URL string, but it doesn't
-    begin
-      url = self.build_pear_url("keyword/getcpc", {"keyword" => self.descriptor, "format" => "json"})
-      response = HTTParty.get(url)
-      response["cpc"].to_f
-    rescue
-    end
-  end
-
-  def build_pear_url(uri, parameters, api_key = "819f9b322610b816c898899ddad715a2e76fc3c5", api_secret = "2c312c9626b79d2fa47321753a18a2672e4d58aa")
-    parameters["signature"] = calculate_pear_signature(uri, parameters, api_secret)
-    parameters["api_key"] = api_key
-    pieces = []
-    parameters.each { |key, value| pieces << CGI.escape(key) + '=' + CGI.escape(value) }
-    "http://juice.pearanalytics.com/api.php/" + uri + '?' + pieces.join('&')
-  end
-
-  def calculate_pear_signature(uri, parameters, api_secret)
-    parameters = parameters.sort()
-    signature = uri.to_s() + ':' + api_secret.to_s() + '%'
-    parameters.each { |key, value| signature += key.to_s() + '=' + value.to_s() + ';' }
-    Digest::SHA1.hexdigest(signature)
-  end
 
   def most_recent_google_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
     (ranking = self.most_recent_ranking_between(start_date, end_date).try(:google)).present? ? ranking : 0
