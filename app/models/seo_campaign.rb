@@ -89,6 +89,16 @@ class SeoCampaign < ActiveRecord::Base
 
   # INSTANCE BEHAVIOR
 
+  def add_ginza_keywords(keywords = "")
+    return unless self.campaign.website.present? && self.campaign.website.ginza_global_id.present?
+    keywords_not_yet_in_ginza = self.keywords.reject {|keyword| keyword.in_ginza?}
+    return unless keywords_not_yet_in_ginza.present?
+    keywords_not_yet_in_ginza.each do |keyword|
+      response = (HTTParty.get("https://app.ginzametrics.com/v1/sites/#{self.campaign.website.ginza_global_id}/add_keywords", :query => {:api_key => GINZA_KEY, :format => 'json', :keywords => keyword.descriptor})).to_a.first
+      keyword.update_attribute(:in_ginza, true) if response.include? "Keywords added"
+    end
+  end
+  
   def spend_between(start_date = Date.today - 1.month, end_date = Date.today)
     (budget = self.budget).present? ? budget * (end_date - start_date).to_i / 30.0 : 0.0
   end
@@ -262,60 +272,6 @@ class SeoCampaign < ActiveRecord::Base
     return keyword_table
   end
 
-  def seo_keyword_ranking_date(start_date = Date.today - 1.year, end_date = Date.today)
-    keywords = self.keywords
-    this_start_date = start_date.beginning_of_day
-    this_end_date = end_date.end_of_day
-    keywords.each do |keyword|
-      this_ranking = keyword.keyword_rankings.last(:conditions => ['created_at between ? AND ?', this_start_date, this_end_date])
-      if this_ranking.present?
-        ranking_date = this_ranking.create_at
-        return ranking_date
-      end
-    end
-  end
-  
-  def add_ginza_keywords(keywords = "")
-    website = self.campaign.website
-    if website.present? && self.campaign.website.ginza_global_id.present?
-      keywords = self.keywords.select {|keyword| !keyword.in_ginza?}
-      if keywords.present?
-        keyword_strings = Array.new
-        keyword_array = Array.new
-        updated_keywords = Array.new
-        keyword_string = ''
-        keywords.each do |keyword|
-          if keyword.descriptor.length > 700
-            puts "Keyword: #{keyword.id} is toooooo damn long!"
-            next
-          end
-          if [keyword_string, keyword.descriptor].join(",").length > 700
-            keyword_strings << keyword_string
-            keyword_array << updated_keywords
-            keyword_string = keyword.descriptor
-            updated_keywords.clear << keyword
-          else
-            keyword_string = [keyword_string, keyword.descriptor].join(",") if keyword_string.present?
-            keyword_string = keyword.descriptor if keyword_string.blank?
-            updated_keywords << keyword
-          end
-        end
-        keyword_strings << keyword_string if keyword_string.present?
-        keyword_array << updated_keywords if keyword_string.present?
-        
-        keyword_strings.each_index do |k_index|
-          response = (HTTParty.get("https://app.ginzametrics.com/v1/sites/#{self.campaign.website.ginza_global_id}/add_keywords", :query => {:api_key => GINZA_KEY, :format => 'json', :keywords => keyword_strings[k_index]})).to_a.first
-          if response.include? "Keywords added"
-            keyword_array[k_index].each do |updated_keyword|
-              puts "Keyword Added: #{updated_keyword.descriptor}"
-              updated_keyword.update_attribute(:in_ginza, true)
-            end
-          end
-        end
-      end
-    end
-  end
-  
   
   # PREDICATES
   
