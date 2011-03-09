@@ -51,6 +51,10 @@ class CampaignsController < ApplicationController
   # We want to change active status not destroy the actual campaign
   def destroy
     authorize! :manipulate_campaign, @campaign
+    @campaign.update_attributes!(:status => "Inactive")
+    flash.now[:error] = "Ooops, there was an error deleting that CAMPAIGN, you might want to try again."
+    redirect_to account_path(@account)
+=begin 
     destroy! do |success, failure|
       success.html {
         flash[:notice] = "Alright, that CAMPAIGN was deleted."
@@ -61,6 +65,7 @@ class CampaignsController < ApplicationController
         redirect_to account_path(@account) 
       }
     end
+=end
   end
   
   def lead_matrix
