@@ -13,8 +13,6 @@
   :name: haml
 - :version: = 0.4.0
   :name: i18n
-- :version: = 1.0.1
-  :name: formtastic
 - :version: = 2.3.14
   :source: http://gemcutter.org
   :name: will_paginate

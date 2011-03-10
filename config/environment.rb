@@ -29,7 +29,6 @@ Rails::Initializer.run do |config|
   config.gem 'adwords4r', :version => '19.1.0'
   config.gem 'haml', :version => '3.0.18'
   config.gem 'i18n', :version => '0.4.0'
-  config.gem 'formtastic', :version => '1.0.1'
   config.gem 'will_paginate', :version => '2.3.14', :source => 'http://gemcutter.org'
   config.gem 'sendgrid', :version => '0.1.4', :source => 'http://gemcutter.org'
   config.gem 'gchartrb', :version =>'0.8', :lib => 'google_chart', :source => 'http://gemcutter.org'
