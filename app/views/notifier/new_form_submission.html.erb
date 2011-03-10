@@ -2,7 +2,7 @@
 <head>
 
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>CityVoice - Weekly Report</title>
+	<title>CityVoice - Form Submission</title>
 	
 	<style type="text/css">
 		
@@ -98,12 +98,42 @@
 	
 			</td>
 			<td width="400" valign="middle" align="right" class="menu-or-slogan">
-			
-				<p>
-				  Weekly Report for 
-				  <br> - 
-				</p>  
-			
+			  
+			  <h3>You've received a new form!</h3>
+				<ul>
+				  <li>Name: <%= @submission.name %></li>
+				  <li>Email: <%= @submission.from_email %></li>
+				  <li>Phone: <%= @submission.phone_number %></li>
+				  <li>Work Description: <%= @submission.work_description %></li>
+				  <%- if @submission.home_address.present? %>
+				    <li>Home Address: <%= @submission.home_address %></li>
+				  <%- end %>
+				  <%- if @submission.work_category.present? %>
+				    <li>Work Category: <%= @submission.work_category %></li>
+				  <%- end %>
+  				<%- if @submission.date_requested.present?? %>
+  				  <li>Date Requested: <%= @submission.date_requested %></li>
+  				<%- end %>
+  				<%- if @submission.time_requested.present? %>
+  				  <li>Time Requested: <%= @submission.time_requested %></li>
+  				<%- end %>
+  				<%- if @submission.other_information.present? %>
+  				  <li>Other Information: <%= @submission.other_information %></li>
+  				<%- end %>
+  				<%- if @submission.custom1_value.present? %>
+  				  <li>Custom 1: <%= @submission.custom1_value %></li>
+  				<%- end %>
+  				<%- if @submission.custom2_value.present? %>
+  				  <li>Custom 2: <%= @submission.custom2_value %></li>
+  				<%- end %>
+  				<%- if @submission.custom3_value.present? %>
+  				  <li>Custom 3: <%= @submission.custom2_value %></li>
+  				<%- end %>
+  				<%- if @submission.custom4_value.present? %>
+  				  <li>Custom 4: <%= @submission.custom4_value %></li>
+  				<%- end %>
+			  </ul>
+			  
 			</td>	
 		</tr></table>
 		
