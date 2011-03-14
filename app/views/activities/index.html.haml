@@ -27,11 +27,16 @@
     $(".edit_activity").change(function() {
       this.submit();
     });
+    $("#activities tr").click(function(event){
+      setItem($(this).context.rowIndex);
+    });
   });
 
   function setItem(item) {
-    if(num < 1)
+    if(item < 1)
       current = 1;
+    else
+      current = item;
     updateItems();
   }
 
