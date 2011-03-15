@@ -21,18 +21,9 @@ class ContactForm < ActiveRecord::Base
     return true unless self.campaign.active?
     self.active? ? false : true
   end
-
-  def create_wufoo_form
-    wufoo = WuParty.new("cityvoice", "9FTI-TCG8-BSEE-RFUV") 
-  end
   
   def get_form_text
-      form_text = "<form action=\"http://#{APP_CONFIG[:host]}/submission\" method=\"POST\" name=\"Form1\" onSubmit=\"return checkform()\"><input type=hidden id=\"contact_form_id\" name=\"submission[contact_form_id]\" value=\"#{self.id}\"> <input type=hidden name=\"submission[retURL]\" value=\"#{self.return_url}\"><table width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"2\">"
-      form_text += "<tr><td><input id=\"first_name\" name=\"submission[name]\" type=\"text\" value=\"Name:\" style=\"width:100%;\" onFocus=\"javascript:this.value=\'\'\" /></td></tr>" if self.need_name == true
       #form_text += "<tr><td><textarea id=\"home_address\" name=\"submission[home_address]\" onFocus=\"javascript:this.value=\'\'\" style=\"width:100%;\" >Address:</textarea></td></tr>" if self.need_address == true
-      form_text += "<tr><td><input id=\"phone_number\" name=\"submission[phone_number]\" type=\"text\"  value=\"Phone #:\" style=\"width:100%;\" onFocus=\"javascript:this.value=\'\'\" /></td></tr>" if self.need_phone == true          
-      form_text += "<tr><td><input id=\"from_email\" name=\"submission[from_email]\" type=\"text\" value=\"Email:\" style=\"width:100%;\" onFocus=\"javascript:this.value=\'\'\" /></td></tr>" if self.need_email == true           
-      form_text += "<tr><td><textarea id=\"work_description\" name=\"submission[work_description]\" onFocus=\"javascript:this.value=\'\'\" style=\"width:100%;\" >Description of work:</textarea></td></tr>" if self.work_description == true   
       #form_text += "<tr><td><select id=\"work_category\" name=\"submission[work_category]\"><option value=\"\">Work Request</option><option value=\"Category 1\">Category 1</option><option value=\"Category 2\">Category 2</option><option value=\"Category 3\">Category 3</option></select></td></tr>" if self.work_category == true            
       #form_text += "<tr><td><input id=\"date_requested\" name=\"submission[date_requested]\" type=\"text\" value=\"Preferred Appointment Date:\"  style=\"width:100%;\" onFocus=\"javascript:this.value=\'\'\" /></td></tr>" if self.date_requested == true               
       #form_text += "<tr><td><select id=\"time_requested\" name=\"submission[time_requested]\"><option value=\"\">Preferred Appointment Time</option><option value=\"Any\">Any</option><option value=\"ASAP\">ASAP</option><option value=\"8 AM\">8 AM</option><option value=\"9 AM\">9 AM</option><option value=\"10 AM\">10 AM</option><option value=\"Other\">Other</option></select></td></tr>" if self.time_requested == true         
@@ -41,6 +32,11 @@ class ContactForm < ActiveRecord::Base
       #form_text += "<tr><td><input id=\"custom2_value\" name=\"submission[custom2_value]\" type=\"text\" value=\"#{self.custom2_text}:\"  style=\"width:100%;\" onFocus=\"javascript:this.value=\'\'\" /></td></tr>" if self.custom2_text.present?
       #form_text += "<tr><td><input id=\"custom3_value\" name=\"submission[custom3_value]\" type=\"text\" value=\"#{self.custom3_text}:\"  style=\"width:100%;\" onFocus=\"javascript:this.value=\'\'\" /></td></tr>" if self.custom3_text.present?
       #form_text += "<tr><td><input id=\"custom4_value\" name=\"submission[custom4_value]\" type=\"text\" value=\"#{self.custom4_text}:\"  style=\"width:100%;\" onFocus=\"javascript:this.value=\'\'\" /></td></tr>" if self.custom4_text.present?
+      form_text = "<form action=\"http://#{APP_CONFIG[:host]}/submission\" method=\"POST\" name=\"Form1\" onSubmit=\"return checkform()\"><input type=hidden id=\"contact_form_id\" name=\"submission[contact_form_id]\" value=\"#{self.id}\"> <input type=hidden name=\"submission[retURL]\" value=\"#{self.return_url}\"><table width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"2\">"
+      form_text += "<tr><td><input id=\"first_name\" name=\"submission[name]\" type=\"text\" value=\"Name:\" style=\"width:100%;\" onFocus=\"javascript:this.value=\'\'\" /></td></tr>" if self.need_name == true
+      form_text += "<tr><td><input id=\"phone_number\" name=\"submission[phone_number]\" type=\"text\"  value=\"Phone #:\" style=\"width:100%;\" onFocus=\"javascript:this.value=\'\'\" /></td></tr>" if self.need_phone == true          
+      form_text += "<tr><td><input id=\"from_email\" name=\"submission[from_email]\" type=\"text\" value=\"Email:\" style=\"width:100%;\" onFocus=\"javascript:this.value=\'\'\" /></td></tr>" if self.need_email == true           
+      form_text += "<tr><td><textarea id=\"work_description\" name=\"submission[work_description]\" onFocus=\"javascript:this.value=\'\'\" style=\"width:100%;\" >Description of work:</textarea></td></tr>" if self.work_description == true   
       form_text += "<tr><td align=\"right\"><input type=\"submit\" name=\"submit\" value=\"Submit Request\" onclick=\"return checkform()\"></td></tr></form>"
       form_text
   end
