@@ -5,16 +5,24 @@ module ActivityTypeMixin
       has_one :activity, :as => :activity_type, :dependent => :destroy
       delegate :review_status, :review_status=,:timestamp, :timestamp=, :duplicate, :duplicate?, :duplicate=, :to => :activity
       accepts_nested_attributes_for :activity
-
-      def initialize(attributes={})
-        super(attributes)
-        self.activity = Activity.new
-        self.activity.activity_type = self
-        self.initialize_specifics(attributes)
-        self
-      end
-
     end
   end
+  
+  # INITIALIZATION
+  
+  def after_initialize
+    return unless self.new_record?
+    self.activity ||= Activity.new
+    self.activity.activity_type ||= self
+    self.initialize_specifics(attributes)
+  end
+
+  # def initialize(attributes={})
+  #   super(attributes)
+  #   self.activity = Activity.new
+  #   self.activity.activity_type = self
+  #   self.initialize_specifics(attributes)
+  #   self
+  # end
 
 end
