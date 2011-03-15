@@ -4,7 +4,7 @@
 %h4 Your phone numbers:
 %p
   - @campaign.phone_numbers.each do |number|
-    = "Your inbound Twilio number is: #{number.inboundno}, Forwarded to: #{number.forward_to}"
+    = "Your inbound number is: #{number.inboundno}, Forwarded to: #{number.forward_to}"
     %br
 
 %br
