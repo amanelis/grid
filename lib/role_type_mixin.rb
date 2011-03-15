@@ -5,16 +5,22 @@ module RoleTypeMixin
       has_one :role, :as => :role_type, :dependent => :destroy
       delegate :user, :user=, :to => :role
       accepts_nested_attributes_for :role
-
-      def initialize(attributes={})
-        super(attributes)
-        self.role = Role.new
-        self.role.role_type = self
-        # self.initialize_specifics(attributes)
-        self
-      end
-
     end
   end
+  
+  # INITIALIZATION
+  
+  def after_initialize
+    return unless self.new_record?
+    self.role ||= Role.new
+    self.role.role_type ||= self
+  end
+
+  # def initialize(attributes={})
+  #   super(attributes)
+  #   self.role = Role.new
+  #   self.role.role_type = self
+  #   self
+  # end
 
 end

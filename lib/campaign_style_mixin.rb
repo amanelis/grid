@@ -8,12 +8,19 @@ module CampaignStyleMixin
     end
   end
 
-  def initialize(attributes={})
-    super(attributes)
-    self.campaign = Campaign.new
-    self.campaign.campaign_style = self
-    # self.initialize_specifics(attributes)
-    self
+  # INITIALIZATION
+  
+  def after_initialize
+    return unless self.new_record?
+    self.campaign ||= Campaign.new
+    self.campaign.campaign_style ||= self
   end
+
+  # def initialize(attributes={})
+  #   super(attributes)
+  #   self.campaign = Campaign.new
+  #   self.campaign.campaign_style = self
+  #   self
+  # end
 
 end
