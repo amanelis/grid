@@ -55,18 +55,6 @@ class CampaignsController < ApplicationController
     @campaign.update_attributes!(:status => "Inactive")
     flash.now[:error] = "Ooops, there was an error deleting that CAMPAIGN, you might want to try again."
     redirect_to account_path(@account)
-=begin 
-    destroy! do |success, failure|
-      success.html {
-        flash[:notice] = "Alright, that CAMPAIGN was deleted."
-        redirect_to account_path(@account) 
-      }
-      failure.html {
-        flash.now[:error] = "Ooops, there was an error deleting that CAMPAIGN, you might want to try again."
-        redirect_to account_path(@account) 
-      }
-    end
-=end
   end
   
   def lead_matrix
@@ -104,12 +92,6 @@ class CampaignsController < ApplicationController
       @form_text = @campaign.create_contact_form(params[:description], params[:return_url], params[:forwarding_email], params[:forwarding_bcc_email], params[:custom1_text], params[:custom2_text], params[:custom3_text], params[:custom4_text], params[:need_name], params[:need_address], params[:need_phone], params[:need_email], params[:work_category], params[:work_description], params[:date_requested], params[:time_requested], params[:other_information])
       @form = @campaign.contact_forms.last
     end
-  end
-  
-  def orphaned
-  end
-  
-  def new_campaign_contact_form
   end
   
 end
