@@ -35,6 +35,13 @@ class Account < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name, :case_sensitive => false, :scope => "group_account_id"
 
+  
+  # INITIALIZATION
+  
+  def after_initialize
+    self.time_zone ||= "Central Time (US & Canada)"
+  end
+
 
   # CLASS BEHAVIOR
 
@@ -537,7 +544,5 @@ class Account < ActiveRecord::Base
     end
     exception
   end
-
-
-
+  
 end

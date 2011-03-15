@@ -11,7 +11,7 @@ class UserSessionsController < ApplicationController
     if @user_session.save
       redirect_back_or_default dashboard_url
     else
-      flash[:error] = "Username/password was invalied."
+      flash[:error] = "Username/password was invalid."
       render :action => :new
     end
   end

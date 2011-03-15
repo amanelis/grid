@@ -335,7 +335,10 @@ thead th {
 	background:-moz-linear-gradient(bottom,rgba(27,43,62,.6),rgba(42,71,106,.6));
 	color:#fff;
 }
-tbody tr:nth-child(even) td, tbody tr.even td {background:#efefef;}
+tbody tr:nth-child(even), tbody tr.even {background:#efefef;}
+
+tbody tr.active { background:rgba(27,43,62,.6); color:#fff; }
+
 tbody{
 	color:#888;
 }
@@ -399,7 +402,7 @@ background:-webkit-gradient(linear,0% 0%,0% 100%,from(#BEBFC2),to(#E8E7E7));
 background:-moz-linear-gradient(top, #BEBFC2, #E8E7E7);
 cursor:pointer;
 }
-	
+
 a.button:active, a.button:focus,  input.button:active, input.button:focus, .button:active, .button:focus {
 background:-webkit-gradient(linear,0% 100%,0% 0%,from(rgba(255,255,255,1)),to(rgba(185,185,185,1)));
 background:-moz-linear-gradient(bottom,rgba(255,255,255,1),rgba(185,185,185,1));
@@ -464,7 +467,7 @@ input.checkbox, input.radio {
 form.inline { line-height:3; }
 form.inline p { margin-bottom:0; }
 
-/* 
+/*
 	PDF Generation Styling
 */
 @media print {
@@ -478,11 +481,11 @@ form.inline p { margin-bottom:0; }
     padding: 0;
     border: none;
   }
-  
+
   #line_items {
     page-break-before: always;
   }
-  
+
   #pdf_link {
     display: none;
   }

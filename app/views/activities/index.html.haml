@@ -1,4 +1,4 @@
-= javascript_include_tag 'jquery.flash.js'
+= javascript_include_tag 'jquery.mapkey.js'
 
 - if params[:q] == 'real'
   :javascript
@@ -17,11 +17,60 @@
     }
 
 :javascript
-  $(document).ready(function() {
+  var current = 0;
+  var current_id = 0;
+
+  $(document).ready(function(){
+    $.mapKey("down", nextItem, {direction: "down"});
+    $.mapKey("up", previousItem, {direction: "down"});
+
     $(".edit_activity").change(function() {
       this.submit();
     });
+    $("#activities tr").click(function(event){
+      setItem($(this).context.rowIndex);
+    });
   });
+
+  function setItem(item) {
+    if(item < 1)
+      current = 1;
+    else
+      current = item;
+    updateItems();
+  }
+
+  function nextItem() {
+    var end = $("#activities tr").length - 1;
+    if(current < end)
+      current++;
+    else
+      current = end;
+
+    updateItems();
+  }
+
+  function previousItem() {
+    if(current > 1)
+      current--;
+    else
+      current = 1;
+
+    updateItems();
+  }
+
+  function updateItems() {
+    // Find the rows with active and remove it
+    $("#activities tr.active").removeClass("active");
+    // add active to the row selected
+    $("#activities tr:eq(" + current + ")").addClass("active");
+    // grab the row selected
+    current_id = $("#activities tr:eq("+current+")").attr('id');
+    // parse the ID
+    current_id = current_id.match(/\d+/);
+    // load the sidebar content
+    $("#sidebar").html('<h3>Selected lead id='+ current_id + '</h3>');
+  }
 
 .span-12.colborder
   %header
@@ -45,3 +94,5 @@
 .span-5.last
   %header
     %h1 Info
+  %div#sidebar
+    %p To get started simply click on one of the leads!

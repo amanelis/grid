@@ -15,3 +15,146 @@
     = "Your contact form ID is: #{form.id}"
     %br
     = text_area_tag 'form', form.generate_js_snippet
+    
+    
+
+%article
+  %h3 Campaign Details
+  %table
+    %thead
+      %tr
+        %th Lead Calls
+        %th All Calls
+        %th Lead Forms
+        %th All Forms
+        %th Total Leads
+        %th Total Contacts
+        %th Spend
+        %th Cost Per Lead
+        %th Cost Per Contact
+    %tbody
+      %tr
+        %td= @campaign.number_of_lead_calls_between(@start_date, @end_date).to_s
+        %td= @campaign.number_of_all_calls_between(@start_date, @end_date).to_s
+        %td= @campaign.number_of_lead_submissions_between(@start_date, @end_date).to_s
+        %td= @campaign.number_of_all_submissions_between(@start_date, @end_date).to_s
+        %td= @campaign.number_of_total_leads_between(@start_date, @end_date).to_s
+        %td= @campaign.number_of_total_contacts_between(@start_date, @end_date).to_s
+        %td= ActionController::Base.helpers.number_to_currency(@campaign.spend_between(@start_date, @end_date))
+        %td= ActionController::Base.helpers.number_to_currency(@campaign.cost_per_lead_between(@start_date, @end_date))
+        %td= ActionController::Base.helpers.number_to_currency(@campaign.cost_per_contact_between(@start_date, @end_date))
+  -if @campaign.website.present?
+    %h3 Website Statistics
+    %table
+      %thead
+        %th Website
+        %th Visits
+        %th Actions
+        %th Bounces
+        %th Avg Actions per Visit
+        %th Total Time Spent
+        %th Avg Time Spent
+        %th Bounce Rate
+        %th Overall Conversion Rate
+        %th Unique Conversion Rate
+      %tbody
+        %tr
+          %td= link_to @campaign.website.nickname, website_path(@campaign.website) 
+          %td= @campaign.number_of_visits_between(@start_date, @end_date).to_s
+          %td= @campaign.number_of_actions_between(@start_date, @end_date).to_s
+          %td= @campaign.number_of_bounces_between(@start_date, @end_date).to_s
+          %td= '%.2f' % @campaign.number_of_average_actions_between(@start_date, @end_date).to_s
+          %td
+            - @total_time = @campaign.total_time_spent_between(@start_date, @end_date)
+            = [(@total_time/3600).to_s + 'h', (@total_time/60 % 60).to_s + 'm', (@total_time % 60).to_s + 's'].map{|t| t.to_s.rjust(2,'0')}.join(':')
+          %td
+            - @avg_time = @campaign.average_total_time_spent_between(@start_date, @end_date).to_i
+            = [(@avg_time/3600).to_s + 'h', (@avg_time/60 % 60).to_s + 'm', (@avg_time % 60).to_s + 's'].map{|t| t.to_s.rjust(2,'0')}.join(':')
+          %td= (sprintf("%.2f", (@campaign.bounce_rate_between(@start_date, @end_date) * 100)) + '%')
+          %td= (sprintf("%.2f", (@campaign.website.overall_conversion_rate_between(@start_date, @end_date) * 100)) + '%')
+          %td= (sprintf("%.2f", (@campaign.website.unique_conversion_rate_between(@start_date, @end_date) * 100)) + '%')
+  -else
+    %h4 There is no website for this campaign.
+
+  - if can? :update, @campaign
+    %h3 Phone Numbers On Campaign
+    %table
+      %thead
+        %tr
+          %th Name
+          %th Description
+          %th Number
+      %tbody
+        -if @phone_number.present?
+          %tr
+            %td= "Fake Number For Alex - Use @phone_number in your views!!!!!!"
+            %td= @phone_number.descript
+            %td= @phone_number.inboundno
+        -@campaign.phone_numbers.each do |number|
+          %tr
+            %td= number.name
+            %td= number.descript
+            %td= number.inboundno
+    -# form_for @campaign, :url => account_campaign_path(@account, @campaign) do |f| 
+      =# f.select(:adopting_phone_number, PhoneNumber.selectable_orphaned_phone_numbers, :include_blank => true)
+      =# f.submit(:update)
+
+
+  %h3 Form Submissions
+  -if @campaign.contact_forms.present?
+    %table
+      %thead
+        %tr
+          %th Name
+          %th Email
+          %th Phone Number
+          %th Submission Time
+          %th Date Requested
+          %th Time Requested
+          %th Work Description
+      %tbody
+        -@campaign.submissions.lead.between(@start_date, @end_date).each do |submission|
+          %tr
+            %td= submission.name
+            %td= submission.from_email
+            %td= submission.phone_number
+            %td= submission.time_of_submission.in_time_zone.to_s(:short)
+            %td= submission.date_requested
+            %td= submission.time_requested
+            %td= submission.work_description
+  -if can? :manipulate_campaign, @campaign
+    = link_to "+ Create Contact Form", "#", :class => "button"
+
+  %h3 Call Log
+  -if @campaign.phone_numbers.present?
+    %table
+      %thead
+        %tr
+          %th Caller
+          %th Caller #
+          %th Inbound #
+          %th Time of Call
+          %th Duration
+          %th Result
+          %th Recording
+          %th Review
+      %tbody
+        -@calls = @campaign.calls.between(@start_date, @end_date).paginate(:page => (params[:page] || 1), :order => 'name DESC', :per_page => 10).each do |call|
+          %tr
+            %td= call.caller_name
+            %td= number_to_phone(call.caller_number)
+            %td= number_to_phone(call.inboundno)
+            %td= call.call_start.in_time_zone.to_s(:short)
+            %td= call.duration
+            %td= call.call_status
+            %td
+              -if call.recorded? && call.recording?
+                = mp3_player "#{call.recording.expiring_url(14400)}"
+              -else
+                =image_tag("sound.png")
+                Call Recording Unavailable
+            %td
+              - form_for (call.activity) do |f|
+                = f.select(:review_status, (call.review_status_options))
+                = f.hidden_field(:campaign_id, {:value => params[:id]})
+  .right.pagination= will_paginate(@calls) if @calls.present?
