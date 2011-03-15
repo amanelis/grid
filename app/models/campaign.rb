@@ -499,7 +499,7 @@ class Campaign < ActiveRecord::Base
     "Website was not added due to errors"
   end
 
-  def delete_website()
+  def delete_website
     return "There is no website on this campaign" if self.website.blank?
     if self.website.campaigns.count > 1 || HTTParty.get("http://stats.cityvoice.com.re.getclicky.com/api/whitelabel/?auth=de8f1bae61c60eb0&type=site&site_id=#{self.website.site_id}&delete=1").parsed_response.split("\n").first == 'OK'
       self.website_id = nil
@@ -569,15 +569,15 @@ class Campaign < ActiveRecord::Base
     #form.custom2_text = custom2_text
     #form.custom3_text = custom3_text
     #form.custom4_text = custom4_text
-    form.need_name = need_name
     #form.need_address = need_address
-    form.need_phone = need_phone
-    form.need_email = need_email
     #form.work_category = work_category
     #form.work_description = work_description
     #form.date_requested = date_requested
     #form.time_requested = time_requested
     #form.other_information = other_information
+    form.need_name = need_name
+    form.need_phone = need_phone
+    form.need_email = need_email
     form.save
     form.html_block = form.get_form_text
     form.return_url = "http://#{APP_CONFIG[:host]}/contact_forms/#{form.id}/thank_you"
