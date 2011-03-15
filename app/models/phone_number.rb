@@ -115,7 +115,7 @@ class PhoneNumber < ActiveRecord::Base
     JSON.parse(update_resp = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{self.twilio_version}/Accounts/#{ACCOUNT_SID}/IncomingPhoneNumbers/#{self.twilio_id}.json", 'GET').body)
   end
   
-  def update_twilio_number(name, forward_to, id_callers = true, record_calls = true, transcribe_calls = false, text_calls = false, call_url = "http://grid.cityvoice.com/phone_numbers/connect/", fallback_url = "http://grid.cityvoice.com/phone_numbers/connect/", status_url = "http://grid.cityvoice.com/phone_numbers/collect/", sms_url = "http://grid.cityvoice.com/phone_numbers/sms_collect/", fallback_sms_url = "http://grid.cityvoice.com/phone_numbers/sms_collect/")
+  def update_twilio_number(name, forward_to, id_callers = true, record_calls = true, transcribe_calls = false, text_calls = false, call_url = "http://#{APP_CONFIG[:host]}/phone_numbers/connect/", fallback_url = "http://#{APP_CONFIG[:host]}/phone_numbers/connect/", status_url = "http://#{APP_CONFIG[:host]}/phone_numbers/collect/", sms_url = "http://#{APP_CONFIG[:host]}/phone_numbers/sms_collect/", fallback_sms_url = "http://#{APP_CONFIG[:host]}/phone_numbers/sms_collect/")
     job_status = JobStatus.create(:name => "PhoneNumber.update_twilio_number")
     begin
       #UPDATE THE TWILIO URLS
