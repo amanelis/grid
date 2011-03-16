@@ -3,23 +3,14 @@
     %ul.right.strong
       %li= link_to image_tag("icons/account.png"), new_account_path, :rel => "facebox", :title => "Add Account"
   %h1 Accounts
-  %h2= (Date.yesterday.beginning_of_month).to_s(:long) + ' to ' + Date.yesterday.to_s(:long)
 %article
   %form{:href => '/', :action => "accounts", :id => 'index', :name => 'index', :method => 'GET'}
-    %label
-      = "Account Status: "
+    %label Status
     %select{:id => :account_status, :name => :account_status}
       - for status in @accounts_statuses
         %option{ :selected => status == @passed_status}= status
-    %label
-      = "Account Type: "
-    %select{:id => :account_type, :name => :account_type}
-      %option
-        = ''
-      - for account_type in @accounts_types
-        %option{ :selected => account_type == @passed_type}= account_type
-    %input{:type => 'submit', :value => 'Filter'}
-    #loading
+    %input{:type => 'submit', :value => 'Sort'}
+  %label.quiet= (Date.yesterday.beginning_of_month).to_s(:long) + ' to ' + Date.yesterday.to_s(:long)
   %table
     %thead
       %tr
