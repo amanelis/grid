@@ -1,6 +1,6 @@
 %tr
   %td
-    .edit= link_to 'Edit', edit_channel_campaign_path(@account, channel, campaign), :rel => "facebox"
+    .edit= link_to 'Edit', edit_channel_campaign_path(@account, channel, campaign), :rel => "facebox" if can? :manipulate_campaign, campaign
     = link_to campaign.name, channel_campaign_path(@account, channel, campaign, :daterange => params[:daterange])
   %td= campaign.number_of_total_leads_between(@start_date, @end_date)
   %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(@start_date, @end_date))

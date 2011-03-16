@@ -14,7 +14,8 @@
   });
 
 %header
-  .right= link_to "Edit", edit_account_path, :rel => "facebox"
+  - if can? :manipulate_account, @account
+    .right= link_to "Edit", edit_account_path, :rel => "facebox"
   %h1= @account.name
 %article
   - @seo_channels.each do |channel|
@@ -45,11 +46,13 @@
         %tr
           %th{:width => "75%"}
             = link_to channel.name, channel_path(@account, channel)
-            .edit= link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
+            .edit= link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox" if can? :manipulate_account, @account
+            =# link_to 'Add Campaign', new_channel_campaign_path(@account, channel), :rel => "facebox" if can? :manipulate_account, @account
           %th{:width => "15%"}= channel.number_of_total_leads_between(@start_date, @end_date)
           %th{:class => "cpl", :width => "10%"}
             = ActionController::Base.helpers.number_to_currency(channel.weighted_cost_per_lead_between(@start_date, @end_date))
       - channel.campaigns.active.each do |campaign|
         = render :partial => 'accounts/channel_campaign', :locals => {:campaign => campaign, :channel => channel}
 
-  = link_to "Create Channel", new_channel_path(@account), :class => "button", :rel => "facebox"
+  - if can? :manipulate_account, @account
+    = link_to "Create Channel", new_channel_path(@account), :class => "button", :rel => "facebox"

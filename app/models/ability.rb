@@ -33,7 +33,7 @@ class Ability
         can :manipulate_account, Account do |account|
           if user.can_manipulate_account?(account) 
             can :create, Campaign
-            can :create, BasicChannel
+            can :create, Channel
           else
             false
           end
@@ -60,6 +60,7 @@ class Ability
         can :export, Account
         can :refresh_accounts, Account
         can :report_client, Account
+        can :read, Channel
       end 
       
       if user.account_user?

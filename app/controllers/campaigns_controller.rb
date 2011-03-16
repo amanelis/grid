@@ -34,13 +34,13 @@ class CampaignsController < ApplicationController
   end
 
   def show
-    authorize! :manipulate_campaign, @campaign
+    authorize! :read, @campaign
     datepicker channel_campaign_path(@account, @channel, @campaign)
   end
   
   def edit
-    render :layout => false
     authorize! :manipulate_campaign, @campaign
+    render :layout => false
   end
   
   def update
