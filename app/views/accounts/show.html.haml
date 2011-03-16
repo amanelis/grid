@@ -45,8 +45,12 @@
         %tr
           %th{:width => "75%"}
             = link_to channel.name, channel_path(@account, channel)
-            .edit= link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
-          %th{:width => "15%"}= channel.number_of_total_leads_between(@start_date, @end_date)
+            .edit
+              = link_to 'Add', edit_channel_path(@account, channel), :rel => "facebox"
+              = link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
+          %th{:width => "15%"}
+            = channel.number_of_total_leads_between(@start_date, @end_date)
+            Leads
           %th{:class => "cpl", :width => "10%"}
             = ActionController::Base.helpers.number_to_currency(channel.weighted_cost_per_lead_between(@start_date, @end_date))
       - channel.campaigns.active.each do |campaign|
