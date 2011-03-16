@@ -14,14 +14,10 @@
   });
 
 %header
-<<<<<<< HEAD
   - if can? :manipulate_account, @account
-    .right= link_to "Edit", edit_account_path, :rel => "facebox"
-=======
   .right
     = link_to image_tag("icons/user.png"), new_user_path, :rel => "facebox"
     = link_to image_tag("icons/edit.png"), edit_account_path, :rel => "facebox"
->>>>>>> 30dd108586b9fec42f7218fcc4fc5d5e939e01f7
   %h1= @account.name
 %article
   - @seo_channels.each do |channel|
