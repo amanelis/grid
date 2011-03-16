@@ -35,14 +35,12 @@ class Account < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name, :case_sensitive => false, :scope => "group_account_id"
 
+  ACTIVE = "active"
+  INACTIVE = "inactive"
   
-  # INITIALIZATION
+  STATUS_OPTIONS = [['Active', ACTIVE], ['Inactive', INACTIVE]].to_ordered_hash
+
   
-  def after_initialize
-    self.time_zone ||= "Central Time (US & Canada)"
-  end
-
-
   # CLASS BEHAVIOR
 
   def self.combined_timeline_data
@@ -122,6 +120,35 @@ class Account < ActiveRecord::Base
 
   def self.get_all_twilio_numbers
     JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/IncomingPhoneNumbers.json?", 'GET').body)['incoming_phone_numbers']
+  end
+
+
+  # INITIALIZATION
+  
+  def after_initialize
+    self.status ||= ACTIVE
+    self.name ||= ""
+    self.time_zone ||= "Central Time (US & Canada)"
+    self.account_type ||= ""
+    self.street ||= ""
+    self.city ||= ""
+    self.county ||= ""
+    self.state ||= ""
+    self.postal_code ||= ""
+    self.country ||= ""
+    self.phone ||= ""
+    self.other_phone ||= ""
+    self.fax ||= ""
+    self.metro_area ||= ""
+    self.website ||= ""
+    self.industry ||= ""
+    self.main_contact ||= ""
+    self.salesforce_id ||= ""
+    self.reporting_emails ||= ""
+    self.receive_weekly_report ||= false
+    self.twilio_id ||= ""
+    self.customer_lobby_id ||= ""
+    self.weekly_report_mtd ||= true
   end
 
 
