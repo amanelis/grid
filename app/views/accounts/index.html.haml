@@ -3,6 +3,7 @@
     %ul.right.strong
       %li= link_to image_tag("icons/account.png"), new_account_path, :rel => "facebox", :title => "Add Account"
   %h1 Accounts
+  %h2.quiet= (Date.yesterday.beginning_of_month).to_s(:long) + ' to ' + Date.yesterday.to_s(:long)
 %article
   %form{:href => '/', :action => "accounts", :id => 'index', :name => 'index', :method => 'GET'}
     %label Status
@@ -10,7 +11,6 @@
       - for status in @accounts_statuses
         %option{ :selected => status == @passed_status}= status
     %input{:type => 'submit', :value => 'Sort'}
-  %label.quiet= (Date.yesterday.beginning_of_month).to_s(:long) + ' to ' + Date.yesterday.to_s(:long)
   %table
     %thead
       %tr
@@ -19,8 +19,12 @@
     %tbody
       - @accounts.each do |account|
         %tr
-          %td= link_to account.name, account_path(account)
-          -account_data = @accounts_data[account.id]
-          -account_type = account.account_type
+          %td
+            -account_data = @accounts_data[account.id]
+            -account_type = account.account_type
+            = link_to account.name, account_path(account)
+            - if account_data.present?
+              .right=image_tag(Gchart.sparkline(:data => account_data[:leads_by_day], :size => '80x15', :line_colors => '0077CC', :background => "00000000"))
           %td= account_data.present? ? account_data[:leads] : 0
+
   -#= link_to "Create New Account", "#", :class => "button"
