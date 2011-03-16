@@ -1,7 +1,7 @@
 %header
   - if @current_user.admin? || @current_user.group_user?
     %ul.right.strong
-      %li= link_to image_tag("icons/account.png"), new_account_path, :rel => "facebox", :title => "Add Account"
+      %li= link_to image_tag("icons/new.png"), new_account_path, :rel => "facebox", :title => "Add Account", :class => "tiptip"
   %h1 Accounts
   %h2.quiet= (Date.yesterday.beginning_of_month).to_s(:long) + ' to ' + Date.yesterday.to_s(:long)
 %article

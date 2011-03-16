@@ -256,6 +256,10 @@ a{
 
 .left{float:left !important;}
 .right{float:right !important;}
+
+.strong{
+	font-weight: bold;
+}
 /*
 	Toolbar
 	------------------
@@ -657,6 +661,24 @@ form.inline p { margin-bottom:0; }
 */
 .edit{
 	float:right;
+}
+
+/*
+	Blank Slate
+	------------------
+*/
+
+article.blank{
+	width:75%;
+	margin: auto;
+}
+
+.blank h1{
+	font-size:24px;
+}
+
+.blank h2{
+	font-size:18px;
 }
 
 /*
