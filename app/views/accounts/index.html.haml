@@ -1,12 +1,7 @@
 %header
   - if @current_user.admin? || @current_user.group_user?
     %ul.right.strong
-      %li= link_to "Create Account", new_account_path, :rel => "facebox"
-      %li
-        %a{:onclick => "confirm_refresh_accounts();"}
-          Refresh
-          %br
-          = image_tag ("icons/refresh.png")  
+      %li= link_to "Create Account", new_account_path, :rel => "facebox" 
   %h1 Accounts
   %h2= (Date.yesterday.beginning_of_month).to_s(:long) + ' to ' + Date.yesterday.to_s(:long)
 %article

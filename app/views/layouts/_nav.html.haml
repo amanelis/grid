@@ -44,7 +44,7 @@
           -# Accounts
           %li{:class => (request.url.include?("accounts")? 'active' : '')}
             = image_tag("icons/accounts.png")
-            = link_to "Account", accounts_url
+            = link_to "Accounts", accounts_url
 
         - if can? :read, Activity
           %li{:class => (request.url.include?("activities")? 'active' : '')}
