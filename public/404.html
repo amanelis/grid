@@ -1,33 +1,49 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!doctype html>
+<html lang="en" class="no-js">
 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<title>Error 404</title>
+		<!--[if lt IE 9]>
+			<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+		<link rel="stylesheet" media="all" href="stylesheets/error.css"/>
+		<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+		
+		<meta name="viewport" content="initial-scale=1.0, width=device-width, maximum-scale=1.0"/>
+		
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+		<script type="text/javascript" src="javascripts/supersized.js"></script>
+		<script type="text/javascript" src="javascripts/modernizr.js"></script>
+		
+		<script type="text/javascript">  
+  		$(function(){
+  			$.fn.supersized.options = {  
+  			  startwidth: 4,  
+  				startheight: 3,
+  				slides : [
+  					{image : 'images/monkey.jpg' }
+  				]
+  			};
+  	        $('#supersized').supersized(); 
+  	    });
+  	</script>
+		
+	</head>
 
-<head>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-  <title>The page you were looking for doesn't exist (404)</title>
-  <link rel="stylesheet" href="/stylesheets/application.css" type="text/css" media="screen" charset="utf-8">
-</head>
-
-<body class="container error">
-  <!-- This file lives in public/404.html -->
-  <section id="content">
-    <header>
-      <h1>This page has gone missing.</h1>
-      <h3>Error 404</h3>
-    </header>
-    
-    <article>
-      <a href="http://grid.cityvoice.com">
-      <img src="/images/hoff.jpg">
-      </a>
-      <p>This page doesn't exist anymore. The Hoff insists that you try something else.</p>
-    </article>
-  </section>
-  
-  <footer>
-    <small>&copy; Copyright 2011 <a href="http://cityvoice.com">CityVoice</a>.
-    <span class="right"><a href="http://cityvoice.com">Feedback/Support</a></span></small>
-  </footer>
-</body>
+	<body>
+<section id="wrapper">
+<section id="content">
+      
+		<header>
+			<h1>We can't find that.</h1>
+			<h2>Seriously awesome web apps.</h2>
+		</header>
+		
+</section>
+</section>
+		
+<div id="supersized"></div>
+	</body>
+	
 </html>
