@@ -7,6 +7,23 @@ class SemCampaign < ActiveRecord::Base
   named_scope :mobile, :conditions => {:mobile => true}
 
   
+  # INITIALIZATION
+  
+  def initialize_thyself
+    self.campaign.initialize_thyself
+    self.mobile ||= false
+    self.monthly_budget ||= 0.0
+    self.rake ||= 0.0
+    self.developer_token ||= ""
+    self.application_token ||= ""
+    self.user_agent ||= ""
+    self.password ||= ""
+    self.email ||= ""
+    self.client_email ||= ""
+    self.environment ||= ""
+  end
+  
+
   # INSTANCE BEHAVIOR
 
   def spend_between(start_date = Date.yesterday, end_date = Date.yesterday)
