@@ -8,7 +8,10 @@ class GoogleSemCampaign < ActiveRecord::Base
   AD_REPORT_TYPE = "Ad"
   ALL_AD_REPORT_TYPE = "All Ad"
   ALL_CAMPAIGN_REPORT_TYPE = "All Campaign"
-  
+
+ 
+  # CLASS BEHAVIOR
+
   def self.update_google_sem_campaign_reports_by_campaign(date = Date.yesterday, hard_update = false)
     job_status = JobStatus.create(:name => "GoogleSemCampaign.update_sem_campaign_reports_by_campaign")
     begin
@@ -329,8 +332,6 @@ class GoogleSemCampaign < ActiveRecord::Base
 
   # INSTANCE BEHAVIOR
 
-  # campaign-level report
-
   def create_campaign_level_sem_campaign_report_for_google(date)
     existing_report = SemCampaignReportStatus.first(:conditions => ['pulled_on = ? AND report_type= ? AND sem_campaign_id = ?', date.strftime('%m/%d/%Y'), CAMPAIGN_REPORT_TYPE, self.id])
 
@@ -473,8 +474,6 @@ class GoogleSemCampaign < ActiveRecord::Base
       SemCampaignReportStatus.delete(existing_report.id)
     end
   end
-
-  # ad-level report
 
   def create_ad_level_sem_campaign_report_for_google(date)
     existing_report = SemCampaignReportStatus.first(:conditions => ['pulled_on = ? AND report_type= ? AND sem_campaign_id = ?', date.strftime('%m/%d/%Y'), AD_REPORT_TYPE, self.id])
@@ -658,8 +657,6 @@ class GoogleSemCampaign < ActiveRecord::Base
     end
   end
   
-  # INSTANCE BEHAVIOR
-
   def rake
     (rake = self.sem_campaign.rake).present? ? rake : 0.0
   end
