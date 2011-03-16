@@ -15,8 +15,8 @@
 
 %header
   .right
-    = link_to image_tag("icons/user.png"), new_user_path, :rel => "facebox"
-    = link_to image_tag("icons/edit.png"), edit_account_path, :rel => "facebox"
+    = link_to image_tag("icons/user.png"), new_user_path, :rel => "facebox", :title => "Add User"
+    = link_to image_tag("icons/edit.png"), edit_account_path, :rel => "facebox", :title => "Edit Account"
   %h1= @account.name
 %article
   - @seo_channels.each do |channel|
@@ -48,8 +48,8 @@
           %th{:width => "75%"}
             = link_to channel.name, channel_path(@account, channel)
             .edit
-              = link_to 'Add', edit_channel_path(@account, channel), :rel => "facebox"
-              = link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
+              .left= link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
+              .right= link_to 'Add Campaign', edit_channel_path(@account, channel), :rel => "facebox"
           %th{:width => "15%"}
             = channel.number_of_total_leads_between(@start_date, @end_date)
             Leads
