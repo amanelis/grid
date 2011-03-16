@@ -14,6 +14,7 @@
   });
 
 %header
+  - if can? :manipulate_account, @account
   .right
     = link_to image_tag("icons/user.png"), new_user_path, :rel => "facebox", :title => "Add User"
     = link_to image_tag("icons/edit.png"), edit_account_path, :rel => "facebox", :title => "Edit Account"
@@ -58,4 +59,5 @@
       - channel.campaigns.active.each do |campaign|
         = render :partial => 'accounts/channel_campaign', :locals => {:campaign => campaign, :channel => channel}
 
-  = link_to "Create Channel", new_channel_path(@account), :class => "button", :rel => "facebox"
+  - if can? :manipulate_account, @account
+    = link_to "Create Channel", new_channel_path(@account), :class => "button", :rel => "facebox"

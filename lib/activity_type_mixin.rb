@@ -14,7 +14,7 @@ module ActivityTypeMixin
     return unless self.new_record?
     self.activity ||= Activity.new
     self.activity.activity_type ||= self
-    self.initialize_specifics(attributes)
+    self.initialize_thyself
   end
 
   # def initialize(attributes={})

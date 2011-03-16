@@ -14,6 +14,7 @@ module CampaignStyleMixin
     return unless self.new_record?
     self.campaign ||= Campaign.new
     self.campaign.campaign_style ||= self
+    self.initialize_thyself
   end
 
   # def initialize(attributes={})

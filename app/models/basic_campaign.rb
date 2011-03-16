@@ -2,6 +2,13 @@ class BasicCampaign < ActiveRecord::Base
   include CampaignStyleMixin
   
   
+  # INITIALIZATION
+  
+  def initialize_thyself
+    self.campaign.initialize_thyself
+  end
+  
+
   # INSTANCE BEHAVIOR
   
   def number_of_visits_by_date

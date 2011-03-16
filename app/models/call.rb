@@ -182,6 +182,13 @@ class Call < ActiveRecord::Base
     calls.each { |call| dispositions[call.disposition] << call.rating.to_f }
     dispositions.inject({}) { |averages, (key, value)| averages[key] = (value.empty? ? 0.0 : value.sum / value.size) ; averages }
   end
+
+
+  # INITIALIZATION
+  
+  def initialize_thyself
+    self.review_status = PENDING
+  end
   
 
   # INSTANCE BEHAVIOR
@@ -193,10 +200,6 @@ class Call < ActiveRecord::Base
     if resp.code == '200'
       return JSON.parse(resp.body)
     end
-  end
-  
-  def initialize_specifics(attributes={})
-    self.review_status = PENDING
   end
   
   def update_if_duplicate

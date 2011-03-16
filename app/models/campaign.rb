@@ -30,6 +30,11 @@ class Campaign < ActiveRecord::Base
   before_destroy :remove_from_many_to_many_relationships
 
   attr_accessor :adopting_phone_number
+  
+  ACTIVE = "active"
+  INACTIVE = "inactive"
+  
+  STATUS_OPTIONS = [['Active', ACTIVE], ['Inactive', INACTIVE]].to_ordered_hash
 
   ORPHANAGE_NAME = 'CityVoice SEM Orphaned Campaigns'
   
@@ -264,6 +269,18 @@ class Campaign < ActiveRecord::Base
     total_weight > 0 ? weighted_total / total_weight : 0.0 
   end
 
+
+  # INITIALIZATION
+  
+  def initialize_thyself
+    self.status ||= ACTIVE
+    self.name ||= ""
+    self.zip_code ||= ""
+    self.target_cities ||= ""
+    self.salesforce_id ||= ""
+    self.flavor ||= ""
+  end
+  
 
   # INSTANCE BEHAVIOR
 

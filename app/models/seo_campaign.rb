@@ -87,6 +87,21 @@ class SeoCampaign < ActiveRecord::Base
   end
 
 
+  # INITIALIZATION
+  
+  def initialize_thyself
+    self.campaign.initialize_thyself
+    self.budget ||= 0.0
+    self.cities ||= ""
+    self.dns_host ||= ""
+    self.dns_login ||= ""
+    self.dns_password ||= ""
+    self.hosting_site ||= ""
+    self.hosting_username ||= ""
+    self.hosting_password ||= ""
+  end
+  
+
   # INSTANCE BEHAVIOR
 
   def add_ginza_keywords(keywords = "")

@@ -5,17 +5,17 @@ class ChannelsController < ApplicationController
   belongs_to :account
   
   def new
-    render :layout => false
     authorize! :manipulate_account, @account
+    render :layout => false
   end
   
   def show
-    authorize! :manipulate_account, @account
+    authorize! :read, @channel
   end
   
   def edit
-    render :layout => false
     authorize! :manipulate_account, @account
+    render :layout => false
   end
   
   def update

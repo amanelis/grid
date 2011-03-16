@@ -6,6 +6,21 @@ class MapsCampaign < ActiveRecord::Base
   has_many :map_keywords, :dependent => :destroy
 
   
+  # INITIALIZATION
+  
+  def initialize_thyself
+    self.campaign.initialize_thyself
+    self.keywords ||= ""
+    self.company_name ||= ""
+    self.street ||= ""
+    self.city ||= ""
+    self.county ||= ""
+    self.state ||= ""
+    self.postal_code ||= ""
+    self.country ||= ""
+  end
+  
+
   # INSTANCE BEHAVIOR
 
   def number_of_visits_by_date
