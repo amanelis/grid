@@ -13,6 +13,7 @@ ActionController::Routing::Routes.draw do |map|
   # CUSTOM ROUTES
   
   map.resources :accounts do |account|
+    account.resources :users
     account.resources :channels, :name_prefix => "" do |channels|
       channels.resources :campaigns
     end
@@ -25,7 +26,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resources   :searches, :activities, :keywords, :job_statuses, :websites
   map.resources   :users,         :password_resets
   map.resource    :submission,    :only => [:index, :create, :show]
-  map.resource    :person,        :controller => "users"
   map.resource    :user_session
   
   map.with_options :controller => 'home' do |home|

@@ -34,6 +34,7 @@ class Ability
           if user.can_manipulate_account?(account) 
             can :create, Campaign
             can :create, Channel
+            can :create, User
           else
             false
           end
@@ -61,8 +62,18 @@ class Ability
         can :refresh_accounts, Account
         can :report_client, Account
         can :read, Channel
+        can :create, User
       end 
       
+      #
+      #
+      #
+      #
+      #
+      #
+      #
+      #
+      # Account users are usually only associated with the accounts the are added to
       if user.account_user?
         can :read, Account do |account|
           user.acquainted_with_account?(account)
@@ -103,6 +114,7 @@ class Ability
         ########## Manipulator Method #################
         
         can :report_client, Account
+        can :create, User
       end
 
     end
