@@ -14,6 +14,7 @@ class UsersController < ApplicationController
   def new
     authorize! :create, User
     no_layout
+    @current_user = current_user
     @user = User.new
     @account = Account.find(params[:account_id]) if params[:account_id].present?
   end
