@@ -1,10 +1,10 @@
 %article.blank
-  %h1 Make your campaign go somewhere
-  %p You can connect a campaign to a phone number or form.
-  %h2 Phone Number
-  %p Add a phone number to track a lead whenever someone calls, you'll get a unique number that forwards to any number you want.
-  %h2 Form
-  %p Get a contact form that you can place on your website, leads will be counted any time someone submits it.
+  %h1.strong Make your campaign go somewhere
+  %h2.quiet Campaigns are the glue that connect people to your business. How customers get a hold of you affects how you track leads. Start tracking your campaign by adding a forwarding number or generating a form for a website.
+  = link_to "Add New Phone Number", "#", :class => "button"
+  or
+  = link_to "Create Website Form", "#", :class => "button"
+
 
 %header
   %h1= @campaign.name
