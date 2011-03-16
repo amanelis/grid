@@ -14,8 +14,14 @@
   });
 
 %header
+<<<<<<< HEAD
   - if can? :manipulate_account, @account
     .right= link_to "Edit", edit_account_path, :rel => "facebox"
+=======
+  .right
+    = link_to image_tag("icons/user.png"), new_user_path, :rel => "facebox"
+    = link_to image_tag("icons/edit.png"), edit_account_path, :rel => "facebox"
+>>>>>>> 30dd108586b9fec42f7218fcc4fc5d5e939e01f7
   %h1= @account.name
 %article
   - @seo_channels.each do |channel|
@@ -46,9 +52,18 @@
         %tr
           %th{:width => "75%"}
             = link_to channel.name, channel_path(@account, channel)
+<<<<<<< HEAD
             .edit= link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox" if can? :manipulate_account, @account
             =# link_to 'Add Campaign', new_channel_campaign_path(@account, channel), :rel => "facebox" if can? :manipulate_account, @account
           %th{:width => "15%"}= channel.number_of_total_leads_between(@start_date, @end_date)
+=======
+            .edit
+              = link_to 'Add', edit_channel_path(@account, channel), :rel => "facebox"
+              = link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
+          %th{:width => "15%"}
+            = channel.number_of_total_leads_between(@start_date, @end_date)
+            Leads
+>>>>>>> 30dd108586b9fec42f7218fcc4fc5d5e939e01f7
           %th{:class => "cpl", :width => "10%"}
             = ActionController::Base.helpers.number_to_currency(channel.weighted_cost_per_lead_between(@start_date, @end_date))
       - channel.campaigns.active.each do |campaign|
