@@ -1,33 +1,60 @@
 %header
-  %h3 Create Campaign
-  %h4.quiet= "#{@account.name} #{@channel.name}"
+  %h1 
+    New Campaign -
+    %span= @channel.name
+  %h2.quiet= @account.name
 %article
-  #create.span-8.append-1
-    -form_for @campaign, :url => channel_campaigns_path do |f|
-      = f.label "Name"
-      %br
-      = f.text_field(:name, :placeholder => "CityVoice")
-      %br
-      %label Forwarding Number
-      %br
-      %label.small.quiet Where you want all your calls to go to
-      %br
-      %input{:id => "campaign_forward_to", :name=> "campaign[forward_to]", :type => "text", :placeholder => "2108446400", :class => "title", :maxlength => "10"}
-      %label Area Code
-      %br
-      %label.small.quiet For your new tracking phone number
-      %br
-      %input{:id => "campaign_area_code", :name=> "campaign[area_code]", :type => "text", :placeholder => "210", :class => "title", :maxlength => "3"}
-      %label Form forwarding email
-      %br
-      %label.small.quiet Where your forms will be submitted to
-      %br
-      %input{:id => "campaign_forwarding_email", :name=> "campaign[forwarding_email]", :type => "text", :placeholder => "me@cityvoice.com", :class => "title"}
-      %input{:type => "submit", :value => "Create Campaign", :class => "button"}
-  #helper.span-13.last.box
-    %h3 What is going on?
-    %p.quiet By creating a campaign, you will be given a phone number to put on your marketing material. This phone number is specific to your marketing campaign and all calls can be tracked through Grid. 
+  -form_for @campaign, :url => channel_campaigns_path do |f|
+    = f.label "Name"
+    %br
+    = f.text_field(:name, :placeholder => "CityVoice", :class => "title")
+    %br
+    %label Forwarding Number
+    %br
+    %label.small.quiet Where you want all your calls to go to
+    %br
+    %input{:id => "campaign_forward_to", :name=> "campaign[forward_to]", :type => "text", :placeholder => "2108446400", :class => "title", :maxlength => "10"}
+    %br
+    %label Area Code
+    %br
+    %label.small.quiet For your new tracking phone number
+    %br
+    %input{:id => "campaign_area_code", :name=> "campaign[area_code]", :type => "text", :placeholder => "210", :class => "title", :maxlength => "3"}
+    %br
+    %label Form forwarding email
+    %br
+    %label.small.quiet Where your forms will be submitted to
+    %br
+    %input{:id => "campaign_forwarding_email", :name=> "campaign[forwarding_email]", :type => "text", :placeholder => "me@cityvoice.com", :class => "title"}
+    %hr
+    %h3 CityVoice ONLY
+    %h4 SEM
+    = f.label "Google Campaign Identifier"
+    %br
+    = f.text_field(:name, :placeholder => "UA-789262", :class => "title")
+    %br
+    = f.label "Mark Up"
+    %br
+    %label.small.quiet Also known as Rake
+    %br
+    = f.text_field(:name, :placeholder => "30%", :class => "title")
+    %br
+    %h4 SEO
+    = f.label "Website"
+    %br
+    = f.text_field(:name, :placeholder => "http://cityvoice.com", :class => "title")
+    %br
+    = f.label "Keywords"
+    %br
+    %label.small.quiet Separate by commas
+    %br
+    = f.text_field(:name, :placeholder => "san antonio marketing, cityvoice, etc.", :class => "title")
+    %br
+    %label Zip Code
+    %br
+    = f.text_field(:name, :placeholder => "78249", :class => "title")
+    %br
     
-    
-    
+    %input{:type => "submit", :value => "Create Campaign", :class => "button"}
+
     =#:url => basic_channel_campaigns_path

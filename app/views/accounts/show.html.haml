@@ -16,8 +16,8 @@
 %header
   - if can? :manipulate_account, @account
   .right
-    = link_to image_tag("icons/user.png"), new_user_path, :rel => "facebox"
-    = link_to image_tag("icons/edit.png"), edit_account_path, :rel => "facebox"
+    = link_to image_tag("icons/user.png"), new_user_path, :rel => "facebox", :title => "Add User"
+    = link_to image_tag("icons/edit.png"), edit_account_path, :rel => "facebox", :title => "Edit Account"
   %h1= @account.name
 %article
   - @seo_channels.each do |channel|
@@ -49,8 +49,8 @@
           %th{:width => "75%"}
             = link_to channel.name, channel_path(@account, channel)
             .edit
-              = link_to 'Add', edit_channel_path(@account, channel), :rel => "facebox"
-              = link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
+              -#= link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
+              = link_to "Add Campaign", new_channel_campaign_path(@account, channel)
           %th{:width => "15%"}
             = channel.number_of_total_leads_between(@start_date, @end_date)
             Leads
