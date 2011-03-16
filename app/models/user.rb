@@ -87,15 +87,11 @@ class User < ActiveRecord::Base
   end
   
   def manipulable_users
-    self.manipulable_role_types.collect(&:user).uniq
-  end
-  
-  def manipulable_role_types
-    @manipulable_role_types ||= (self.manipulable_group_accounts.collect { |manipulable_group_account| manipulable_group_account.group_users } << self.manipulable_accounts.collect { |manipulable_account| manipulable_account.account_users }).flatten
+    manipulable_role_types.collect(&:user).uniq
   end
   
   def manipulable_role_types_for(user)
-    user.roles.collect(&:role_type).select { |role_type| self.manipulable_role_types.include?(role_type) }
+    user.roles.collect(&:role_type).select { |role_type| manipulable_role_types.include?(role_type) }
   end
 
   
@@ -121,6 +117,10 @@ class User < ActiveRecord::Base
   
   def retrieve_keywords_from_campaigns(campaigns)
     campaigns.select(&:is_seo?).collect { |campaign| campaign.campaign_style.keywords }.flatten
+  end
+  
+  def manipulable_role_types
+    @manipulable_role_types ||= (self.manipulable_group_accounts.collect { |manipulable_group_account| manipulable_group_account.group_users } << self.manipulable_accounts.collect { |manipulable_account| manipulable_account.account_users }).flatten
   end
     
 end
