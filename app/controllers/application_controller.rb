@@ -57,6 +57,10 @@ class ApplicationController < ActionController::Base
       Time.zone = resource.time_zone
     end
     
+    def no_layout
+      render :layout => false
+    end
+    
     def load_resource_user
       @user = current_user 
     end

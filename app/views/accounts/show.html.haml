@@ -49,7 +49,7 @@
           %th{:width => "75%"}
             = link_to channel.name, channel_path(@account, channel)
             .edit
-              -#= link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
+              = link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
               = link_to "Add Campaign", new_channel_campaign_path(@account, channel)
           %th{:width => "15%"}
             = channel.number_of_total_leads_between(@start_date, @end_date)
