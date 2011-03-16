@@ -186,6 +186,14 @@ class GroupAccount < ActiveRecord::Base
    end
    
    
+   # INITIALIZATION
+
+   def after_initialize
+     self.name ||= ""
+     self.salesforce_id ||= ""
+   end
+
+
    # INSTANCE BEHAVIOR
    
    def managed_campaign_flavors
