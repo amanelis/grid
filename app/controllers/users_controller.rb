@@ -38,7 +38,7 @@ class UsersController < ApplicationController
       @group_user.user            = @user
       @group_user.group_account   = @group_account
       
-      if type == "1" && @user.can_manipulate_account?(@account)
+      if type == "1" && @current_user.can_manipulate_account?(@account)
         @group_user.manipulator = true
       end
       
@@ -50,7 +50,7 @@ class UsersController < ApplicationController
       @account_user.user    = @user
       @account_user.account = @account
       
-      if type == "3" && @user.can_manipulate_account?(@account)
+      if type == "3" && @current_user.can_manipulate_account?(@account)
         @account_user.manipulator = true
       end
       
