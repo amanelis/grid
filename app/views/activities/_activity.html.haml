@@ -10,6 +10,8 @@
       =activity.activity_type.caller_name
     %td.time
       -activity_time_zone = activity.activity_type.phone_number.campaign.account.time_zone
+      =activity.activity_type.timestamp.localtime.strftime("%I:%M%p %b %d")
+      %br
       =time_ago_in_words(activity.activity_type.call_start) + " ago"
 
 - elsif activity.is_submission?
