@@ -35,8 +35,36 @@
           %td= ActionController::Base.helpers.number_to_currency(@campaign.spend_between(@start_date, @end_date))
           %td= ActionController::Base.helpers.number_to_currency(@campaign.cost_per_lead_between(@start_date, @end_date))
           %td= ActionController::Base.helpers.number_to_currency(@campaign.cost_per_contact_between(@start_date, @end_date))
-    -if can? :manipulate_campaign, @campaign
-      -#= link_to "+ Create Contact Form", "#", :class => "button"
+
+
+
+    %h3 Rankings
+    %table
+      %thead
+        %tr
+          %th Keyword (Click for History)
+          %th Last Updated
+          %th Google
+          %th Month Change
+          %th Yahoo
+          %th Month Change
+          %th Bing
+          %th Month Change
+      %tbody
+        - (@campaign.campaign_style.keywords.sort { |a,b| a.descriptor <=> b.descriptor }).each do |keyword|
+          %tr
+            %td= link_to keyword.descriptor, keyword_path(keyword)
+            %td= keyword.most_recent_ranking().created_at.strftime("%m/%d/%y %I:%M %p") if keyword.most_recent_ranking.present?
+            %td= ((final_ranking = ((ranking = keyword.most_recent_google_ranking_between(@start_date, @end_date))) > 100 ? '>100' : ranking.to_s) == '0') ? '' : final_ranking
+            %td= keyword.google_ranking_change_between(@start_date, @end_date) 
+            %td= ((final_ranking = ((ranking = keyword.most_recent_yahoo_ranking_between(@start_date, @end_date))) > 100 ? '>100' : ranking.to_s) == '0') ? '' : final_ranking
+            %td= keyword.yahoo_ranking_change_between(@start_date, @end_date) 
+            %td= ((final_ranking = ((ranking = keyword.most_recent_bing_ranking_between(@start_date, @end_date))) > 100 ? '>100' : ranking.to_s) == '0') ? '' : final_ranking
+            %td= keyword.bing_ranking_change_between(@start_date, @end_date)
+
+
+
+
     %h3 Connections
     %h4 Forms
     %p
