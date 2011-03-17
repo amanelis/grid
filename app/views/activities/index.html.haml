@@ -80,9 +80,6 @@
 
 .span-12.colborder
   %header
-    .right
-      %label.quiet
-        %em *Try using the up and down arrows on your keyboard
     %h1 Leads
   %article
     %table#activities.small
@@ -94,10 +91,14 @@
       %tbody
         - for activity in @activities
           = render activity, :locals => {:activity => activity}
-    .pagination= will_paginate(@activities)
-    %hr.space
 .span-5.last
   %header
-    %h1 Info
+    %h1 Details
   %div#sidebar
-    %p To get started simply click on one of the leads!
+    = image_tag("icons/arrow.png")
+    %h4.strong Click a lead to see more.
+    %p.quiet Try using the up and down arrows on your keyboard
+.span-17
+  %hr
+  .pagination= will_paginate(@activities)
+  %hr.space
