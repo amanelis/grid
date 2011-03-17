@@ -26,35 +26,7 @@
     %label.small.quiet Where your forms will be submitted to
     %br
     %input{:id => "campaign_forwarding_email", :name=> "campaign[forwarding_email]", :type => "text", :placeholder => "me@cityvoice.com", :class => "title"}
-    %hr
-    %h3 CityVoice ONLY
-    %h4 SEM
-    = f.label "Google Campaign Identifier"
     %br
-    = f.text_field(:name, :placeholder => "UA-789262", :class => "title")
-    %br
-    = f.label "Mark Up"
-    %br
-    %label.small.quiet Also known as Rake
-    %br
-    = f.text_field(:name, :placeholder => "30%", :class => "title")
-    %br
-    %h4 SEO
-    = f.label "Website"
-    %br
-    = f.text_field(:name, :placeholder => "http://cityvoice.com", :class => "title")
-    %br
-    = f.label "Keywords"
-    %br
-    %label.small.quiet Separate by commas
-    %br
-    = f.text_field(:name, :placeholder => "san antonio marketing, cityvoice, etc.", :class => "title")
-    %br
-    %label Zip Code
-    %br
-    = f.text_field(:name, :placeholder => "78249", :class => "title")
-    %br
-    
     %input{:type => "submit", :value => "Create Campaign", :class => "button"}
 
     =#:url => basic_channel_campaigns_path
