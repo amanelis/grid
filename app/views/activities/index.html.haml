@@ -80,13 +80,9 @@
     %table#activities.small
       %thead
         %tr
-          %th Type
           %th Campaign
           %th From
-          %th Content
-          %th Review
           %th Time
-          -#%th Customer Lobby
       %tbody
         - for activity in @activities
           = render activity, :locals => {:activity => activity}

@@ -1,63 +1,29 @@
 - if activity.is_call?
   %tr{:id => "activity_#{activity.id}", "data-time" => "#{activity.timestamp.to_i}"}
-    %td.type= image_tag ("icons/telephone.png")
     %td.campaign
-      %p=# link_to activity.activity_type.phone_number.campaign.name, channel_campaign_path(@account, @channel, @campaign, activity.activity_type.phone_number.campaign.account, activity.activity_type.phone_number.campaign)
-      %p= link_to activity.activity_type.phone_number.campaign.name, "#"
-      %p= activity.activity_type.phone_number.campaign.account.name
+      = link_to activity.activity_type.phone_number.campaign.name, "#"
+      %br
+      = activity.activity_type.phone_number.campaign.account.name
     %td.caller
       %strong=number_to_phone(activity.activity_type.caller_number)
-      %p=activity.activity_type.caller_name
-    %td.recording
-      -if activity.activity_type.recorded? && activity.activity_type.recording?
-        = link_to image_tag("sound.png", :alt => "Listen"), "#", :rel => "facebox", :onclick => "playSound('#{activity.activity_type.recording.expiring_url(14400)}');"
-      -else
-        = "---"
-    %td.review{:class => activity.activity_type.call_status.downcase}
-      =  "#{(activity.activity_type.call_end - activity.activity_type.call_start).to_int} seconds"
-      - if activity.activity_type.duplicate?
-        %p.duplicate= "Duplicate"
-      - form_for activity do |f|
-        = f.select(:review_status, (activity.activity_type.review_status_options))
+      =activity.activity_type.caller_name
     %td.time
       -activity_time_zone = activity.activity_type.phone_number.campaign.account.time_zone
       =time_ago_in_words(activity.activity_type.call_start) + " ago"
-    -#%td.time
-      -#-if activity.activity_type.phone_number.campaign.account.customer_lobby_id.present?
-        -#-if activity.activity_type.customer_lobby_requested
-          -#= link_to( image_tag("cl_submitted.png", :alt => "View your invitations in Customer Lobby"), "https://www.customerlobby.com/member/invitation-tracking?view=email", :popup => ['new_window'])
-        -#-else
-          -#= link_to( image_tag("cl_submit.png", :alt => "Submit this contact to Customer Lobby"), submit_call_cl_path(activity.activity_type.id))
-      -#-else
-        -#= link_to( image_tag("cl_findout.png", :alt => "Find out more about Customer Lobby"), add_customer_lobby_path(activity.activity_type.phone_number.campaign.account.id))
 
 - elsif activity.is_submission?
   %tr{:id => activity.id, "data-time" => "#{activity.timestamp.to_i}"}
-    %td.type= image_tag ("icons/form.png")
     %td.campaign
-      %p= link_to activity.activity_type.contact_form.campaign.name, account_campaign_path(activity.activity_type.contact_form.campaign.account, activity.activity_type.contact_form.campaign)
-      %p= activity.activity_type.contact_form.campaign.account.name
+      = link_to activity.activity_type.contact_form.campaign.name, account_campaign_path(activity.activity_type.contact_form.campaign.account, activity.activity_type.contact_form.campaign)
+      = activity.activity_type.contact_form.campaign.account.name
     %td.caller
       %strong=activity.activity_type.from_email
-      %p=activity.activity_type.name || activity.activity_type.from_email
-      %p=activity.activity_type.phone_number
-      %p=activity.activity_type.home_address
-    %td.recording
-      %strong=h activity.activity_type.work_category
-      %p=h activity.activity_type.work_description
-    %td.review
-      - if activity.duplicate?
-        %p.duplicate= "Duplicate"
-      - form_for activity do |f|
-        = f.select(:review_status, (activity.activity_type.review_status_options))
+      %br
+      =activity.activity_type.name || activity.activity_type.from_email
+      %br
+      =activity.activity_type.phone_number
+      %br
+      =activity.activity_type.home_address
     %td.time
       -activity_time_zone = activity.activity_type.contact_form.campaign.account.time_zone
       =time_ago_in_words(activity.activity_type.time_of_submission) + " ago"
-    -#%td.time
-      -#-if activity.activity_type.contact_form.campaign.account.customer_lobby_id.present?
-        -#-if activity.activity_type.customer_lobby_requested
-          -#= link_to( image_tag("cl_submitted.png", :alt => "View your invitations in Customer Lobby"), "https://www.customerlobby.com/member/invitation-tracking?view=email", :popup => ['new_window'])
-        -#-else
-          -#= link_to( image_tag("cl_submit.png", :alt => "Submit this contact to Customer Lobby"), submit_cl_path(activity.activity_type.id))
-      -#-else
-        -#= link_to( image_tag("cl_findout.png", :alt => "Find out more about Customer Lobby"), add_customer_lobby_path(activity.activity_type.contact_form.campaign.account.id))
