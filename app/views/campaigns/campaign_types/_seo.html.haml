@@ -5,63 +5,27 @@
     = render :partial => 'campaigns/campaign_types/listings/buttons'
 
 - unless @campaign.phone_numbers.empty? && @campaign.contact_forms.empty?
-  %header
-    %h1= @campaign.name
-    %h2= @account.name
-  %article
-    %h3 Campaign Details
-    %table
-      %thead
+  = render :partial => 'campaigns/campaign_types/common'
+  %h3 Rankings
+  %table
+    %thead
+      %tr
+        %th Keyword (Click for History)
+        %th Last Updated
+        %th Google
+        %th Month Change
+        %th Yahoo
+        %th Month Change
+        %th Bing
+        %th Month Change
+    %tbody
+      - (@campaign.campaign_style.keywords.sort { |a,b| a.descriptor <=> b.descriptor }).each do |keyword|
         %tr
-          %th Lead Calls
-          %th All Calls
-          %th Lead Forms
-          %th All Forms
-          %th Total Leads
-          %th Total Contacts
-          %th Spend
-          %th Cost Per Lead
-          %th Cost Per Contact
-      %tbody
-        %tr
-          %td= @campaign.number_of_lead_calls_between(@start_date, @end_date).to_s
-          %td= @campaign.number_of_all_calls_between(@start_date, @end_date).to_s
-          %td= @campaign.number_of_lead_submissions_between(@start_date, @end_date).to_s
-          %td= @campaign.number_of_all_submissions_between(@start_date, @end_date).to_s
-          %td= @campaign.number_of_total_leads_between(@start_date, @end_date).to_s
-          %td= @campaign.number_of_total_contacts_between(@start_date, @end_date).to_s
-          %td= ActionController::Base.helpers.number_to_currency(@campaign.spend_between(@start_date, @end_date))
-          %td= ActionController::Base.helpers.number_to_currency(@campaign.cost_per_lead_between(@start_date, @end_date))
-          %td= ActionController::Base.helpers.number_to_currency(@campaign.cost_per_contact_between(@start_date, @end_date))
-
-
-
-    %h3 Rankings
-    %table
-      %thead
-        %tr
-          %th Keyword (Click for History)
-          %th Last Updated
-          %th Google
-          %th Month Change
-          %th Yahoo
-          %th Month Change
-          %th Bing
-          %th Month Change
-      %tbody
-        - (@campaign.campaign_style.keywords.sort { |a,b| a.descriptor <=> b.descriptor }).each do |keyword|
-          %tr
-            %td= link_to keyword.descriptor, "#"
-            %td= keyword.most_recent_ranking().created_at.strftime("%m/%d/%y %I:%M %p") if keyword.most_recent_ranking.present?
-            %td= ((final_ranking = ((ranking = keyword.most_recent_google_ranking_between(@start_date, @end_date))) > 100 ? '>100' : ranking.to_s) == '0') ? '' : final_ranking
-            %td= keyword.google_ranking_change_between(@start_date, @end_date) 
-            %td= ((final_ranking = ((ranking = keyword.most_recent_yahoo_ranking_between(@start_date, @end_date))) > 100 ? '>100' : ranking.to_s) == '0') ? '' : final_ranking
-            %td= keyword.yahoo_ranking_change_between(@start_date, @end_date) 
-            %td= ((final_ranking = ((ranking = keyword.most_recent_bing_ranking_between(@start_date, @end_date))) > 100 ? '>100' : ranking.to_s) == '0') ? '' : final_ranking
-            %td= keyword.bing_ranking_change_between(@start_date, @end_date)
-
-    %h3 Connections
-    %h4 Forms
-    = render :partial => 'campaigns/campaign_types/listings/contact_form'
-    %h4 Phone Numbers
-    = render :partial => 'campaigns/campaign_types/listings/phone_number'
+          %td= link_to keyword.descriptor, "#"
+          %td= keyword.most_recent_ranking().created_at.strftime("%m/%d/%y %I:%M %p") if keyword.most_recent_ranking.present?
+          %td= ((final_ranking = ((ranking = keyword.most_recent_google_ranking_between(@start_date, @end_date))) > 100 ? '>100' : ranking.to_s) == '0') ? '' : final_ranking
+          %td= keyword.google_ranking_change_between(@start_date, @end_date) 
+          %td= ((final_ranking = ((ranking = keyword.most_recent_yahoo_ranking_between(@start_date, @end_date))) > 100 ? '>100' : ranking.to_s) == '0') ? '' : final_ranking
+          %td= keyword.yahoo_ranking_change_between(@start_date, @end_date) 
+          %td= ((final_ranking = ((ranking = keyword.most_recent_bing_ranking_between(@start_date, @end_date))) > 100 ? '>100' : ranking.to_s) == '0') ? '' : final_ranking
+          %td= keyword.bing_ranking_change_between(@start_date, @end_date)
