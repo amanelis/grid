@@ -1,5 +1,18 @@
+:javascript
+  $(document).ready(function(){
+    // if they click cancel, close the facebox
+    $('#cancel').click(function(){$.facebox.close()});
+
+    $("#create").click(function(){
+      $('#new_campaign').validate();
+      // If it is valid, submit
+      if( $('#new_campaign').valid() )
+        $("#new_campaign").submit();
+    });
+  });
+
 %header
-  %h1 
+  %h1
     New Campaign -
     %span= @channel.name
   %h2.quiet= @account.name
@@ -7,26 +20,24 @@
   -form_for @campaign, :url => channel_campaigns_path do |f|
     = f.label "Name"
     %br
-    = f.text_field(:name, :placeholder => "CityVoice", :class => "title")
+    = f.text_field(:name, :placeholder => "CityVoice", :class => "title required")
     %br
     %label Forwarding Number
     %br
     %label.small.quiet Where you want all your calls to go to
     %br
-    %input{:id => "campaign_forward_to", :name=> "campaign[forward_to]", :type => "text", :placeholder => "2108446400", :class => "title", :maxlength => "10"}
+    %input{:id => "campaign_forward_to", :name=> "campaign[forward_to]", :type => "text", :placeholder => "2108446400", :class => "title required", :maxlength => "10"}
     %br
     %label Area Code
     %br
     %label.small.quiet For your new tracking phone number
     %br
-    %input{:id => "campaign_area_code", :name=> "campaign[area_code]", :type => "text", :placeholder => "210", :class => "title", :maxlength => "3"}
+    %input{:id => "campaign_area_code", :name=> "campaign[area_code]", :type => "text", :placeholder => "210", :class => "title  required", :maxlength => "3"}
     %br
     %label Form forwarding email
     %br
     %label.small.quiet Where your forms will be submitted to
     %br
-    %input{:id => "campaign_forwarding_email", :name=> "campaign[forwarding_email]", :type => "text", :placeholder => "me@cityvoice.com", :class => "title"}
+    %input{:id => "campaign_forwarding_email", :name=> "campaign[forwarding_email]", :type => "text", :placeholder => "me@cityvoice.com", :class => "title required"}
     %br
-    %input{:type => "submit", :value => "Create Campaign", :class => "button"}
-
-    =#:url => basic_channel_campaigns_path
+  %button{:id => 'create', :class => "button"} Create Campaign
