@@ -13,6 +13,7 @@ class PhoneNumbersController < ApplicationController
   
   def new
     authorize! :manipulate_campaign, @campaign
+    no_layout
   end
   
   def create
