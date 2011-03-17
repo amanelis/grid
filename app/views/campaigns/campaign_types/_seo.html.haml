@@ -53,7 +53,7 @@
       %tbody
         - (@campaign.campaign_style.keywords.sort { |a,b| a.descriptor <=> b.descriptor }).each do |keyword|
           %tr
-            %td= link_to keyword.descriptor, keyword_path(keyword)
+            %td= link_to keyword.descriptor, "#"
             %td= keyword.most_recent_ranking().created_at.strftime("%m/%d/%y %I:%M %p") if keyword.most_recent_ranking.present?
             %td= ((final_ranking = ((ranking = keyword.most_recent_google_ranking_between(@start_date, @end_date))) > 100 ? '>100' : ranking.to_s) == '0') ? '' : final_ranking
             %td= keyword.google_ranking_change_between(@start_date, @end_date) 

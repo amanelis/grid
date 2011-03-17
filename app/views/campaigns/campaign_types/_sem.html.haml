@@ -52,7 +52,7 @@
       %tbody
         -adwords_campaigns.each do |adwords_campaign|
           %tr
-            %td= link_to adwords_campaign.name, show_account_campaign_google_sem_campaign_path(resource.account.id, resource, adwords_campaign)
+            %td= link_to adwords_campaign.name, "#"
             %td= adwords_campaign.clicks_between(@start_date, @end_date)
             %td= adwords_campaign.impressions_between(@start_date, @end_date)
             %td= (sprintf("%.3f", (adwords_campaign.click_through_rate_between(@start_date, @end_date) * 100)) + '%')
