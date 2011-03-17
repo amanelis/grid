@@ -6,6 +6,5 @@
   = render :partial => 'campaigns/campaign_types/sem'
 
 - unless @campaign.phone_numbers.blank? && @campaign.contact_forms.blank?
-  %footer  
-    = render :partial => 'campaigns/campaign_types/listings/buttons'
+  %footer= render :partial => 'campaigns/campaign_types/listings/buttons'
 
