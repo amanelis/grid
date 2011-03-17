@@ -18,11 +18,7 @@
   /[if IE]
     = stylesheet_link_tag 'ie'
   = stylesheet_link_tag '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/themes/smoothness/jquery-ui.css', 'screen', 'application'
-  = javascript_include_tag '//ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js', 'modernizr', 'audiojs/audio.js', 'facebox', 'highcharts', "jquery.tipTip.minified", 'application'
-  :javascript
-    $(function(){
-    $(".container").tipTip({maxWidth: "auto", edgeOffset: 10, delay: });
-    });
+  = javascript_include_tag '//ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js', 'modernizr', 'audiojs/audio.js', 'facebox', 'highcharts', "jquery.tipTip.minified", 'application', 'jquery.flash'
 
 %body
   .container#wrapper
@@ -47,5 +43,5 @@
         .right=mail_to "alex.baldwin@cityvoice.com", "Help", :subject => "Grid Feedback/Support", :class => "button action"
         &copy; 2011 Grid. All rights reserved.
         %br
-        A service of 
+        A service of
         = link_to "CityVoice", "http://cityvoice.com"

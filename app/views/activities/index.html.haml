@@ -69,7 +69,7 @@
     // parse the ID
     current_id = current_id.match(/\d+/);
     // load the sidebar content
-    $("#sidebar").html('<h3>Selected lead id='+ current_id + '</h3>');
+    $("#sidebar").load('http://#{APP_CONFIG[:host]}/activities/'+current_id);
   }
 
 .span-12.colborder

@@ -1,0 +1,46 @@
+-if @activity.activity_type.recorded? && @activity.activity_type.recording?
+  :javascript
+    $(document).ready(function(){
+      $("#player").flash({
+        src: './player.swf',
+        width: '200px',
+        height: '22px'
+      },
+      {update: false},
+      function(htmlOptions){
+        $this = $(this);
+        var url = '#{@activity.activity_type.recording.expiring_url(14400)}';
+        htmlOptions.flashvars.file = $this.attr('href');
+        $this.before($.fn.flash.transform(htmlOptions));
+      });
+    });
+
+%h3=@activity.activity_type.phone_number.campaign.account.name
+
+%p
+  %strong Campaign
+  %br
+  =@activity.activity_type.phone_number.campaign.name
+  %br
+  =@activity.activity_type.phone_number.campaign.account.name
+
+%p
+  %strong From
+  %br
+  =number_to_phone(@activity.activity_type.caller_number)
+  %br
+  =@activity.activity_type.caller_name
+
+%p
+  %strong Review
+  %br
+  - form_for @activity do |f|
+    = f.select(:review_status, (@activity.activity_type.review_status_options))
+
+%p
+  %strong Time
+  -activity_time_zone = @activity.activity_type.phone_number.campaign.account.time_zone
+  =time_ago_in_words(@activity.activity_type.call_start) + " ago"
+
+-if @activity.activity_type.recorded? && @activity.activity_type.recording?
+  %div#player

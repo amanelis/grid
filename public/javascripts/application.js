@@ -4,6 +4,7 @@
 $(document).ready(function($) {
   $('a[rel*=facebox]').facebox();
   $('.tiptip').tipTip();
+  $(".container").tipTip({maxWidth: "auto", edgeOffset: 10 });
 })
 
 
