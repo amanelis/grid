@@ -6,6 +6,7 @@
       = activity.activity_type.phone_number.campaign.account.name
     %td.caller
       %strong=number_to_phone(activity.activity_type.caller_number)
+      %br
       =activity.activity_type.caller_name
     %td.time
       -activity_time_zone = activity.activity_type.phone_number.campaign.account.time_zone
