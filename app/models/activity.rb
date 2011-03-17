@@ -12,14 +12,20 @@ class Activity < ActiveRecord::Base
   named_scope :lead, {:conditions => ['duplicate = FALSE AND (review_status = ? OR review_status = ?)', PENDING, LEAD]}
   
   named_scope :today, {:conditions => ['timestamp between ? AND ?', Date.today.to_time_in_current_zone.at_beginning_of_day.utc, Date.today.to_time_in_current_zone.end_of_day.utc], :order => 'timestamp DESC'}
+
   
-   
+  # INSTANCE BEHAVIOR
+  
   def is_call?
     self.activity_type.instance_of?(Call)
   end
   
   def is_submission?
     self.activity_type.instance_of?(Submission)
+  end
+  
+  def time_zone
+    self.activity_type.time_zone
   end
 
 end

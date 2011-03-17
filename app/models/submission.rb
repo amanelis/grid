@@ -176,5 +176,9 @@ class Submission < ActiveRecord::Base
       "This request has already been made or Customer Lobby account doesn't exist."
     end
   end
+
+  def time_zone
+    self.contact_form.time_zone
+  end
   
 end

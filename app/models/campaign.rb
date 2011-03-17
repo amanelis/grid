@@ -601,6 +601,11 @@ class Campaign < ActiveRecord::Base
     form.save
     form
   end
+  
+  def time_zone
+    self.account.time_zone
+  end
+
 
   # PREDICATES
   

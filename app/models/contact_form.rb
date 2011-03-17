@@ -1,6 +1,7 @@
 class ContactForm < ActiveRecord::Base
   belongs_to :campaign
   has_many :submissions, :dependent => :destroy
+
   
   # INSTANCE BEHAVIOR
 
@@ -73,7 +74,8 @@ class ContactForm < ActiveRecord::Base
     return "<iframe src=\"http://#{APP_CONFIG[:host]}/contact_forms/#{self.id}/get_html\" width=\"300\" height=\"375\"></iframe>"
   end
   
-  
-  
-  
+  def time_zone
+    self.campaign.time_zone
+  end
+
 end

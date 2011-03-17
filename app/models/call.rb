@@ -291,5 +291,9 @@ class Call < ActiveRecord::Base
       return UNIQUE_REVIEW_STATUS_OPTIONS
     end
   end
-  
+
+  def time_zone
+    self.phone_number.time_zone
+  end
+
 end

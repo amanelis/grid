@@ -190,5 +190,9 @@ class PhoneNumber < ActiveRecord::Base
   def call_timeline_data
     Utilities.merge_timeline_data(self.number_of_answered_calls_by_date, self.number_of_canceled_calls_by_date, self.number_of_voicemail_calls_by_date, self.number_of_other_calls_by_date)
   end
+  
+  def time_zone
+    self.campaign.time_zone
+  end
 
 end

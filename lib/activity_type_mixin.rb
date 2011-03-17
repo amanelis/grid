@@ -16,5 +16,5 @@ module ActivityTypeMixin
     self.activity.activity_type ||= self
     self.initialize_thyself
   end
-
+  
 end
