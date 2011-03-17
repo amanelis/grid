@@ -17,20 +17,20 @@
 
 %h3.strong=@activity.activity_type.phone_number.campaign.account.name
 %h4.quiet=@activity.activity_type.phone_number.campaign.name
-%p
-  -activity_time_zone = @activity.activity_type.phone_number.campaign.account.time_zone
-  =time_ago_in_words(@activity.activity_type.call_start) + " ago"
-%p
-  %strong From
-  %br
-  =number_to_phone(@activity.activity_type.caller_number)
-  %br
-  =@activity.activity_type.caller_name
-  -if @activity.activity_type.recorded? && @activity.activity_type.recording?
-    %div#player
 .notice
-  %h4 Review
-  %p{:class => @activity.activity_type.call_status.downcase}
+  %h4.strong Review
+  %p
+    %span.strong=@activity.activity_type.caller_name
+    %br
+    =number_to_phone(@activity.activity_type.caller_number)
+    %br
+    -if @activity.activity_type.recorded? && @activity.activity_type.recording?
+      %div#player
+  %p
+    -activity_time_zone = @activity.activity_type.phone_number.campaign.account.time_zone
+    =time_ago_in_words(@activity.activity_type.call_start) + " ago"
+    %br
+    %span{:class => @activity.activity_type.call_status.downcase}
     =(@activity.activity_type.call_end - @activity.activity_type.call_start).to_int
     seconds
   - form_for @activity do |f|
