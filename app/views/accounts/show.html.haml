@@ -66,6 +66,8 @@
       - channel.campaigns.active.each do |campaign|
         = render :partial => 'accounts/channel_campaign', :locals => {:campaign => campaign, :channel => channel}
 
-  -# CHANNEL ##################################################################################################################
+
+
+  -# FOOTER ##################################################################################################################
   - if can? :manipulate_account, @account
     = link_to "Create Channel", new_channel_path(@account), :class => "button", :rel => "facebox"

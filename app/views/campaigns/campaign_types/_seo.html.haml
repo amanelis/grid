@@ -4,7 +4,7 @@
     %h2.quiet Campaigns are the glue that connect people to your business. How customers get a hold of you affects how you track leads. Start tracking your campaign by adding a forwarding number or generating a form for a website.
     = link_to "Add New Phone Number", new_channel_campaign_phone_number_path(@account, @channel, @campaign), :rel => "facebox", :class => "button"
     or
-    = link_to "Create Website Form", "#", :class => "button"
+    = link_to "Create Contact Form", new_channel_campaign_contact_form_path(@account, @channel, @campaign), :rel => "facebox", :class => "button"
 
 - unless @campaign.phone_numbers.empty? && @campaign.contact_forms.empty?
   %header
@@ -35,8 +35,36 @@
           %td= ActionController::Base.helpers.number_to_currency(@campaign.spend_between(@start_date, @end_date))
           %td= ActionController::Base.helpers.number_to_currency(@campaign.cost_per_lead_between(@start_date, @end_date))
           %td= ActionController::Base.helpers.number_to_currency(@campaign.cost_per_contact_between(@start_date, @end_date))
-    -if can? :manipulate_campaign, @campaign
-      -#= link_to "+ Create Contact Form", "#", :class => "button"
+
+
+
+    %h3 Rankings
+    %table
+      %thead
+        %tr
+          %th Keyword (Click for History)
+          %th Last Updated
+          %th Google
+          %th Month Change
+          %th Yahoo
+          %th Month Change
+          %th Bing
+          %th Month Change
+      %tbody
+        - (@campaign.campaign_style.keywords.sort { |a,b| a.descriptor <=> b.descriptor }).each do |keyword|
+          %tr
+            %td= link_to keyword.descriptor, keyword_path(keyword)
+            %td= keyword.most_recent_ranking().created_at.strftime("%m/%d/%y %I:%M %p") if keyword.most_recent_ranking.present?
+            %td= ((final_ranking = ((ranking = keyword.most_recent_google_ranking_between(@start_date, @end_date))) > 100 ? '>100' : ranking.to_s) == '0') ? '' : final_ranking
+            %td= keyword.google_ranking_change_between(@start_date, @end_date) 
+            %td= ((final_ranking = ((ranking = keyword.most_recent_yahoo_ranking_between(@start_date, @end_date))) > 100 ? '>100' : ranking.to_s) == '0') ? '' : final_ranking
+            %td= keyword.yahoo_ranking_change_between(@start_date, @end_date) 
+            %td= ((final_ranking = ((ranking = keyword.most_recent_bing_ranking_between(@start_date, @end_date))) > 100 ? '>100' : ranking.to_s) == '0') ? '' : final_ranking
+            %td= keyword.bing_ranking_change_between(@start_date, @end_date)
+
+
+
+
     %h3 Connections
     %h4 Forms
     %p

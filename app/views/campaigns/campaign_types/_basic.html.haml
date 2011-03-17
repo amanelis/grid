@@ -4,7 +4,7 @@
     %h2.quiet Campaigns are the glue that connect people to your business. How customers get a hold of you affects how you track leads. Start tracking your campaign by adding a forwarding number or generating a form for a website.
     = link_to "Add New Phone Number", new_channel_campaign_phone_number_path(@account, @channel, @campaign), :rel => "facebox", :class => "button"
     or
-    = link_to "Create Website Form", "#", :class => "button"
+    = link_to "Create Contact Form", new_channel_campaign_contact_form_path(@account, @channel, @campaign), :rel => "facebox", :class => "button"
 
 - unless @campaign.phone_numbers.empty? && @campaign.contact_forms.empty?
   %header

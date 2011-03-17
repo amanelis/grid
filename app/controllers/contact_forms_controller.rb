@@ -10,40 +10,17 @@ class ContactFormsController < ApplicationController
   belongs_to :campaign
   
   def index
-    @campaign = Campaign.find(params[:campaign_id])
-    if @campaign.present?
-      @forms = @campaign.contact_forms
-    end
   end
   
   def new
-     @campaign = Campaign.find(params[:campaign_id])
-     if @campaign.present?
-       @form = @campaign.contact_forms.build
-     end
+    authorize! :manipulate_campaign, @campaign
+    no_layout
   end
   
   def create
-    @campaign = Campaign.find(params[:campaign_id])
-    if @campaign.present?
-      @form = @campaign.create_contact_form(params[:description], 
-                                            params[:forwarding_email], 
-                                            params[:forwarding_bcc_email], 
-                                            params[:custom1_text], 
-                                            params[:custom2_text], 
-                                            params[:custom3_text], 
-                                            params[:custom4_text], 
-                                            params[:need_name],
-                                            params[:need_address], 
-                                            params[:need_phone], 
-                                            params[:need_email], 
-                                            params[:work_category], 
-                                            params[:work_description], 
-                                            params[:date_requested], 
-                                            params[:time_requested], 
-                                            params[:other_information])
-      redirect_to contact_form_path(@form.id)
-    end
+    form = @campaign.create_contact_form('', params[:contact_form][:forwarding_email])
+    flash[:notice] = "Good job, you just created a contact form!"
+    redirect_to channel_campaign_path(@account, @channel, @campaign) 
   end
   
   def show
