@@ -11,7 +11,7 @@
         $this = $(this);
         var url = '#{@activity.activity_type.recording.expiring_url(14400)}';
         url = url.split('&').join('%26');
-        htmlOptions.flashvars.file = $this.attr('href');
+        htmlOptions.flashvars.file = url;
         $this.before($.fn.flash.transform(htmlOptions));
       });
     });
