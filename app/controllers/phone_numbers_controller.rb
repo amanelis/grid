@@ -1,6 +1,5 @@
 class PhoneNumbersController < ApplicationController
   inherit_resources
-  load_resource 
   load_resource :accounts 
   load_resource :channels
   load_resource :campaigns
@@ -10,6 +9,16 @@ class PhoneNumbersController < ApplicationController
   belongs_to :campaign
   
   def index
+  end
+  
+  def new
+    authorize! :manipulate_campaign, @campaign
+  end
+  
+  def create
+    number = @campaign.create_twilio_number(params[:phone_number][:area_code], @campaign.name, params[:phone_number][:forward_to])
+    flash[:notice] = "Good job, you just created a phone number!"
+    redirect_to channel_campaign_path(@account, @channel, @campaign)
   end
   
   def connect

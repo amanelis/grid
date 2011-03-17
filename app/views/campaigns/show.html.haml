@@ -1,9 +1,10 @@
-%article.blank
-  %h1.strong Make your campaign go somewhere
-  %h2.quiet Campaigns are the glue that connect people to your business. How customers get a hold of you affects how you track leads. Start tracking your campaign by adding a forwarding number or generating a form for a website.
-  = link_to "Add New Phone Number", "#", :class => "button"
-  or
-  = link_to "Create Website Form", "#", :class => "button"
+- if @campaign.phone_numbers.empty? && @campaign.contact_forms.empty?
+  %article.blank
+    %h1.strong Make your campaign go somewhere
+    %h2.quiet Campaigns are the glue that connect people to your business. How customers get a hold of you affects how you track leads. Start tracking your campaign by adding a forwarding number or generating a form for a website.
+    = link_to "Add New Phone Number", "#", :class => "button"
+    or
+    = link_to "Create Website Form", "#", :class => "button"
 
 - unless @campaign.phone_numbers.empty? && @campaign.contact_forms.empty?
   %hr

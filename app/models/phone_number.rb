@@ -111,7 +111,7 @@ class PhoneNumber < ActiveRecord::Base
 
   # INSTANCE BEHAVIOR
 
-  def get_twilio_number()
+  def get_twilio_number
     JSON.parse(update_resp = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{self.twilio_version}/Accounts/#{ACCOUNT_SID}/IncomingPhoneNumbers/#{self.twilio_id}.json", 'GET').body)
   end
   
