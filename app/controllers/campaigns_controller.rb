@@ -9,6 +9,7 @@ class CampaignsController < ApplicationController
   
   def new
     authorize! :manipulate_account, @account
+    no_layout
   end
   
   def create
