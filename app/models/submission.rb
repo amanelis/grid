@@ -177,8 +177,8 @@ class Submission < ActiveRecord::Base
     end
   end
 
-  def time_zone
-    self.contact_form.time_zone
+  def campaign
+    self.contact_form.campaign
   end
-  
+
 end
