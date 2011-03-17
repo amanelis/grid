@@ -1,14 +1,16 @@
 - if activity.is_call?
   %tr{:id => "activity_#{activity.id}", "data-time" => "#{activity.timestamp.to_i}"}
-    %td.campaign
+    %td
+      %a.iconic.phone
+    %td
       = link_to activity.activity_type.phone_number.campaign.name, "#"
       %br
       = activity.activity_type.phone_number.campaign.account.name
-    %td.caller
+    %td
       %strong=number_to_phone(activity.activity_type.caller_number)
       %br
       =activity.activity_type.caller_name
-    %td.time
+    %td
       -activity_time_zone = activity.activity_type.phone_number.campaign.account.time_zone
       =activity.activity_type.timestamp.in_time_zone(activity.time_zone).strftime("%I:%M%p %b %d")
       %br
@@ -16,10 +18,12 @@
 
 - elsif activity.is_submission?
   %tr{:id => activity.id, "data-time" => "#{activity.timestamp.to_i}"}
-    %td.campaign
+    %td
+      %a.iconic.article
+    %td
       = link_to activity.activity_type.contact_form.campaign.name, account_campaign_path(activity.activity_type.contact_form.campaign.account, activity.activity_type.contact_form.campaign)
       = activity.activity_type.contact_form.campaign.account.name
-    %td.caller
+    %td
       %strong=activity.activity_type.from_email
       %br
       =activity.activity_type.name || activity.activity_type.from_email
@@ -27,6 +31,6 @@
       =activity.activity_type.phone_number
       %br
       =activity.activity_type.home_address
-    %td.time
+    %td
       -activity_time_zone = activity.activity_type.contact_form.campaign.account.time_zone
       =time_ago_in_words(activity.activity_type.time_of_submission) + " ago"

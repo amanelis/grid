@@ -478,6 +478,11 @@ th:last-child{
 	        border-radius: 0 4px 4px 0;
 }
 
+td .iconic{
+	font-size:24px;
+	margin-left:12px;
+}
+
 /*
 	Stats
 	------------------
