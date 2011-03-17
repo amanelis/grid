@@ -35,15 +35,9 @@
           %td= ActionController::Base.helpers.number_to_currency(@campaign.spend_between(@start_date, @end_date))
           %td= ActionController::Base.helpers.number_to_currency(@campaign.cost_per_lead_between(@start_date, @end_date))
           %td= ActionController::Base.helpers.number_to_currency(@campaign.cost_per_contact_between(@start_date, @end_date))
-    -if can? :manipulate_campaign, @campaign
-      -#= link_to "+ Create Contact Form", "#", :class => "button"
-    %h3 Connections
-    %h4 Forms
-    %p
-      - @campaign.contact_forms.each do |form|
-        = "Your contact form ID is: #{form.id}"
-        %br
-        = text_area_tag 'form', form.generate_js_snippet
-    %h4 Phone Numbers
-    - @campaign.phone_numbers.each do |number|
-      %li= "Your inbound number is: #{number.inboundno}, Forwarded to: #{number.forward_to}"
+
+      %h3 Connections
+      %h4 Forms
+      = render :partial => 'campaigns/campaign_types/listings/contact_form'
+      %h4 Phone Numbers
+      = render :partial => 'campaigns/campaign_types/listings/phone_number'

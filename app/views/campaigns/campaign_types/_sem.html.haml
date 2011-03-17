@@ -63,11 +63,6 @@
 
     %h3 Connections
     %h4 Forms
-    %p
-      - @campaign.contact_forms.each do |form|
-        = "Your contact form ID is: #{form.id}"
-        %br
-        = text_area_tag 'form', form.generate_js_snippet
+    = render :partial => 'campaigns/campaign_types/listings/contact_form'
     %h4 Phone Numbers
-    - @campaign.phone_numbers.each do |number|
-      %li= "Your inbound number is: #{number.inboundno}, Forwarded to: #{number.forward_to}"
+    = render :partial => 'campaigns/campaign_types/listings/phone_number'
