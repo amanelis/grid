@@ -19,4 +19,4 @@
           %td= user.last_request_at.nil? ? "Has Not logged in" : time_ago_in_words(user.last_request_at)
           %td
             = link_to 'Edit', edit_user_path(user)
-            = link_to 'Destroy', user, :confirm => "This will delete user: #{user.email}, are you sure?", :method => :delete
+            = link_to 'Destroy', user, :confirm => "This will delete user: #{user.email}, are you sure?", :method => :delete unless user.id == @current_user.id
