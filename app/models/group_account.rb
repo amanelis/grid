@@ -1,7 +1,7 @@
 class GroupAccount < ActiveRecord::Base
   
-  has_many :accounts
-  has_many :group_users
+  has_many :accounts, :dependent => :destroy
+  has_many :group_users, :dependent => :destroy
   belongs_to :owner, :class_name => "GroupUser"
 
   validates_uniqueness_of :name, :case_sensitive => false
