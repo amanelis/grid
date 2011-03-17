@@ -1,4 +1,13 @@
 class PhoneNumbersController < ApplicationController
+  inherit_resources
+  load_resource 
+  load_resource :accounts 
+  load_resource :channels
+  load_resource :campaigns
+  
+  belongs_to :account
+  belongs_to :channel
+  belongs_to :campaign
   
   def index
   end

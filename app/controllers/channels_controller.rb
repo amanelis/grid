@@ -2,6 +2,7 @@ class ChannelsController < ApplicationController
   inherit_resources
   load_resource
   load_resource :account
+  
   belongs_to :account
   
   def new
