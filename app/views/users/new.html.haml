@@ -16,7 +16,10 @@
     %br
     %label Type
     %br
-    = select_tag "user_type", '<option value="0">- Select Role -</option><option value="1">Group User W</option> <option value="2">Group User R</option><option value="3">Account User W</option><option value="4">Account User R</option>', :name => "user[type]"
+    - if @current_user.can_manipulate_account?(@account)
+      = select_tag "user_type", '<option value="0">- Select Role -</option><option value="1">Group User Write</option> <option value="2">Group User Read</option><option value="3">Account User Write</option><option value="4">Account User Read</option>', :name => "user[type]"
+    - else
+      = select_tag "user_type", '<option value="0">- Select Role -</option><option value="4">Account User Read</option>', :name => "user[type]"
   %footer
     #submit
       = link_to "Cancel", "#", :class => "cancel", :onclick => "$.facebox.close();"
