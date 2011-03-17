@@ -1,7 +1,13 @@
 :javascript
+  var previousVal = $("#campaign_name").val();
   $(document).ready(function(){
     $('#cancel').click(function(){$.facebox.close()});
     $("#update").click(function(){
+      // If nothing was changed, close facebox
+      if(previousVal == $("#campaign_name").val()) {
+        $.facebox.close();
+        return;
+      }
       $('.edit_campaign').validate();
       // If it is valid, submit
       if( $('.edit_campaign').valid() )
