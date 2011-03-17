@@ -39,33 +39,36 @@ class UsersController < ApplicationController
     
     if params[:user][:email].blank? || params[:user][:password].blank? || params[:user][:password_confirmation].blank? || params[:user][:type] == "0"
       flash[:error] = "You did not enter in correct information, please try again"
+    else 
+      
+      if @user.save
+        flash[:notice] = "User was saved!"
+        
+        if type == "1" || type == "2"
+          @group_user                 = GroupUser.new 
+          @group_user.user            = @user
+          @group_user.group_account   = @group_account
+
+          if type == "1" && @current_user.can_manipulate_account?(@account)
+            @group_user.manipulator = true
+          end
+          @group_user.save
+        elsif type == "3" || type == "4"
+          @account_user         = AccountUser.new
+          @account_user.user    = @user
+          @account_user.account = @account
+
+          if type == "3" && @current_user.can_manipulate_account?(@account)
+            @account_user.manipulator = true
+          end
+          @account_user.save
+        end
+      else
+        flash[:error] = "User was not able to be saved"
+      end
     end
     
-    unless @user.save
-      flash[:error] = "User was not able to be saved, please try again!"
-    end
-
-    if type == "1" || type == "2"
-      @group_user                 = GroupUser.new 
-      @group_user.user            = @user
-      @group_user.group_account   = @group_account
-      
-      if type == "1" && @current_user.can_manipulate_account?(@account)
-        @group_user.manipulator = true
-      end
-      @group_user.save
-    elsif type == "3" || type == "4"
-      @account_user         = AccountUser.new
-      @account_user.user    = @user
-      @account_user.account = @account
-      
-      if type == "3" && @current_user.can_manipulate_account?(@account)
-        @account_user.manipulator = true
-      end
-      @account_user.save
-    end
-
-    redirect_to account_path(@account)    
+    redirect_to account_path(@account)   
   end
   
   def edit
