@@ -1,49 +1,12 @@
-%article.blank
-  %h1.strong Make your campaign go somewhere
-  %h2.quiet Campaigns are the glue that connect people to your business. How customers get a hold of you affects how you track leads. Start tracking your campaign by adding a forwarding number or generating a form for a website.
-  = link_to "Add New Phone Number", "#", :class => "button"
+- if @campaign.is_basic?
+  = render :partial => 'campaigns/campaign_types/basic'
+- elsif @campaign.is_seo?
+  = render :partial => 'campaigns/campaign_types/seo'
+- elsif @campaign.is_sem?
+  = render :partial => 'campaigns/campaign_types/sem'
+
+- unless @campaign.phone_numbers.blank? || @campaign.contact_forms.blank?
+  %br  
+  = link_to "Add New Phone Number", new_channel_campaign_phone_number_path(@account, @channel, @campaign), :rel => "facebox", :class => "button"
   or
   = link_to "Create Website Form", "#", :class => "button"
-
-- unless @campaign.phone_numbers.empty? && @campaign.contact_forms.empty?
-  %hr
-  %header
-    %h1= @campaign.name
-    %h2= @account.name
-  %article
-    %h3 Campaign Details
-    %table
-      %thead
-        %tr
-          %th Lead Calls
-          %th All Calls
-          %th Lead Forms
-          %th All Forms
-          %th Total Leads
-          %th Total Contacts
-          %th Spend
-          %th Cost Per Lead
-          %th Cost Per Contact
-      %tbody
-        %tr
-          %td= @campaign.number_of_lead_calls_between(@start_date, @end_date).to_s
-          %td= @campaign.number_of_all_calls_between(@start_date, @end_date).to_s
-          %td= @campaign.number_of_lead_submissions_between(@start_date, @end_date).to_s
-          %td= @campaign.number_of_all_submissions_between(@start_date, @end_date).to_s
-          %td= @campaign.number_of_total_leads_between(@start_date, @end_date).to_s
-          %td= @campaign.number_of_total_contacts_between(@start_date, @end_date).to_s
-          %td= ActionController::Base.helpers.number_to_currency(@campaign.spend_between(@start_date, @end_date))
-          %td= ActionController::Base.helpers.number_to_currency(@campaign.cost_per_lead_between(@start_date, @end_date))
-          %td= ActionController::Base.helpers.number_to_currency(@campaign.cost_per_contact_between(@start_date, @end_date))
-    -if can? :manipulate_campaign, @campaign
-      -#= link_to "+ Create Contact Form", "#", :class => "button"
-    %h3 Connections
-    %h4 Forms
-    %p
-      - @campaign.contact_forms.each do |form|
-        = "Your contact form ID is: #{form.id}"
-        %br
-        = text_area_tag 'form', form.generate_js_snippet
-    %h4 Phone Numbers
-    - @campaign.phone_numbers.each do |number|
-      %li= "Your inbound number is: #{number.inboundno}, Forwarded to: #{number.forward_to}"
