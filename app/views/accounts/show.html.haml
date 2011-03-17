@@ -24,6 +24,9 @@
   %h1= @account.name
   %datepicker= render :partial => "shared/date_picker"
 %article
+  =high_chart("total_daily_leads_graph", @daily_total_leads_graph)
+  %hr
+
   -# SEO #####################################################################################################################
   - @seo_channels.each do |channel|
     %table.channels
