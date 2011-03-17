@@ -17,12 +17,4 @@ module ActivityTypeMixin
     self.initialize_thyself
   end
 
-  # def initialize(attributes={})
-  #   super(attributes)
-  #   self.activity = Activity.new
-  #   self.activity.activity_type = self
-  #   self.initialize_specifics(attributes)
-  #   self
-  # end
-
 end

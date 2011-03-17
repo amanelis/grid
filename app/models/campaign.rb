@@ -1,7 +1,7 @@
 class Campaign < ActiveRecord::Base
   belongs_to :account
   belongs_to :channel
-  belongs_to :campaign_style, :polymorphic => true
+  belongs_to :campaign_style, :polymorphic => true, :dependent => :destroy
   belongs_to :website
   has_many :phone_numbers, :dependent => :destroy
   has_many :calls, :through => :phone_numbers, :order => "call_start DESC"

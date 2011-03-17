@@ -16,11 +16,4 @@ module RoleTypeMixin
     self.role.role_type ||= self
   end
 
-  # def initialize(attributes={})
-  #   super(attributes)
-  #   self.role = Role.new
-  #   self.role.role_type = self
-  #   self
-  # end
-
 end

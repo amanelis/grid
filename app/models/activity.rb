@@ -1,5 +1,5 @@
 class Activity < ActiveRecord::Base
-  belongs_to :activity_type, :polymorphic => true
+  belongs_to :activity_type, :polymorphic => true, :dependent => :destroy
 
   PENDING = 'pending'
   LEAD = 'lead'

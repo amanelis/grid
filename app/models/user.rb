@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
   acts_as_authentic
   
-  has_many :roles
+  has_many :roles, :dependent => :destroy
   
   has_many :group_users, :through => :roles, :source => :role_type, :source_type => 'GroupUser'
   has_many :account_users, :through => :roles, :source => :role_type, :source_type => 'AccountUser'

@@ -17,11 +17,4 @@ module CampaignStyleMixin
     self.initialize_thyself
   end
 
-  # def initialize(attributes={})
-  #   super(attributes)
-  #   self.campaign = Campaign.new
-  #   self.campaign.campaign_style = self
-  #   self
-  # end
-
 end
