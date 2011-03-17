@@ -30,9 +30,14 @@
       %label Type
       %br
       - if @current_user.can_manipulate_account?(@account)
-        = select_tag "user_type", '<option value="1">Group User Write</option> <option value="2">Group User Read</option><option value="3">Account User Write</option><option value="4">Account User Read</option>', :name => "user[type]", :class => 'required'
+        %select{:id => 'user_type', :name => 'user[type]', :class => 'required'}
+          %option{:value => 1} Group User Write
+          %option{:value => 2} Group User Read
+          %option{:value => 3} Account User Write
+          %option{:value => 4} Account User Read
       - else
-        = select_tag "user_type", '<option value="4">Account User Read</option>', :name => "user[type]", :class => 'required'
+        %select{:id => 'user_type', :name => 'user[type]', :class => 'required'}
+          %option{:value => 4} Account User Read
       =# hidden_field_tag 'acco', 'VUBJKB23UIVI1UU1VOBVI@'
 %footer
   #submit
