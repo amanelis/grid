@@ -17,4 +17,11 @@ module ActivityTypeMixin
     self.initialize_thyself
   end
   
+  
+  # INSTANCE BEHAVIOR
+  
+  def time_zone
+    self.campaign.time_zone
+  end
+
 end

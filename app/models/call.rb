@@ -84,7 +84,7 @@ class Call < ActiveRecord::Base
   
   #validates_attachment_presence :recording
   #validates_attachment_content_type :recording, :content_type => [ 'application/mp3', 'application/x-mp3', 'audio/mpeg', 'audio/mp3' ]
-    
+ 
   
   # CLASS BEHAVIOR
 
@@ -291,9 +291,9 @@ class Call < ActiveRecord::Base
       return UNIQUE_REVIEW_STATUS_OPTIONS
     end
   end
-
-  def time_zone
-    self.phone_number.time_zone
+  
+  def campaign
+    self.phone_number.campaign
   end
 
 end
