@@ -22,7 +22,9 @@
         = link_to image_tag ("icons/email.png"), send_weekly_path(params[:id])
   %h1= @account.name
   %datepicker= render :partial => "shared/date_picker"
+  
 %article
+  -# SEO #####################################################################################################################
   - @seo_channels.each do |channel|
     %table.channels
       %thead
@@ -34,6 +36,7 @@
       - channel.campaigns.active.each do |campaign|
         = render :partial => 'accounts/channel_campaign', :locals => {:campaign => campaign, :channel => channel}
 
+  -# SEM #####################################################################################################################
   - @sem_channels.each do |channel|
     %table.channels
       %thead
@@ -45,6 +48,7 @@
       - channel.campaigns.active.each do |campaign|
         = render :partial => 'accounts/channel_campaign', :locals => {:campaign => campaign, :channel => channel}
 
+  -# BASIC ###################################################################################################################
   - @basic_channels.each do |channel|
     %table.channels
       %thead
@@ -62,5 +66,6 @@
       - channel.campaigns.active.each do |campaign|
         = render :partial => 'accounts/channel_campaign', :locals => {:campaign => campaign, :channel => channel}
 
+  -# CHANNEL ##################################################################################################################
   - if can? :manipulate_account, @account
     = link_to "Create Channel", new_channel_path(@account), :class => "button", :rel => "facebox"

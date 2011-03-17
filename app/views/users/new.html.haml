@@ -31,16 +31,18 @@
       %br
       - if @current_user.can_manipulate_account?(@account)
         %select{:id => 'user_type', :name => 'user[type]', :class => 'required'}
+          %option{:value => 0} - Choose a role -
           %option{:value => 1} Group User Write
           %option{:value => 2} Group User Read
           %option{:value => 3} Account User Write
           %option{:value => 4} Account User Read
       - else
         %select{:id => 'user_type', :name => 'user[type]', :class => 'required'}
+          %option{:value => 0} - Choose a role -
           %option{:value => 4} Account User Read
 %footer
   #submit
-    %button{:class => 'button', :id => 'cancel'} Cancel
+    = link_to "Cancel", "#", :class => "cancel", :id => 'cancel'
     %button{:class => 'button', :id => 'register'} Register
   %hr.space
 
