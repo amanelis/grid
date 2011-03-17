@@ -40,7 +40,7 @@
       %tbody
         -@search_campaigns.each do |campaign|
           %tr
-            %td= link_to campaign.name, campaign_path(campaign)
+            %td= link_to campaign.name, channel_campaign_path(campaign.account, campaign.channel, campaign)
             %td= campaign.number_of_lead_calls_between(Date.yesterday - 1.week, Date.yesterday).to_s
             %td= campaign.number_of_lead_submissions_between(Date.yesterday - 1.week, Date.yesterday).to_s
             %td= campaign.number_of_total_leads_between(Date.yesterday - 1.week, Date.yesterday).to_s

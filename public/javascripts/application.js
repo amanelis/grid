@@ -43,7 +43,7 @@ function confirm_refresh_accounts() {
 }
 
 function confirm_export_report(id) {
-  var message = '<center>This will export a PDF client report for previous month.<p><a href="#" onClick="export_client_report('+id+');">Yes</a> or <a href="#" onClick="$.facebox.close();">No</a></center>';
+  var message = '<center>This will export a PDF client report for your date range.<p><a href="#" onClick="export_client_report('+id+');">Yes</a> or <a href="#" onClick="$.facebox.close();">No</a></center>';
   $.facebox(message);
 }
 
