@@ -3,7 +3,7 @@
     $(document).ready(function(){
       $("#player").flash({
         src: './player.swf',
-        width: '200px',
+        width: '150px',
         height: '22px'
       },
       {update: false},
@@ -11,7 +11,7 @@
         $this = $(this);
         var url = '#{@activity.activity_type.recording.expiring_url(14400)}';
         url = url.split('&').join('%26');
-        htmlOptions.flashvars.file = $this.attr('href');
+        htmlOptions.flashvars.file = url;
         $this.before($.fn.flash.transform(htmlOptions));
       });
     });
@@ -26,7 +26,8 @@
     =number_to_phone(@activity.activity_type.caller_number)
     %br
     -if @activity.activity_type.recorded? && @activity.activity_type.recording?
-      %div#player
+      %center
+        %div#player
   %p
     -activity_time_zone = @activity.activity_type.phone_number.campaign.account.time_zone
     =time_ago_in_words(@activity.activity_type.call_start) + " ago"
