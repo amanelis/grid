@@ -6,38 +6,38 @@
         -# Dashboard
         %li{:class => (request.url.include?("dashboard")? 'active' : '')}
           .triangle
-          = image_tag("icons/dashboard.png")
+          %a.iconic.home
           = link_to "Dashboard", dashboard_url
 
         -# Accounts
         %li{:class => (request.url.include?("accounts")? 'active' : '')}
           .triangle
-          = image_tag("icons/accounts.png")
+          %a.iconic.book-alt
           = link_to "Accounts", accounts_url
 
         -# Activities
         %li{:class => (request.url.include?("activities")? 'active' : '')}
           .triangle
-          = image_tag("icons/leads.png")
+          %a.iconic.star
           = link_to "Leads", activities_url
 
 
         -# Jobs
         %li{:class => (request.url.include?("job_statuses")? 'active' : '')}
           .triangle
-          = image_tag("icons/jobs.png")
+          %a.iconic.new-window
           = link_to "Jobs", job_statuses_url
 
         -# Users
         %li{:class => (request.url.include?("users")? 'active' : '')}
           .triangle
-          = image_tag("icons/users.png")
+          %a.iconic.user 
           = link_to "Users", users_url
 
         -# Searches
         %li{:class => (request.url.include?("searches")? 'active' : '')}
           .triangle
-          = image_tag("icons/search.png")
+          %a.iconic.magnifying-glass
           = link_to "Search", searches_url
 
       - else
