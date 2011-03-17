@@ -1,16 +1,25 @@
+:javascript
+  $(document).ready(function(){
+    // if they click cancel, close the facebox
+    $('#cancel').click(function(){$.facebox.close()});
+
+    $("#create").click(function(){
+      $('#new_channel').validate();
+      // If it is valid, submit
+      if( $('#new_channel').valid() )
+        $("#new_channel").submit();
+    });
+  });
+
 - form_for @channel do |f|
   %header
     %h1 Create a new Channel
   %article
-    = f.label "Name"
-    %br
-    = f.text_field :name
-    %br
-    =# f.label "Type"
-    -#%br
-    =# f.select(:channel_type, Channel::CHANNEL_TYPE_OPTIONS, :prompt => "- Choose Type -" )
-  %footer
-    #submit
-      = link_to "Cancel", "#", :class => "cancel", :onclick => "$.facebox.close();"
-      = f.submit "Create", :class => 'button'
-    %hr.space
+    %p
+      %label Name
+      = f.text_field :name, :class => 'required title'
+%footer
+  #submit
+    %button{:class => 'button', :id => 'cancel'} Cancel
+    %button{:class => 'button', :id => 'create'} Create Channel
+  %hr.space

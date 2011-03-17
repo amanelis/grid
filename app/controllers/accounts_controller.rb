@@ -138,15 +138,6 @@ class AccountsController < ApplicationController
     flash[:notice] = "You have successfully sent an email!"
     redirect_to account_path(params[:id])
   end
-  
-  def refresh_accounts
-    authorize! :refresh_accounts, Account
-    GroupAccount.pull_salesforce_accounts
-    Campaign.pull_salesforce_campaigns
-    GroupAccount.cache_results_for_group_accounts
-    flash[:notice] = "Accounts reloaded!"
-    redirect_to :action => "index"
-  end
 
   def export
     authorize! :export, Account
@@ -169,9 +160,6 @@ class AccountsController < ApplicationController
     end
     send_data csv_data, :type => 'text/csv; charset=iso-8859-1; header=present', :disposition => "attachment; filename=#{@outfile}"
   end 
-  
-  def add_customer_lobby
-  end
 
 end
 
