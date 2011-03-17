@@ -1,12 +1,13 @@
-%header
-  .right= link_to "Create User", register_path, :rel => "facebox"
+%header       
   %h1 Users
 %article
   %table
     %thead
       %tr
-        %th ID
-        %th Email
+        %th User ID
+        %th
+          .right= link_to "", register_path, :rel => "facebox", :title => "Create User", :class => "tiptip iconic plus-alt"
+          Email
         %th Created
         %th Last Request
         %th= @current_user.admin? ? "Action" : nil

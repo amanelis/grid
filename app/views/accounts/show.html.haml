@@ -16,16 +16,13 @@
 %header
   - if can? :manipulate_account, @account
     .menu
+      = link_to "", {:onclick => "confirm_export_report(#{params[:id]});"}, :title => "Export to PDF", :class => "tiptip iconic document"
       = link_to "", new_account_user_path(@account), :rel => "facebox", :title => "Add User", :class => 'tiptip iconic user'
       = link_to "", edit_account_path, :rel => "facebox", :title => "Edit Account", :class => 'tiptip iconic pencil'
       - if @account.can_send_weekly_report_now?
         = link_to "", send_weekly_path(params[:id]), :title => "Send Test Email", :class => "tiptip iconic mail-alt"
-      %a{:onclick => "confirm_export_report(#{params[:id]});"}
-        %br
-        Export
   %h1= @account.name
   %datepicker= render :partial => "shared/date_picker"
-  
 %article
   -# SEO #####################################################################################################################
   - @seo_channels.each do |channel|

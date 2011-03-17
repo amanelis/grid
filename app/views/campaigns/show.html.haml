@@ -6,4 +6,11 @@
   = render :partial => 'campaigns/campaign_types/sem'
 
 - unless @campaign.phone_numbers.blank? && @campaign.contact_forms.blank?
+<<<<<<< HEAD
   = render :partial => 'campaigns/campaign_types/listings/buttons'
+=======
+  %footer  
+    = link_to "Add New Phone Number", new_channel_campaign_phone_number_path(@account, @channel, @campaign), :rel => "facebox", :class => "button"
+    or
+    = link_to "Create Contact Form", new_channel_campaign_contact_form_path(@account, @channel, @campaign), :rel => "facebox", :class => "button"
+>>>>>>> 3eb71468f4e34886bb2f4a303f238f50c035567d
