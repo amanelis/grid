@@ -273,7 +273,6 @@ a{
 #toolbar li a{
 	color:#fff;
 	line-height:36px;
-	font-weight:bold;
 }
 
 #toolbar ul, #toolbar img{
@@ -284,8 +283,12 @@ header ul{
 	margin:0;
 }
 
-#toolbar img{
-	margin-top:6px;
+#logo{
+	font-weight:bold;
+	margin:12px;
+	font-size:24px;
+	line-height:48px;
+	color:#fff;
 }
 
 /*
@@ -476,6 +479,11 @@ th:last-child{
 	-webkit-border-radius: 0 4px 4px 0;
 	   -moz-border-radius: 0 4px 4px 0;
 	        border-radius: 0 4px 4px 0;
+}
+
+td .iconic{
+	font-size:24px;
+	margin-left:12px;
 }
 
 /*
