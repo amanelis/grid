@@ -1,15 +1,25 @@
+:javascript
+  $(document).ready(function(){
+    $('#cancel').click(function(){$.facebox.close()});
+    $("#update").click(function(){
+      $('.edit_channel').validate();
+      // If it is valid, submit
+      if( $('.edit_channel').valid() )
+        $(".edit_channel").submit();
+    });
+  });
+
 - form_for @channel, :url => channel_path, :method => "put" do |f|
   %header
     %h1= "Edit #{@channel.name}"
   %article
-    = f.label "Name"
+    %label Name
     %br
-    = f.text_field :name
+    = f.text_field :name, :class => 'required title'
     %br
     = link_to 'Delete this Channel', channel_path(@account, @channel), :class=> "button", :confirm => "This will delete this channel, are you sure?", :method => :delete if @channel.campaigns.count == 0
-  %footer
-    #submit
-      = link_to "Cancel", "#", :class => "cancel", :onclick => "$.facebox.close();"
-      = f.submit "Update", :class => 'button'
-    %hr.space
-  
+%footer
+  #submit
+    = link_to "Cancel", "#", :class => "cancel", :id => 'cancel'
+    %button{:id => 'update', :class => 'button'} Update
+  %hr.space

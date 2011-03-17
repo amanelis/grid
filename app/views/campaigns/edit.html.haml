@@ -1,14 +1,25 @@
+:javascript
+  $(document).ready(function(){
+    $('#cancel').click(function(){$.facebox.close()});
+    $("#update").click(function(){
+      $('.edit_campaign').validate();
+      // If it is valid, submit
+      if( $('.edit_campaign').valid() )
+        $(".edit_campaign").submit();
+    });
+  });
+
 - form_for @campaign, :url => channel_campaign_path, :method => "put" do |f|
   %header
     %h1= "Edit #{@campaign.name}"
   %article
-    = f.label "Name"
-    %br
-    = f.text_field :name
-    %br
+    %p
+      %label Name
+      %br
+      = f.text_field :name, :class => 'required title'
     = link_to 'Pause this Campaign', channel_campaign_path(@account, @channel, @campaign), :class => "button", :confirm => "This will delete this campaign, are you sure?", :method => :delete
-  %footer
-    #submit
-      = link_to "Cancel", "#", :class => "cancel", :onclick => "$.facebox.close();"
-      = f.submit "Update", :class => 'button'
-    %hr.space
+%footer
+  #submit
+    = link_to "Cancel", "#", :class => "cancel", :id => 'cancel'
+    %button{:id => 'update', :class => 'button'} Update
+  %hr.space
