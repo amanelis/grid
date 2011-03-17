@@ -20,6 +20,6 @@
       = f.text_field :name, :class => 'required title'
 %footer
   #submit
-    %button{:class => 'button', :id => 'cancel'} Cancel
+    = link_to "Cancel", "#", :class => "cancel", :id => 'cancel'
     %button{:class => 'button', :id => 'create'} Create Channel
   %hr.space
