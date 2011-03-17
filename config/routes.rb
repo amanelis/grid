@@ -14,8 +14,11 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :accounts do |account|
     account.resources :users
-    account.resources :channels, :name_prefix => "" do |channels|
-      channels.resources :campaigns
+    account.resources :channels, :name_prefix => "" do |channel|
+      channel.resources :campaigns do |campaign|
+        campaign.resources :phone_numbers
+        campaign.resources :contact_forms
+      end
     end
   end
 

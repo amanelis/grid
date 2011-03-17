@@ -1,5 +1,8 @@
 class PhoneNumbersController < ApplicationController
   
+  def index
+  end
+  
   def connect
     @phone_number = PhoneNumber.find(params[:id])
     forward_to = @phone_number.forward_to.blank? ? '2105289224' : @phone_number.forward_to

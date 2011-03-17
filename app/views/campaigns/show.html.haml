@@ -5,7 +5,7 @@
   or
   = link_to "Create Website Form", "#", :class => "button"
 
-- unless @campaign.phone_numbers.empty? || @campaign.contact_forms.empty?
+- unless @campaign.phone_numbers.empty? && @campaign.contact_forms.empty?
   %hr
   %header
     %h1= @campaign.name
