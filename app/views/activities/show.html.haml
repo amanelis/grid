@@ -21,6 +21,8 @@
   %strong Campaign
   %br
   =@activity.activity_type.phone_number.campaign.name
+%p
+  %strong Account
   %br
   =@activity.activity_type.phone_number.campaign.account.name
 
@@ -34,11 +36,16 @@
 %p
   %strong Review
   %br
+  %span{:class => @activity.activity_type.call_status.downcase}
+    =(@activity.activity_type.call_end - @activity.activity_type.call_start).to_int
+    seconds
+  %br
   - form_for @activity do |f|
     = f.select(:review_status, (@activity.activity_type.review_status_options))
 
 %p
   %strong Time
+  %br
   -activity_time_zone = @activity.activity_type.phone_number.campaign.account.time_zone
   =time_ago_in_words(@activity.activity_type.call_start) + " ago"
 
