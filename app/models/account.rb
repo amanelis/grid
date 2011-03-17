@@ -24,7 +24,7 @@ class Account < ActiveRecord::Base
   end
 
   belongs_to :account_manager, :class_name => "GroupUser", :foreign_key => "account_manager_id"
-  has_many :account_users
+  has_many :account_users, :dependent => :destroy
 
   named_scope :active, :conditions => ['LCASE(status) = ?', "active"], :order => "name ASC"
   named_scope :inactive, :conditions => ['LCASE(status) = ?', "inactive"], :order => "name ASC"
