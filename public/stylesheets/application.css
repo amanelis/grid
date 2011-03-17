@@ -373,7 +373,11 @@ hr{
 	padding:12px;
 }
 
-footer small, footer small a{
+footer p{
+	margin-left:190px;
+}
+
+footer, footer a{
 	font-size:12px !important;
 	color:#444;
 }
@@ -410,6 +414,15 @@ header h2{
 	margin-bottom:12px;
 }
 
+/*
+	Footer
+	------------------
+*/
+
+.menu{
+	float:right;
+	font-size:36px;
+}
 /*
 	Date Picker
 	------------------
@@ -484,6 +497,12 @@ th:last-child{
 td .iconic{
 	font-size:24px;
 	margin-left:12px;
+}
+
+th .iconic{
+	float:right;
+	font-size:18px;
+	line-height:18px;
 }
 
 /*

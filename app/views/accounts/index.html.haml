@@ -15,7 +15,7 @@
         %th 
           Account
           - if @current_user.admin? || @current_user.group_user?
-            .right= link_to image_tag("icons/new.png"), new_account_path, :rel => "facebox", :title => "Add Account", :class => "tiptip"
+            = link_to "", new_account_path, :rel => "facebox", :title => "Add Account", :class => "tiptip iconic plus-alt"
         %th Leads
     %tbody
       - @accounts.each do |account|
