@@ -1,4 +1,10 @@
 %br  
-= link_to "Add New Phone Number", new_channel_campaign_phone_number_path(@account, @channel, @campaign), :rel => "facebox", :class => "button"
+.button
+  %a.iconic.phone
+  = link_to "Add Phone Number", new_channel_campaign_phone_number_path(@account, @channel, @campaign), :rel => "facebox"
+
 or
-= link_to "Create Contact Form", new_channel_campaign_contact_form_path(@account, @channel, @campaign), :rel => "facebox", :class => "button"
+
+.button
+  %a.iconic.article
+  = link_to "Create Contact Form", new_channel_campaign_contact_form_path(@account, @channel, @campaign), :rel => "facebox"

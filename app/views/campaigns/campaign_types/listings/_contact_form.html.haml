@@ -3,3 +3,6 @@
   %br
   = text_area_tag 'form', form.generate_js_snippet
   %br
+.button
+  %a.iconic.article
+  = link_to "Create Contact Form", new_channel_campaign_contact_form_path(@account, @channel, @campaign), :rel => "facebox"

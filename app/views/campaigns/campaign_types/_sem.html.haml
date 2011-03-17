@@ -1,17 +1,11 @@
-- if @campaign.phone_numbers.empty? && @campaign.contact_forms.empty?
-  %article.blank
-    %h1.strong Make your campaign go somewhere
-    %h2.quiet Campaigns are the glue that connect people to your business. How customers get a hold of you affects how you track leads. Start tracking your campaign by adding a forwarding number or generating a form for a website.
-    = render :partial => 'campaigns/campaign_types/listings/buttons'
-
 - unless @campaign.phone_numbers.empty? && @campaign.contact_forms.empty?
-  = render :partial => 'campaigns/campaign_types/common'
   - adwords_campaigns = @campaign.campaign_style.google_sem_campaigns
-    %h3 Adwords Campaigns(In progress)
+  %article
+    %h3 Adwords Campaigns
     %table
       %thead
         %tr
-          %th Adwords Campaign Name
+          %th Name
           %th Clicks
           %th Impressions
           %th CTR
@@ -22,7 +16,7 @@
       %tbody
         -adwords_campaigns.each do |adwords_campaign|
           %tr
-            %td= link_to adwords_campaign.name, "#"
+            %td= adwords_campaign.name
             %td= adwords_campaign.clicks_between(@start_date, @end_date)
             %td= adwords_campaign.impressions_between(@start_date, @end_date)
             %td= (sprintf("%.3f", (adwords_campaign.click_through_rate_between(@start_date, @end_date) * 100)) + '%')

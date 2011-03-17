@@ -1,6 +1,3 @@
-%header
-  %h1= @campaign.name
-  %h2.quiet= @account.name
 %article
   %h3 Campaign Details
   %table
@@ -27,7 +24,10 @@
         %td= ActionController::Base.helpers.number_to_currency(@campaign.cost_per_lead_between(@start_date, @end_date))
         %td= ActionController::Base.helpers.number_to_currency(@campaign.cost_per_contact_between(@start_date, @end_date))
   %h3 Connections
-  %h4 Forms
-  = render :partial => 'campaigns/campaign_types/listings/contact_form'
-  %h4 Phone Numbers
-  = render :partial => 'campaigns/campaign_types/listings/phone_number'
+  .span-8.colborder
+    %h4.strong Forms
+    = render :partial => 'campaigns/campaign_types/listings/contact_form'
+  .span-8.last 
+    %h4.strong Phone Numbers
+    = render :partial => 'campaigns/campaign_types/listings/phone_number'
+  %hr

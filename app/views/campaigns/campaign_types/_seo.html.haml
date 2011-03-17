@@ -1,16 +1,9 @@
-- if @campaign.phone_numbers.empty? && @campaign.contact_forms.empty?
-  %article.blank
-    %h1.strong Make your campaign go somewhere
-    %h2.quiet Campaigns are the glue that connect people to your business. How customers get a hold of you affects how you track leads. Start tracking your campaign by adding a forwarding number or generating a form for a website.
-    = render :partial => 'campaigns/campaign_types/listings/buttons'
-
-- unless @campaign.phone_numbers.empty? && @campaign.contact_forms.empty?
-  = render :partial => 'campaigns/campaign_types/common'
+%article
   %h3 Rankings
   %table
     %thead
       %tr
-        %th Keyword (Click for History)
+        %th Keyword
         %th Last Updated
         %th Google
         %th Month Change
@@ -21,7 +14,7 @@
     %tbody
       - (@campaign.campaign_style.keywords.sort { |a,b| a.descriptor <=> b.descriptor }).each do |keyword|
         %tr
-          %td= link_to keyword.descriptor, "#"
+          %td= keyword.descriptor
           %td= keyword.most_recent_ranking().created_at.strftime("%m/%d/%y %I:%M %p") if keyword.most_recent_ranking.present?
           %td= ((final_ranking = ((ranking = keyword.most_recent_google_ranking_between(@start_date, @end_date))) > 100 ? '>100' : ranking.to_s) == '0') ? '' : final_ranking
           %td= keyword.google_ranking_change_between(@start_date, @end_date) 
