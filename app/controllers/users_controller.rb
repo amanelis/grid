@@ -12,7 +12,7 @@ class UsersController < ApplicationController
   end
   
   def new
-    authorize! :create, User
+    authorize! :manipulate_account, @account
     no_layout
     @current_user = current_user
     @user = User.new
