@@ -1,4 +1,4 @@
--if @activity.activity_type.recorded? && @activity.activity_type.recording?
+- if @activity.is_call? && @activity.activity_type.recorded? && @activity.activity_type.recording?
   :javascript
     $(document).ready(function(){
       $("#player").flash({
@@ -16,24 +16,41 @@
       });
     });
 
-%h3.strong=@activity.activity_type.phone_number.campaign.account.name
-%h4.quiet=@activity.activity_type.phone_number.campaign.name
-.notice
-  %h4.strong Review
-  %p
-    %span.strong=@activity.activity_type.caller_name
-    %br
-    =number_to_phone(@activity.activity_type.caller_number)
-    %br
-    -if @activity.activity_type.recorded? && @activity.activity_type.recording?
-      %center
-        %div#player
-  %p
-    -activity_time_zone = @activity.activity_type.phone_number.campaign.account.time_zone
-    =time_ago_in_words(@activity.activity_type.call_start) + " ago"
-    %br
-    %span{:class => @activity.activity_type.call_status.downcase}
-    =(@activity.activity_type.call_end - @activity.activity_type.call_start).to_int
-    seconds
-  - form_for @activity do |f|
-    = f.select(:review_status, (@activity.activity_type.review_status_options))
+- if @activity.is_call?
+  %h3.strong=@activity.activity_type.phone_number.campaign.account.name
+  %h4.quiet=@activity.activity_type.phone_number.campaign.name
+  .notice
+    %h4.strong Review
+    %p
+      %span.strong=@activity.activity_type.caller_name
+      %br
+      =number_to_phone(@activity.activity_type.caller_number)
+      %br
+      -if @activity.activity_type.recorded? && @activity.activity_type.recording?
+        %center
+          %div#player
+    %p
+      -activity_time_zone = @activity.activity_type.phone_number.campaign.account.time_zone
+      =time_ago_in_words(@activity.activity_type.call_start) + " ago"
+      %br
+      %span{:class => @activity.activity_type.call_status.downcase}
+      =(@activity.activity_type.call_end - @activity.activity_type.call_start).to_int
+      seconds
+    - form_for @activity do |f|
+      = f.select(:review_status, (@activity.activity_type.review_status_options))
+      
+- elsif @activity.is_submission?
+  %h3.strong=@activity.activity_type.contact_form.campaign.account.name
+  %h4.quiet=@activity.activity_type.contact_form.campaign.name
+  .notice
+    %h4.strong Review
+    %p
+      %span.strong=@activity.activity_type.name
+    %p
+      -activity_time_zone = @activity.activity_type.contact_form.campaign.account.time_zone
+      =time_ago_in_words(@activity.timestamp) + " ago"
+      %br
+    - form_for @activity do |f|
+      = f.select(:review_status, (@activity.activity_type.review_status_options))
+
+  

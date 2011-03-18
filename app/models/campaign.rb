@@ -89,6 +89,7 @@ class Campaign < ActiveRecord::Base
             if existing_campaign.blank?
               new_sem_campaign = SemCampaign.new
               new_sem_campaign.salesforce_id = sf_campaign.id
+              new_sem_campaign.channel = Channel.build_default_sem_channel_for(account)
             else
               new_sem_campaign = existing_campaign.campaign_style
               unless new_sem_campaign.instance_of?(SemCampaign)
@@ -139,6 +140,7 @@ class Campaign < ActiveRecord::Base
             if existing_campaign.blank?
               new_seo_campaign = SeoCampaign.new
               new_seo_campaign.salesforce_id = sf_campaign.id
+              new_seo_campaign.channel = Channel.build_default_seo_channel_for(account)
             else
               new_seo_campaign = existing_campaign.campaign_style
               unless new_seo_campaign.instance_of?(SeoCampaign)
@@ -199,6 +201,7 @@ class Campaign < ActiveRecord::Base
             if existing_campaign.blank?
               new_basic_campaign = BasicCampaign.new
               new_basic_campaign.salesforce_id = sf_campaign.id
+              new_basic_campaign.channel = Channel.build_default_basic_channel_for(account)
             else
               new_basic_campaign = existing_campaign.campaign_style
               unless new_basic_campaign.instance_of?(BasicCampaign)

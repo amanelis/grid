@@ -114,7 +114,6 @@ class Ability
         ########## Manipulator Method #################
         
         can :report_client, Account
-        can :create, User
       end
 
     end
