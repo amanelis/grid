@@ -29,7 +29,7 @@
     %p
       %label Type
       %br
-      - if can? :manipulate_account, @account
+      - if @current_user.group_user?
         %select{:id => 'user_type', :name => 'user[type]', :class => 'required'}
           %option{:value => 0} - Choose a role -
           %option{:value => 1} Group User Write
