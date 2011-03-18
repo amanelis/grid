@@ -54,12 +54,12 @@ class DatabaseManifest < Moonshine::Manifest::Rails
   })
 
   plugin :iptables
-  plugin :ssh
+  #plugin :ssh
 
   recipe :iptables
   recipe :ssh
   
-  plugin :monit
+  #plugin :monit
   recipe :monit
   
   def application_packages

@@ -42,15 +42,15 @@ class ApplicationManifest < Moonshine::Manifest::Rails
   # for details. To customize, remove this recipe and specify the components you want.
   # recipe :default_stack
   
-  plugin :iptables
-  plugin :ssh
+  #plugin :iptables
+  #plugin :ssh
   
   recipe :iptables
   recipe :ssh
   
   recipe :memcached
   
-  plugin :monit
+  #plugin :monit
   recipe :monit
 
   # Add your application's custom requirements here
