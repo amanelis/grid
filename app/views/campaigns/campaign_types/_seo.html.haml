@@ -1,25 +1,5 @@
 %article
-  -if @campaign.website.present?
-    %h3 Website
-    %h4.quiet= @campaign.website.nickname
-    %table
-      %thead
-        %th.tiptip{:title => "Amount of unique people that looked at your website."} Visitors
-        %th.tiptip{:title => "Includes clicks and form submissions."} Actions
-        %th.tiptip{:title => "Average amount of time spent per visitor"} Avg Time Spent
-        %th.tiptip{:title => "Percentage of visitors that viewed only one page, an indicator for how relevant your website is."} BR%
-        %th.tiptip{:title => ""} Conversion
-        %th.tiptip{:title => ""} Unique Conversion
-      %tbody
-        %tr
-          %td= @campaign.number_of_visits_between(@start_date, @end_date).to_s
-          %td= @campaign.number_of_actions_between(@start_date, @end_date).to_s
-          %td
-            - @avg_time = @campaign.average_total_time_spent_between(@start_date, @end_date).to_i
-            = [(@avg_time/60 % 60).to_s, (@avg_time % 60).to_s].map{|t| t.to_s.rjust(2,'0')}.join(':')
-          %td= (sprintf("%.2f", (@campaign.bounce_rate_between(@start_date, @end_date) * 100)) + '%')
-          %td= (sprintf("%.2f", (@campaign.website.overall_conversion_rate_between(@start_date, @end_date) * 100)) + '%')
-          %td= (sprintf("%.2f", (@campaign.website.unique_conversion_rate_between(@start_date, @end_date) * 100)) + '%')
+  = render :partial => 'campaigns/campaign_types/website'
   %h3 Keyword Rankings
   %table
     %thead
@@ -32,7 +12,7 @@
     %tbody
       - (@campaign.campaign_style.keywords.sort { |a,b| a.descriptor <=> b.descriptor }).each do |keyword|
         %tr
-          %td= link_to keyword.descriptor, keyword_path, :rel => "facebox"
+          %td= link_to keyword.descriptor, "#", :rel => "facebox"
           %td
             = ((final_ranking = ((ranking = keyword.most_recent_google_ranking_between(@start_date, @end_date))) > 100 ? '>100' : ranking.to_s) == '0') ? '' : final_ranking
             (
