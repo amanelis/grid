@@ -1,10 +1,13 @@
 .forms
-  - @campaign.contact_forms.each do |form|
-    %a.iconic.article
-    = "Form ##{form.id}"
-    %br
-    = text_area_tag 'form', form.generate_js_snippet
-    %br
+  - unless @campaign.phone_numbers.empty?
+    - @campaign.contact_forms.each do |form|
+      %a.iconic.article
+      = "Form ##{form.id}"
+      %br
+      = text_area_tag 'form', form.generate_js_snippet
+      %br
+  - else
+    Looks like you have no contact forms!
   %hr.space
   .button
     %a.iconic.article
