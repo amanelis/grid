@@ -6,6 +6,9 @@
   %header
     %h1= @campaign.name
     %h2.quiet= @account.name
+
+%datepicker= render :partial => "shared/date_picker"
+
 - if @campaign.is_basic?
   = render :partial => 'campaigns/campaign_types/basic'
 - elsif @campaign.is_seo?
