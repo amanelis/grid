@@ -33,7 +33,7 @@ class HomeController < ApplicationController
           f.title({:text=> false})  
           f.y_axis({:title=> false, :min => 0, :labels=>{:rotation=>0, :align=>'right'} })
           f.x_axis(:categories => (Rails.cache.fetch("dashboard_dates") { GroupAccount.dashboard_dates }) , :labels=>{:rotation=>-45 , :align => 'right'})
-          f.options[:chart][:defaultSeriesType] = "line"
+          f.options[:chart][:defaultSeriesType] = "area"
           
           @user.admin? || @user.group_users.count == 1 ? f.legend(:enabled => false) : f.legend(:enabled => true)
 
