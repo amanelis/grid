@@ -700,6 +700,18 @@ form.inline p { margin-bottom:0; }
 	float:right;
 }
 
+.channels .name{
+	width:60%;
+}
+
+.channels .leads{
+	width:20%;
+}
+
+.channels .cpl{
+	width:20%;
+}
+
 /*
 	Blank Slate
 	------------------
