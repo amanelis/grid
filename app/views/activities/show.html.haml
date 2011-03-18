@@ -1,4 +1,4 @@
--if @activity.activity_type.recorded? && @activity.activity_type.recording?
+if @activity.is_call? && @activity.activity_type.recorded? && @activity.activity_type.recording?
   :javascript
     $(document).ready(function(){
       $("#player").flash({
