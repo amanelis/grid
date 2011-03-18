@@ -516,70 +516,60 @@ th .iconic{
 	width: 33.3%;
 	float:left;
 }
-}
 /*
 	Buttons
 	------------------
 */
 
-#input{
-	margin:0 0 15px;
+a.button, .button{ 
+	display: inline-block; 
+	padding: 7px 9px; 
+	text-shadow: 1px 1px 0 #FFFFFF; 
+	background: #ECECEC url('/images/buttons.png') 0 0 no-repeat; 
+	white-space: nowrap; 
+	overflow: visible; 
+	cursor: pointer; 
+	text-decoration: none; 
+	border: 1px solid #CACACA; 
+	-webkit-border-radius: 4px;
+	   -moz-border-radius: 4px;
+	        border-radius: 4px;
+	padding-box; 
+	border-radius: 2px; 
+	outline: none; 
+	position: relative; 
+	zoom: 1; 
+	*display: inline; 
 }
-
-#forgot{
-	margin:15px 0 0 0;
+a.button, .button, .button a{
+	color: #3C3C3D;
+	font-size: 12px;
+	line-height:1;   
 }
-
-.button a, a.button, input.button, .button{
-	color:#373737;
+.button.primary, a.button.primary { font-weight: bold }
+.button:hover,a.button:hover{  border-color: #388AD4; background-position: 0 -40px; background-color: #2D7DC5; }
+.button:hover,a.button:hover, .button:hover a {
+	color: #FFFFFF;
+	text-decoration: none; 
+	text-shadow: -1px -1px 0 rgba(0,0,0,0.3);
 }
-a.button, input.button,	.button{
-margin:0 0 15px;
-text-decoration:none;
-background:-webkit-gradient(linear,0% 0%,0% 100%,from(#E8E7E7),to(#BEBFC2));
-background:-moz-linear-gradient(top, #E8E7E7, #BEBFC2);
-display: inline-block;
-padding:5px;
-font-weight:bold;
-text-shadow: 1px 1px 1px rgba(255,255,255,0.5);
-border:1px solid rgba(0,0,0,0.4);
-	-moz-border-radius: 5px;
-		-webkit-border-radius: 5px;
-	-moz-box-shadow: 0 0 0 1px #2C7CD1 inset, 0 1px 0 1px rgba(143, 228, 255, 0.6) inset, 0 28px 20px -18px rgba(143, 228, 255, 0.65) inset, 0 0 0 2px #2F94FF inset, 0 1px 0 0 rgba(255, 255, 255, 0.6)
-		-webkit-box-shadow:0 0 0 1px #2C7CD1 inset, 0 1px 0 1px rgba(143, 228, 255, 0.6) inset, 0 28px 20px -18px rgba(143, 228, 255, 0.65) inset, 0 0 0 2px #2F94FF inset, 0 1px 0 0 rgba(255, 255, 255, 0.6)
+.button:active,
+a.button.active { background-position: 0 -81px; border-color: #347BBA; background-color: #0F5EA2; }
+a.button.active, .button.active, .button.active a{
+	color: #FFFFFF; text-shadow: none;
 }
-
-a.button:hover, input.button:hover, .button:hover {
-color:#000;
-background:-webkit-gradient(linear,0% 0%,0% 100%,from(#BEBFC2),to(#E8E7E7));
-background:-moz-linear-gradient(top, #BEBFC2, #E8E7E7);
-cursor:pointer;
-}
-
-a.button:active, a.button:focus,  input.button:active, input.button:focus, .button:active, .button:focus {
-background:-webkit-gradient(linear,0% 100%,0% 0%,from(rgba(255,255,255,1)),to(rgba(185,185,185,1)));
-background:-moz-linear-gradient(bottom,rgba(255,255,255,1),rgba(185,185,185,1));
-}
-
-
-button:disabled {
-color:rgba(0,0,0,0.4);
-text-shadow:1px 1px 0px rgba(255,255,255,0.5);
-background:rgba(220,220,220,1);
-}
-
-/* CALL TO ACTION */
-.action, a.action, input.action{
-background:-webkit-gradient(linear,0% 0%,0% 100%,from(#FFC100),to(#FF8B00));
-background:-moz-linear-gradient(top, #FFC100, #FF8B00);
-font-size:24px;
-}
-
-
-.action:hover, a.action:hover, input.action:hover{
-background:-webkit-gradient(linear,0% 0%,0% 100%,from(#FF8B00),to(#FFC100));
-background:-moz-linear-gradient(top, #FF8B00, #FFC100);
-}
+a.button:active { top: 1px }
+a.button.negative:hover { color: #FFFFFF; background-position: 0 -121px; background-color: #D84743; border-color: #911D1B; }
+a.button.negative:active,
+a.button.negative.active { background-position: 0 -161px; background-color: #A5211E; border-color: #911D1B; }
+a.button.pill { -webkit-border-radius: 19px; -moz-border-radius: 19px; border-radius: 19px; padding: 6px 12px; }
+a.button.left { -webkit-border-bottom-right-radius: 0px; -webkit-border-top-right-radius: 0px; -moz-border-radius-bottomright: 0px; -moz-border-radius-topright: 0px; border-bottom-right-radius: 0px; border-top-right-radius: 0px; margin-right: 0px; }
+a.button.middle { margin-right: 0px; margin-left: 0px; -webkit-border-radius: 0px; -moz-border-radius: 0px; border-radius: 0px; border-left: none; }
+a.button.right { -webkit-border-bottom-left-radius: 0px; -webkit-border-top-left-radius: 0px; -moz-border-radius-bottomleft: 0px; -moz-border-radius-topleft: 0px; border-top-left-radius: 0px; border-bottom-left-radius: 0px; margin-left: 0px; border-left: none;}
+a.button.left:active,
+a.button.middle:active,
+a.button.right:active { top: 0px }
+a.button.big { font-size: 16px; padding: 7px 16px; }
 
 /*-------------------------------------------------------------- */
 /* Forms */
@@ -705,7 +695,7 @@ form.inline p { margin-bottom:0; }
 }
 
 .channels .leads{
-	width:20%;
+	width:0%;
 }
 
 .channels .cpl{
