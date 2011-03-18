@@ -1,5 +1,11 @@
 - @campaign.phone_numbers.each do |number|
-  %li= "Your inbound number is: #{number.inboundno}, Forwarded to: #{number.forward_to}"
+  .strong
+    %a.iconic.phone
+    = number.inboundno
+  %em.quiet
+    %a.iconic.arrow-right
+    = number.forward_to
+%hr.space
 .button
   %a.iconic.phone
   = link_to "Add Phone Number", new_channel_campaign_phone_number_path(@account, @channel, @campaign), :rel => "facebox"

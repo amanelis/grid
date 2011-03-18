@@ -719,6 +719,15 @@ article.blank{
 }
 
 /*
+	Forms
+	------------------
+*/
+
+.forms textarea{
+	width:310px;
+}
+
+/*
 	Pagination
 	------------------
 */
