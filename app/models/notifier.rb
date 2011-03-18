@@ -12,6 +12,7 @@ class Notifier < ActionMailer::Base
     subject       "New CityVoice Lead!"  
     from          "CityVoice <no-reply@cityvoice.com>"
     reply_to      sender
+    content_type  "multipart/alternative"
     body          :submission => submission
     sent_on       Time.now
   end
@@ -31,18 +32,5 @@ class Notifier < ActionMailer::Base
     content_type  "multipart/alternative"
     body          :account_report_data => account.weekly_reporting_data(date, previous)
   end
-
-  def new_form_submission(submission)
-    the_recipients = ["alex.baldwin@cityvoice.com"]
-    sender = submission.name + ' <' + submission.from_email + '>'
-
-    recipients    the_recipients
-    subject       "New CityVoice Lead!"  
-    from          "CityVoice <no-reply@cityvoice.com>"
-    reply_to      sender
-    body          :submission => submission
-    sent_on       Time.now
-  end
-
-
+  
 end
