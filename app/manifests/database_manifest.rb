@@ -53,7 +53,7 @@ class DatabaseManifest < Moonshine::Manifest::Rails
         ]}
   })
 
-  plugin :iptables
+  #plugin :iptables
   #plugin :ssh
 
   recipe :iptables
