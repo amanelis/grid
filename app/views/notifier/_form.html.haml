@@ -1,22 +1,35 @@
-= "Name: #{@submission.name}\n"
-= "Email: #{@submission.from_email}\n"
-= "Phone: #{@submission.phone_number}\n"
+%b= "Name: #{@submission.name}\n"
+%br
+%b= "Email: #{@submission.from_email}\n"
+%br
+%b= "Phone: #{@submission.phone_number}\n"
+%br
 = "Work Description: #{@submission.work_description}\n"
+%br
 -if @submission.home_address.present?
   = "Home Address: #{@submission.home_address}\n"
+  %br
 -if @submission.work_category.present?
   = "Work Category: #{@submission.work_category}\n"
+  br
 -if @submission.date_requested.present?
   = "Date Requested: #{@submission.date_requested}\n"
+  %br
 -if @submission.time_requested.present?
   = "Time Requested: #{@submission.time_requested}\n"
+  %br
 -if @submission.other_information.present?
   = "Other Information: #{@submission.other_information}\n"
+  %br
 -if @submission.custom1_value.present?
   = "#{@submission.contact_form.custom1_text}: #{@submission.custom1_value}\n"
+  %br
 -if @submission.custom2_value.present?
   = "#{@submission.contact_form.custom2_text}: #{@submission.custom2_value}\n"
+  %br
 -if @submission.custom3_value.present?
   = "#{@submission.contact_form.custom3_text}: #{@submission.custom3_value}\n"
+  %br
 -if @submission.custom4_value.present?
   = "#{@submission.contact_form.custom4_text}: #{@submission.custom4_value}\n"
+  %br
