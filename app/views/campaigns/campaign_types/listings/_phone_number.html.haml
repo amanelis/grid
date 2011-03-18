@@ -1,3 +1,6 @@
+.button
+  %a.iconic.phone
+  = link_to "Add Phone Number", new_channel_campaign_phone_number_path(@account, @channel, @campaign), :rel => "facebox"
 - unless @campaign.phone_numbers.empty?
   - @campaign.phone_numbers.each do |number|
     .strong
@@ -7,8 +10,4 @@
       %a.iconic.arrow-right
       = number.forward_to
 - else
-  Looks like you have no phone numbers!
-%hr.space
-.button
-  %a.iconic.phone
-  = link_to "Add Phone Number", new_channel_campaign_phone_number_path(@account, @channel, @campaign), :rel => "facebox"
+  You haven't added any phone numbers yet.

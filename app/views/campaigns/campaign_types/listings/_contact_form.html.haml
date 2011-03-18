@@ -1,5 +1,8 @@
+.button
+  %a.iconic.article
+  = link_to "Create Contact Form", new_channel_campaign_contact_form_path(@account, @channel, @campaign), :rel => "facebox"
 .forms
-  - unless @campaign.phone_numbers.empty?
+  - unless @campaign.contact_forms.empty?
     - @campaign.contact_forms.each do |form|
       %a.iconic.article
       = "Form ##{form.id}"
@@ -7,8 +10,4 @@
       = text_area_tag 'form', form.generate_js_snippet
       %br
   - else
-    Looks like you have no contact forms!
-  %hr.space
-  .button
-    %a.iconic.article
-    = link_to "Create Contact Form", new_channel_campaign_contact_form_path(@account, @channel, @campaign), :rel => "facebox"
+    You haven't added any contact forms yet.
