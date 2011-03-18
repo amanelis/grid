@@ -14,7 +14,7 @@ class UsersController < ApplicationController
   
   def new
     authorize! :manipulate_account, @account
-    no_layout
+    request.request_uri != "/register" ? no_layout : nil
     @current_user = current_user
   end
   
@@ -48,7 +48,7 @@ class UsersController < ApplicationController
           @group_user.user            = @user
           @group_user.group_account   = @group_account
 
-          if type == "1" && @current_user.can_manipulate_account?(@account)
+          if type == "1" && @current_user.can_manipulate_account?(@account) && @current_user.group_user?
             @group_user.manipulator = true
           end
           @group_user.save
@@ -57,7 +57,7 @@ class UsersController < ApplicationController
           @account_user.user    = @user
           @account_user.account = @account
 
-          if type == "3" && @current_user.can_manipulate_account?(@account)
+          if type == "3" && @current_user.can_manipulate_account?(@account) && @current_user.group_user?
             @account_user.manipulator = true
           end
           @account_user.save
