@@ -471,9 +471,7 @@ thead a{
 }
 
 thead th {
-	background:#95A3B2;
-	background:-webkit-gradient(linear,0% 100%,0% 0%,from(rgba(25,25,25,1)),to(rgba(42,71,106,.6)));
-	background:-moz-linear-gradient(bottom,rgba(27,43,62,.6),rgba(42,71,106,.6));
+	background:#515860;
 	color:#fff;
 }
 tbody tr:nth-child(even), tbody tr.even {background:#efefef;}
@@ -531,10 +529,13 @@ th .iconic{
 #forgot{
 	margin:15px 0 0 0;
 }
-a.button, input.button,	.button {
+
+.button a, a.button, input.button, .button{
+	color:#373737;
+}
+a.button, input.button,	.button{
 margin:0 0 15px;
 text-decoration:none;
-color:#373737;
 background:-webkit-gradient(linear,0% 0%,0% 100%,from(#E8E7E7),to(#BEBFC2));
 background:-moz-linear-gradient(top, #E8E7E7, #BEBFC2);
 display: inline-block;
