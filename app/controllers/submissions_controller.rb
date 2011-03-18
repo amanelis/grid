@@ -27,7 +27,7 @@ class SubmissionsController < ApplicationController
     elsif @submission.save
       # HTTP 200 OK
       if @submission.from_email == "alex.baldwin@cityvoice.com"
-        Notifier.deliver_new_form_submission(@submission)
+        Notifier.deliver_form_submission(@submission)
         head 200
         return
       else        
