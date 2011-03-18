@@ -21,24 +21,23 @@
           %a.iconic.star
           = link_to "Leads", activities_url
 
-
-        -# Jobs
-        %li{:class => (request.url.include?("job_statuses")? 'active' : '')}
+        -# Searches
+        %li{:class => (request.url.include?("searches")? 'active' : '')}
           .triangle
-          %a.iconic.new-window
-          = link_to "Jobs", job_statuses_url
+          %a.iconic.magnifying-glass
+          = link_to "Search", searches_url
 
         -# Users
         %li{:class => (request.url.include?("users")? 'active' : '')}
           .triangle
           %a.iconic.user 
           = link_to "Users", users_url
-
-        -# Searches
-        %li{:class => (request.url.include?("searches")? 'active' : '')}
+        
+        -# Jobs
+        %li{:class => (request.url.include?("job_statuses")? 'active' : '')}
           .triangle
-          %a.iconic.magnifying-glass
-          = link_to "Search", searches_url
+          %a.iconic.new-window
+          = link_to "Jobs", job_statuses_url
 
       - else
         -# Dashboard

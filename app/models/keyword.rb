@@ -55,13 +55,25 @@ class Keyword < ActiveRecord::Base
 
 
   # INSTANCE BEHAVIOR
+  
+  def daily_most_recent_google_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
+    (start_date..end_date).inject([]) { |rankings, date| rankings << self.most_recent_google_ranking_between(date, date) }
+  end
 
   def most_recent_google_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
     (ranking = self.most_recent_ranking_between(start_date, end_date).try(:google)).present? ? ranking : 0
   end
 
+  def daily_most_recent_yahoo_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
+    (start_date..end_date).inject([]) { |rankings, date| rankings << self.most_recent_yahoo_ranking_between(date, date) }
+  end
+
   def most_recent_yahoo_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
     (ranking = self.most_recent_ranking_between(start_date, end_date).try(:yahoo)).present? ? ranking : 0
+  end
+
+  def daily_most_recent_bing_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
+    (start_date..end_date).inject([]) { |rankings, date| rankings << self.most_recent_bing_ranking_between(date, date) }
   end
 
   def most_recent_bing_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)

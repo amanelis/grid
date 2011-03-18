@@ -3,7 +3,7 @@
     %td
       %a.iconic.phone
     %td
-      = activity.activity_type.phone_number.campaign.name
+      %strong= activity.activity_type.phone_number.campaign.name
       %br
       = activity.activity_type.phone_number.campaign.account.name
     %td
@@ -12,7 +12,7 @@
       =activity.activity_type.caller_name
     %td
       -activity_time_zone = activity.activity_type.phone_number.campaign.account.time_zone
-      =activity.activity_type.timestamp.in_time_zone(activity.time_zone).strftime("%I:%M%p %b %d")
+      %strong=activity.activity_type.timestamp.in_time_zone(activity.time_zone).strftime("%I:%M%p %b %d")
       %br
       =time_ago_in_words(activity.activity_type.call_start) + " ago"
 
@@ -21,7 +21,8 @@
     %td
       %a.iconic.article
     %td
-      = activity.activity_type.contact_form.campaign.name
+      %strong= activity.activity_type.contact_form.campaign.name
+      %br
       = activity.activity_type.contact_form.campaign.account.name
     %td
       %strong=activity.activity_type.from_email
@@ -33,4 +34,6 @@
       =activity.activity_type.home_address
     %td
       -activity_time_zone = activity.activity_type.contact_form.campaign.account.time_zone
+      %strong=activity.activity_type.timestamp.in_time_zone(activity.time_zone).strftime("%I:%M%p %b %d")
+      %br
       =time_ago_in_words(activity.activity_type.time_of_submission) + " ago"

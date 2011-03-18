@@ -1,18 +1,2 @@
-%header
-  %h3="Keyword Rankings for #{@keyword.descriptor}" 
-%article
-  %table{:class => "pretty"}
-    %thead
-      %tr
-        %th Update Date
-        %th Google
-        %th Yahoo
-        %th Bing
-    %tbody
-      - @rankings.each do |ranking|
-        %tr{:class => cycle('odd', 'even')}
-          %td= ranking.created_at
-          %td= ranking.google
-          %td= ranking.yahoo
-          %td= ranking.bing
-
+=high_chart("daily_keyword_ranking_graph", @daily_keyword_ranking_graph)
+%hr.space
