@@ -1,8 +1,9 @@
 class UsersController < ApplicationController
   #before_filter :require_user, :only => [:index, :show, :edit, :update, :new]
   #load_and_authorize_resource :except => [:edit, :update]
-  inherit_resources
   load_resource
+  load_resource :account
+  
   
   #
   # We want to only list out the users that the current user can manipulate
@@ -15,8 +16,6 @@ class UsersController < ApplicationController
     authorize! :manipulate_account, @account
     no_layout
     @current_user = current_user
-    @user = User.new
-    @account = Account.find(params[:account_id]) if params[:account_id].present?
   end
   
   
@@ -32,9 +31,9 @@ class UsersController < ApplicationController
   # adding that user. We are validating that server side and client side.
   def create
     @current_user   = current_user
-    @account        = Account.find(params[:account_id]) if params[:account_id].present?
     @user           = User.new(:email => params[:user][:email], :password => params[:user][:password], :password_confirmation => params[:user][:password_confirmation])
-    @group_account  = @account.group_account
+    @account        = Account.find(params[:account_id]) if params[:account_id].present?
+    @group_account  = @account.group_account if params[:account_id].present?
     type            = params[:user][:type]
     
     if params[:user][:email].blank? || params[:user][:password].blank? || params[:user][:password_confirmation].blank? || params[:user][:type] == "0"
@@ -91,7 +90,7 @@ class UsersController < ApplicationController
     
     if @user.update_attributes(params[:user])
       flash[:notice] = "Account updated!"
-      redirect_to edit_user_path(@user)
+      redirect_to users_path
     else
       flash[:error] = "Error on updating account!"
       redirect_to edit_user_path(@user)

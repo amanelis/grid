@@ -10,12 +10,32 @@ class Ability
       
       if user.group_user?
         
+        # Account Authorization
         can :read, Account do |account|
           user.acquainted_with_account?(account)
         end
+=begin
+        can :create, :new, :edit, :update, :destroy, Account do |account|
+          user.can_manipulate_account?(account)
+        end
+        
+        # Campaign Authorization
         can :read, Campaign do |campaign|
           user.acquainted_accounts.collect(&:campaigns).flatten.include?(campaign)
         end
+        can :create, :new, :edit, :update, :destroy, Campaign do |campaign|
+          user.can_manipulate_campaign?(campaign)
+        end
+        
+        # Channel Authorization
+        can :read, Channel do |channel|
+          user.acquainted_with_account?(channel.account)
+        end
+        can :create, :new, :edit, :update, :destroy, Channel do |channel|
+          user.can_manipulate_account?(channel.account)
+        end
+=end        
+        
         can :lead_matrix, Campaign do |campaign|
           user.acquainted_accounts.collect(&:campaigns).flatten.include?(campaign)
         end
@@ -50,19 +70,12 @@ class Ability
             false
           end
         end
-        
-        can :update, Campaign do |campaign|
-           if user.can_manipulate_campaign?(campaign) 
-             can :update, Campaign
-           end
-        end
         ########## Manipulator Method #################
         
         can :export, Account
         can :refresh_accounts, Account
         can :report_client, Account
         can :read, Channel
-        can :create, User
       end 
       
       #
