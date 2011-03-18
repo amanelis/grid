@@ -4,21 +4,27 @@
     %thead
       %tr
         %th Keyword
-        %th Last Updated
         %th Google
-        %th Month Change
         %th Yahoo
-        %th Month Change
         %th Bing
-        %th Month Change
+        %th Updated
     %tbody
       - (@campaign.campaign_style.keywords.sort { |a,b| a.descriptor <=> b.descriptor }).each do |keyword|
         %tr
           %td= keyword.descriptor
-          %td= keyword.most_recent_ranking().created_at.strftime("%m/%d/%y %I:%M %p") if keyword.most_recent_ranking.present?
-          %td= ((final_ranking = ((ranking = keyword.most_recent_google_ranking_between(@start_date, @end_date))) > 100 ? '>100' : ranking.to_s) == '0') ? '' : final_ranking
-          %td= keyword.google_ranking_change_between(@start_date, @end_date) 
-          %td= ((final_ranking = ((ranking = keyword.most_recent_yahoo_ranking_between(@start_date, @end_date))) > 100 ? '>100' : ranking.to_s) == '0') ? '' : final_ranking
-          %td= keyword.yahoo_ranking_change_between(@start_date, @end_date) 
-          %td= ((final_ranking = ((ranking = keyword.most_recent_bing_ranking_between(@start_date, @end_date))) > 100 ? '>100' : ranking.to_s) == '0') ? '' : final_ranking
-          %td= keyword.bing_ranking_change_between(@start_date, @end_date)
+          %td
+            = ((final_ranking = ((ranking = keyword.most_recent_google_ranking_between(@start_date, @end_date))) > 100 ? '>100' : ranking.to_s) == '0') ? '' : final_ranking
+            (
+            = keyword.google_ranking_change_between(@start_date, @end_date) 
+            )
+          %td
+            = ((final_ranking = ((ranking = keyword.most_recent_yahoo_ranking_between(@start_date, @end_date))) > 100 ? '>100' : ranking.to_s) == '0') ? '' : final_ranking
+            (
+            = keyword.yahoo_ranking_change_between(@start_date, @end_date)
+            ) 
+          %td
+            = ((final_ranking = ((ranking = keyword.most_recent_bing_ranking_between(@start_date, @end_date))) > 100 ? '>100' : ranking.to_s) == '0') ? '' : final_ranking
+            (
+            =keyword.bing_ranking_change_between(@start_date, @end_date)
+            )
+          %td= keyword.most_recent_ranking().created_at.strftime("%b %d") if keyword.most_recent_ranking.present?
