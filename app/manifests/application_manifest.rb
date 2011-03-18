@@ -36,6 +36,21 @@ class ApplicationManifest < Moonshine::Manifest::Rails
      :enable_on_boot => true  # maybe you want god to start it instead of init
    } 
    )
+   
+  if deploy_stage == 'production'
+    configure(
+      :wordpress => {
+        :domain          => 'dashboard.io',
+        :auth_key        => '8~Bw8TT[e{O5-%wc$yN|&8btT,##)?ap]8i|3x[-5[#${c}%Qp;d)+@KvwyE^q3v',
+        :secure_auth_key => '^p{|+C?y2ZAlD8ORO<|8@5,|,vq|c?=*(58cql*5PePAjbu?ee}%|,NbEnW%6;wR',
+        :logged_in_key   => '6y|O&# l1(]k#Lg-*z1+{~Pqw&q)ai /Tv-@&.Ux-wP3j|s@`;Lr?L0}+_jeORhK',
+        :nonce_key       => '(HmOlW}u$- ]kN$cb+-l;?oTb-7 [~%A:|.;?&K.f*+m7v -=f#_mCWg|k3+y!wj',
+        :db => {:password => 'siTGfg2938F'}
+      }
+    )
+    plugin :wordpress
+    recipe :wordpress
+  end
 
   # The default_stack recipe install Rails, Apache, Passenger, the database from
   # database.yml, Postfix, Cron, logrotate and NTP. See lib/moonshine/manifest/rails.rb
