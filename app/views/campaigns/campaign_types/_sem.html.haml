@@ -24,3 +24,4 @@
           %td= "$#{sprintf("%.2f", adwords_campaign.cost_between(@start_date, @end_date))}"
           %td= sprintf("%.2f", adwords_campaign.average_position_between(@start_date, @end_date))
           %td= "#{sprintf("%.2f", adwords_campaign.average_quality_score_between(@start_date, @end_date))}/10"
+  %small.right= link_to "Google Advertiser Guide", "http://www.google.com/adwords/thirdpartypartners/"
