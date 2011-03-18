@@ -9,7 +9,7 @@ class UsersController < ApplicationController
   # We want to only list out the users that the current user can manipulate
   def index
     @current_user = current_user
-    @users = @current_user.manipulable_users.compact
+    @current_user.admin? ? (@users = User.all) : (@current_user.manipulable_users.compact)
   end
   
   def new
