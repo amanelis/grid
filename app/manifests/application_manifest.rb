@@ -48,8 +48,8 @@ class ApplicationManifest < Moonshine::Manifest::Rails
         :db => {:password => 'siTGfg2938F'}
       }
     )
-    plugin :wordpress
-    recipe :wordpress
+    #plugin :wordpress
+    #recipe :wordpress
   end
 
   # The default_stack recipe install Rails, Apache, Passenger, the database from
