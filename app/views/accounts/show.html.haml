@@ -16,7 +16,7 @@
 %header
   - if can? :manipulate_account, @account
     .menu
-      = link_to "", "#", {:onclick => "confirm_export_report(#{params[:id]});"}, :title => "Export to PDF", :class => "tiptip iconic document"
+      = link_to "", "#", :onclick => "confirm_export_report(#{params[:id]});", :title => "Export to PDF", :class => "tiptip iconic document"
       = link_to "", new_account_user_path(@account), :rel => "facebox", :title => "Add User", :class => 'tiptip iconic user'
       = link_to "", edit_account_path, :rel => "facebox", :title => "Edit Account", :class => 'tiptip iconic pencil'
       - if @account.can_send_weekly_report_now?
