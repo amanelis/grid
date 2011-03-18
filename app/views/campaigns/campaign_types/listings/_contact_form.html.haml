@@ -1,6 +1,7 @@
 .button
   %a.iconic.article
   = link_to "Create Contact Form", new_channel_campaign_contact_form_path(@account, @channel, @campaign), :rel => "facebox"
+%hr.space
 .forms
   - unless @campaign.contact_forms.empty?
     - @campaign.contact_forms.each do |form|

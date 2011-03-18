@@ -23,8 +23,9 @@
             = keyword.yahoo_ranking_change_between(@start_date, @end_date)
             ) 
           %td
-            = ((final_ranking = ((ranking = keyword.most_recent_bing_ranking_between(@start_date, @end_date))) > 100 ? '>100' : ranking.to_s) == '0') ? '' : final_ranking
-            (
-            =keyword.bing_ranking_change_between(@start_date, @end_date)
-            )
+            N/A
+            -#= ((final_ranking = ((ranking = keyword.most_recent_bing_ranking_between(@start_date, @end_date))) > 100 ? '>100' : ranking.to_s) == '0') ? '' : final_ranking
+            -#(
+            -#=keyword.bing_ranking_change_between(@start_date, @end_date)
+            -#)
           %td= keyword.most_recent_ranking().created_at.strftime("%b %d") if keyword.most_recent_ranking.present?
