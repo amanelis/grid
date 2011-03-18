@@ -4,15 +4,11 @@
       $("#player").flash({
         src: './player.swf',
         width: '150px',
-        height: '22px'
+        height: '22px',
+        flashvars: { file: '#{@activity.activity_type.recording.expiring_url(14400)}'}
       },
       {update: false},
       function(htmlOptions){
-        $this = $(this);
-        var url = '#{@activity.activity_type.recording.expiring_url(14400)}';
-        url = url.split('&').join('%26');
-        htmlOptions.flashvars.file = url;
-        $this.before($.fn.flash.transform(htmlOptions));
       });
     });
 
@@ -38,7 +34,7 @@
       seconds
     - form_for @activity do |f|
       = f.select(:review_status, (@activity.activity_type.review_status_options))
-      
+
 - elsif @activity.is_submission?
   %h3.strong=@activity.activity_type.contact_form.campaign.account.name
   %h4.quiet=@activity.activity_type.contact_form.campaign.name
@@ -53,4 +49,4 @@
     - form_for @activity do |f|
       = f.select(:review_status, (@activity.activity_type.review_status_options))
 
-  
+
