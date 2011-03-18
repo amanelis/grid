@@ -508,6 +508,17 @@ th .iconic{
 	line-height:18px;
 }
 
+th .iconic{
+	float:right;
+	font-size:18px;
+	line-height:18px;
+}
+
+td .iconic.x{
+	font-size:18px;
+	float:right;
+}
+
 /*
 	Stats
 	------------------

@@ -4,20 +4,17 @@
   %table
     %thead
       %tr
-        %th User ID
         %th
-          .right= link_to "", register_path, :rel => "facebox", :title => "Create User", :class => "tiptip iconic plus-alt"
+          .right= link_to "", register_path, :rel => "facebox", :title => "Add User", :class => "tiptip iconic plus-alt"
           Email
         %th Created
-        %th Last Request
-        %th= @current_user.admin? ? "Action" : nil
+        %th Last Login
     %tbody
       - @users.each do |user|
         %tr
-          %td= user.id
-          %td= link_to user.email, edit_user_path(user)
+          %td
+            = link_to user.email, edit_user_path(user)
+            - if @current_user.admin?
+              = link_to "", user, :title => "Delete User", :class => 'tiptip iconic x', :confirm => "This will delete user: #{user.email}, are you sure?", :method => :delete unless user.id == @current_user.id
           %td= user.created_at.to_s(:long)
           %td= user.last_request_at.nil? ? "Has Not logged in" : time_ago_in_words(user.last_request_at)
-          %td
-            = link_to 'Edit', edit_user_path(user)
-            = link_to 'Destroy', user, :confirm => "This will delete user: #{user.email}, are you sure?", :method => :delete unless user.id == @current_user.id
