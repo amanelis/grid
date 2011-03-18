@@ -706,8 +706,7 @@ form.inline p { margin-bottom:0; }
 
 article.blank{
 	width:75%;
-	margin: auto;
-	padding-top:80px;
+	margin: 24px auto
 }
 
 .blank h1{
