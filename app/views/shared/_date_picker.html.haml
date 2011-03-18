@@ -1,4 +1,5 @@
 :javascript
+  var dateToggle = true;
   $(function(){
     $('#to,#from').datepicker({
       showOtherMonths:   true,
@@ -9,6 +10,11 @@
 
     $("#show_change_dates").click(function(){
       $('#change_dates').toggle('blind', {}, 250);
+      if(dateToggle)
+        $('#show_change_dates').html('Close');
+      else
+        $('#show_change_dates').html('Edit');
+      dateToggle = ! dateToggle;
     })
 
     $("#date_range_selector").change(function(){
