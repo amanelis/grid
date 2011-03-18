@@ -31,7 +31,7 @@ class HomeController < ApplicationController
 
         @total_daily_leads = HighChart.new('graph') do |f|
           f.title({:text=> false})  
-          f.y_axis({:title=> {:text=> 'Daily Leads'}, :min => 0, :labels=>{:rotation=>0, :align=>'right'} })
+          f.y_axis({:title=> false, :min => 0, :labels=>{:rotation=>0, :align=>'right'} })
           f.x_axis(:categories => (Rails.cache.fetch("dashboard_dates") { GroupAccount.dashboard_dates }) , :labels=>{:rotation=>-45 , :align => 'right'})
           f.options[:chart][:defaultSeriesType] = "line"
           
@@ -39,14 +39,14 @@ class HomeController < ApplicationController
 
 
           if @user.admin? 
-            f.series(:name=> 'Leads', :data => (Rails.cache.fetch("dashboard_data_hash") { GroupAccount.dashboard_data_hash })[:admin])
+            f.series(:name=> 'Leads', :fillOpacity => '.3', :data => (Rails.cache.fetch("dashboard_data_hash") { GroupAccount.dashboard_data_hash })[:admin])
           elsif @user.group_user?
             @user.group_users.each do |group_user|
-              f.series(:name=> 'Leads', :data => (Rails.cache.fetch("dashboard_data_hash") { GroupAccount.dashboard_data_hash })[group_user.group_account.id])
+              f.series(:name=> 'Leads', :fillOpacity => '.3', :data => (Rails.cache.fetch("dashboard_data_hash") { GroupAccount.dashboard_data_hash })[group_user.group_account.id])
             end
           else
             @user.account_users.each do |account_user|
-              f.series(:name=> 'Leads', :data => @account_users_data[account_user.account.id])
+              f.series(:name=> 'Leads', :fillOpacity => '.3', :data => @account_users_data[account_user.account.id])
             end
           end
         end
