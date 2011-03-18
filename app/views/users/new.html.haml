@@ -10,7 +10,7 @@
     });
   });
 
-- form_for @user, :url => account_users_path(@account) do |f|
+- form_for @user, :url => (@account.present? ? account_users_path(@account) : users_path) do |f| 
   %header
     %h1 Register a New User
   %article
@@ -29,7 +29,6 @@
     %p
       %label Type
       %br
-      -# if @current_user.can_manipulate_account?(@account)
       - if can? :manipulate_account, @account
         %select{:id => 'user_type', :name => 'user[type]', :class => 'required'}
           %option{:value => 0} - Choose a role -
