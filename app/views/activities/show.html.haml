@@ -2,13 +2,10 @@
   :javascript
     $(document).ready(function(){
       $("#player").flash({
-        src: './player.swf',
+        src: 'http://#{APP_CONFIG[:host]}/player.swf',
         width: '150px',
         height: '22px',
         flashvars: { file: '#{@activity.activity_type.recording.expiring_url(14400)}'}
-      },
-      {update: false},
-      function(htmlOptions){
       });
     });
 
@@ -48,5 +45,3 @@
       %br
     - form_for @activity do |f|
       = f.select(:review_status, (@activity.activity_type.review_status_options))
-
-
