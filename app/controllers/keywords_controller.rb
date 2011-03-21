@@ -10,11 +10,12 @@ class KeywordsController < ApplicationController
   belongs_to :campaign
   
   def index
-    @keywords = @campaign.campaign_style.keywords if @campaign.is_seo?
+    @keywords = @campaign.campaign_style.keywords
   end
   
   def show
     datepicker channel_campaign_keyword_path(@account, @channel, @campaign, @keyword)
+    
     if @campaign.is_seo?
       @rankings = @keyword.keyword_rankings.sort { |a,b| b.created_at <=> a.created_at }
   
@@ -28,6 +29,7 @@ class KeywordsController < ApplicationController
         f.series(:name=> 'Leads', :fillOpacity => '.3', :pointInterval => 24 * 3600 * 1000, :pointStart => @start_date.to_time_in_current_zone.at_beginning_of_day.utc.to_i * 1000, :data => ([4,5,6]))
       end
     end
+    
   end
   
 end
