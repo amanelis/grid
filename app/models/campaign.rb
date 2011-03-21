@@ -605,6 +605,10 @@ class Campaign < ActiveRecord::Base
     form
   end
   
+  def keywords
+    self.is_seo? ? self.campaign_style.keywords : []
+  end
+  
   def time_zone
     self.account.time_zone
   end
