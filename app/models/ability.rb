@@ -39,6 +39,11 @@ class Ability
       can :destroy, Channel do |channel|
         user.can_manipulate_account?(channel.account)
       end
+      
+      # Keyword Authorization
+      can :read, Keyword do |keyword|
+        user.acquainted_with_keyword?(keyword)
+      end
             
       # Custom Authorization
       can :lead_matrix, Campaign do |campaign|
