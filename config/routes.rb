@@ -18,6 +18,7 @@ ActionController::Routing::Routes.draw do |map|
       channel.resources :campaigns do |campaign|
         campaign.resources :phone_numbers
         campaign.resources :contact_forms
+        campaign.resources :keywords
       end
     end
   end

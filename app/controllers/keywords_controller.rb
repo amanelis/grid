@@ -1,10 +1,16 @@
 class KeywordsController < ApplicationController
   inherit_resources
-  load_and_authorize_resource
+  load_resource 
+  load_resource :accounts 
+  load_resource :channels
+  load_resource :campaigns
+  
+  belongs_to :account
+  belongs_to :channel
+  belongs_to :campaign
   
   def index
-      @campaign = Campaign.find(params[:id])
-      @keywords = @campaign.campaign_style.keywords 
+    @keywords = @campaign.campaign_style.keywords
   end
   
   def show
