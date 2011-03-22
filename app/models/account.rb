@@ -65,6 +65,10 @@ class Account < ActiveRecord::Base
   def self.leads_in_previous_hours(time = nil)
     Activity.previous_hours(time).collect { |activity| activity.activity_type }
   end
+  
+  def self.accounts_receiving_weekly_reports
+    self.active.to_a.select { |account| account.receive_weekly_report? && account.valid_reporting_emails.present? }
+  end
 
   def self.account_statuses
     Account.all.collect(&:status).compact.uniq
@@ -157,10 +161,6 @@ class Account < ActiveRecord::Base
 
   def close_twilio_subaccount
     raise unless Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.twilio_id}.json?", 'POST', {'Status' => 'closed'}).kind_of? Net::HTTPSuccess
-  end
-  
-  def self.accounts_receiving_weekly_reports
-    self.active.to_a.select { |account| account.receive_weekly_report? && account.valid_reporting_emails.present? }
   end
 
   def self.get_twilio_subaccounts
