@@ -80,7 +80,7 @@
     // load the sidebar content
     $("#sidebar").load('http://#{APP_CONFIG[:host]}/activities/'+current_id, function(){
       $("#sidebar").animate({
-        marginTop: (current * 44) - 15
+        marginTop: $("#activities tr:eq("+current+")").offset().top
       }, 250);
       $('html, body').animate({scrollTop: $("#activities tr:eq("+current+")").offset().top}, 500);
     });
