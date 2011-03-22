@@ -51,5 +51,7 @@
   :name: cancan
 - :version: = 1.0.6
   :name: inherited_resources
+- :version: = 0.5.4
+  :name: subdomain-fu
 - :version: 2.3.9
   :name: rails
