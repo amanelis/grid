@@ -31,7 +31,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources   :contact_forms,   :member => {:thank_you => :get, :get_html => :get, :get_iframe => :get}
   map.resources   :website_visits,  :member => {:global_visitor => :get}
   map.resources   :calls,           :member => {:collect => :post}
-  #map.resources   :phone_numbers,   :member => {:connect => :get}
+  map.resources   :phone_numbers,   :member => {:connect => :post}
   map.resources   :searches, :activities, :keywords, :job_statuses, :websites
   map.resources   :users,         :password_resets
   map.resource    :submission,    :only => [:index, :create, :show]
