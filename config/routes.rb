@@ -10,7 +10,7 @@ ActionController::Routing::Routes.draw do |map|
   map.submit_cl           "/submissions/:id/submit_cl",         :controller => "submissions",     :action => :submit_cl
   map.submit_call_cl      "/calls/:id/submit_call_cl",          :controller => "calls",           :action => :submit_call_cl
   map.add_customer_lobby  "/accounts/:id/add_customer_lobby",   :controller => "accounts",        :action => :add_customer_lobby
-  #map.incoming            "/phone_numbers/connect/:number",     :controller => "phone_numbers",   :action => :connect
+  map.connect             "/phone_numbers/connect/:number",     :controller => "phone_numbers",   :action => :connect
   map.connect             "/incoming/:number",                  :controller => "phone_numbers",   :action => :connect
   # CUSTOM ROUTES
   
