@@ -6,7 +6,6 @@ class ActivitiesController < ApplicationController
     @user       = current_user
     @accounts   = current_user.acquainted_accounts
     @activities = Activity.paginate(:page => (params[:page] || 1), :order => 'timestamp DESC', :per_page => 50)
-    respond("html", nil, "js", nil)
   end
 
   def update
@@ -25,10 +24,7 @@ class ActivitiesController < ApplicationController
   end
 
   def show
-    @activity = Activity.find(params[:id])
-
-    # No need for a layout
-    render :layout => false
+    no_layout
   end
 
 end

@@ -28,16 +28,12 @@ class Campaign < ActiveRecord::Base
   validate :proper_channel?
 
   before_destroy :remove_from_many_to_many_relationships
-
   attr_accessor :adopting_phone_number
   
   ACTIVE = "active"
   INACTIVE = "inactive"
-  
   STATUS_OPTIONS = [['Active', ACTIVE], ['Inactive', INACTIVE]].to_ordered_hash
-
   ORPHANAGE_NAME = 'CityVoice SEM Orphaned Campaigns'
-  
   MANAGED_FLAVORS = ['seo', 'sem - all', 'sem - bing', 'sem - google', 'sem - google boost', 'sem - google mobile', 'sem - yahoo', 'local maps', 'retargeter']
   
 
@@ -58,6 +54,60 @@ class Campaign < ActiveRecord::Base
   
   def forwarding_number=(a_forwarding_number)
     @forwarding_number = a_forwarding_number
+  end
+  
+  def create_twilio_number(phone_number, name, forward_to, id_callers = true, record_calls = true, transcribe_calls = false, text_calls = false, call_url = "http://#{APP_CONFIG[:host]}/phone_numbers/connect/", fallback_url = "http://#{APP_CONFIG[:host]}/phone_numbers/connect/", status_url = "http://#{APP_CONFIG[:host]}/phone_numbers/collect/", sms_url = "http://#{APP_CONFIG[:host]}/phone_numbers/sms_collect/", fallback_sms_url = "http://#{APP_CONFIG[:host]}/phone_numbers/sms_collect/")
+    job_status = JobStatus.create(:name => "Campaign.create_twilio_number")
+    begin
+      
+      if self.account.twilio_id.blank?
+        self.account.create_twilio_subaccount 
+      
+      
+      
+      # If they get rid of the number need to check to see if there are any more numbers on account object. if there
+      # are no numbers delete account.twilio_id
+      #self.account.activate_twilio_subaccount
+      #CREATE THE NUMBER IN TWILIO (BASIC INFORMATION)
+      d = {'PhoneNumber' => "+1#{phone_number}"} if phone_number.length == 10
+      d = {'PhoneNumber' => "+#{phone_number}"} if phone_number.length == 11
+      d = {'AreaCode' => phone_number} if phone_number.length == 3
+      resp = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.account.twilio_id}/IncomingPhoneNumbers.json", 'POST', d)
+      raise unless resp.kind_of? Net::HTTPSuccess
+      
+      #CREATE THE PHONE NUMBER IN GRID IF TWILIO CREATION WAS SUCCESSFUL
+      new_phone_number = self.phone_numbers.build
+      new_phone_number.twilio_id = JSON.parse(resp.body)['sid']
+      new_phone_number.inboundno = JSON.parse(resp.body)['phone_number'].gsub("+", "")
+      new_phone_number.forward_to = forward_to
+      new_phone_number.name = name
+      new_phone_number.descript = name
+      new_phone_number.twilio_version = API_VERSION
+      new_phone_number.id_callers = id_callers
+      new_phone_number.record_calls = record_calls
+      new_phone_number.transcribe_calls = transcribe_calls
+      new_phone_number.text_calls = text_calls
+      new_phone_number.active = true
+      new_phone_number.save!
+      
+      #UPDATE THE TWILIO URLS
+      new_phone_number.update_twilio_number(new_phone_number.name, new_phone_number.forward_to, new_phone_number.id_callers, new_phone_number.record_calls, new_phone_number.transcribe_calls, new_phone_number.text_calls, call_url, fallback_url, status_url, sms_url, fallback_sms_url)
+      job_status.finish_with_no_errors
+      return new_phone_number
+    rescue Exception => ex
+      job_status.finish_with_errors(ex)
+      raise
+    end
+  end
+  
+  def inactivate_phone_number(phone_number_id)
+    phone_number = self.phone_numbers.first(:conditions => ['id = ?', phone_number_id])
+    return false if phone_number.blank? || phone_number.twilio_id.blank?
+    resp = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{phone_number.twilio_version}/Accounts/#{self.account.twilio_id}/IncomingPhoneNumbers/#{phone_number.twilio_id}.json", 'DELETE')
+    return false unless resp.code == '204'
+    phone_number.active = false
+    phone_number.save!
+    true
   end
 
 
@@ -528,56 +578,6 @@ class Campaign < ActiveRecord::Base
     else
       "There was an error deleting your site."
     end
-  end
-  
-  def create_twilio_number(phone_number, name, forward_to, id_callers = true, record_calls = true, transcribe_calls = false, text_calls = false, call_url = "http://#{APP_CONFIG[:host]}/phone_numbers/connect/", fallback_url = "http://#{APP_CONFIG[:host]}/phone_numbers/connect/", status_url = "http://#{APP_CONFIG[:host]}/phone_numbers/collect/", sms_url = "http://#{APP_CONFIG[:host]}/phone_numbers/sms_collect/", fallback_sms_url = "http://#{APP_CONFIG[:host]}/phone_numbers/sms_collect/")
-    job_status = JobStatus.create(:name => "Campaign.create_twilio_number")
-    begin
-      self.account.create_twilio_subaccount if self.account.twilio_id.blank?
-      
-      # If they get rid of the number need to check to see if there are any more numbers on account object. if there
-      # are no numbers delete account.twilio_id
-      #self.account.activate_twilio_subaccount
-      #CREATE THE NUMBER IN TWILIO (BASIC INFORMATION)
-      d = {'PhoneNumber' => "+1#{phone_number}"} if phone_number.length == 10
-      d = {'PhoneNumber' => "+#{phone_number}"} if phone_number.length == 11
-      d = {'AreaCode' => phone_number} if phone_number.length == 3
-      resp = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.account.twilio_id}/IncomingPhoneNumbers.json", 'POST', d)
-      raise unless resp.kind_of? Net::HTTPSuccess
-      
-      #CREATE THE PHONE NUMBER IN GRID IF TWILIO CREATION WAS SUCCESSFUL
-      new_phone_number = self.phone_numbers.build
-      new_phone_number.twilio_id = JSON.parse(resp.body)['sid']
-      new_phone_number.inboundno = JSON.parse(resp.body)['phone_number'].gsub("+", "")
-      new_phone_number.forward_to = forward_to
-      new_phone_number.name = name
-      new_phone_number.descript = name
-      new_phone_number.twilio_version = API_VERSION
-      new_phone_number.id_callers = id_callers
-      new_phone_number.record_calls = record_calls
-      new_phone_number.transcribe_calls = transcribe_calls
-      new_phone_number.text_calls = text_calls
-      new_phone_number.active = true
-      new_phone_number.save!
-      
-      #UPDATE THE TWILIO URLS
-      new_phone_number.update_twilio_number(new_phone_number.name, new_phone_number.forward_to, new_phone_number.id_callers, new_phone_number.record_calls, new_phone_number.transcribe_calls, new_phone_number.text_calls, call_url, fallback_url, status_url, sms_url, fallback_sms_url)
-      job_status.finish_with_no_errors
-      return new_phone_number
-    rescue Exception => ex
-      job_status.finish_with_errors(ex)
-      raise
-    end
-  end
-  
-  def inactivate_phone_number(phone_number_id)
-    phone_number = self.phone_numbers.first(:conditions => ['id = ?', phone_number_id])
-    return false if phone_number.blank? || phone_number.twilio_id.blank?
-    resp = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{phone_number.twilio_version}/Accounts/#{self.account.twilio_id}/IncomingPhoneNumbers/#{phone_number.twilio_id}.json", 'DELETE')
-    return false unless resp.code == '204'
-    phone_number.active = false
-    phone_number.save!
-    true
   end
   
   def create_contact_form(description = '',  forwarding_email = '', forwarding_bcc_email = '', custom1_text = '', custom2_text = '', custom3_text = '', custom4_text = '', need_name = true, need_address = false, need_phone = true, need_email = true, work_category = false, work_description = true, date_requested = false, time_requested = false, other_information = false)

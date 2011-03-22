@@ -65,10 +65,11 @@
       %thead
         %tr
           %th.name
-            = link_to channel.name, channel_path(@account, channel)
-            .edit
-              = link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
-              = link_to "Add Campaign", new_channel_campaign_path(@account, channel), :rel => "facebox"
+            = link_to channel.name, channel_path(@account, channel) 
+            - if can? :manipulate_account, @account
+              .edit
+                = link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
+                = link_to "Add Campaign", new_channel_campaign_path(@account, channel), :rel => "facebox"
           %th.leads
             = channel.number_of_total_leads_between(@start_date, @end_date)
             Leads

@@ -1,14 +1,24 @@
+:javascript
+  $(document).ready(function(){
+    $("#create").click(function(){
+      $('#new_contact_form').validate();
+      // If it is valid, submit
+      if( $('#new_contact_form').valid() )
+        $("#new_contact_form").submit();
+    });
+  });
+
 %header
   %h1
     New Contact Form
     %span= @channel.name
   %h2.quiet= @account.name
 %article
-  - form_tag(channel_campaign_contact_forms_path(@account, @channel, @campaign), :method => :post) do
+  - form_tag(channel_campaign_contact_forms_path(@account, @channel, @campaign), :method => :post, :id => 'new_contact_form') do
     %label Form forwarding email
     %br
     %label.small.quiet Where you want your form submitted to
     %br
     %input{:id => "contact_form_forwarding_email", :name => "contact_form[forwarding_email]", :type => "text", :placeholder => "me@cityvoice.com", :class => "title required"}
     %br
-    %button{:id => 'create', :class => "button"} Create Contact Form
+  %button{:id => 'create', :class => "button"} Create Contact Form
