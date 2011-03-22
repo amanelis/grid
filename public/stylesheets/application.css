@@ -218,8 +218,12 @@
 	Layout / Backgrounds
 	------------------
 */
+html{
+	overflow-y: scroll;
+}
+
 body{
-	background-color:#E6E1E1;
+	background: #E6E1E1 url("/images/matte.png") repeat;
 	-webkit-font-smoothing: antialiased;
 }
 
