@@ -22,8 +22,9 @@
         url: form_url,
         data: $('form[id*="activity"]').serialize(),
         success: function() {
-          $("#activity_message").html('<p>Saved!</p>');
-
+          $("#activity_message").html('Saved!');
+          $("#activity_message").addClass('flash_notice');
+          $("#activity_message").fadeOut(2500);
         }
       });
     })
@@ -51,7 +52,6 @@
       seconds
       - form_for @activity do |f|
         = f.select(:review_status, (@activity.activity_type.review_status_options))
-    %div{:id => 'activity_message'}
 
 - elsif @activity.is_submission?
   %h3.strong=@activity.activity_type.contact_form.campaign.account.name
@@ -66,4 +66,5 @@
       %br
       - form_for @activity do |f|
         = f.select(:review_status, (@activity.activity_type.review_status_options))
-    %div{:id => 'activity_message'}
+
+%div{:id => 'activity_message'}
