@@ -1,6 +1,7 @@
 class ActivitiesController < ApplicationController
   inherit_resources
   load_and_authorize_resource
+  before_filter :check_authorization
 
   def index
     @user       = current_user
