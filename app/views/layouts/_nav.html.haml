@@ -50,8 +50,8 @@
           -# Accounts
           %li{:class => (request.url.include?("accounts")? 'active' : '')}
             .triangle
-            %a.iconic.book-alt
-            = link_to "Accounts", accounts_url
+            %a.iconic.new-window
+            = link_to "Channels", accounts_url
 
         - if can? :read, Activity
           %li{:class => (request.url.include?("activities")? 'active' : '')}
