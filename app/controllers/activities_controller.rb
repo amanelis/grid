@@ -6,7 +6,6 @@ class ActivitiesController < ApplicationController
     @user       = current_user
     @accounts   = current_user.acquainted_accounts
     @activities = Activity.paginate(:page => (params[:page] || 1), :order => 'timestamp DESC', :per_page => 50)
-    respond("html", nil, "js", nil)
   end
 
   def update

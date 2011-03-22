@@ -91,6 +91,7 @@ class Ability
       can :refresh_accounts, Account
       can :report_client, Account
       can :read, Channel
+      can :read, Activity
     end
     
   end
