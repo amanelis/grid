@@ -12,7 +12,6 @@ ActionController::Routing::Routes.draw do |map|
   map.submit_call_cl      "/calls/:id/submit_call_cl",          :controller => "calls",           :action => :submit_call_cl
   map.add_customer_lobby  "/accounts/:id/add_customer_lobby",   :controller => "accounts",        :action => :add_customer_lobby
   map.connect             "/phone_numbers/connect/:number",     :controller => "phone_numbers",   :action => :connect
-  map.connect             "/incoming/:number",                  :controller => "phone_numbers",   :action => :connect
   # CUSTOM ROUTES
   
   map.resources :accounts do |account|
@@ -38,7 +37,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resources   :searches, :activities, :keywords, :job_statuses, :websites
   map.resources   :users,         :password_resets
   map.resource    :submission,    :only => [:index, :create, :show]
-  #map.resources    :user_sessions
   
   map.with_options :controller => 'home' do |home|
     home.dashboard 'dashboard', :action => 'dashboard'
