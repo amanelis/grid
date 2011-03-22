@@ -223,7 +223,7 @@ html{
 }
 
 body{
-	background: #E6E1E1 url("/images/matte.png") repeat;
+	background: #E6E1E1 url("/images/matte.png") repeat fixed;
 	-webkit-font-smoothing: antialiased;
 }
 
@@ -242,9 +242,8 @@ body{
 	padding:12px 24px;
 }
 
-a{
-	text-decoration:none;
-}
+a{text-decoration:none; color:#0047B3; font-weight:bold;}
+a:hover{text-decoration:underline; color:#0047B3;}
 
 .left{float:left !important;}
 .right{float:right !important;}
@@ -485,9 +484,7 @@ tbody tr.active { background:rgba(27,43,62,.6); color:#fff; }
 tbody{
 	color:#444;
 }
-tbody a{
-	color:#000;
-}
+
 
 th:first-child{
 	-webkit-border-radius: 4px 0 0 4px;
