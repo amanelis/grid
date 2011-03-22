@@ -1,10 +1,20 @@
+:javascript
+  $(document).ready(function(){
+    $("#create").click(function(){
+      $('#new_phone_number').validate();
+      // If it is valid, submit
+      if( $('#new_phone_number').valid() )
+        $("#new_phone_number").submit();
+    });
+  });
+
 %header
   %h1
-    New Phone Number 
+    New Phone Number
     %span= @channel.name
   %h2.quiet= @account.name
 %article
-  - form_tag(channel_campaign_phone_numbers_path(@account, @channel, @campaign), :method => :post) do
+  - form_tag(channel_campaign_phone_numbers_path(@account, @channel, @campaign), :method => :post, :id => "new_phone_number") do
     %label Forwarding Number
     %br
     %label.small.quiet Where you want all your calls to go to
@@ -18,4 +28,4 @@
     %br
     %input{:id => "phone_number_area_code", :name => "phone_number[area_code]", :type => "text", :placeholder => "210", :class => "title required", :maxlength => "3"}
     %br
-    %button{:id => 'create', :class => "button"} Provision Number
+  %button{:id => 'create', :class => "button"} Provision Number
