@@ -82,6 +82,7 @@
       $("#sidebar").animate({
         marginTop: (current * 44) - 15
       }, 250);
+      $('html, body').animate({scrollTop: $("#activities tr:eq("+current+")").offset().top}, 500);
     });
   }
 
