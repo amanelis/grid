@@ -22,6 +22,8 @@
         url: form_url,
         data: $('form[id*="activity"]').serialize(),
         success: function() {
+          $("#activity_message").html('<p>Saved!</p>');
+
         }
       });
     })
@@ -40,7 +42,7 @@
       -if @activity.activity_type.recorded? && @activity.activity_type.recording?
         %center
           %div#player
-    %p#activity_form
+    %p
       -activity_time_zone = @activity.activity_type.phone_number.campaign.account.time_zone
       =time_ago_in_words(@activity.activity_type.call_start) + " ago"
       %br
@@ -49,6 +51,7 @@
       seconds
       - form_for @activity do |f|
         = f.select(:review_status, (@activity.activity_type.review_status_options))
+    %div{:id => 'activity_message'}
 
 - elsif @activity.is_submission?
   %h3.strong=@activity.activity_type.contact_form.campaign.account.name
@@ -57,9 +60,10 @@
     %h4.strong Review
     %p
       %span.strong=@activity.activity_type.name
-    %p#activity_form
+    %p
       -activity_time_zone = @activity.activity_type.contact_form.campaign.account.time_zone
       =time_ago_in_words(@activity.timestamp) + " ago"
       %br
       - form_for @activity do |f|
         = f.select(:review_status, (@activity.activity_type.review_status_options))
+    %div{:id => 'activity_message'}
