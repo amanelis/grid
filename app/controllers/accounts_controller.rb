@@ -4,6 +4,7 @@ class AccountsController < ApplicationController
   before_filter :load_time_zone, :only  => [:show, :report, :report_client]
 
   def index
+    authorize! :read, Account
     @accounts           = current_user.acquainted_accounts
     @accounts.count == 1 ? (redirect_to account_path(@accounts.first.id)) : nil
     @accounts_statuses  = Account.account_statuses_for(@accounts)

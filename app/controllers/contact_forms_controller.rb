@@ -18,7 +18,7 @@ class ContactFormsController < ApplicationController
   end
   
   def create
-    form = @campaign.create_contact_form('', params[:contact_form][:forwarding_email])
+    form = @campaign.create_contact_form(params[:contact_form][:forwarding_email])
     flash[:notice] = "Good job, you just created a contact form!"
     redirect_to channel_campaign_path(@account, @channel, @campaign) 
   end

@@ -4,14 +4,10 @@ class UsersController < ApplicationController
   load_resource
   load_resource :account
   
-  
   def index
-    if current_user_session
-      @current_user = current_user
-      @current_user.admin? ? (@users = User.all) : (@current_user.manipulable_users.compact)
-    else
-      redirect_to root_url
-    end
+    authorize! :manipulate_account, @account
+    @current_user = current_user
+    @current_user.admin? ? (@users = User.all) : (@current_user.manipulable_users.compact)
   end
   
   def new
