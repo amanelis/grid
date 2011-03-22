@@ -76,12 +76,13 @@
     current_id = current_id.match(/\d+/);
     // load the sidebar content
     $("#sidebar").load('http://#{APP_CONFIG[:host]}/activities/'+current_id);
+    $("#sidebar").css('margin-top', (current * 44) - 15 );
   }
 
 %header
   %h1 Leads
 %article.span-12.colborder
-  -#%p.strong 
+  -#%p.strong
     -#Filter by
     -#= link_to "Calls", "#"
     -#= link_to "Forms", "#"
