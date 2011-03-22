@@ -60,10 +60,8 @@ class Campaign < ActiveRecord::Base
     job_status = JobStatus.create(:name => "Campaign.create_twilio_number")
     begin
       
-      if self.account.twilio_id.blank?
-        self.account.create_twilio_subaccount 
-      
-      
+      # This will check the twilio id if blank or been deleted in twilio
+      self.account.create_twilio_subaccount if self.account.twilio_id.blank? || Account.get_active_twilio_subaccounts.none?{|account| account['sid'] == self.account.twilio_id}
       
       # If they get rid of the number need to check to see if there are any more numbers on account object. if there
       # are no numbers delete account.twilio_id
@@ -580,24 +578,13 @@ class Campaign < ActiveRecord::Base
     end
   end
   
-  def create_contact_form(description = '',  forwarding_email = '', forwarding_bcc_email = '', custom1_text = '', custom2_text = '', custom3_text = '', custom4_text = '', need_name = true, need_address = false, need_phone = true, need_email = true, work_category = false, work_description = true, date_requested = false, time_requested = false, other_information = false)
+  def create_contact_form(forwarding_email)
     form = self.contact_forms.build
     form.return_url = "http://#{APP_CONFIG[:host]}/thank_you"
     form.forwarding_email = forwarding_email
-    form.forwarding_bcc_email = forwarding_bcc_email
-    #form.custom1_text = custom1_text
-    #form.custom2_text = custom2_text
-    #form.custom3_text = custom3_text
-    #form.custom4_text = custom4_text
-    #form.need_address = need_address
-    #form.work_category = work_category
-    #form.work_description = work_description
-    #form.date_requested = date_requested
-    #form.time_requested = time_requested
-    #form.other_information = other_information
-    form.need_name = need_name
-    form.need_phone = need_phone
-    form.need_email = need_email
+    form.need_name = true
+    form.need_phone = true
+    form.need_email = true
     form.save
     form.html_block = form.get_form_text
     form.return_url = "http://#{APP_CONFIG[:host]}/contact_forms/#{form.id}/thank_you"

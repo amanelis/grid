@@ -61,6 +61,10 @@ class ApplicationController < ActionController::Base
       render :layout => false
     end
     
+    def check_authorization
+      redirect_to root_url unless current_user
+    end
+    
     def load_resource_user
       @user = current_user 
     end

@@ -2,6 +2,7 @@ class AccountsController < ApplicationController
   inherit_resources
   load_and_authorize_resource :except   => [:export, :refresh_accounts]
   before_filter :load_time_zone, :only  => [:show, :report, :report_client]
+  before_filter :check_authorization
 
   def index
     @accounts           = current_user.acquainted_accounts
