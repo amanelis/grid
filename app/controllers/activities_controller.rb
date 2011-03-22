@@ -24,10 +24,7 @@ class ActivitiesController < ApplicationController
   end
 
   def show
-    @activity = Activity.find(params[:id])
-
-    # No need for a layout
-    render :layout => false
+    no_layout
   end
 
 end

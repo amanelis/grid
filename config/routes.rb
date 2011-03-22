@@ -10,6 +10,8 @@ ActionController::Routing::Routes.draw do |map|
   map.submit_cl           "/submissions/:id/submit_cl",         :controller => "submissions",     :action => :submit_cl
   map.submit_call_cl      "/calls/:id/submit_call_cl",          :controller => "calls",           :action => :submit_call_cl
   map.add_customer_lobby  "/accounts/:id/add_customer_lobby",   :controller => "accounts",        :action => :add_customer_lobby
+  #map.incoming            "/phone_numbers/connect/:number",     :controller => "phone_numbers",   :action => :connect
+  map.connect             "/incoming/:number",                  :controller => "phone_numbers",   :action => :connect
   # CUSTOM ROUTES
   
   map.resources :accounts do |account|
@@ -22,11 +24,14 @@ ActionController::Routing::Routes.draw do |map|
       end
     end
   end
+  
+  map.resources :incoming
+  map.resources :phone_numbers
 
   map.resources   :contact_forms,   :member => {:thank_you => :get, :get_html => :get, :get_iframe => :get}
   map.resources   :website_visits,  :member => {:global_visitor => :get}
   map.resources   :calls,           :member => {:collect => :post}
-  map.resources   :phone_numbers,   :member => {:connect => :post}
+  #map.resources   :phone_numbers,   :member => {:connect => :get}
   map.resources   :searches, :activities, :keywords, :job_statuses, :websites
   map.resources   :users,         :password_resets
   map.resource    :submission,    :only => [:index, :create, :show]
@@ -35,7 +40,8 @@ ActionController::Routing::Routes.draw do |map|
   map.with_options :controller => 'home' do |home|
     home.dashboard 'dashboard', :action => 'dashboard'
   end
+
   
   # End point route
-  map.root        :controller => "home", :action => "index" 
+  map.root :controller => "home", :action => "index" 
 end
