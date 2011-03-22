@@ -2,15 +2,32 @@
   $(document).ready(function(){
     // if they click cancel, close the facebox
     $('#cancel').click(function(){$.facebox.close()});
+
+    var validateUserType = function () {
+      if($("#user_type").val()  == '0') {
+        $('#user_type_field').append('<label for="user_type" generated="true" class="error" style="display: inline; ">This field is required.</label>');
+        return false;
+      } else {
+        $('#user_type_field').remove('label.error');
+        return true;
+      }
+    }
+
+    $("#user_type").change(function(){
+      validateUserType();
+    });
+
     $("#register").click(function(){
       $('#new_user').validate();
+
       // If it is valid, submit
       if( $('#new_user').valid() )
-        $("#new_user").submit();
+        if( validateUserType() )
+          $("#new_user").submit();
     });
   });
 
-- form_for @user, :url => (@account.present? ? account_users_path(@account) : users_path) do |f| 
+- form_for @user, :url => (@account.present? ? account_users_path(@account) : users_path) do |f|
   %header
     %h1 Register a New User
   %article
@@ -26,7 +43,7 @@
       %label Confirm Password
       %br
       = f.password_field :password_confirmation, :class => 'required title'
-    %p
+    %p#user_type_field
       %label Type
       %br
       - if @current_user.group_user?
