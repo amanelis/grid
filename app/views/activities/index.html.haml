@@ -1,21 +1,5 @@
 = javascript_include_tag 'jquery.mapkey.js'
 
-- if params[:q] == 'real'
-  :javascript
-    jQuery.ajaxSetup({
-      'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")}
-    })
-
-    $(function() {
-      setTimeout(updateActivity, 30000);
-    });
-
-    function updateActivity() {
-      var after = $("#activities tbody tr").attr("data-time");
-      $.getScript("/activities.js?after=" + after)
-      setTimeout(updateActivity, 30000);
-    }
-
 :javascript
   var current = 0;
   var current_id = 0;

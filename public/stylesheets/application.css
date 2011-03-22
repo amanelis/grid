@@ -201,15 +201,15 @@
 }
 
 /* Webkit Hacks  */
-@media screen and (-webkit-min-device-pixel-ratio:0) {	
+@media screen and (-webkit-min-device-pixel-ratio:0) {
 	#tiptip_content {
 		padding: 4px 8px 5px 8px;
 		background-color: rgba(45,45,45,0.88);
 	}
-	#tiptip_holder.tip_bottom #tiptip_arrow_inner { 
+	#tiptip_holder.tip_bottom #tiptip_arrow_inner {
 		border-bottom-color: rgba(45,45,45,0.88);
 	}
-	#tiptip_holder.tip_top #tiptip_arrow_inner { 
+	#tiptip_holder.tip_top #tiptip_arrow_inner {
 		border-top-color: rgba(20,20,20,0.92);
 	}
 }
@@ -459,11 +459,11 @@ header h2{
 	Flash Messages
 	------------------
 */
-#flash_notice, #flash_error {padding:0.8em;margin:1em 0;border:2px solid #ddd;}
-#flash_error {background:#fbe3e4;color:#8a1f11;border-color:#fbc2c4;}
-#flash_notice {background:#e6efc2;color:#264409;border-color:#c6d880;}
-#flash_error a{color:#8a1f11;}
-#flash_notice a{color:#264409;}
+#flash_notice, #flash_error, .flash_notice, .flash_error {padding:0.8em;margin:1em 0;border:2px solid #ddd;}
+#flash_error,  .flash_error {background:#fbe3e4;color:#8a1f11;border-color:#fbc2c4;}
+#flash_notice, .flash_notice {background:#e6efc2;color:#264409;border-color:#c6d880;}
+#flash_error,  .flash_error a{color:#8a1f11;}
+#flash_notice, .flash_notice a{color:#264409;}
 
 /*
 	Tables
@@ -533,36 +533,36 @@ td .iconic.x{
 	------------------
 */
 
-a.button, .button{ 
-	display: inline-block; 
-	padding: 7px 9px; 
-	text-shadow: 1px 1px 0 #FFFFFF; 
-	background: #ECECEC url('/images/buttons.png') 0 0 no-repeat; 
-	white-space: nowrap; 
-	overflow: visible; 
-	cursor: pointer; 
-	text-decoration: none; 
-	border: 1px solid #CACACA; 
+a.button, .button{
+	display: inline-block;
+	padding: 7px 9px;
+	text-shadow: 1px 1px 0 #FFFFFF;
+	background: #ECECEC url('/images/buttons.png') 0 0 no-repeat;
+	white-space: nowrap;
+	overflow: visible;
+	cursor: pointer;
+	text-decoration: none;
+	border: 1px solid #CACACA;
 	-webkit-border-radius: 4px;
 	   -moz-border-radius: 4px;
 	        border-radius: 4px;
-	padding-box; 
-	border-radius: 2px; 
-	outline: none; 
-	position: relative; 
-	zoom: 1; 
-	*display: inline; 
+	padding-box;
+	border-radius: 2px;
+	outline: none;
+	position: relative;
+	zoom: 1;
+	*display: inline;
 }
 a.button, .button, .button a{
 	color: #3C3C3D;
 	font-size: 12px;
-	line-height:1;   
+	line-height:1;
 }
 .button.primary, a.button.primary { font-weight: bold }
 .button:hover,a.button:hover{  border-color: #388AD4; background-position: 0 -40px; background-color: #2D7DC5; }
 .button:hover,a.button:hover, .button:hover a {
 	color: #FFFFFF;
-	text-decoration: none; 
+	text-decoration: none;
 	text-shadow: -1px -1px 0 rgba(0,0,0,0.3);
 }
 .button:active,
