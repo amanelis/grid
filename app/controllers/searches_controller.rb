@@ -1,5 +1,6 @@
 class SearchesController < ApplicationController
   load_and_authorize_resource :account, :campaign
+  before_filter :check_authorization
   
   def index
     @accounts     = current_user.acquainted_accounts
