@@ -76,7 +76,9 @@
     current_id = current_id.match(/\d+/);
     // load the sidebar content
     $("#sidebar").load('http://#{APP_CONFIG[:host]}/activities/'+current_id, function(){
-      $("#sidebar").css('margin-top', (current * 44) - 15 );
+      $("#sidebar").animate({
+        marginTop: (current * 44) - 15
+      }, 250);
     });
   }
 
