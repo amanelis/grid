@@ -121,6 +121,13 @@ class Account < ActiveRecord::Base
   def self.get_all_twilio_numbers
     JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/IncomingPhoneNumbers.json?", 'GET').body)['incoming_phone_numbers']
   end
+  
+  def self.kill_twilio_sub_accounts
+    accounts = Account.get_active_twilio_subaccounts
+    accounts.each do |account|
+      Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{account['sid']}.json?", 'POST', {'Status' => 'closed'})
+    end
+  end
 
 
   # INITIALIZATION
@@ -494,13 +501,6 @@ class Account < ActiveRecord::Base
 
   def close_twilio_subaccount
     raise unless Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.twilio_id}.json?", 'POST', {'Status' => 'closed'}).kind_of? Net::HTTPSuccess
-  end
-  
-  def self.kill_twilio_sub_accounts
-    accounts = Account.get_active_twilio_subaccounts
-    accounts.each do |account|
-      Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{account['sid']}.json?", 'POST', {'Status' => 'closed'})
-    end
   end
 
   def create_basic_campaign(basic_channel, name)
