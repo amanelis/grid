@@ -248,9 +248,8 @@ a:hover{text-decoration:underline; color:#0047B3;}
 .left{float:left !important;}
 .right{float:right !important;}
 
-.strong{
-	font-weight: bold;
-}
+.strong{font-weight: bold;}
+.center{text-align:center;}
 /*
 	Toolbar
 	------------------
