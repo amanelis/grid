@@ -3,6 +3,7 @@ class AccountsController < ApplicationController
   load_and_authorize_resource :except   => [:export, :refresh_accounts]
   before_filter :load_time_zone, :only  => [:show, :report, :report_client]
   before_filter :check_authorization
+  ssl_required  :index if Rails.env.production?
 
   def index
     @accounts           = current_user.acquainted_accounts
