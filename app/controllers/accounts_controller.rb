@@ -3,12 +3,9 @@ class AccountsController < ApplicationController
   load_and_authorize_resource :except   => [:export, :refresh_accounts]
   before_filter :load_time_zone, :only  => [:show, :report, :report_client]
   before_filter :check_authorization
-  
-  before_filter :require_ssl, :only => [:index, :new, :create, :destroy, :update, :edit, :show]
+  ssl_required :index
 
   def index
-    request.env[‘HTTPS’] = ‘on’
-    
     @accounts           = current_user.acquainted_accounts
     @accounts.count == 1 ? (redirect_to account_path(@accounts.first.id)) : nil
     @accounts_statuses  = Account.account_statuses_for(@accounts)
