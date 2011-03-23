@@ -23,7 +23,7 @@ class IncomingController < ApplicationController
     end
   end
   
-  # /incoming/:encoded_number/connect?params.......
+  # /incoming/:encoded_number/complete
   def complete
     encoded = CGI.unescape(params[:encoded_number])
     decoded = Base64.decode64(encoded)
