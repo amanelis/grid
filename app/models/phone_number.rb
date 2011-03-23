@@ -132,6 +132,7 @@ class PhoneNumber < ActiveRecord::Base
             'SmsFallbackMethod' => 'POST',
             'VoiceCallerIdLookup' => true
           }
+          
       update_resp = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{self.twilio_version}/Accounts/#{self.campaign.account.twilio_id}/IncomingPhoneNumbers/#{self.twilio_id}.json", 'POST', d)
       raise unless update_resp.kind_of? Net::HTTPSuccess
     rescue Exception => ex
