@@ -126,7 +126,7 @@ class PhoneNumber < ActiveRecord::Base
             'VoiceFallbackMethod' => 'POST',
             'StatusCallback' => "#{status_url}",
             'StatusCallbackMethod' => 'POST',
-            'SmsUrl' => "#{sms_url}#{self.id}",
+            'SmsUrl' => "#{sms_url}",
             'SmsMethod' => 'POST',
             'SmsFallbackUrl' => "#{fallback_sms_url}",
             'SmsFallbackMethod' => 'POST',

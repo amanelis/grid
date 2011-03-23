@@ -15,7 +15,7 @@ ActionController::Routing::Routes.draw do |map|
                                                                           
   # Twilio routing                                                                 
   map.connect_number      "/incoming/:encoded_number/connect",            :controller => "incoming",        :action => :connect
-  map.complete_number     "/incoming/:number/complete",                   :controller => "incoming",        :action => :complete
+  map.complete_number     "/incoming/:encoded_number/complete",           :controller => "incoming",        :action => :complete
   # CUSTOM ROUTES
   
   map.resources :accounts do |account|
