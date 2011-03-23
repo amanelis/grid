@@ -5,6 +5,10 @@ class IncomingController < ApplicationController
     encoded = CGI.unescape(params[:encoded_number])
     decoded = Base64.decode64(encoded)
     phone_number = PhoneNumber.find_by_inboundno(decoded)
+    call = phone_number.calls.build
+    call.timestamp = Time.now
+    call.call_start = Time.now
+    call.save!
     
     unless phone_number.nil?
       record = phone_number.record_calls == true ? "true" : "false"
@@ -34,6 +38,7 @@ class IncomingController < ApplicationController
     call.caller_state     = params["CallerState"]
     call.caller_zipcode   = params["CallerZip"]
     call.caller_country   = params["CallerCountry"]
+    call.call_end         = call.call_start + params["Duration"]
    
     #twilio_call = Call.get_twilio_call(params["CallSid"])
     #call.call_start = Time.parse(twilio_call["start_time"])
@@ -41,7 +46,7 @@ class IncomingController < ApplicationController
     #call.cost = twilio_call["price"]
     call.save!
     Call.fetch_twilio_recording(params["CallSid"])
-    #Call.send_later(:fetch_twilio_recording, params["CallSid"]) if call.save!
+    Call.send_later(:fetch_twilio_recording, params["CallSid"]) if call.save!
     head 200
   end
   
