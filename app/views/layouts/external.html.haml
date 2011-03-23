@@ -24,7 +24,7 @@
   .container#wrapper
     %header#toolbar
       = link_to "CityVoice", root_path, :id => "logo"
-      .right= link_to "Login", login_path, :class => "button"
+      = link_to "Login", login_path, :class => "button", :id => "login"
     %section#content
       #yield
         =render :partial => "layouts/flash", :locals => { :flash => flash }
