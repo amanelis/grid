@@ -22,6 +22,7 @@
     %label Name
     %br
     = f.text_field :name, :class => 'required title'
+    -# ONLY SHOW THIS SECTION FOR SEM CAMPAIGNS
     %hr
     %label Google Campaign ID
     %br
@@ -37,6 +38,8 @@
     %br
     %input.title{:type => "text"}
     %br
+    -# END SEM
+    -# ONLY SHOW THIS SECTION FOR SEO CAMPAIGNS
     %hr
     %label URL
     %br
@@ -52,6 +55,7 @@
     %br
     %input.title{:type => "text"}
     %br
+    -# END SEO
     = link_to 'Pause this Campaign', channel_campaign_path(@account, @channel, @campaign), :class => "button", :confirm => "This will delete this campaign, are you sure?", :method => :delete
 %footer
   #submit
