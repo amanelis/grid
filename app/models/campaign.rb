@@ -642,7 +642,7 @@ class Campaign < ActiveRecord::Base
   end
   
   def managed_flavor?
-    MANAGED_FLAVORS.include?(self.flavor.downcase)
+    MANAGED_FLAVORS.include?(self.flavor.try(:downcase))
   end
   
   
