@@ -103,7 +103,7 @@ class Campaign < ActiveRecord::Base
       
       
       #UPDATE THE TWILIO URLS
-      new_phone_number.update_twilio_number(new_phone_number.name, new_phone_number.forward_to, new_phone_number.id_callers, new_phone_number.record_calls, new_phone_number.transcribe_calls, new_phone_number.text_calls, call_url, fallback_url, status_url, sms_url, fallback_sms_url)
+      new_phone_number.update_twilio_number(new_phone_number.name, new_phone_number.forward_to, call_url, fallback_url, status_url, sms_url, fallback_sms_url)
       job_status.finish_with_no_errors
       return new_phone_number
     rescue Exception => ex

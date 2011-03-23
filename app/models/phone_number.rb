@@ -115,7 +115,7 @@ class PhoneNumber < ActiveRecord::Base
     JSON.parse(update_resp = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{self.twilio_version}/Accounts/#{ACCOUNT_SID}/IncomingPhoneNumbers/#{self.twilio_id}.json", 'GET').body)
   end
   
-  def update_twilio_number(name, forward_to, id_callers = true, record_calls = true, transcribe_calls = false, text_calls = false, call_url, fallback_url, status_url, sms_url, fallback_sms_url)
+  def update_twilio_number(name, forward_to, call_url, fallback_url, status_url, sms_url, fallback_sms_url)
     job_status = JobStatus.create(:name => "PhoneNumber.update_twilio_number")
     begin
       #UPDATE THE TWILIO URLS
@@ -130,7 +130,7 @@ class PhoneNumber < ActiveRecord::Base
             'SmsMethod' => 'POST',
             'SmsFallbackUrl' => "#{fallback_sms_url}",
             'SmsFallbackMethod' => 'POST',
-            'VoiceCallerIdLookup' => id_callers
+            'VoiceCallerIdLookup' => true
           }
       update_resp = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{self.twilio_version}/Accounts/#{self.campaign.account.twilio_id}/IncomingPhoneNumbers/#{self.twilio_id}.json", 'POST', d)
       raise unless update_resp.kind_of? Net::HTTPSuccess
