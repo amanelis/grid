@@ -3,7 +3,7 @@ class AccountsController < ApplicationController
   load_and_authorize_resource :except   => [:export, :refresh_accounts]
   before_filter :load_time_zone, :only  => [:show, :report, :report_client]
   before_filter :check_authorization
-
+  
   def index
     @accounts           = current_user.acquainted_accounts
     @accounts.count == 1 ? (redirect_to account_path(@accounts.first.id)) : nil

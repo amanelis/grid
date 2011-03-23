@@ -2,12 +2,14 @@
 # Likewise, all the methods added will be available for all controllers.
 
 class ApplicationController < ActionController::Base
+  #include SslRequirement
+  include ExceptionNotification::Notifiable
+  
   helper :all # include all helpers, all the time
   #protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
   # Scrub sensitive parameters from your log
   filter_parameter_logging :password, :password_confirmation
-  include ExceptionNotification::Notifiable
   
   #CanCan rescue errors and access denied
   rescue_from CanCan::AccessDenied do |exception|
@@ -50,6 +52,10 @@ class ApplicationController < ActionController::Base
           respond("html", args.first)
         end 
       end
+    end
+    
+    def require_ssl
+      redirect_to :protocol => "https://" unless (request.ssl? or local_request?)  
     end
     
     # resource is refereing to the restful functions that require an instance variable of the controller name
