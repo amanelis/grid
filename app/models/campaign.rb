@@ -17,11 +17,8 @@ class Campaign < ActiveRecord::Base
   named_scope :maps, :conditions => {:campaign_style_type => MapsCampaign.name}
   named_scope :basic, :conditions => {:campaign_style_type => BasicCampaign.name}
   
-  named_scope :new_managed, lambda { |group_account| {:conditions => ["LCASE(flavor) IN (#{group_account.managed_campaign_flavors.inspect[1...-1]})"]} }
-  named_scope :new_unmanaged, lambda { |group_account| {:conditions => ["LCASE(flavor) NOT IN (#{group_account.managed_campaign_flavors.inspect[1...-1]})"]} }
-
-  named_scope :managed, lambda { {:conditions => ["LCASE(flavor) IN (#{MANAGED_FLAVORS.inspect[1...-1]})"]} }
-  named_scope :unmanaged, lambda { {:conditions => ["LCASE(flavor) NOT IN (#{MANAGED_FLAVORS.inspect[1...-1]})"]} }
+  named_scope :managed, :conditions => {:managed => true}
+  named_scope :unmanaged, :conditions => {:managed => false}
 
   validates_presence_of :name
   validates_uniqueness_of :name, :case_sensitive => false, :scope => "account_id"
@@ -169,6 +166,7 @@ class Campaign < ActiveRecord::Base
             new_sem_campaign.name = sf_campaign.name
             new_sem_campaign.zip_code = sf_campaign.zip_code__c
             new_sem_campaign.flavor = sf_campaign.campaign_type__c
+            new_sem_campaign.managed = MANAGED_FLAVORS.include?(sf_campaign.campaign_type__c.downcase)
             new_sem_campaign.mobile = true if sf_campaign.campaign_type__c.include? 'Mobile'
             new_sem_campaign.monthly_budget = sf_campaign.monthly_budget__c
             new_sem_campaign.rake = sf_campaign.campaign_rake__c
@@ -229,6 +227,7 @@ class Campaign < ActiveRecord::Base
             new_seo_campaign.name = sf_campaign.name
             new_seo_campaign.zip_code = sf_campaign.zip_code__c
             new_seo_campaign.flavor = sf_campaign.campaign_type__c
+            new_seo_campaign.managed = MANAGED_FLAVORS.include?(sf_campaign.campaign_type__c.downcase)
             new_seo_campaign.save!
             new_seo_campaign.campaign.save!
             
@@ -254,6 +253,7 @@ class Campaign < ActiveRecord::Base
             new_maps_campaign.status = sf_campaign.status__c
             new_maps_campaign.name = sf_campaign.name
             new_maps_campaign.flavor = sf_campaign.campaign_type__c
+            new_maps_campaign.managed = MANAGED_FLAVORS.include?(sf_campaign.campaign_type__c.downcase)
             new_google_maps_campaign = new_maps_campaign.google_maps_campaigns.build
             new_google_maps_campaign.login = sf_campaign.maps_login__c
             new_google_maps_campaign.password = sf_campaign.maps_password__c
@@ -281,6 +281,7 @@ class Campaign < ActiveRecord::Base
             new_basic_campaign.status = sf_campaign.status__c
             new_basic_campaign.name = sf_campaign.name
             new_basic_campaign.flavor = sf_campaign.campaign_type__c
+            new_basic_campaign.managed = MANAGED_FLAVORS.include?(sf_campaign.campaign_type__c.downcase)
             new_basic_campaign.save!
             new_basic_campaign.campaign.save!
           end
@@ -640,7 +641,7 @@ class Campaign < ActiveRecord::Base
     self.campaign_style.instance_of?(BasicCampaign)
   end
   
-  def managed?
+  def managed_flavor?
     MANAGED_FLAVORS.include?(self.flavor.downcase)
   end
   
