@@ -1,0 +1,16 @@
+<table id="notes">
+  <tr>
+    <th>Description</th>
+  </tr>
+
+<% @notes.each do |note| %>
+  <%= render note %>  
+<% end %>
+</table>
+
+<br />
+
+<h2>Note form</h2>
+<div id="form">
+  <%= render :partial => "form" %>
+</div>
