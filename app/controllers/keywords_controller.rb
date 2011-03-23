@@ -14,7 +14,6 @@ class KeywordsController < ApplicationController
   end
   
   def show
-    render :layout => false
     datepicker channel_campaign_keyword_path(@account, @channel, @campaign, @keyword)
     
     if @campaign.is_seo?
