@@ -250,6 +250,11 @@ a:hover{text-decoration:underline; color:#0047B3;}
 
 .strong{font-weight: bold;}
 .center{text-align:center;}
+
+#login{
+	float:right;
+	margin:12px;
+}
 /*
 	Toolbar
 	------------------
@@ -429,6 +434,14 @@ header h2{
 .menu{
 	float:right;
 	font-size:36px;
+}
+
+.menu a{
+	-webkit-transition: all .2s ease-in-out;
+	-moz-transition: all .2s ease-in-out;
+	-o-transition: all .2s ease-in-out;
+	-webkit-transition: all .2s ease-in-out;
+	transition: all .2s ease-in-out;
 }
 /*
 	Date Picker
@@ -743,7 +756,7 @@ article.blank{
 /* Menu Bar */
 .menu a:hover{
 	text-decoration:none;
-	opacity:.8;
+	text-shadow:0 0 3px #66C6EF;
 }
 
 /*
