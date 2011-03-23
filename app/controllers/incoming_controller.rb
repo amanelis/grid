@@ -41,8 +41,6 @@ class IncomingController < ApplicationController
     Call.fetch_twilio_recording(params["CallSid"])
     #Call.send_later(:fetch_twilio_recording, params["CallSid"]) if call.save!
     head 200
-    
-    render :text => call.inspect
   end
   
   
