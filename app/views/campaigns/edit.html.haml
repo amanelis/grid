@@ -19,10 +19,44 @@
   %header
     %h1= "Edit #{@campaign.name}"
   %article
-    %p
-      %label Name
-      %br
-      = f.text_field :name, :class => 'required title'
+    %label Name
+    %br
+    = f.text_field :name, :class => 'required title'
+    -# ONLY SHOW THIS SECTION FOR SEM CAMPAIGNS
+    -#%hr
+    -#%label Google Campaign ID
+    -#%br
+    -#%label.quiet For multiple separate with commas
+    -#%br
+    -#%input.title{:type => "text"}
+    -#%br
+    -#%label Landing Page
+    -#%br
+    -#%input.title{:type => "text"}
+    -#%br
+    -#%label Mark up (%)
+    -#%br
+    -#%input.title{:type => "text"}
+    -#%br
+    -# END SEM
+    
+    -# ONLY SHOW THIS SECTION FOR SEO CAMPAIGNS
+    -#%hr
+    -#%label URL
+    -#%br
+    -#%input.title{:type => "text"}
+    -#%br
+    -#%label Keywords
+    -#%br
+    -#%label.quiet For multiple separate with commas
+    -#%br
+    -#%input.title{:type => "text"}
+    -#%br
+    -#%label Budget
+    -#%br
+    -#%input.title{:type => "text"}
+    -#%br
+    -# END SEO
     = link_to 'Pause this Campaign', channel_campaign_path(@account, @channel, @campaign), :class => "button", :confirm => "This will delete this campaign, are you sure?", :method => :delete
 %footer
   #submit

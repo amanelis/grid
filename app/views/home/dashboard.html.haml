@@ -45,6 +45,7 @@
         %aside
           %p Leads Today
           %h3#leads= @leads_count
+        %hr.space
         =high_chart("total_daily_leads", @total_daily_leads)     
         
   - elsif @user.account_user?

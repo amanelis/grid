@@ -1,21 +1,5 @@
 = javascript_include_tag 'jquery.mapkey.js'
 
-- if params[:q] == 'real'
-  :javascript
-    jQuery.ajaxSetup({
-      'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")}
-    })
-
-    $(function() {
-      setTimeout(updateActivity, 30000);
-    });
-
-    function updateActivity() {
-      var after = $("#activities tbody tr").attr("data-time");
-      $.getScript("/activities.js?after=" + after)
-      setTimeout(updateActivity, 30000);
-    }
-
 :javascript
   var current = 0;
   var current_id = 0;
@@ -33,6 +17,9 @@
   });
 
   function setItem(item) {
+    if(current == item) {
+      return;
+    }
     if(item < 1){
       current = 1;
       return;
@@ -75,26 +62,37 @@
     // parse the ID
     current_id = current_id.match(/\d+/);
     // load the sidebar content
-    $("#sidebar").load('http://#{APP_CONFIG[:host]}/activities/'+current_id);
+    $("#sidebar").load('http://#{APP_CONFIG[:host]}/activities/'+current_id, function(){
+      $("#sidebar").animate({
+        marginTop: $("#activities tr:eq("+current+")").offset().top
+      }, 250);
+      $('html, body').animate({scrollTop: $("#activities tr:eq("+current+")").offset().top}, 500);
+    });
   }
 
-.span-12.colborder
-  %header
-    %h1 Leads
-  %article
-    %table#activities.small
-      %thead
-        %tr
-          %th Type
-          %th Campaign
-          %th From
-          %th Time
-      %tbody
-        - for activity in @activities
-          = render activity, :locals => {:activity => activity}
+%header
+  %h1 Leads
+%article.span-12.colborder
+  -#%p.strong
+    -#Filter by
+    -#= link_to "Calls", "#"
+    -#= link_to "Forms", "#"
+    -#= link_to "Most Recent", "#"
+  -#%hr
+  %p.quiet Click on a lead to view more information
+  %table#activities.small
+    %thead
+      %tr
+        %th Type
+        %th Campaign
+        %th From
+        %th Time
+    %tbody
+      - for activity in @activities
+        = render activity, :locals => {:activity => activity}
 .span-5.last
   %header
-    %h1 Details
+    %h2 Details
   %div#sidebar
     .notice
       %h4.strong Click a lead to see more.

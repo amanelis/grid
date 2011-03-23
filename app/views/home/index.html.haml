@@ -1,36 +1,16 @@
--if @user
-  %header
-    %h1 Welcome to Grid
-  %article
-    %h2 What can I do?
-    %h3 Add and track your marketing campaigns, it's just that simple.
-    %h2 Trouble?
-    %h3
-      Things here are "in the works", not everything you see might be functioning properly. If something is amiss please report it to
-      = mail_to "support@cityvoice.com"
--else
-  %header
-    %h1 Half of your marketing is working... but which half?
-    %h2 Grid tells you <i>what</i> made your phone ring or your email ding.
-  %article
-    %h2 Business owners
-    %p Is yellow pages really working for you? How much revenue did that newspaper ad last fall generate? These are the types of questions that can be answered with Grid.
-    %p Start tracking by signing up.
-    %h3 How simple is it?
-    %ol
-      %li Setup any campaign in less than 5 minutes.
-      %li Get a unique phone number and landing page for each of your marketing campaigns.
-      %li Don't waste money on weak-sauce marketing ever again.
-    %hr
-    %h2	Marketing consultants
-    %p Losing clients because no one sent out a report? Having problems tracking offline campaigns? Never again with Grid, we're here to fix those problems for good.
-    %p Don't be that guy anymore. Sign up.
-    %h3 How does it work?
-    %ol
-      %li Add clients and track their campaigns.
-      %li Send automatic e-mails and generate reports to maximize marketing zen.
-      %li Show off all the hard work you do.
-    %hr
-    %p.small 
-      Still have questions? Email us at
-      = mail_to "support@cityvoice.com"
+%header.center
+  %h1.strong Which of your marketing efforts are working?
+  %h2.quiet Grid tells you <i>what</i> made your phone ring or your email ding.
+  %hr
+  = image_tag("new_lead.jpg")
+.span-7.append-1
+  %h3.strong Track Offline Leads
+  %p.quiet Get specific phone numbers for each of your marketing campaigns.
+.span-7.append-1
+  %h3.strong Website Analytics
+  %p.quiet Track which keywords are bringing the most revenue for your business.
+.span-6.last
+  %h3.strong Integrate Adwords
+  %p.quiet Compare your Adwords campaigns right from Grid. 
+%hr.space
+

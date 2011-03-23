@@ -126,6 +126,7 @@ class Submission < ActiveRecord::Base
     return true if text =~ /\bdear\s*business\s*owner\b/i
     return true if text =~ /\bdear\s*head\b/i
     return true if text =~ /\brelevant\s*traffic\b/i
+    return true if text =~ /\bstrip\s*poker/i
     return true if text =~ /груди/i
     return true if text =~ /сисечки/i
     return true if text =~ /проституток/i

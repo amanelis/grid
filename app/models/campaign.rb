@@ -17,27 +17,20 @@ class Campaign < ActiveRecord::Base
   named_scope :maps, :conditions => {:campaign_style_type => MapsCampaign.name}
   named_scope :basic, :conditions => {:campaign_style_type => BasicCampaign.name}
   
-  named_scope :new_managed, lambda { |group_account| {:conditions => ["LCASE(flavor) IN (#{group_account.managed_campaign_flavors.inspect[1...-1]})"]} }
-  named_scope :new_unmanaged, lambda { |group_account| {:conditions => ["LCASE(flavor) NOT IN (#{group_account.managed_campaign_flavors.inspect[1...-1]})"]} }
-
-  named_scope :managed, lambda { {:conditions => ["LCASE(flavor) IN (#{MANAGED_FLAVORS.inspect[1...-1]})"]} }
-  named_scope :unmanaged, lambda { {:conditions => ["LCASE(flavor) NOT IN (#{MANAGED_FLAVORS.inspect[1...-1]})"]} }
+  named_scope :managed, :conditions => {:managed => true}
+  named_scope :unmanaged, :conditions => {:managed => false}
 
   validates_presence_of :name
   validates_uniqueness_of :name, :case_sensitive => false, :scope => "account_id"
   validate :proper_channel?
 
   before_destroy :remove_from_many_to_many_relationships
-
   attr_accessor :adopting_phone_number
   
   ACTIVE = "active"
   INACTIVE = "inactive"
-  
   STATUS_OPTIONS = [['Active', ACTIVE], ['Inactive', INACTIVE]].to_ordered_hash
-
   ORPHANAGE_NAME = 'CityVoice SEM Orphaned Campaigns'
-  
   MANAGED_FLAVORS = ['seo', 'sem - all', 'sem - bing', 'sem - google', 'sem - google boost', 'sem - google mobile', 'sem - yahoo', 'local maps', 'retargeter']
   
 
@@ -58,6 +51,75 @@ class Campaign < ActiveRecord::Base
   
   def forwarding_number=(a_forwarding_number)
     @forwarding_number = a_forwarding_number
+  end
+  
+  def create_twilio_number(phone_number, name, forward_to)
+    job_status = JobStatus.create(:name => "Campaign.create_twilio_number")
+    begin
+      
+      # This will check the twilio id if blank or been deleted in twilio
+      self.account.create_twilio_subaccount if self.account.twilio_id.blank? || Account.get_active_twilio_subaccounts.none?{|account| account['sid'] == self.account.twilio_id}
+      
+      # If they get rid of the number need to check to see if there are any more numbers on account object. if there
+      # are no numbers delete account.twilio_id
+      #self.account.activate_twilio_subaccount
+      #CREATE THE NUMBER IN TWILIO (BASIC INFORMATION)
+      d = {'PhoneNumber' => "1#{phone_number}"} if phone_number.length == 10
+      d = {'AreaCode' => phone_number} if phone_number.length == 3
+      resp = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.account.twilio_id}/IncomingPhoneNumbers.json", 'POST', d)
+      raise unless resp.kind_of? Net::HTTPSuccess
+      
+      #CREATE THE PHONE NUMBER IN GRID IF TWILIO CREATION WAS SUCCESSFUL
+      new_phone_number = self.phone_numbers.build
+      new_phone_number.twilio_id = JSON.parse(resp.body)['sid']
+      new_phone_number.inboundno = JSON.parse(resp.body)['phone_number'].gsub("+", "")
+      new_phone_number.forward_to = forward_to
+      new_phone_number.name = name
+      new_phone_number.descript = name
+      new_phone_number.twilio_version = API_VERSION
+      new_phone_number.id_callers = true
+      new_phone_number.record_calls = true
+      new_phone_number.transcribe_calls = false
+      new_phone_number.text_calls = false
+      new_phone_number.active = true
+      new_phone_number.save!
+      
+      # CALL URLS ############################################ 
+=begin
+      call_url          = "http://#{APP_CONFIG[:host]}/phone_numbers/connect/"
+      fallback_url      = "http://#{APP_CONFIG[:host]}/phone_numbers/connect/"
+      status_url        = "http://#{APP_CONFIG[:host]}/phone_numbers/collect/"
+      sms_url           = "http://#{APP_CONFIG[:host]}/phone_numbers/sms_collect/"
+      fallback_sms_url  = "http://#{APP_CONFIG[:host]}/phone_numbers/sms_collect/"
+=end
+      phone_number_md5  = Base64.encode64(new_phone_number.inboundno)
+      url_friendly_num  = CGI.escape(phone_number_md5)
+      call_url          = "http://#{APP_CONFIG[:host]}/incoming/#{url_friendly_num}/connect"
+      fallback_url      = "http://#{APP_CONFIG[:host]}/incoming/#{url_friendly_num}/connect"
+      status_url        = "http://#{APP_CONFIG[:host]}/incoming/#{url_friendly_num}/complete"
+      sms_url           = "http://#{APP_CONFIG[:host]}/incoming/#{url_friendly_num}/sms_collect"
+      fallback_sms_url  = "http://#{APP_CONFIG[:host]}/incoming/#{url_friendly_num}/sms_collect"
+      
+      
+      
+      #UPDATE THE TWILIO URLS
+      new_phone_number.update_twilio_number(new_phone_number.name, new_phone_number.forward_to, call_url, fallback_url, status_url, sms_url, fallback_sms_url)
+      job_status.finish_with_no_errors
+      return new_phone_number
+    rescue Exception => ex
+      job_status.finish_with_errors(ex)
+      raise
+    end
+  end
+  
+  def inactivate_phone_number(phone_number_id)
+    phone_number = self.phone_numbers.first(:conditions => ['id = ?', phone_number_id])
+    return false if phone_number.blank? || phone_number.twilio_id.blank?
+    resp = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{phone_number.twilio_version}/Accounts/#{self.account.twilio_id}/IncomingPhoneNumbers/#{phone_number.twilio_id}.json", 'DELETE')
+    return false unless resp.code == '204'
+    phone_number.active = false
+    phone_number.save!
+    true
   end
 
 
@@ -104,6 +166,7 @@ class Campaign < ActiveRecord::Base
             new_sem_campaign.name = sf_campaign.name
             new_sem_campaign.zip_code = sf_campaign.zip_code__c
             new_sem_campaign.flavor = sf_campaign.campaign_type__c
+            new_sem_campaign.managed = MANAGED_FLAVORS.include?(sf_campaign.campaign_type__c.downcase)
             new_sem_campaign.mobile = true if sf_campaign.campaign_type__c.include? 'Mobile'
             new_sem_campaign.monthly_budget = sf_campaign.monthly_budget__c
             new_sem_campaign.rake = sf_campaign.campaign_rake__c
@@ -164,6 +227,7 @@ class Campaign < ActiveRecord::Base
             new_seo_campaign.name = sf_campaign.name
             new_seo_campaign.zip_code = sf_campaign.zip_code__c
             new_seo_campaign.flavor = sf_campaign.campaign_type__c
+            new_seo_campaign.managed = MANAGED_FLAVORS.include?(sf_campaign.campaign_type__c.downcase)
             new_seo_campaign.save!
             new_seo_campaign.campaign.save!
             
@@ -189,6 +253,7 @@ class Campaign < ActiveRecord::Base
             new_maps_campaign.status = sf_campaign.status__c
             new_maps_campaign.name = sf_campaign.name
             new_maps_campaign.flavor = sf_campaign.campaign_type__c
+            new_maps_campaign.managed = MANAGED_FLAVORS.include?(sf_campaign.campaign_type__c.downcase)
             new_google_maps_campaign = new_maps_campaign.google_maps_campaigns.build
             new_google_maps_campaign.login = sf_campaign.maps_login__c
             new_google_maps_campaign.password = sf_campaign.maps_password__c
@@ -216,6 +281,7 @@ class Campaign < ActiveRecord::Base
             new_basic_campaign.status = sf_campaign.status__c
             new_basic_campaign.name = sf_campaign.name
             new_basic_campaign.flavor = sf_campaign.campaign_type__c
+            new_basic_campaign.managed = MANAGED_FLAVORS.include?(sf_campaign.campaign_type__c.downcase)
             new_basic_campaign.save!
             new_basic_campaign.campaign.save!
           end
@@ -530,79 +596,22 @@ class Campaign < ActiveRecord::Base
     end
   end
   
-  def create_twilio_number(phone_number, name, forward_to, id_callers = true, record_calls = true, transcribe_calls = false, text_calls = false, call_url = "http://#{APP_CONFIG[:host]}/phone_numbers/connect/", fallback_url = "http://#{APP_CONFIG[:host]}/phone_numbers/connect/", status_url = "http://#{APP_CONFIG[:host]}/phone_numbers/collect/", sms_url = "http://#{APP_CONFIG[:host]}/phone_numbers/sms_collect/", fallback_sms_url = "http://#{APP_CONFIG[:host]}/phone_numbers/sms_collect/")
-    job_status = JobStatus.create(:name => "Campaign.create_twilio_number")
-    begin
-      self.account.create_twilio_subaccount if self.account.twilio_id.blank?
-      
-      # If they get rid of the number need to check to see if there are any more numbers on account object. if there
-      # are no numbers delete account.twilio_id
-      #self.account.activate_twilio_subaccount
-      #CREATE THE NUMBER IN TWILIO (BASIC INFORMATION)
-      d = {'PhoneNumber' => "+1#{phone_number}"} if phone_number.length == 10
-      d = {'PhoneNumber' => "+#{phone_number}"} if phone_number.length == 11
-      d = {'AreaCode' => phone_number} if phone_number.length == 3
-      resp = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.account.twilio_id}/IncomingPhoneNumbers.json", 'POST', d)
-      raise unless resp.kind_of? Net::HTTPSuccess
-      
-      #CREATE THE PHONE NUMBER IN GRID IF TWILIO CREATION WAS SUCCESSFUL
-      new_phone_number = self.phone_numbers.build
-      new_phone_number.twilio_id = JSON.parse(resp.body)['sid']
-      new_phone_number.inboundno = JSON.parse(resp.body)['phone_number'].gsub("+", "")
-      new_phone_number.forward_to = forward_to
-      new_phone_number.name = name
-      new_phone_number.descript = name
-      new_phone_number.twilio_version = API_VERSION
-      new_phone_number.id_callers = id_callers
-      new_phone_number.record_calls = record_calls
-      new_phone_number.transcribe_calls = transcribe_calls
-      new_phone_number.text_calls = text_calls
-      new_phone_number.active = true
-      new_phone_number.save!
-      
-      #UPDATE THE TWILIO URLS
-      new_phone_number.update_twilio_number(new_phone_number.name, new_phone_number.forward_to, new_phone_number.id_callers, new_phone_number.record_calls, new_phone_number.transcribe_calls, new_phone_number.text_calls, call_url, fallback_url, status_url, sms_url, fallback_sms_url)
-      job_status.finish_with_no_errors
-      return new_phone_number
-    rescue Exception => ex
-      job_status.finish_with_errors(ex)
-      raise
-    end
-  end
-  
-  def inactivate_phone_number(phone_number_id)
-    phone_number = self.phone_numbers.first(:conditions => ['id = ?', phone_number_id])
-    return false if phone_number.blank? || phone_number.twilio_id.blank?
-    resp = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{phone_number.twilio_version}/Accounts/#{self.account.twilio_id}/IncomingPhoneNumbers/#{phone_number.twilio_id}.json", 'DELETE')
-    return false unless resp.code == '204'
-    phone_number.active = false
-    phone_number.save!
-    true
-  end
-  
-  def create_contact_form(description = '',  forwarding_email = '', forwarding_bcc_email = '', custom1_text = '', custom2_text = '', custom3_text = '', custom4_text = '', need_name = true, need_address = false, need_phone = true, need_email = true, work_category = false, work_description = true, date_requested = false, time_requested = false, other_information = false)
+  def create_contact_form(forwarding_email)
     form = self.contact_forms.build
     form.return_url = "http://#{APP_CONFIG[:host]}/thank_you"
     form.forwarding_email = forwarding_email
-    form.forwarding_bcc_email = forwarding_bcc_email
-    #form.custom1_text = custom1_text
-    #form.custom2_text = custom2_text
-    #form.custom3_text = custom3_text
-    #form.custom4_text = custom4_text
-    #form.need_address = need_address
-    #form.work_category = work_category
-    #form.work_description = work_description
-    #form.date_requested = date_requested
-    #form.time_requested = time_requested
-    #form.other_information = other_information
-    form.need_name = need_name
-    form.need_phone = need_phone
-    form.need_email = need_email
+    form.need_name = true
+    form.need_phone = true
+    form.need_email = true
     form.save
     form.html_block = form.get_form_text
     form.return_url = "http://#{APP_CONFIG[:host]}/contact_forms/#{form.id}/thank_you"
     form.save
     form
+  end
+  
+  def keywords
+    self.is_seo? ? self.campaign_style.keywords : []
   end
   
   def time_zone
@@ -632,8 +641,8 @@ class Campaign < ActiveRecord::Base
     self.campaign_style.instance_of?(BasicCampaign)
   end
   
-  def managed?
-    MANAGED_FLAVORS.include?(self.flavor.downcase)
+  def managed_flavor?
+    MANAGED_FLAVORS.include?(self.flavor.try(:downcase))
   end
   
   

@@ -65,6 +65,10 @@ class Account < ActiveRecord::Base
   def self.leads_in_previous_hours(time = nil)
     Activity.previous_hours(time).collect { |activity| activity.activity_type }
   end
+  
+  def self.accounts_receiving_weekly_reports
+    self.active.to_a.select { |account| account.receive_weekly_report? && account.valid_reporting_emails.present? }
+  end
 
   def self.account_statuses
     Account.all.collect(&:status).compact.uniq
@@ -98,30 +102,6 @@ class Account < ActiveRecord::Base
     exception.present? ? job_status.finish_with_errors(exception) : job_status.finish_with_no_errors
   end
 
-  def self.accounts_receiving_weekly_reports
-    self.active.to_a.select { |account| account.receive_weekly_report? && account.valid_reporting_emails.present? }
-  end
-
-  def self.get_twilio_subaccounts
-    JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts.json?", 'GET').body)['accounts']
-  end
-
-  def self.get_active_twilio_subaccounts
-    JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts.json?Status=active", 'GET').body)['accounts']
-  end
-
-  def self.get_suspended_subaccounts
-    JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts.json?Status=suspended", 'GET').body)['accounts']
-  end
-
-  def self.get_closed_subaccounts
-    JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts.json?Status=closed", 'GET').body)['accounts']
-  end
-
-  def self.get_all_twilio_numbers
-    JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/IncomingPhoneNumbers.json?", 'GET').body)['incoming_phone_numbers']
-  end
-
 
   # INITIALIZATION
   
@@ -150,6 +130,66 @@ class Account < ActiveRecord::Base
     self.customer_lobby_id ||= ""
     self.weekly_report_mtd ||= true
   end
+
+
+  # TWILIO ACCOUNT INTEGRATION ###########################################################################################################################################################
+  def create_twilio_subaccount
+    resp = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts.json?", 'POST', {'FriendlyName' => self.name})
+    raise unless resp.kind_of? Net::HTTPSuccess
+    self.update_attribute(:twilio_id, JSON.parse(resp.body)['sid'])
+  end
+
+  def get_twilio_subaccount
+    JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.twilio_id}.json?", 'GET').body)
+  end
+
+  def get_twilio_subaccount_status
+    JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.twilio_id}.json?", 'GET').body)['status']
+  end
+
+  def get_subaccount_twilio_numbers
+    JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.twilio_id}/IncomingPhoneNumbers.json?", 'GET').body)['incoming_phone_numbers']
+  end
+
+  def suspend_twilio_subaccount
+    raise unless Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.twilio_id}.json?", 'POST', {'Status' => 'suspended'}).kind_of? Net::HTTPSuccess
+  end
+
+  def activate_twilio_subaccount
+    raise unless Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.twilio_id}.json?", 'POST', {'Status' => 'active'}).kind_of? Net::HTTPSuccess
+  end
+
+  def close_twilio_subaccount
+    raise unless Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.twilio_id}.json?", 'POST', {'Status' => 'closed'}).kind_of? Net::HTTPSuccess
+  end
+
+  def self.get_twilio_subaccounts
+    JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts.json?", 'GET').body)['accounts']
+  end
+
+  def self.get_active_twilio_subaccounts
+    JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts.json?Status=active", 'GET').body)['accounts']
+  end
+
+  def self.get_suspended_subaccounts
+    JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts.json?Status=suspended", 'GET').body)['accounts']
+  end
+
+  def self.get_closed_subaccounts
+    JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts.json?Status=closed", 'GET').body)['accounts']
+  end
+
+  def self.get_all_twilio_numbers
+    JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/IncomingPhoneNumbers.json?", 'GET').body)['incoming_phone_numbers']
+  end
+  
+  def self.kill_twilio_sub_accounts
+    accounts = Account.get_active_twilio_subaccounts
+    accounts.each do |account|
+      Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{account['sid']}.json?", 'POST', {'Status' => 'closed'})
+    end
+  end
+  # TWILIO ACCOUNT INTEGRATION ###########################################################################################################################################################
 
 
   # INSTANCE BEHAVIOR
@@ -464,43 +504,6 @@ class Account < ActiveRecord::Base
 
   def number_of_other_calls_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.active.to_a.sum { |campaign| campaign.number_of_other_calls_between(start_date, end_date) }
-  end
-
-  def create_twilio_subaccount
-    resp = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts.json?", 'POST', {'FriendlyName' => self.name})
-    raise unless resp.kind_of? Net::HTTPSuccess
-    self.update_attribute(:twilio_id, JSON.parse(resp.body)['sid'])
-  end
-
-  def get_twilio_subaccount
-    JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.twilio_id}.json?", 'GET').body)
-  end
-
-  def get_twilio_subaccount_status
-    JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.twilio_id}.json?", 'GET').body)['status']
-  end
-
-  def get_subaccount_twilio_numbers
-    JSON.parse(Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.twilio_id}/IncomingPhoneNumbers.json?", 'GET').body)['incoming_phone_numbers']
-  end
-
-  def suspend_twilio_subaccount
-    raise unless Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.twilio_id}.json?", 'POST', {'Status' => 'suspended'}).kind_of? Net::HTTPSuccess
-  end
-
-  def activate_twilio_subaccount
-    raise unless Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.twilio_id}.json?", 'POST', {'Status' => 'active'}).kind_of? Net::HTTPSuccess
-  end
-
-  def close_twilio_subaccount
-    raise unless Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.twilio_id}.json?", 'POST', {'Status' => 'closed'}).kind_of? Net::HTTPSuccess
-  end
-  
-  def self.kill_twilio_sub_accounts
-    accounts = Account.get_active_twilio_subaccounts
-    accounts.each do |account|
-      Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{account['sid']}.json?", 'POST', {'Status' => 'closed'})
-    end
   end
 
   def create_basic_campaign(basic_channel, name)

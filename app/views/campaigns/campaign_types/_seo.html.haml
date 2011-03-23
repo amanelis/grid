@@ -1,5 +1,4 @@
 %article
-  = render :partial => 'campaigns/campaign_types/website'
   %h3 Keyword Rankings
   %table
     %thead
@@ -12,7 +11,7 @@
     %tbody
       - (@campaign.campaign_style.keywords.sort { |a,b| a.descriptor <=> b.descriptor }).each do |keyword|
         %tr
-          %td= link_to keyword.descriptor, "#", :rel => "facebox"
+          %td= link_to keyword.descriptor, channel_campaign_keyword_path(@account, @channel, @campaign, keyword), :rel => "facebox"
           %td
             = ((final_ranking = ((ranking = keyword.most_recent_google_ranking_between(@start_date, @end_date))) > 100 ? '>100' : ranking.to_s) == '0') ? '' : final_ranking
             (

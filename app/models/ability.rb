@@ -2,7 +2,7 @@ class Ability
   include CanCan::Ability
   
   def initialize(user)
-    user ||= User.new 
+    user ||= User.new
     
     if user.admin?
       can :manage, :all
@@ -38,6 +38,11 @@ class Ability
       end
       can :destroy, Channel do |channel|
         user.can_manipulate_account?(channel.account)
+      end
+      
+      # Keyword Authorization
+      can :read, Keyword do |keyword|
+        user.acquainted_with_keyword?(keyword)
       end
             
       # Custom Authorization
@@ -86,6 +91,7 @@ class Ability
       can :refresh_accounts, Account
       can :report_client, Account
       can :read, Channel
+      can :read, Activity
     end
     
   end

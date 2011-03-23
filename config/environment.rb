@@ -46,6 +46,7 @@ Rails::Initializer.run do |config|
   config.gem 'twiliolib', :version => '2.0.7'
   config.gem "cancan", :version => '1.4.1'
   config.gem "inherited_resources", :version => '1.0.6'
+  #config.gem 'subdomain-fu', :version => '0.5.4'
   
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named

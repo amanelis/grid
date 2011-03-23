@@ -5,9 +5,30 @@
         src: 'http://#{APP_CONFIG[:host]}/player.swf',
         width: '150px',
         height: '22px',
-        flashvars: { file: '#{@activity.activity_type.recording.expiring_url(14400)}'}
+        flashvars: { file: '#{@activity.activity_type.recording.expiring_url}'}
       });
     });
+
+:javascript
+  $(document).ready(function(){
+    $("#activity_review_status").change(function() {
+      // grab drop down information
+      var review_status = $('#activity_review_status').val();
+      // Grab the url from the form
+      var form_url = $('form[id*="activity"]').first().attr('action');
+
+      $.ajax({
+        type: 'POST',
+        url: form_url,
+        data: $('form[id*="activity"]').serialize(),
+        success: function() {
+          $("#activity_message").html('Saved!');
+          $("#activity_message").addClass('flash_notice');
+          $("#activity_message").fadeOut(2500);
+        }
+      });
+    })
+  });
 
 - if @activity.is_call?
   %h3.strong=@activity.activity_type.phone_number.campaign.account.name
@@ -29,8 +50,8 @@
       %span{:class => @activity.activity_type.call_status.downcase}
       =(@activity.activity_type.call_end - @activity.activity_type.call_start).to_int
       seconds
-    - form_for @activity do |f|
-      = f.select(:review_status, (@activity.activity_type.review_status_options))
+      - form_for @activity do |f|
+        = f.select(:review_status, (@activity.activity_type.review_status_options))
 
 - elsif @activity.is_submission?
   %h3.strong=@activity.activity_type.contact_form.campaign.account.name
@@ -43,5 +64,7 @@
       -activity_time_zone = @activity.activity_type.contact_form.campaign.account.time_zone
       =time_ago_in_words(@activity.timestamp) + " ago"
       %br
-    - form_for @activity do |f|
-      = f.select(:review_status, (@activity.activity_type.review_status_options))
+      - form_for @activity do |f|
+        = f.select(:review_status, (@activity.activity_type.review_status_options))
+
+%div{:id => 'activity_message'}

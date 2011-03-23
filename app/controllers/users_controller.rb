@@ -4,10 +4,8 @@ class UsersController < ApplicationController
   load_resource
   load_resource :account
   
-  
-  #
-  # We want to only list out the users that the current user can manipulate
   def index
+    authorize! :manipulate_account, @account
     @current_user = current_user
     @current_user.admin? ? (@users = User.all) : (@current_user.manipulable_users.compact)
   end

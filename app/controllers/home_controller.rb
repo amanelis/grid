@@ -2,6 +2,7 @@ class HomeController < ApplicationController
   before_filter :load_resource_user, :only => [:index, :dashboard]
   
   def index
+    render :layout => "external"
   end
   
   def dashboard  

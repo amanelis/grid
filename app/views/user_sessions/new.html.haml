@@ -1,7 +1,7 @@
 %header
   %h1 Log In
 %article
-  - form_for @user_session, :url => user_session_path do |f|	
+  - form_for @user_session, :url => user_sessions_path do |f|	
     = f.label :email
     %br
     = f.text_field :email, :class => 'title'
