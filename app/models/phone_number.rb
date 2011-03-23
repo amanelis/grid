@@ -120,15 +120,15 @@ class PhoneNumber < ActiveRecord::Base
     begin
       #UPDATE THE TWILIO URLS
       d = { 'FriendlyName' => name,
-            'VoiceUrl' => "#{call_url}#{self.id}",
+            'VoiceUrl' => "#{call_url}",
             'VoiceMethod' => 'POST',
-            'VoiceFallbackUrl' => "#{fallback_url}#{self.id}",
+            'VoiceFallbackUrl' => "#{fallback_url}",
             'VoiceFallbackMethod' => 'POST',
-            'StatusCallback' => "#{status_url}#{self.id}",
+            'StatusCallback' => "#{status_url}",
             'StatusCallbackMethod' => 'POST',
             'SmsUrl' => "#{sms_url}#{self.id}",
             'SmsMethod' => 'POST',
-            'SmsFallbackUrl' => "#{fallback_sms_url}#{self.id}",
+            'SmsFallbackUrl' => "#{fallback_sms_url}",
             'SmsFallbackMethod' => 'POST',
             'VoiceCallerIdLookup' => id_callers
           }

@@ -13,8 +13,9 @@ ActionController::Routing::Routes.draw do |map|
   map.add_customer_lobby  "/accounts/:id/add_customer_lobby",             :controller => "accounts",        :action => :add_customer_lobby
   map.connect             "/phone_numbers/connect/:number",               :controller => "phone_numbers",   :action => :connect
                                                                           
-  map.connect_number      "/incoming/:encoded_number/connect/:id",            :controller => "incoming",        :action => :connect
-  map.complete_number     "/incoming/:number/complete/:id",                   :controller => "incoming",        :action => :complete
+  # Twilio routing                                                                 
+  map.connect_number      "/incoming/:encoded_number/connect",            :controller => "incoming",        :action => :connect
+  map.complete_number     "/incoming/:number/complete",                   :controller => "incoming",        :action => :complete
   # CUSTOM ROUTES
   
   map.resources :accounts do |account|
