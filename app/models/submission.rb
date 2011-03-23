@@ -61,7 +61,6 @@ class Submission < ActiveRecord::Base
   def initialize_thyself
     self.review_status = PENDING
     self.review_status = SPAM if self.is_spam?
-    self.description ||= ""
   end
 
   
