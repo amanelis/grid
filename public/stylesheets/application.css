@@ -250,6 +250,11 @@ a:hover{text-decoration:underline; color:#0047B3;}
 
 .strong{font-weight: bold;}
 .center{text-align:center;}
+
+#login{
+	float:right;
+	margin:12px;
+}
 /*
 	Toolbar
 	------------------
