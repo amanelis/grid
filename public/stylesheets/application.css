@@ -740,6 +740,12 @@ article.blank{
 	width:310px;
 }
 
+/* Menu Bar */
+.menu a:hover{
+	text-decoration:none;
+	opacity:.8;
+}
+
 /*
 	Pagination
 	------------------

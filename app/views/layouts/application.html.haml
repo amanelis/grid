@@ -21,7 +21,7 @@
 %body
   .container#wrapper
     %header.span-24#toolbar
-      = link_to "CityVoice", root_path, :id => "logo"
+      = link_to "CityVoice", dashboard_path, :id => "logo"
       %ul
         - if @current_user
           %li= link_to "My Info", edit_user_path(@current_user)

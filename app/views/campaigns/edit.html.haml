@@ -19,10 +19,41 @@
   %header
     %h1= "Edit #{@campaign.name}"
   %article
-    %p
-      %label Name
-      %br
-      = f.text_field :name, :class => 'required title'
+    %label Name
+    %br
+    = f.text_field :name, :class => 'required title'
+    %hr
+    %h4.strong Adwords
+    %label Google Campaign ID
+    %br
+    %label.quiet For multiple separate with commas
+    %br
+    %input.title{:type => "text"}
+    %br
+    %label Landing Page
+    %br
+    %input.title{:type => "text"}
+    %br
+    %label Mark up (%)
+    %br
+    %input.title{:type => "text"}
+    %br
+    %hr
+    %h4.strong Website
+    %label URL
+    %br
+    %input.title{:type => "text"}
+    %br
+    %label Keywords
+    %br
+    %label.quiet For multiple separate with commas
+    %br
+    %input.title{:type => "text"}
+    %br
+    %label Budget
+    %br
+    %input.title{:type => "text"}
+    %br
     = link_to 'Pause this Campaign', channel_campaign_path(@account, @channel, @campaign), :class => "button", :confirm => "This will delete this campaign, are you sure?", :method => :delete
 %footer
   #submit
