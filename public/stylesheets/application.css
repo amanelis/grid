@@ -248,9 +248,8 @@ a:hover{text-decoration:underline; color:#0047B3;}
 .left{float:left !important;}
 .right{float:right !important;}
 
-.strong{
-	font-weight: bold;
-}
+.strong{font-weight: bold;}
+.center{text-align:center;}
 /*
 	Toolbar
 	------------------
@@ -739,6 +738,12 @@ article.blank{
 
 .forms textarea{
 	width:310px;
+}
+
+/* Menu Bar */
+.menu a:hover{
+	text-decoration:none;
+	opacity:.8;
 }
 
 /*

@@ -10,6 +10,8 @@
   %meta{'http-equiv' => "content-type", :content => "text/html;charset=UTF-8"}
   %meta{:charset => "utf-8"}/
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  %meta{:content => "Marketing tool in progress", :name => "description"}/
+  %meta{:content => "Paul Singh, Mark Mayfield, Alex Manelis, Alex Baldwin", :name => "author"}/
   %meta{:name => "viewport", :content => "width=device-width; initial-scale=1.0; maximum-scale=1.0;"}
   %link{:rel => "shortcut icon", :href => "/images/favicon.ico" }
 
@@ -20,29 +22,15 @@
 
 %body
   .container#wrapper
-    %header.span-24#toolbar
-      = link_to "CityVoice", dashboard_path, :id => "logo"
-      %ul
-        - if @current_user
-          %li= link_to "My Info", edit_user_path(@current_user)
-          %li= link_to 'Logout', logout_path, :method => :delete, :id => "logout"
-        - else
-          -#= link_to "Register", register_path
-          -#%li= link_to "Login", login_path
-    #navigation.span-4
-      =render :partial => "layouts/nav"
-    %section#content.span-20.last
+    %header#toolbar
+      = link_to "CityVoice", root_path, :id => "logo"
+      .right= link_to "Login", login_path, :class => "button"
+    %section#content
       #yield
         =render :partial => "layouts/flash", :locals => { :flash => flash }
         = yield
-  .container#footer
     %footer
-      .right=mail_to "alex.baldwin@cityvoice.com", "Help", :subject => "Grid Feedback/Support", :class => "button"
-      %p
-        &copy; 2011 Grid. All rights reserved.
-        %br
-        A service of
-        = link_to "CityVoice", "http://cityvoice.com"
+      %small Grid is a service of CityVoice.
   %hr.space
     <script type='text/javascript'> var mp_protocol = (('https:' == document.location.protocol) ? 'https://' : 'http://'); document.write(unescape('%3Cscript src="' + mp_protocol + 'api.mixpanel.com/site_media/js/api/mixpanel.js" type="text/javascript"%3E%3C/script%3E')); </script> <script type='text/javascript'> try {  var mpmetrics = new MixpanelLib('7de24727849be75cd790f4318d0d8244'); } catch(err) { null_fn = function () {}; var mpmetrics = {  track: null_fn,  track_funnel: null_fn,  register: null_fn,  register_once: null_fn, register_funnel: null_fn }; } </script>
     - if request.host == "grid.cityvoice.com"

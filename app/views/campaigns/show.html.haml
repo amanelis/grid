@@ -4,6 +4,8 @@
     %h2.quiet Campaigns are the glue that connect people to your business. How customers get a hold of you affects how you track leads. Start tracking your campaign by adding a forwarding number or generating a form for a website.
 -else
   %header
+    .menu
+      = link_to "", edit_channel_campaign_path, :rel => "facebox", :title => "Edit Campaign", :class => 'tiptip iconic cog'
     %h1= @campaign.name
     %h2.quiet= @account.name
     %datepicker= render :partial => "shared/date_picker"
