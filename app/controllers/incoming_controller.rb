@@ -24,19 +24,21 @@ class IncomingController < ApplicationController
     phone_number = PhoneNumber.find_by_inboundno(decoded)
     
     call = phone_number.calls.build
-    call.forwardno = params["Called"].gsub("+", "")
-    call.caller_name = params["CallerName"]
-    call.inboundno = params["From"].gsub("+", "")
-    call.call_id = params["CallSid"]
-    call.call_status = params["CallStatus"]
-    call.caller_city = params["CallerCity"]
-    call.caller_state = params["CallerState"]
-    call.caller_zipcode = params["CallerZip"]
-    call.caller_country = params["CallerCountry"]
-    twilio_call = Call.get_twilio_call(params["CallSid"])
-    call.call_start = Time.parse(twilio_call["start_time"])
-    call.call_end = Time.parse(twilio_call["end_time"])
-    call.cost = twilio_call["price"]
+    call.call_id          = params["CallSid"]
+    call.call_status      = params["CallStatus"]
+    call.caller_name      = params["CallerName"]
+    call.caller_number    = params["Caller"].gsub("+", "")
+    call.forwardno        = params["To"].gsub("+", "")
+    call.inboundno        = params["From"].gsub("+", "")
+    call.caller_city      = params["CallerCity"]
+    call.caller_state     = params["CallerState"]
+    call.caller_zipcode   = params["CallerZip"]
+    call.caller_country   = params["CallerCountry"]
+   
+    #twilio_call = Call.get_twilio_call(params["CallSid"])
+    #call.call_start = Time.parse(twilio_call["start_time"])
+    #call.call_end = Time.parse(twilio_call["end_time"])
+    #call.cost = twilio_call["price"]
     call.save!
     Call.fetch_twilio_recording(params["CallSid"])
     #Call.send_later(:fetch_twilio_recording, params["CallSid"]) if call.save!
