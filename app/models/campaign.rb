@@ -94,11 +94,11 @@ class Campaign < ActiveRecord::Base
 =end
       phone_number_md5  = Base64.encode64(new_phone_number.inboundno)
       url_friendly_num  = CGI.escape(phone_number_md5)
-      call_url          = "http://#{APP_CONFIG[:host]}/incoming/#{url_friendly_num}"
-      fallback_url      = "http://#{APP_CONFIG[:host]}/phone_numbers/connect/"
-      status_url        = "http://#{APP_CONFIG[:host]}/phone_numbers/collect/"
-      sms_url           = "http://#{APP_CONFIG[:host]}/phone_numbers/sms_collect/"
-      fallback_sms_url  = "http://#{APP_CONFIG[:host]}/phone_numbers/sms_collect/"
+      call_url          = "http://#{APP_CONFIG[:host]}/incoming/#{url_friendly_num}/connect/"
+      fallback_url      = "http://#{APP_CONFIG[:host]}/incoming/#{url_friendly_num}/connect/"
+      status_url        = "http://#{APP_CONFIG[:host]}/incoming/#{url_friendly_num}/collect/"
+      sms_url           = "http://#{APP_CONFIG[:host]}/incoming/#{url_friendly_num}/sms_collect/"
+      fallback_sms_url  = "http://#{APP_CONFIG[:host]}/incoming/#{url_friendly_num}/sms_collect/"
       
       
       
