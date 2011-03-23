@@ -2,7 +2,6 @@
 # Likewise, all the methods added will be available for all controllers.
 
 class ApplicationController < ActionController::Base
-  include SslRequirement
   include ExceptionNotification::Notifiable
   
   helper :all # include all helpers, all the time
