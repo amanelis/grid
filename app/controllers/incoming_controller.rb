@@ -35,10 +35,10 @@ class IncomingController < ApplicationController
     call.caller_zipcode   = params["CallerZip"]
     call.caller_country   = params["CallerCountry"]
    
-    twilio_call = Call.get_twilio_call(params["CallSid"])
-    call.call_start = Time.parse(twilio_call["start_time"])
-    call.call_end = Time.parse(twilio_call["end_time"])
-    call.cost = twilio_call["price"]
+    #twilio_call = Call.get_twilio_call(params["CallSid"])
+    #call.call_start = Time.parse(twilio_call["start_time"])
+    #call.call_end = Time.parse(twilio_call["end_time"])
+    #call.cost = twilio_call["price"]
     call.save!
     Call.fetch_twilio_recording(params["CallSid"])
     #Call.send_later(:fetch_twilio_recording, params["CallSid"]) if call.save!
