@@ -26,7 +26,8 @@
   
   
 %article
-  =high_chart("total_daily_leads_graph", @daily_total_leads_graph)
+  - unless @current_user.account_user?
+    =high_chart("total_daily_leads_graph", @daily_total_leads_graph)
   %hr
 
   -# SEO #####################################################################################################################
