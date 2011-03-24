@@ -599,6 +599,7 @@ class Campaign < ActiveRecord::Base
   def create_contact_form(forwarding_email)
     form = self.contact_forms.build
     form.forwarding_email = forwarding_email
+    form.return_url = "http://#{APP_CONFIG[:host]}/api/forms/#{form.id}/thank_you"
     form.need_name = true
     form.need_phone = true
     form.need_email = true
