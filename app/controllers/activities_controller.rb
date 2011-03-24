@@ -25,15 +25,9 @@ class ActivitiesController < ApplicationController
     
     if params[:activity][:description].blank?
       flash.now[:error] = "Looks like your description was invalid"
-      respond_to do |format|
-        format.js
-      end
     else
+      flash.now[:notice] = "Updated!"
       @activity.update_attributes(:description => params[:activity][:description])
-      respond_to do |format|
-        format.js
-        format.html
-      end
     end
     
   end
