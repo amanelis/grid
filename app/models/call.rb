@@ -296,7 +296,7 @@ class Call < ActiveRecord::Base
   # PREDICATES
   
   def is_twilio?
-    self.phone_number.twilio_id.present?
+    self.phone_number.is_twilio?
   end
 
 end
