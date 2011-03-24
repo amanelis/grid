@@ -113,7 +113,7 @@ class Submission < ActiveRecord::Base
     return true if text =~ /\bsex\b/i
     return true if text =~ /\bsexual\b/i
     return true if text =~ /\banime\b/i
-    return true if text =~ /\bsearch\s*engine/i
+    return true if text =~ /\bsearch\s*engine\b/i
     return true if text =~ /\binternet\s*marketing\b/i
     return true if text =~ /\bincrease\s*traffic\b/i
     return true if text =~ /\bonline\s*leads\b/i
@@ -126,7 +126,7 @@ class Submission < ActiveRecord::Base
     return true if text =~ /\bdear\s*business\s*owner\b/i
     return true if text =~ /\bdear\s*head\b/i
     return true if text =~ /\brelevant\s*traffic\b/i
-    return true if text =~ /\bstrip\s*poker/i
+    return true if text =~ /\bstrip\s*poker\b/i
     return true if text =~ /груди/i
     return true if text =~ /сисечки/i
     return true if text =~ /проституток/i
