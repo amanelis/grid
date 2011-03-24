@@ -671,6 +671,8 @@ form.inline p { margin-bottom:0; }
 	color:green;
 }
 
+textarea#description { width: 92%; height: 100px; }
+
 /*
 	Dashboard
 	------------------
