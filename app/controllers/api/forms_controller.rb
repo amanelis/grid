@@ -45,9 +45,7 @@ class Api::FormsController < ApplicationController
       else
         # Let's not give the (likely) bot too much info on why this failed.
         head 400
-      end
-    else
-      
+      end 
     end
   end
   
