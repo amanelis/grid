@@ -76,7 +76,6 @@
     -#= link_to "Forms", "#"
     -#= link_to "Most Recent", "#"
   -#%hr
-  %p.quiet Click on a lead to view more information
   %div{:id => "activities_scroll_pane", :style => "height: 500px; overflow: auto;"}
     %table#activities.small
       %thead
@@ -89,8 +88,7 @@
         - for activity in @activities
           = render activity, :locals => {:activity => activity}
 .span-5.last
-  %header
-    %h2 Details
+  %h2.subheader Details
   %div#sidebar
     .notice
       %h4.strong Click a lead to see more.
