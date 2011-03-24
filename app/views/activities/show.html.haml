@@ -11,24 +11,38 @@
 
 :javascript
   $(document).ready(function(){
-    $("#activity_review_status").change(function() {
+    function flash_message(str, class) {
+      $('#activity_message').html(str);
+      $('#activity_message').addClass(class);
+      $('#activity_message').fadeOut(2500);
+    }
+    function save_form() {
       // grab drop down information
       var review_status = $('#activity_review_status').val();
       // Grab the url from the form
       var form_url = $('form[id*="activity"]').first().attr('action');
-
       $.ajax({
         type: 'POST',
         url: form_url,
         data: $('form[id*="activity"]').serialize(),
         success: function() {
-          $("#activity_message").html('Saved!');
-          $("#activity_message").addClass('flash_notice');
-          $("#activity_message").fadeOut(2500);
+          flash_message('Saved!', 'flash_notice');
+        },
+        error: function() {
+          flash_message('Error!', 'flash_error');
         }
       });
+    }
+    $("#activity_review_status").change(function() {
+      save_form();
+    });
+    $("#save_form").click(function(){
+      save_form();
     })
+
   });
+
+%div{:id => 'activity_message'}
 
 - if @activity.is_call?
   %h3.strong=@activity.activity_type.phone_number.campaign.account.name
@@ -51,7 +65,18 @@
       =(@activity.activity_type.call_end - @activity.activity_type.call_start).to_int
       seconds
       - form_for @activity do |f|
-        = f.select(:review_status, (@activity.activity_type.review_status_options))
+        %p
+          %label Status:
+          %br
+          = f.select(:review_status, (@activity.activity_type.review_status_options))
+        %p
+          %label Notes:
+          %br
+          %textarea{ :name => "description", :id => "description"}
+            =@activity.description
+      %p
+        %center
+          %button{:id => "save_form", :class => "button"} Save
 
 - elsif @activity.is_submission?
   %h3.strong=@activity.activity_type.contact_form.campaign.account.name
@@ -65,6 +90,16 @@
       =time_ago_in_words(@activity.timestamp) + " ago"
       %br
       - form_for @activity do |f|
-        = f.select(:review_status, (@activity.activity_type.review_status_options))
+        %p
+          %label Status:
+          %br
+          = f.select(:review_status, (@activity.activity_type.review_status_options))
+        %p
+          %label Notes:
+          %br
+          %textarea{ :name => "description", :id => "description" }
+            =@activity.description
+      %p
+        %center
+          %button{:id => "save_form", :class => "button"} Save
 
-%div{:id => 'activity_message'}

@@ -22,6 +22,7 @@ class ActivitiesController < ApplicationController
     else
       @activity.update_attributes!(params[:activity]) ? (flash[:notice] = "Activities updated successfully!", respond("html", activities_path)) : (flash[:error] = "Activities were not updated!", respond("html", activities_path))
     end
+    
   end
 
   def show

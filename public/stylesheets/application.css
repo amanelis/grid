@@ -376,12 +376,16 @@ hr{
 	------------------
 */
 
-#footer{
-	padding:12px;
+#content{
+	margin-bottom:12px;
 }
 
-footer p{
-	margin-left:190px;
+footer{
+	padding:0 12px;
+}
+
+footer.app{
+	margin-left:178px;
 }
 
 footer, footer a{
@@ -670,6 +674,8 @@ form.inline p { margin-bottom:0; }
 .answer{
 	color:green;
 }
+
+textarea#description { width: 92%; height: 100px; }
 
 /*
 	Dashboard
