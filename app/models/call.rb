@@ -291,5 +291,12 @@ class Call < ActiveRecord::Base
   def campaign
     self.phone_number.campaign
   end
+  
+  
+  # PREDICATES
+  
+  def is_twilio?
+    self.phone_number.twilio_id.present?
+  end
 
 end
