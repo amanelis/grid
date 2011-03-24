@@ -236,9 +236,6 @@ body{
 
 #yield{
 	min-height:400px;
-}
-
-#yield{
 	padding:12px 24px;
 }
 
@@ -376,12 +373,16 @@ hr{
 	------------------
 */
 
-#footer{
-	padding:12px;
+#content{
+	margin-bottom:12px;
 }
 
-footer p{
-	margin-left:190px;
+footer{
+	padding:0 12px;
+}
+
+footer.app{
+	margin-left:178px;
 }
 
 footer, footer a{
@@ -442,6 +443,82 @@ header h2{
 	-o-transition: all .2s ease-in-out;
 	-webkit-transition: all .2s ease-in-out;
 	transition: all .2s ease-in-out;
+}
+
+/* Index */
+
+.pitch{
+	text-align:center;
+}
+
+#yield header.pitch{
+	border-bottom:none;
+}
+
+.pitch ul{
+	font-style: italic;
+	color:#C33;
+	width:50%;
+	font-size:18px;
+	padding-top:36px;
+}
+
+.pitch li{
+	float:none;
+	margin-bottom:6px;
+}
+
+.pitch h1{
+	line-height:1;
+	letter-spacing:-2px;
+	font-weight:bold;
+	font-size:42px;
+	margin-bottom:4px;
+}
+
+.pitch h2{
+	font-size:22px;
+	font-weight:normal;
+}
+
+#register{
+	float:right;
+	width:50%;
+}
+
+#register p{
+	font-size:22px;
+}
+
+#register .button{
+	font-size:24px;
+}
+
+.specific{
+	width:66%;
+}
+
+.specific h1{
+	font-size:24px;
+}
+
+.specific h2{
+	font-size:16px;
+}
+
+.sales{
+	width:33%;
+	float:right;
+}
+
+.sale h3{
+	font-size:14px;
+	text-decoration:none;
+}
+.sale span{
+	float:left;
+	margin-right:6px;
+	font-size:24px;
 }
 /*
 	Date Picker

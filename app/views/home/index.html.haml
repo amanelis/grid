@@ -1,16 +1,28 @@
-%header.center
-  %h1.strong Which of your marketing efforts are working?
-  %h2.quiet Grid tells you <i>what</i> made your phone ring or your email ding.
+%header.pitch
+  %h1 Know where your customers came from.
+  %h2.quiet Grid tells you what made your phone ring or your email ding.
+%article.pitch
+  #register.notice
+    %p Stop fiddling around and start understanding your marketing.
+    = link_to "Register Now", register_path, :class => "button"
+    %small
+  %ul
+    %li How did this customer find us?
+    %li Is yellow pages really worth that?
+    %li Which marketing is working?
+%article
   %hr
-  = image_tag("new_lead.jpg")
-.span-7.append-1
-  %h3.strong Track Offline Leads
-  %p.quiet Get specific phone numbers for each of your marketing campaigns.
-.span-7.append-1
-  %h3.strong Website Analytics
-  %p.quiet Track which keywords are bringing the most revenue for your business.
-.span-6.last
-  %h3.strong Integrate Adwords
-  %p.quiet Compare your Adwords campaigns right from Grid. 
-%hr.space
-
+  %section.sales
+    .sale
+      %span.iconic.tag
+      %h3 Find which search engine keywords are bringing the most revenue.
+    .sale
+      %span.iconic.image
+      %h3 Track Adwords campaigns value from within Grid.
+    .sale
+      %span.iconic.phone
+      %h3 Get specific phone numbers for each of your marketing campaigns.
+  %section.specific
+    %h1 Real-time Lead Monitoring
+    %h2 Using online and offline tracking, you can know where every single customer comes from. With Grid you will always know which marketing tactics are working, and how much each specific lead is worth to you.
+  %hr.space
