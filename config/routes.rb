@@ -8,9 +8,6 @@ ActionController::Routing::Routes.draw do |map|
   map.register            "/register",                                    :controller => "users",           :action => :new
                                                                           
   # Twilio routing                                                                 
-  #map.connect_number      "/incoming/:encoded_number/connect",            :controller => "incoming",        :action => :connect
-  #map.collect_number      "/incoming/:encoded_number/complete",           :controller => "incoming",        :action => :complete
-  
   map.connect_number_api  "/api/calls/:encoded_number/connect",           :controller => "api/calls",       :action => :connect
   map.collect_number_api  "/api/calls/:encoded_number/complete",          :controller => "api/calls",       :action => :complete
   
@@ -39,9 +36,6 @@ ActionController::Routing::Routes.draw do |map|
     api.resources :forms
   end
   
-  
-  
-  #map.resources :incoming
   map.resources :phone_numbers
   map.resources :user_sessions
 
@@ -51,14 +45,10 @@ ActionController::Routing::Routes.draw do |map|
   map.resources   :phone_numbers,   :member => {:connect => :post}
   map.resources   :searches, :activities, :keywords, :job_statuses, :websites
   map.resources   :users,         :password_resets
-  #map.resource    :submission,    :only => [:index, :create, :show]
-  
-
   
   map.with_options :controller => 'home' do |home|
     home.dashboard 'dashboard', :action => 'dashboard'
   end
-
   
   # End point route
   map.root :controller => "home", :action => "index" 
