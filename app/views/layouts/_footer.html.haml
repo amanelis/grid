@@ -1,0 +1,11 @@
+.right=mail_to "alex.baldwin@cityvoice.com", "Help", :subject => "Grid Feedback/Support", :class => "button"
+%small
+  %strong= number_with_delimiter(Rails.cache.fetch("activity_count", :expires_in => 15.minutes) { Activity.count })
+  leads tracked for small businesses and marketing consultants.
+  %br
+  %em &copy; 2011 Grid. All rights reserved.
+%hr.space
+<script type='text/javascript'> var mp_protocol = (('https:' == document.location.protocol) ? 'https://' : 'http://'); document.write(unescape('%3Cscript src="' + mp_protocol + 'api.mixpanel.com/site_media/js/api/mixpanel.js" type="text/javascript"%3E%3C/script%3E')); </script> <script type='text/javascript'> try {  var mpmetrics = new MixpanelLib('7de24727849be75cd790f4318d0d8244'); } catch(err) { null_fn = function () {}; var mpmetrics = {  track: null_fn,  track_funnel: null_fn,  register: null_fn,  register_once: null_fn, register_funnel: null_fn }; } </script>
+- if request.host == "grid.cityvoice.com"
+:javascript
+  mpmetrics.track('#{request.request_uri}');
