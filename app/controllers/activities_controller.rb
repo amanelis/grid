@@ -23,13 +23,6 @@ class ActivitiesController < ApplicationController
       @activity.update_attributes!(params[:activity]) ? (flash[:notice] = "Activities updated successfully!", respond("html", activities_path)) : (flash[:error] = "Activities were not updated!", respond("html", activities_path))
     end
     
-    if params[:activity][:description].blank?
-      flash.now[:error] = "Looks like your description was invalid"
-    else
-      flash.now[:notice] = "Updated!"
-      @activity.update_attributes(:description => params[:activity][:description])
-    end
-    
   end
 
   def show
