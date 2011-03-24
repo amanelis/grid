@@ -413,18 +413,28 @@ article h3{
 */
 
 header h1{
+	margin:0;
 	font-size:24px;
 	font-weight:bold;
 }
 
 header h2{
 	font-size:16px;
-	font-weight:bold;
+	font-weight:normal;
+	margin:0;
 }
 
 #yield header{
 	border-bottom:1px solid #C7CCD1;
-	margin-bottom:12px;
+	margin-bottom:6px;
+	padding-bottom:6px;
+}
+
+.sub h2{
+	font-weight:bold;
+	font-size:12px;
+	text-transform: uppercase;
+	letter-spacing:2px;
 }
 
 /*
