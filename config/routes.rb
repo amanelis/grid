@@ -41,7 +41,7 @@ ActionController::Routing::Routes.draw do |map|
   
   
   
-  map.resources :incoming
+  #map.resources :incoming
   map.resources :phone_numbers
   map.resources :user_sessions
 
