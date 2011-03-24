@@ -1,21 +1,20 @@
 %header
-  .right
-    %form{:href => '/', :action => "accounts", :id => 'index', :name => 'index', :method => 'GET'}
-      %label Status
-      %select{:id => :account_status, :name => :account_status}
-        - for status in @accounts_statuses
-          %option{ :selected => status == @passed_status}= status
-      %input{:type => 'submit', :value => 'Sort'}
+  - if @current_user.admin? || @current_user.group_user?
+    .menu
+      = link_to "", new_account_path, :rel => "facebox", :title => "Add Account", :class => "tiptip iconic plus-alt"
   %h1 Accounts
   %h2.quiet= (Date.yesterday.beginning_of_month).to_s(:long) + ' to ' + Date.yesterday.to_s(:long)
 %article
+  %form{:href => '/', :action => "accounts", :id => 'index', :name => 'index', :method => 'GET'}
+    %label Status
+    %select{:id => :account_status, :name => :account_status}
+      - for status in @accounts_statuses
+        %option{ :selected => status == @passed_status}= status
+    %input{:type => 'submit', :value => 'Sort'}
   %table
     %thead
       %tr
-        %th 
-          Account
-          - if @current_user.admin? || @current_user.group_user?
-            = link_to "", new_account_path, :rel => "facebox", :title => "Add Account", :class => "tiptip iconic plus-alt"
+        %th Account
         %th Leads
     %tbody
       - @accounts.each do |account|
