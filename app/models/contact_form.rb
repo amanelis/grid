@@ -33,7 +33,9 @@ class ContactForm < ActiveRecord::Base
       #form_text += "<tr><td><input id=\"custom2_value\" name=\"submission[custom2_value]\" type=\"text\" value=\"#{self.custom2_text}:\"  style=\"width:100%;\" onFocus=\"javascript:this.value=\'\'\" /></td></tr>" if self.custom2_text.present?
       #form_text += "<tr><td><input id=\"custom3_value\" name=\"submission[custom3_value]\" type=\"text\" value=\"#{self.custom3_text}:\"  style=\"width:100%;\" onFocus=\"javascript:this.value=\'\'\" /></td></tr>" if self.custom3_text.present?
       #form_text += "<tr><td><input id=\"custom4_value\" name=\"submission[custom4_value]\" type=\"text\" value=\"#{self.custom4_text}:\"  style=\"width:100%;\" onFocus=\"javascript:this.value=\'\'\" /></td></tr>" if self.custom4_text.present?
-      form_text = "<form action=\"http://#{APP_CONFIG[:host]}/submission\" method=\"POST\" name=\"Form1\" onSubmit=\"return checkform()\"><input type=hidden id=\"contact_form_id\" name=\"submission[contact_form_id]\" value=\"#{self.id}\"> <input type=hidden name=\"submission[retURL]\" value=\"#{self.return_url}\"><table width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"2\">"
+      
+      #form_text = "<form action=\"http://#{APP_CONFIG[:host]}/submission\" method=\"POST\" name=\"Form1\" onSubmit=\"return checkform()\"><input type=hidden id=\"contact_form_id\" name=\"submission[contact_form_id]\" value=\"#{self.id}\"> <input type=hidden name=\"submission[retURL]\" value=\"#{self.return_url}\"><table width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"2\">"
+      form_text = "<form action=\"http://#{APP_CONFIG[:host]}/api/forms/submit\" method=\"POST\" name=\"Form1\" onSubmit=\"return checkform()\"><input type=hidden id=\"contact_form_id\" name=\"submission[contact_form_id]\" value=\"#{self.id}\"> <input type=hidden name=\"submission[retURL]\" value=\"#{self.return_url}\"><table width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"2\">"
       form_text += "<tr><td><input id=\"first_name\" name=\"submission[name]\" type=\"text\" value=\"Name:\" style=\"width:100%;\" onFocus=\"javascript:this.value=\'\'\" /></td></tr>" if self.need_name == true
       form_text += "<tr><td><input id=\"phone_number\" name=\"submission[phone_number]\" type=\"text\"  value=\"Phone #:\" style=\"width:100%;\" onFocus=\"javascript:this.value=\'\'\" /></td></tr>" if self.need_phone == true          
       form_text += "<tr><td><input id=\"from_email\" name=\"submission[from_email]\" type=\"text\" value=\"Email:\" style=\"width:100%;\" onFocus=\"javascript:this.value=\'\'\" /></td></tr>" if self.need_email == true           
@@ -71,7 +73,8 @@ class ContactForm < ActiveRecord::Base
   end
   
   def get_iframe_code
-    return "<iframe src=\"http://#{APP_CONFIG[:host]}/contact_forms/#{self.id}/get_html\" width=\"300\" height=\"375\"></iframe>"
+    #return "<iframe src=\"http://#{APP_CONFIG[:host]}/contact_forms/#{self.id}/get_html\" width=\"300\" height=\"375\"></iframe>"
+    return "<iframe src=\"http://#{APP_CONFIG[:host]}/api/forms/#{self.id}/get_html\" width=\"300\" height=\"375\"></iframe>"
   end
   
   def time_zone

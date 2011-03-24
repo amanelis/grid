@@ -94,11 +94,11 @@ class Campaign < ActiveRecord::Base
 =end
       phone_number_md5  = Base64.encode64(new_phone_number.inboundno)
       url_friendly_num  = CGI.escape(phone_number_md5)
-      call_url          = "http://#{APP_CONFIG[:host]}/incoming/#{url_friendly_num}/connect"
-      fallback_url      = "http://#{APP_CONFIG[:host]}/incoming/#{url_friendly_num}/connect"
-      status_url        = "http://#{APP_CONFIG[:host]}/incoming/#{url_friendly_num}/complete"
-      sms_url           = "http://#{APP_CONFIG[:host]}/incoming/#{url_friendly_num}/sms_collect"
-      fallback_sms_url  = "http://#{APP_CONFIG[:host]}/incoming/#{url_friendly_num}/sms_collect"
+      call_url          = "http://#{APP_CONFIG[:host]}/api/calls/#{url_friendly_num}/connect"
+      fallback_url      = "http://#{APP_CONFIG[:host]}/api/calls/#{url_friendly_num}/connect"
+      status_url        = "http://#{APP_CONFIG[:host]}/api/calls/#{url_friendly_num}/complete"
+      sms_url           = "http://#{APP_CONFIG[:host]}/api/calls/#{url_friendly_num}/sms_collect"
+      fallback_sms_url  = "http://#{APP_CONFIG[:host]}/api/calls/#{url_friendly_num}/sms_collect"
       
       
       
@@ -598,14 +598,14 @@ class Campaign < ActiveRecord::Base
   
   def create_contact_form(forwarding_email)
     form = self.contact_forms.build
-    form.return_url = "http://#{APP_CONFIG[:host]}/thank_you"
     form.forwarding_email = forwarding_email
+    form.return_url = "http://#{APP_CONFIG[:host]}/api/forms/#{form.id}/thank_you"
     form.need_name = true
     form.need_phone = true
     form.need_email = true
     form.save
     form.html_block = form.get_form_text
-    form.return_url = "http://#{APP_CONFIG[:host]}/contact_forms/#{form.id}/thank_you"
+    form.return_url = "http://#{APP_CONFIG[:host]}/api/forms/#{form.id}/thank_you"
     form.save
     form
   end

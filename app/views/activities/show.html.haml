@@ -17,6 +17,7 @@
       $('#activity_message').fadeOut(2500);
     }
     function save_form() {
+      console.log("%s", $('form[id*="activity"]').serialize());
       // grab drop down information
       var review_status = $('#activity_review_status').val();
       // Grab the url from the form

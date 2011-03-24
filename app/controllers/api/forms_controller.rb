@@ -1,13 +1,18 @@
-class SubmissionsController < ApplicationController
-  def index
-    head 200
+class Api::FormsController < ApplicationController
+  
+  def get_html
+    render :text => ContactForm.find(params[:form_id]).get_form_text
   end
   
-  def show
-    head 200
+  def thank_you
+    render :text => "Thank you for your submission."
   end
   
-  def create
+  def get_iframe
+    render :text => ContactForm.find(params[:form_id]).get_iframe_code
+  end
+  
+  def submission
     unless ContactForm.exists?(params[:submission][:contact_form_id])
       # Let's not give the (likely) bot too much info on why this failed.
       head 400
@@ -41,5 +46,5 @@ class SubmissionsController < ApplicationController
       head 400
     end
   end
-
+  
 end
