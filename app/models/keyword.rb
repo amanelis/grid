@@ -57,7 +57,7 @@ class Keyword < ActiveRecord::Base
   # INSTANCE BEHAVIOR
   
   def daily_most_recent_google_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
-    (start_date..end_date).inject([]) { |rankings, date| rankings << (ranking = self.most_recent_google_ranking_between(date, date)) > 100 ? 101 : ranking }
+    (start_date..end_date).inject([]) { |rankings, date| rankings << ((ranking = self.most_recent_google_ranking_between(date, date)) > 100 ? 101 : ranking) }
   end
 
   def most_recent_google_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
@@ -65,7 +65,7 @@ class Keyword < ActiveRecord::Base
   end
 
   def daily_most_recent_yahoo_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
-    (start_date..end_date).inject([]) { |rankings, date| rankings << (ranking = self.most_recent_yahoo_ranking_between(date, date)) > 100 ? 101 : ranking }
+    (start_date..end_date).inject([]) { |rankings, date| rankings << ((ranking = self.most_recent_yahoo_ranking_between(date, date)) > 100 ? 101 : ranking) }
   end
 
   def most_recent_yahoo_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
@@ -73,7 +73,7 @@ class Keyword < ActiveRecord::Base
   end
 
   def daily_most_recent_bing_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
-    (start_date..end_date).inject([]) { |rankings, date| rankings << (ranking = self.most_recent_bing_ranking_between(date, date)) > 100 ? 101 : ranking }
+    (start_date..end_date).inject([]) { |rankings, date| rankings << ((ranking = self.most_recent_bing_ranking_between(date, date)) > 100 ? 101 : ranking) }
   end
 
   def most_recent_bing_ranking_between(start_date = Date.today - 30.day, end_date = Date.yesterday)
