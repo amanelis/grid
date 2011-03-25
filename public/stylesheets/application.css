@@ -846,6 +846,8 @@ article.blank{
 .menu a:hover{
 	text-decoration:none;
 	text-shadow:0 0 3px #66C6EF;
+	-moz-transform:scale(1.5);
+	-webkit-transform:scale(1.2);
 }
 
 /*
