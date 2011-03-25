@@ -1,5 +1,5 @@
 function GridForm() {
-  this.host = 'grid.cityvoice.com',
+  this.host = 'staging.cityvoice.com',
   this.height = '100%',
   this.width = '',
   this.auto_resize = false,

@@ -93,7 +93,7 @@ class ContactForm < ActiveRecord::Base
     	form_text += '}'
     	form_text += '</style>'
     	
-    	form_text += "<form action=\"http://#{APP_CONFIG[:host]}/api/forms/submit\" method=\"POST\" name=\"Form1\" onSubmit=\"return checkform()\">"
+    	form_text += "<form action=\"http://#{APP_CONFIG[:host]}/api/v1/forms/submit\" method=\"POST\" name=\"Form1\" onSubmit=\"return checkform()\">"
       form_text += "<input type=hidden id=\"contact_form_id\" name=\"submission[contact_form_id]\" value=\"#{self.id}\">"
       form_text += "<input type=hidden name=\"submission[retURL]\" value=\"#{self.return_url}\">"
       form_text += "<label>Name*</label><br>"
