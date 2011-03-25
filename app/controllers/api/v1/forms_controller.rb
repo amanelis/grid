@@ -1,4 +1,4 @@
-class Api::FormsController < ApplicationController
+class Api::V1::FormsController < ApplicationController
   
   def get_html
     render :text => ContactForm.find(params[:form_id]).get_form_text
