@@ -196,4 +196,11 @@ class PhoneNumber < ActiveRecord::Base
     self.campaign.time_zone
   end
 
+
+  # PREDICATES
+  
+  def is_twilio?
+    self.twilio_id.present?
+  end
+
 end

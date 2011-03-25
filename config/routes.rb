@@ -8,16 +8,16 @@ ActionController::Routing::Routes.draw do |map|
   map.register            "/register",                                    :controller => "users",           :action => :new
                                                                           
   # Twilio routing                                                                 
-  map.connect_number_api  "/api/calls/:encoded_number/connect",           :controller => "api/calls",       :action => :connect
-  map.collect_number_api  "/api/calls/:encoded_number/complete",          :controller => "api/calls",       :action => :complete
-  
-  map.get_html            "/api/forms/:form_id/get_html",                 :controller => "api/forms",       :action => :get_html
-  map.get_iframe          "/api/forms/:form_id/get_iframe",               :controller => "api/forms",       :action => :get_iframe
-  map.thank_you           "/api/forms/:form_id/thank_you",                :controller => "api/forms",       :action => :thank_you
-  map.form_submit         "/api/forms/submit",                            :controller => "api/forms",       :action => :submission, :conditions => { :method => :post }
-  
-  map.form_submit_old     "/submission",                                  :controller => "api/forms",       :action => :submission, :conditions => { :method => :post }
-  map.form_thank_old      "/contact_forms/:id/thank_you",                 :controller => "api/forms",       :action => :thank_you
+  map.connect_number_api  "/api/v1/calls/:encoded_number/connect",        :controller => "api/v1/calls",       :action => :connect
+  map.collect_number_api  "/api/v1/calls/:encoded_number/complete",       :controller => "api/v1/calls",       :action => :complete
+                                                                                              
+  map.get_html            "/api/v1/forms/:form_id/get_html",              :controller => "api/v1/forms",       :action => :get_html
+  map.get_iframe          "/api/v1/forms/:form_id/get_iframe",            :controller => "api/v1/forms",       :action => :get_iframe
+  map.thank_you           "/api/v1/forms/:form_id/thank_you",             :controller => "api/v1/forms",       :action => :thank_you
+  map.form_submit         "/api/v1/forms/submit",                         :controller => "api/v1/forms",       :action => :submission, :conditions => { :method => :post }
+                                                                                              
+  map.form_submit_old     "/submission",                                  :controller => "api/v1/forms",       :action => :submission, :conditions => { :method => :post }
+  map.form_thank_old      "/contact_forms/:id/thank_you",                 :controller => "api/v1/forms",       :action => :thank_you
   # CUSTOM ROUTES
   
   map.resources :accounts do |account|
@@ -45,6 +45,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources   :phone_numbers,   :member => {:connect => :post}
   map.resources   :searches, :activities, :keywords, :job_statuses, :websites
   map.resources   :users,         :password_resets
+  map.resource    :submission,    :only => [:index, :create, :show]
   
   map.with_options :controller => 'home' do |home|
     home.dashboard 'dashboard', :action => 'dashboard'

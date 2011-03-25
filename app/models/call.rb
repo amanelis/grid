@@ -135,7 +135,7 @@ class Call < ActiveRecord::Base
               existing_call.assigned_to = call_result["assigned_to"]
               existing_call.disposition = call_result["disposition"]
               existing_call.rating = call_result["rating"]
-              existing_call.revenue = call_result["revenue"]
+              existing_call.marchex_revenue = call_result["revenue"]
               Call.send_later(:fetch_call_recording, call_result["call_id"]) if existing_call.save!
               processed_calls << existing_call
             end
@@ -174,7 +174,7 @@ class Call < ActiveRecord::Base
   end
   
   def self.total_revenue(calls)
-    calls.to_a.sum { |call| call.revenue.to_f }
+    calls.to_a.sum { |call| call.get_revenue }
   end
   
   def self.average_ratings_per_disposition(calls)
@@ -288,6 +288,10 @@ class Call < ActiveRecord::Base
     end
   end
   
+  def get_revenue
+    self.is_twilio? ? (self.revenue || 0.0) : self.marchex_revenue.to_f
+  end
+  
   def campaign
     self.phone_number.campaign
   end
@@ -296,7 +300,7 @@ class Call < ActiveRecord::Base
   # PREDICATES
   
   def is_twilio?
-    self.phone_number.twilio_id.present?
+    self.phone_number.is_twilio?
   end
 
 end

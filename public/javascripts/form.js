@@ -1,5 +1,5 @@
 function GridForm() {
-  this.host = 'grid.cityvoice.com',
+  this.host = 'staging.cityvoice.com',
   this.height = '100%',
   this.width = '',
   this.auto_resize = false,
@@ -13,8 +13,7 @@ function GridForm() {
     }
   },
   this.frame_url = function() {
-    //return 'http://' + this.host + '/contact_forms/' + this.form_id + '/get_html';
-		return 'http://' + this.host + '/api/forms/' + this.form_id + '/get_html';
+		return 'http://' + this.host + '/api/v1/forms/' + this.form_id + '/get_html';
   },
   this.build_frame= function(){
     var scroll='no';

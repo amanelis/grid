@@ -1,4 +1,4 @@
-class Api::FormsController < ApplicationController
+class Api::V1::FormsController < ApplicationController
   
   def get_html
     render :text => ContactForm.find(params[:form_id]).get_form_text
@@ -18,11 +18,11 @@ class Api::FormsController < ApplicationController
       head 400
       return
     end
-    
+  
     logger.debug "\n\n**********************************"
     logger.debug params[:submission].to_yaml
     logger.debug "**********************************\n\n"
-    
+  
     @submission = Submission.new(params[:submission])
     @submission.ip_address = request.remote_ip
     @submission.user_agent = request.user_agent
@@ -44,7 +44,7 @@ class Api::FormsController < ApplicationController
     else
       # Let's not give the (likely) bot too much info on why this failed.
       head 400
-    end
+    end 
   end
   
 end

@@ -1,6 +1,6 @@
-class Api::CallsController < ApplicationController
+class Api::V1::CallsController < ApplicationController
   
-  # /incoming/:encoded_number/connect
+  # /incoming/:encoded_number/connect 
   def connect
     encoded = CGI.unescape(params[:encoded_number])
     decoded = Base64.decode64(encoded)
