@@ -54,6 +54,13 @@ class Submission < ActiveRecord::Base
     :joins => "INNER JOIN activities ON submissions.id = activities.activity_type_id AND activities.activity_type_type = 'Submission'", 
     :conditions => ['activities.duplicate = FALSE']
   }
+  
+  
+  # CLASS BEHAVIOR
+  
+  def self.total_revenue(submissions)
+    submissions.to_a.sum { |submission| submission.revenue || 0.0 }
+  end
 
 
   # INITIALIZATION
