@@ -1,6 +1,10 @@
-- @browser_title = "Grid Forgotten Password"
-%h3 Fill out the form below and instructions to reset your password will be emailed to you:
-
-- form_tag password_resets_path do
-  = text_field_tag "email"
-  = submit_tag "Reset my password"
+%header
+  %h1 Reset Password
+%article
+  %p.quiet Let us know what your email is so we can send you directions for resetting your password
+  - form_tag password_resets_path do
+    %label Email
+    %br
+    = text_field_tag "email", :class => "title"
+    %br
+    = submit_tag "Reset Password", :class => "button"
