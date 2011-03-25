@@ -278,7 +278,7 @@ class Website < ActiveRecord::Base
   
   #TESTING GINZA METHODS
   
-  def create_ginza_site()
+  def create_ginza_site
     if self.ginza_global_id.blank?
       response = HTTParty.get("https://app.ginzametrics.com/v1/accounts/#{GINZA_ACCOUNT_ID}/add_site?api_key=#{GINZA_KEY}&format=json&url=#{self.nickname}&market=US")
       if response.to_a.first.first == "site"

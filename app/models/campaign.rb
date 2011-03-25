@@ -567,7 +567,7 @@ class Campaign < ActiveRecord::Base
     
     unless exists_on_clicky
       url = "http://stats.cityvoice.com.re.getclicky.com/api/whitelabel/?auth=de8f1bae61c60eb0&type=site&user_id=134255&domain=#{website}&nickname=#{website}&timezone=#{time_zone}&dst=usa"
-      url += "&mirrors=#{mirrors}" if mirrors.present?
+      #url += "&mirrors=#{mirrors}" if mirrors.present?
       info = HTTParty.get(url).parsed_response.split("\n")
       if info.first == 'OK'
         site_id = info[1]

@@ -18,6 +18,13 @@
     %p
       %label Name
       = f.text_field :name, :class => 'required title'
+      %br
+      %label Type
+      %select{:id => 'channel_type', :name => 'channel[channel_type]', :class => 'required'}
+        %option{:value => ''} - Choose a Type -
+        %option{:value => 'seo'} SEO Channel
+        %option{:value => 'sem'} SEM Channel
+        %option{:value => 'basic'} Basic Channel
 %footer
   #submit
     = link_to "Cancel", "#", :class => "cancel", :id => 'cancel'

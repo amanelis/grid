@@ -1,11 +1,11 @@
 ActionController::Routing::Routes.draw do |map|
   # CUSTOM ROUTES
-  map.report_client       "/accounts/:id/report/client",                  :controller => "accounts",        :action => :report_client
-  map.report_client_pdf   "/accounts/:id/report/client.pdf",              :controller => "accounts",        :action => :report_client, :as => :client
-  map.send_weekly         "/accounts/send_weekly_email/:id",              :controller => "accounts",        :action => :send_weekly_email
-  map.login               "/login",                                       :controller => "user_sessions",   :action => :new
-  map.logout              "/logout",                                      :controller => "user_sessions",   :action => :destroy
-  map.register            "/register",                                    :controller => "users",           :action => :new
+  map.report_client       "/accounts/:id/report/client",                  :controller => "accounts",          :action => :report_client
+  map.report_client_pdf   "/accounts/:id/report/client.pdf",              :controller => "accounts",          :action => :report_client, :as => :client
+  map.send_weekly         "/accounts/send_weekly_email/:id",              :controller => "accounts",          :action => :send_weekly_email
+  map.login               "/login",                                       :controller => "user_sessions",     :action => :new
+  map.logout              "/logout",                                      :controller => "user_sessions",     :action => :destroy
+  map.register            "/register",                                    :controller => "users",             :action => :new
                                                                           
   # Twilio routing                                                                 
   map.connect_number_api  "/api/v1/calls/:encoded_number/connect",        :controller => "api/v1/calls",       :action => :connect

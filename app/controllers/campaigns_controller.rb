@@ -19,17 +19,44 @@ class CampaignsController < ApplicationController
       bc.account = @account
       bc.channel = @channel
       bc.name    = params[:campaign][:name]
+      bc.status  = "Active"
       bc.save
-      bc.campaign.status = "Active"
       bc.campaign.save
       
       flash[:notice] = "Good job, you just created a campaign!"
-      redirect_to channel_campaign_path(@account, @channel, bc.campaign)
     elsif @channel.channel_type == "sem"
-      # Creating a SEM 
+      name          = params[:campaign][:name]
+      adwords_id    = params[:campaign][:adwords_id]
+      landing_page  = params[:campaign][:landing_page]
+      rake          = params[:campaign][:rake]
+      
+      sc = SemCampaign.new
+      sc.account  = @account
+      sc.channel  = @channel
+      sc.name     = name
+      sc.rake     = rake
+      sc.save
+      sc.campaign.save
+      sc.campaign.create_website(landing_page)
+ 
+      flash[:notice] = "Good job, you just created a campaign!"
     elsif @channel.channel_type == "seo"
-      # Creating a SEO
+      name      = params[:campaign][:name]
+      website   = params[:campaign][:url]
+      budget    = params[:campaign][:budget]
+      keywords  = params[:campaign][:keyword]
+      
+      sc = SeoCampaign.new
+      sc.account  = @account
+      sc.channel  = @channel
+      sc.name     = name
+      sc.budget   = budget
+      sc.save
+      sc.campaign.save
+      sc.campaign.create_website(website)
+      flash[:notice] = "Good job, you just created a campaign!"
     end
+    redirect_to channel_campaign_path(@account, @channel, sc.campaign)
   end
 
   def show
@@ -89,7 +116,23 @@ class CampaignsController < ApplicationController
     authorize! :manipulate_campaign, @campaign
     @campaign = Campaign.find(params[:id])
     if @campaign.present?
-      @form_text = @campaign.create_contact_form(params[:description], params[:return_url], params[:forwarding_email], params[:forwarding_bcc_email], params[:custom1_text], params[:custom2_text], params[:custom3_text], params[:custom4_text], params[:need_name], params[:need_address], params[:need_phone], params[:need_email], params[:work_category], params[:work_description], params[:date_requested], params[:time_requested], params[:other_information])
+      @form_text = @campaign.create_contact_form(params[:description], 
+                                                 params[:return_url], 
+                                                 params[:forwarding_email], 
+                                                 params[:forwarding_bcc_email], 
+                                                 params[:custom1_text], 
+                                                 params[:custom2_text], 
+                                                 params[:custom3_text], 
+                                                 params[:custom4_text], 
+                                                 params[:need_name], 
+                                                 params[:need_address], 
+                                                 params[:need_phone], 
+                                                 params[:need_email], 
+                                                 params[:work_category], 
+                                                 params[:work_description], 
+                                                 params[:date_requested], 
+                                                 params[:time_requested], 
+                                                 params[:other_information])
       @form = @campaign.contact_forms.last
     end
   end

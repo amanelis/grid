@@ -14,9 +14,56 @@
     %span= @channel.name
   %h2.quiet= @account.name
 %article
-  -form_for @campaign, :url => channel_campaigns_path do |f|
-    = f.label "Name"
-    %br
-    = f.text_field(:name, :placeholder => "CityVoice", :class => "title required")
-    %br
-  %button{:id => 'create', :class => "button"} Create Campaign
+  - if @channel.is_basic?
+    - form_for @campaign, :url => channel_campaigns_path do |f|
+      = f.label "Name"
+      %br
+      = f.text_field(:name, :placeholder => "CityVoice", :class => "title required")
+      %br
+    %button{:id => 'create', :class => "button"} Create Campaign
+  
+  - elsif @channel.is_seo?
+    - form_for @campaign, :url => channel_campaigns_path do |f|
+      %label Name
+      %br
+      %input.title{:id => "campaign_name", :name => "campaign[name]", :type => "text"}
+      %br
+      %br
+      %label URL
+      %br
+      %input.title{:id => "campaign_url", :name => "campaign[url]", :type => "text"}
+      %br
+      %br
+      %label Keywords
+      %br
+      %input.title{:id => "campaign_keywords", :name => "campaign[keywords]", :type => "text"}
+      %br
+      %br
+      %label Budget
+      %br
+      %input.title{:id => "campaign_budget", :name => "campaign[budget]", :type => "text"}
+      %br
+      %br
+      %button{:id => 'create', :class => "button"} Create Campaign
+  
+  - elsif @channel.is_sem?
+    - form_for @campaign, :url => channel_campaigns_path do |f|
+      %label Name
+      %br
+      %input.title{:id => "campaign_name", :name => "campaign[name]", :type => "text"}
+      %br
+      %br
+      %label Google Campaign ID
+      %br
+      %input.title{:id => "campaign_adwords_id", :name => "campaign[adwords_id]", :type => "text"}
+      %br
+      %label Landing Page
+      %br
+      %input.title{:id => "campaign_landing_page", :name => "campaign[landing_page]", :type => "text"}
+      %br
+      %label Mark up 
+      %br
+      %input.title{:id => "campaign_rake", :name => "campaign[rake]", :type => "text"}
+      %br
+      %br
+      %button{:id => 'create', :class => "button"} Create Campaign

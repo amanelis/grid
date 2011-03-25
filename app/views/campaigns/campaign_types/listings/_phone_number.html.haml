@@ -6,9 +6,9 @@
   - @campaign.phone_numbers.each do |number|
     .strong
       %a.iconic.phone
-      = number.inboundno
+      = number_to_phone(number.inboundno)
     %em.quiet
       %a.iconic.arrow-right
-      = number.forward_to
+      = number_to_phone(number.forward_to)
 - else
   You haven't added any phone numbers yet.
