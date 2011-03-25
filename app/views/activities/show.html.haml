@@ -12,12 +12,15 @@
 :javascript
   $(document).ready(function(){
     function flash_message(str, class) {
+      $('#activity_message').hide();
+      $('#activity_message').empty();
       $('#activity_message').html(str);
       $('#activity_message').addClass(class);
-      $('#activity_message').fadeOut(2500);
+      $('#activity_message').show('blind', 400, function() {
+        $('#activity_message').delay(1000).hide('blind', 400);
+      });
     }
     function save_form() {
-      console.log("%s", $('form[id*="activity"]').serialize());
       // grab drop down information
       var review_status = $('#activity_review_status').val();
       // Grab the url from the form
@@ -42,8 +45,6 @@
     })
 
   });
-
-%div{:id => 'activity_message'}
 
 - if @activity.is_call?
   %h3.strong=@activity.activity_type.phone_number.campaign.account.name
@@ -73,11 +74,12 @@
         %p
           %label Notes:
           %br
-          %textarea{ :name => "description", :id => "description"}
+          %textarea{ :name => "activity[description]", :id => "description"}
             =@activity.description
       %p
         %center
           %button{:id => "save_form", :class => "button"} Save
+          %div{:id => 'activity_message'}
 
 - elsif @activity.is_submission?
   %h3.strong=@activity.activity_type.contact_form.campaign.account.name
@@ -98,9 +100,10 @@
         %p
           %label Notes:
           %br
-          %textarea{ :name => "description", :id => "description" }
+          %textarea{ :name => "activity[description]", :id => "description" }
             =@activity.description
       %p
         %center
           %button{:id => "save_form", :class => "button"} Save
+          %div{:id => 'activity_message'}
 
