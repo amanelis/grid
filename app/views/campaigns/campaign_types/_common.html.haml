@@ -3,15 +3,15 @@
   %table
     %thead
       %tr
-        %th Lead Calls
-        %th All Calls
-        %th Lead Forms
-        %th All Forms
-        %th Total Leads
-        %th Total Contacts
-        %th Spend
-        %th Cost Per Lead
-        %th Cost Per Contact
+        %th.tiptip{:title => ""} Lead Calls
+        %th.tiptip{:title => ""} All Calls
+        %th.tiptip{:title => ""} Lead Forms
+        %th.tiptip{:title => ""} All Forms
+        %th.tiptip{:title => ""} Total Leads
+        %th.tiptip{:title => ""} Total Contacts
+        %th.tiptip{:title => ""} Spend
+        %th.tiptip{:title => ""} Cost Per Lead
+        %th.tiptip{:title => ""} Cost Per Contact
     %tbody
       %tr
         %td= @campaign.number_of_lead_calls_between(@start_date, @end_date).to_s

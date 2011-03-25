@@ -1,1 +1,6 @@
-=high_chart("daily_keyword_ranking_graph", @daily_keyword_ranking_graph)
+%header
+  %h1= @keyword.descriptor
+%article
+  %p.quiet Lower rankings are better, 0 means that we do not have a ranking for that day
+  =high_chart("daily_keyword_ranking_graph", @daily_keyword_ranking_graph)
+  %hr.space

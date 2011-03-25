@@ -3,11 +3,11 @@
   %table
     %thead
       %tr
-        %th Keyword
-        %th Google
-        %th Yahoo
-        %th Bing
-        %th Updated
+        %th.tiptip{:title => ""} Keyword
+        %th.tiptip{:title => ""} Google
+        %th.tiptip{:title => ""} Yahoo
+        %th.tiptip{:title => ""} Bing
+        %th.tiptip{:title => ""} Updated
     %tbody
       - (@campaign.campaign_style.keywords.sort { |a,b| a.descriptor <=> b.descriptor }).each do |keyword|
         %tr
