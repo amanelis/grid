@@ -139,7 +139,7 @@ class ContactForm < ActiveRecord::Base
   
   def get_iframe_code
     #return "<iframe src=\"http://#{APP_CONFIG[:host]}/contact_forms/#{self.id}/get_html\" width=\"300\" height=\"375\"></iframe>"
-    return "<iframe src=\"http://#{APP_CONFIG[:host]}/api/forms/#{self.id}/get_html\" width=\"300\" height=\"375\"></iframe>"
+    return "<iframe src=\"http://#{APP_CONFIG[:host]}/api/v1/forms/#{self.id}/get_html\" width=\"300\" height=\"375\"></iframe>"
   end
   
   def time_zone
