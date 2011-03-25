@@ -10,11 +10,11 @@
     %h2.quiet= @account.name
     %datepicker= render :partial => "shared/date_picker"
 
-- if @campaign.is_basic?
-  = render :partial => 'campaigns/campaign_types/basic'
-- elsif @campaign.is_seo?
-  = render :partial => 'campaigns/campaign_types/seo'
-- elsif @campaign.is_sem?
-  = render :partial => 'campaigns/campaign_types/sem'
+  - if @campaign.is_basic?
+    = render :partial => 'campaigns/campaign_types/basic'
+  - elsif @campaign.is_seo?
+    = render :partial => 'campaigns/campaign_types/seo'
+  - elsif @campaign.is_sem?
+    = render :partial => 'campaigns/campaign_types/sem'
 
-= render :partial => 'campaigns/campaign_types/common'
+  = render :partial => 'campaigns/campaign_types/common'
