@@ -444,7 +444,7 @@ class Campaign < ActiveRecord::Base
   end
 
   def total_revenue_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    Call.total_revenue(self.calls.between(start_date, end_date))
+    Call.total_revenue(self.calls.between(start_date, end_date)) + Submission.total_revenue(self.submissions.between(start_date, end_date))
   end
 
   def number_of_visits_between(start_date = Date.yesterday, end_date = Date.yesterday)
