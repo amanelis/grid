@@ -1,6 +1,7 @@
 :javascript
   $(document).ready(function () {
-    $("div#[id^='flash_']").fadeOut(4000);
+    $("div#[id*='flash'").hide();
+    $("div#[id*='flash']").show('blind', 800).delay(2000).hide('blind', 800);
   });
-- flash.each do |name, msg| 
+- flash.each do |name, msg|
   %article= content_tag :div, msg, :id => "flash_#{name}"
