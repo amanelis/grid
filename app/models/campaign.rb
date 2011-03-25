@@ -121,6 +121,20 @@ class Campaign < ActiveRecord::Base
     phone_number.save!
     true
   end
+  
+  def create_contact_form(forwarding_email)
+    form = self.contact_forms.build
+    form.forwarding_email = forwarding_email
+    form.return_url = "http://#{APP_CONFIG[:host]}/api/v1/forms/#{form.id}/thank_you"
+    form.need_name = true
+    form.need_phone = true
+    form.need_email = true
+    form.save
+    form.html_block = form.get_form_text
+    form.return_url = "http://#{APP_CONFIG[:host]}/api/v1/forms/#{form.id}/thank_you"
+    form.save
+    form
+  end
 
 
   # CLASS BEHAVIOR
@@ -594,20 +608,6 @@ class Campaign < ActiveRecord::Base
     else
       "There was an error deleting your site."
     end
-  end
-  
-  def create_contact_form(forwarding_email)
-    form = self.contact_forms.build
-    form.forwarding_email = forwarding_email
-    form.return_url = "http://#{APP_CONFIG[:host]}/api/v1/forms/#{form.id}/thank_you"
-    form.need_name = true
-    form.need_phone = true
-    form.need_email = true
-    form.save
-    form.html_block = form.get_form_text
-    form.return_url = "http://#{APP_CONFIG[:host]}/api/v1/forms/#{form.id}/thank_you"
-    form.save
-    form
   end
   
   def keywords
