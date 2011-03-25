@@ -252,7 +252,7 @@ class Call < ActiveRecord::Base
   end
   
   def duration
-    return 0 if self.call_end.balnk?
+    return 0 if self.call_end.blank?
     span = self.call_end - self.call_start
     min = (span / 60).floor
     secs = span.modulo(60).ceil
