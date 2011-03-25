@@ -46,7 +46,7 @@
     %p#user_type_field
       %label Type
       %br
-      - if @current_user.group_user?
+      - if @current_user.group_user? || @current_user.admin?
         %select{:id => 'user_type', :name => 'user[type]', :class => 'required'}
           %option{:value => 0} - Choose a role -
           %option{:value => 1} Group User Write
