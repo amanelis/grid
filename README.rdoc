@@ -5,6 +5,11 @@ The main app can be found at http://grid.cityvoice.com as well as the staging en
 == Installation
 To configure this app you must first run:
   rake gems:install
+
+You will need to also install:
+  gem install json
+  gem install xmlparser
+
 this will install all dependent gems for Grid so you can get going. Possible errors you will encounter are issues with two gems we have seen so far. The first Gem being daemons, you must be sure on your system that there is NO other version of daemons installed except for the version we have specified in the config/environment.rb for that gem. Be sure to:
   rake db:create
   rake db:migrate
