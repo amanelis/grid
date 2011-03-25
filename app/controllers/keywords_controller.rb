@@ -26,7 +26,9 @@ class KeywordsController < ApplicationController
         f.legend(:enabled => false)
     
         f.chart(:defaultSeriesType => 'area', :backgroundColor => false)
-        f.series(:name=> 'Leads', :fillOpacity => '.3', :pointInterval => 24 * 3600 * 1000, :pointStart => @start_date.to_time_in_current_zone.at_beginning_of_day.utc.to_i * 1000, :data => ([4,5,6]))
+        f.series(:name=> 'Leads', :fillOpacity => '.3', :pointInterval => 24 * 3600 * 1000, :pointStart => @start_date.to_time_in_current_zone.at_beginning_of_day.utc.to_i * 1000, :data => @keyword.daily_most_recent_google_ranking_between(@start_date, @end_date))
+        #f.series(:name=> 'Leads', :fillOpacity => '.3', :pointInterval => 24 * 3600 * 1000, :pointStart => @start_date.to_time_in_current_zone.at_beginning_of_day.utc.to_i * 1000, :data => @keyword.daily_most_recent_yahoo_ranking_between(@start_date, @end_date))
+        #f.series(:name=> 'Leads', :fillOpacity => '.3', :pointInterval => 24 * 3600 * 1000, :pointStart => @start_date.to_time_in_current_zone.at_beginning_of_day.utc.to_i * 1000, :data => @keyword.daily_most_recent_bing_ranking_between(@start_date, @end_date))
       end
     end
     
