@@ -116,7 +116,7 @@ class ContactForm < ActiveRecord::Base
     form_text +=  "<script type=\"text/javascript\">"
     form_text +=  "var myform = new GridForm();"
     form_text +=  "myform.initialize({"
-    form_text +=  "form_id: #{self.id}"]
+    form_text +=  "form_id: #{self.id}"
 
     # Override the host if we are in testing mode
     if Rails.env.development? || Rails.env.staging?
