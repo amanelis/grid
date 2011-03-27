@@ -56,7 +56,7 @@ class CampaignsController < ApplicationController
       sc.campaign.create_website(website)
       flash[:notice] = "Good job, you just created a campaign!"
     end
-    redirect_to channel_campaign_path(@account, @channel, sc.campaign)
+    redirect_to account_path(@account)
   end
 
   def show
