@@ -17,47 +17,46 @@
 
 - form_for @campaign, :url => channel_campaign_path, :method => "put" do |f|
   %header
-    %h1= "Edit #{@campaign.name}"
+    %h1= "Edit #{@campaign.name} Campaign"
   %article
     %label Name
     %br
-    = f.text_field :name, :class => 'required title'
-    -# ONLY SHOW THIS SECTION FOR SEM channel
-    -#%hr
-    -#%label Google Campaign ID
-    -#%br
-    -#%label.quiet For multiple separate with commas
-    -#%br
-    -#%input.title{:type => "text"}
-    -#%br
-    -#%label Landing Page
-    -#%br
-    -#%input.title{:type => "text"}
-    -#%br
-    -#%label Mark up (%)
-    -#%br
-    -#%input.title{:type => "text"}
-    -#%br
-    -# END SEM
+    %input.title{:id => "campaign_name", :name => "campaign[name]", :type => "text", :value => @campaign.name}
+    %br
+    - if @campaign.is_seo?
+      %label URL
+      %br
+      %input.title{:id => "campaign_url", :name => "campaign[url]", :type => "text", :value => @campaign.website.domain}
+      %br
+      %br
+      %label Keywords
+      %br
+      %input.title{:id => "campaign_keywords", :name => "campaign[keywords]", :type => "text"}
+      %br
+      %br
+      %label Budget
+      %br
+      %input.title{:id => "campaign_budget", :name => "campaign[budget]", :type => "text", :value => @campaign.campaign_style.budget}
+      %br
+      %br
     
-    -# ONLY SHOW THIS SECTION FOR SEO channels
-    -#%hr
-    -#%label URL
-    -#%br
-    -#%input.title{:type => "text"}
-    -#%br
-    -#%label Keywords
-    -#%br
-    -#%label.quiet For multiple separate with commas
-    -#%br
-    -#%input.title{:type => "text"}
-    -#%br
-    -#%label Budget
-    -#%br
-    -#%input.title{:type => "text"}
-    -#%br
-    -# END SEO
+    - elsif @campaign.is_sem?
+      %label Google Campaign ID
+      %br
+      %input.title{:id => "campaign_adwords_id", :name => "campaign[adwords_id]", :type => "text", :value => @account.adwords_client.reference_id}
+      %br
+      %label Landing Page
+      %br
+      %input.title{:id => "campaign_landing_page", :name => "campaign[landing_page]", :type => "text", :value => @campaign.website.domain}
+      %br
+      %label Mark up 
+      %br
+      %input.title{:id => "campaign_rake", :name => "campaign[rake]", :type => "text", :value => @campaign.campaign_style.rake}
+      %br
+      %br
+    
     = link_to 'Pause this Campaign', channel_campaign_path(@account, @channel, @campaign), :class => "button", :confirm => "This will delete this campaign, are you sure?", :method => :delete
+    
 %footer
   #submit
     = link_to "Cancel", "#", :class => "cancel", :id => 'cancel'

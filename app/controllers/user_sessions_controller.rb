@@ -3,7 +3,7 @@ class UserSessionsController < ApplicationController
   before_filter :require_user, :only => :destroy
   
   def new
-    @user_session = UserSession.new
+    defined?(current_user_session) ? (redirect_to dashboard_url) : (@user_session = UserSession.new)
   end
   
   def create

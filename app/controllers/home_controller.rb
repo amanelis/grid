@@ -1,5 +1,5 @@
 class HomeController < ApplicationController
-  before_filter :load_resource_user, :only => [:index, :dashboard]
+  before_filter :load_resource_user, :only => [:index, :dashboard, :welcome]
   
   def index
     render :layout => "external"
@@ -61,7 +61,6 @@ class HomeController < ApplicationController
   end
   
   def welcome
-    render :layout => "application"
   end
 
 end

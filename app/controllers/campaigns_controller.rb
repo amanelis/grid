@@ -76,8 +76,15 @@ class CampaignsController < ApplicationController
   
   def update
     authorize! :manipulate_campaign, @campaign
-    @campaign.update_attributes(params[:campaign])
-    flash[:notice] = "Alright, that CAMPAIGN was updated."
+    if @campaign.is_basic?
+      @campaign.update_attributes(:name => params[:campaign][:name]) ? (flash[:notice] = "Updated!") : (flash[:error] = "Ooops looks like there was an error updating your campaign, try again!")
+    elsif @campaign.is_sem?
+      @campaign.update_attributes(:name => params[:campaign][:name]) && @account.adwords_client.update_attributes(:reference_id => params[:campaign][:adwords_id]) && @campaign.campaign_style.update_attributes(:rake => params[:campaign][:rake])  && @campaign.website.update_attributes(:domain => params[:campaign][:landing_page]) ?  (flash[:notice] = "Updated!") : (flash[:error] = "Ooops looks like there was an error updating your campaign, try again!") 
+    elsif @campaign.is_seo?
+      @campaign.update_attributes(:name => params[:campaign][:name]) 
+      @campaign.website.update_attributes(:domain => params[:campaign][:url]) 
+      @campaign.campaign_style.update_attributes(:budget => params[:campaign][:budget]) 
+    end
     redirect_to account_path(@account)
   end
   
