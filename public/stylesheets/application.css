@@ -465,12 +465,15 @@ header h2{
 	border-bottom:none;
 }
 
-.pitch ul{
+#register ul{
 	font-style: italic;
 	color:#C33;
-	width:50%;
 	font-size:18px;
 	padding-top:36px;
+}
+
+#video {
+	width:50%;
 }
 
 .pitch li{
@@ -505,6 +508,7 @@ header h2{
 }
 
 .specific{
+	float:right;
 	width:66%;
 }
 
@@ -518,7 +522,6 @@ header h2{
 
 .sales{
 	width:33%;
-	float:right;
 }
 
 .sale h3{

@@ -1,17 +1,23 @@
 %header.pitch
   %h1 Know where your customers came from.
   %h2.quiet Grid tells you what made your phone ring or your email ding.
+  %hr.space
 %article.pitch
-  #register.notice
-    %p Stop fiddling around and start understanding your marketing.
+  #register
+    %ul
+      %li How did this customer find us?
+      %li Is yellow pages really worth that?
+      %li Which marketing is working?
     = link_to "Request an Invite", "http://eepurl.com/c711c", :class => "button"
-    %small
-  %ul
-    %li How did this customer find us?
-    %li Is yellow pages really worth that?
-    %li Which marketing is working?
+  #video
+    :erb
+      <iframe src="http://player.vimeo.com/video/21572261?title=0&amp;byline=0&amp;portrait=0&amp;color=dd4499" width="480" height="300" frameborder="0"></iframe>
+  %hr.space
 %article
   %hr
+  %section.specific
+    %h1 Real-time Lead Monitoring
+    %h2 Using online and offline tracking, you can know where every single customer comes from. With Grid you will always know which marketing tactics are working, and how much each specific lead is worth to you.
   %section.sales
     .sale
       %span.iconic.tag
@@ -22,7 +28,4 @@
     .sale
       %span.iconic.phone
       %h3 Get specific phone numbers for each of your marketing campaigns.
-  %section.specific
-    %h1 Real-time Lead Monitoring
-    %h2 Using online and offline tracking, you can know where every single customer comes from. With Grid you will always know which marketing tactics are working, and how much each specific lead is worth to you.
   %hr.space
