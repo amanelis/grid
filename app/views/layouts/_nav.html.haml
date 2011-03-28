@@ -4,6 +4,11 @@
       - if @current_user.admin?
 
         -# Dashboard
+        %li{:class => (request.url.include?("welcome")? 'active' : '')}
+          .triangle
+          %a.iconic.home
+          = link_to "Welcome", welcome_url
+          
         %li{:class => (request.url.include?("dashboard")? 'active' : '')}
           .triangle
           %a.iconic.dial

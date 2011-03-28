@@ -1,5 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
   # CUSTOM ROUTES
+  map.welcome             "/welcome",                                     :controller => "home",          :action => :welcome
   map.report_client       "/accounts/:id/report/client",                  :controller => "accounts",          :action => :report_client
   map.report_client_pdf   "/accounts/:id/report/client.pdf",              :controller => "accounts",          :action => :report_client, :as => :client
   map.send_weekly         "/accounts/send_weekly_email/:id",              :controller => "accounts",          :action => :send_weekly_email

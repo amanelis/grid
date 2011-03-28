@@ -60,5 +60,8 @@ class HomeController < ApplicationController
     end
   end
   
-  
+  def welcome
+    render :layout => "application"
+  end
+
 end
