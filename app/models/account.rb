@@ -34,6 +34,7 @@ class Account < ActiveRecord::Base
 
   validates_presence_of :name
   validates_uniqueness_of :name, :case_sensitive => false, :scope => "group_account_id"
+  validate :valid_account_manager
 
   ACTIVE = "active"
   INACTIVE = "inactive"
@@ -579,6 +580,10 @@ class Account < ActiveRecord::Base
       end
     end
     exception
+  end
+
+  def valid_account_manager
+    errors.add(:account, "has an invalid account manager") unless self.account_manager.blank? || self.account_manager.group_account == self.group_account
   end
   
 end

@@ -207,7 +207,7 @@ class MapsCampaign < ActiveRecord::Base
   
   # PREDICATES
   
-  def proper_channel?
+  def valid_channel?
     true
   end
   

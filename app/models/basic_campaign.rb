@@ -26,7 +26,7 @@ class BasicCampaign < ActiveRecord::Base
   
   # PREDICATES
   
-  def proper_channel?
+  def valid_channel?
     self.channel.blank? || self.channel.is_basic?
   end
 

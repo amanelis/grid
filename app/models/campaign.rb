@@ -22,7 +22,7 @@ class Campaign < ActiveRecord::Base
 
   validates_presence_of :name
   validates_uniqueness_of :name, :case_sensitive => false, :scope => "account_id"
-  validate :proper_channel?
+  validate :valid_channel
 
   before_destroy :remove_from_many_to_many_relationships
   attr_accessor :adopting_phone_number
@@ -654,8 +654,8 @@ class Campaign < ActiveRecord::Base
     self.industries.each { |industry| industry.campaigns.delete(self) }
   end
   
-  def proper_channel?
-    unless self.campaign_style.proper_channel?
+  def valid_channel
+    unless self.campaign_style.valid_channel?
       errors.add(:channel, "is of the incorrect channel type")
     end
     errors.add(:channel, "belongs to a different account than the campaign") unless self.channel.blank? || self.channel.account == self.account
