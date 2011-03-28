@@ -5,9 +5,8 @@ class UsersController < ApplicationController
   load_resource :account
   
   def index
-    authorize! :manipulate_account, @account
     @current_user = current_user
-    @current_user.admin? ? (@users = User.all) : (@current_user.manipulable_users.compact)
+    @current_user.admin? ? (@users = User.all) : (@users = @current_user.manipulable_users)
   end
   
   def new

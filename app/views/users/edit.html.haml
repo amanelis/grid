@@ -16,4 +16,23 @@
     = f.password_field :password_confirmation, :class => 'title'
     = f.hidden_field :id, :value => @user.id
     %br
+    
+    - if @user.group_users.any?{|group_user| group_user.account_manager?}
+      %br
+      %h2 Account Manager Information
+      %label Name  
+      %br
+      %input.title{:id => "user_am_name", :name => "user[am_name]", :type => "text"}
+      %br
+      %br
+      %label Email  
+      %br
+      %input.title{:id => "user_am_email", :name => "user[am_email]", :type => "text"}
+      %br
+      %br
+      %label Phone Number  
+      %br
+      %input.title{:id => "user_am_phone", :name => "user[am_phone]", :type => "text"}
+      %br
+      %br
     = f.submit "Save", :class => 'button'

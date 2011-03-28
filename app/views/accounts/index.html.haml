@@ -16,6 +16,7 @@
       %tr
         %th Account
         %th Leads
+        -#%th Manager
     %tbody
       - @accounts.each do |account|
         %tr
@@ -26,5 +27,6 @@
             - if account_data.present?
               .right= image_tag(Gchart.sparkline(:data => account_data[:leads_by_day], :size => '80x15', :line_colors => '0077CC', :background => "00000000"))
           %td= account_data.present? ? account_data[:leads] : 0
+          -#%td= select_tag(:account_manager, account.group_account.group_users.select{|group_user| group_user.email.present?})
 
   -#= link_to "Create New Account", "#", :class => "button"
