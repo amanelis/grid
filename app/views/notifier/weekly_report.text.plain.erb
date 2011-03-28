@@ -1,7 +1,7 @@
-Weekly Report for <%= @account_report_data[6]  %>
-<%= @account_report_data[4] %> - <%= @account_report_data[5] %>
+Weekly Report for <%= @account_report_data[:account_name]  %>
+<%= @account_report_data[:start_date].strftime("%b %d") %> - <%= @account_report_data[:end_date].strftime("%b %d") %>
 
-<%= "Lead Calls: #{@account_report_data[1]}, Contact Calls: #{@account_report_data[0]}, Lead Submissions: #{@account_report_data[3]}, Contact Submissions: #{@account_report_data[2]}." %>
+<%= "Lead Calls: #{@account_report_data[:lead_calls]}, Contact Calls: #{@account_report_data[:all_calls] - @account_report_data[:lead_calls]}, Lead Submissions: #{@account_report_data[:lead_submissions]}, Contact Submissions: #{@account_report_data[:all_submissions] - @account_report_data[:lead_submissions]}." %>
 
 *Lead: True, potential customers: first conversation or voicemail and spam free forms. 
 *Contact: Anytime your phone rings or your email dings.
