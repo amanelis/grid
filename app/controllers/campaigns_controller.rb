@@ -20,10 +20,12 @@ class CampaignsController < ApplicationController
       bc.channel = @channel
       bc.name    = params[:campaign][:name]
       bc.status  = "Active"
-      bc.save
-      bc.campaign.save
-      
-      flash[:notice] = "Good job, you just created a campaign!"
+
+      if bc.save && bc.campaign.save 
+        flash[:notice] = "Good job, you just created a campaign!"
+      else
+        flash[:error] = "Looks like you might have already named a campaign with a similar name, please try again!"
+      end
     elsif @channel.channel_type == "sem"
       name          = params[:campaign][:name]
       adwords_id    = params[:campaign][:adwords_id]
@@ -35,11 +37,12 @@ class CampaignsController < ApplicationController
       sc.channel  = @channel
       sc.name     = name
       sc.rake     = rake
-      sc.save
-      sc.campaign.save
-      sc.campaign.create_website(landing_page)
- 
-      flash[:notice] = "Good job, you just created a campaign!"
+  
+      if sc.save && sc.campaign.save && sc.campaign.create_website(website)
+        flash[:notice] = "Good job, you just created a campaign!"
+      else
+        flash[:error] = "Looks like you might have already named a campaign with a similar name, please try again!"
+      end
     elsif @channel.channel_type == "seo"
       name      = params[:campaign][:name]
       website   = params[:campaign][:url]
@@ -51,10 +54,12 @@ class CampaignsController < ApplicationController
       sc.channel  = @channel
       sc.name     = name
       sc.budget   = budget
-      sc.save
-      sc.campaign.save
-      sc.campaign.create_website(website)
-      flash[:notice] = "Good job, you just created a campaign!"
+      
+      if sc.save && sc.campaign.save && sc.campaign.create_website(website)
+        flash[:notice] = "Good job, you just created a campaign!"
+      else
+        flash[:error] = "Looks like you might have already named a campaign with a similar name, please try again!"
+      end
     end
     redirect_to account_path(@account)
   end
