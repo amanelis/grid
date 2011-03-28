@@ -9,8 +9,6 @@ class ContactFormsController < ApplicationController
   belongs_to :channel
   belongs_to :campaign
   
-  def index
-  end
   
   def new
     authorize! :manipulate_campaign, @campaign
