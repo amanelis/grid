@@ -6,10 +6,19 @@ class GroupUser < ActiveRecord::Base
 
   validate :unique_role?
   
+  
+  # PREDICATES
+  
   def unique?
     self.role.user.group_users.none? { |group_user| group_user.group_account == self.group_account }
   end
   
+  def account_manager?
+    self.accounts.present?
+  end
+  
+  
+  # PRIVATE BEHAVIOR
   
   private
   
