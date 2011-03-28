@@ -8,9 +8,6 @@ class PhoneNumbersController < ApplicationController
   belongs_to :channel
   belongs_to :campaign
   
-  def index
-  end
-  
   def new
     authorize! :manipulate_campaign, @campaign
     no_layout
