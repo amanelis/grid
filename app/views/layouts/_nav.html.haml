@@ -3,12 +3,13 @@
     - if @current_user
       - if @current_user.admin?
 
-        -# Dashboard
+        -# Welcome
         %li{:class => (request.url.include?("welcome")? 'active' : '')}
           .triangle
           %a.iconic.home
           = link_to "Welcome", welcome_url
-          
+        
+        -# Dashboard  
         %li{:class => (request.url.include?("dashboard")? 'active' : '')}
           .triangle
           %a.iconic.dial
