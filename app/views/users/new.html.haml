@@ -1,7 +1,7 @@
 :javascript
   $(document).ready(function(){
     // if they click cancel, close the facebox
-    $('#cancel').click(function(){$.facebox.close()});
+    $('#cancel').click(function(){$.facebox.close(); return false;});
 
     var validateUserType = function () {
       if($("#user_type").val()  == '0') {

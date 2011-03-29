@@ -1,5 +1,6 @@
 :javascript
   $(document).ready(function(){
+    $('#cancel').click(function(){$.facebox.close(); return false;});
     $("#create").click(function(){
       $('#new_campaign').validate();
       // If it is valid, submit
@@ -14,56 +15,52 @@
     %span= @channel.name
   %h2.quiet= @account.name
 %article
-  - if @channel.is_basic?
-    - form_for @campaign, :url => channel_campaigns_path do |f|
+  - form_for @campaign, :url => channel_campaigns_path do |f|
+    - if @channel.is_basic?
       = f.label "Name"
       %br
       = f.text_field(:name, :placeholder => "CityVoice", :class => "title required")
-      %br
-    %button{:id => 'create', :class => "button"} Create Campaign
-  
-  - elsif @channel.is_seo?
-    - form_for @campaign, :url => channel_campaigns_path do |f|
+
+    - elsif @channel.is_seo?
       %label Name
       %br
-      %input.title{:id => "campaign_name", :name => "campaign[name]", :type => "text"}
+      %input.title{:id => "campaign_name", :name => "campaign[name]", :type => "text required"}
       %br
       %br
       %label URL
       %br
-      %input.title{:id => "campaign_url", :name => "campaign[url]", :type => "text"}
+      %input.title{:id => "campaign_url", :name => "campaign[url]", :type => "text required"}
       %br
       %br
       %label Keywords
       %br
-      %input.title{:id => "campaign_keywords", :name => "campaign[keywords]", :type => "text"}
+      %input.title{:id => "campaign_keywords", :name => "campaign[keywords]", :type => "text required"}
       %br
       %br
       %label Budget
       %br
-      %input.title{:id => "campaign_budget", :name => "campaign[budget]", :type => "text"}
-      %br
-      %br
-      %button{:id => 'create', :class => "button"} Create Campaign
-  
-  - elsif @channel.is_sem?
-    - form_for @campaign, :url => channel_campaigns_path do |f|
+      %input.title{:id => "campaign_budget", :name => "campaign[budget]", :type => "text required"}
+
+    - elsif @channel.is_sem?
       %label Name
       %br
-      %input.title{:id => "campaign_name", :name => "campaign[name]", :type => "text"}
+      %input.title{:id => "campaign_name", :name => "campaign[name]", :type => "text required"}
       %br
       %br
       %label Google Campaign ID
       %br
-      %input.title{:id => "campaign_adwords_id", :name => "campaign[adwords_id]", :type => "text"}
+      %input.title{:id => "campaign_adwords_id", :name => "campaign[adwords_id]", :type => "text required"}
       %br
       %label Landing Page
       %br
-      %input.title{:id => "campaign_landing_page", :name => "campaign[landing_page]", :type => "text"}
+      %input.title{:id => "campaign_landing_page", :name => "campaign[landing_page]", :type => "text required"}
       %br
-      %label Mark up 
+      %label Mark up
       %br
-      %input.title{:id => "campaign_rake", :name => "campaign[rake]", :type => "text"}
-      %br
-      %br
-      %button{:id => 'create', :class => "button"} Create Campaign
+      %input.title{:id => "campaign_rake", :name => "campaign[rake]", :type => "text required"}
+
+%footer
+  #submit
+    %button{:id => 'create', :class => "button"} Create Campaign
+    = link_to "Cancel", "", :class => "cancel", :id => 'cancel'
+  %hr.space
