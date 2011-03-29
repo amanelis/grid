@@ -37,9 +37,7 @@ class UsersController < ApplicationController
       flash[:error] = "You did not enter in correct information, please try again"
     else 
       
-      if @user.save
-        flash[:notice] = "User was saved!"
-        
+      if @user.save        
         if type == "1" || type == "2"
           @group_user                 = GroupUser.new 
           @group_user.user            = @user
@@ -48,7 +46,8 @@ class UsersController < ApplicationController
           if type == "1" && @current_user.can_manipulate_account?(@account) && @current_user.group_user?
             @group_user.manipulator = true
           end
-          @group_user.save
+          @group_user.save ? (flash[:notice] = "User was saved!") : (flash[:error] = "User was not able to be saved")
+            
         elsif type == "3" || type == "4"
           @account_user         = AccountUser.new
           @account_user.user    = @user
@@ -57,13 +56,12 @@ class UsersController < ApplicationController
           if type == "3" && @current_user.can_manipulate_account?(@account) && @current_user.group_user?
             @account_user.manipulator = true
           end
-          @account_user.save
+          @account_user.save ? (flash[:notice] = "User was saved!") : (flash[:error] = "User was not able to be saved")
         end
       else
         flash[:error] = "User was not able to be saved"
       end
     end
-    
     redirect_to account_path(@account)   
   end
   

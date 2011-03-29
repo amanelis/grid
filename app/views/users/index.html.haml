@@ -14,7 +14,7 @@
         %tr
           %td
             = link_to user.email, edit_user_path(user)
-            - if @current_user.admin?
+            - if @current_user.admin? || @current_user.manipulable_users.collect(&:id).include?(user.id)
               = link_to "", user, :title => "Delete User", :class => 'tiptip iconic x', :confirm => "This will delete user: #{user.email}, are you sure?", :method => :delete unless user.id == @current_user.id
           %td= user.created_at.to_s(:long)
           %td= user.last_request_at.nil? ? "Has Not logged in" : time_ago_in_words(user.last_request_at)
