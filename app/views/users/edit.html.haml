@@ -1,4 +1,7 @@
 %header
+  -#.right
+    -#- if @current_user.admin? || @current_user.manipulable_users.collect(&:id).include?(user.id)
+      -#%small= link_to "Delete", user, :title => "Delete User", :confirm => "This will delete user: #{user.email}, are you sure?", :method => :delete unless user.id == @current_user.id
   %h1=@user.email
 %article
   - form_for (@user) do |f|
