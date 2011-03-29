@@ -261,7 +261,6 @@ a:hover{text-decoration:underline; color:#0047B3;}
 Toolbar
 ------------------
 */
-
 #toolbar{
 	background:#5D504F;
 margin-bottom:12px;
@@ -281,7 +280,16 @@ margin-left:12px;
 }
 
 #toolbar li a{
-color:#efefef;
+	color:#C5C5C5;
+	font-weight:normal;
+}
+
+#toolbar li a:hover{
+	color:#fff;
+}
+
+#toolbar a:hover{
+	text-decoration:none;
 }
 
 #logo{
@@ -289,6 +297,10 @@ font-weight:bold;
 font-size:24px;
 line-height:48px;
 color:#fff;
+}
+
+#logo:hover{
+	opacity:.5;	
 }
 
 /*
@@ -306,6 +318,10 @@ padding:6px 0;
 
 #navigation li.active{
 background:#efefef;
+}
+
+#navigation li.active .iconic{
+	color:#4E96AD;
 }
 
 .triangle{
@@ -327,11 +343,10 @@ font-weight:bold;
 
 #navigation li a{
 text-decoration:none;
-color:#888;
-font-weight:bold;
+color:#333;
+font-weight:normal;
 font-size:14px;
 line-height:16px;
-text-shadow:0 1px 0 rgba(0, 0, 0, 0.2);
 }
 
 #navigation li img{
