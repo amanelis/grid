@@ -222,24 +222,30 @@ html{
 overflow-y: scroll;
 }
 
-
-/* Background Color */
-/* background: #E6E1E1 url("/images/matte.png") repeat fixed; */
 body{
-	background:none repeat scroll 0 0 #FFFFFF;
+	background: #E6E1E1 url("/images/matte.png") repeat fixed;
 	-webkit-font-smoothing: antialiased;
 }
 
-.showgrid {background:url(/images/grid.png);}
+.showgrid {
+	background:url(/images/grid.png);
+	background-position:12px;
+}
 
 #content{
+	background:#fff;
 -webkit-border-radius: 4px;
    -moz-border-radius: 4px;
         border-radius: 4px;
 }
 
+#toolbar, #content, footer{
+	padding:0 12px;
+}
+
 #yield{
 min-height:400px;
+padding:12px 0;
 }
 
 a{text-decoration:none; color:#0047B3; font-weight:bold;}
@@ -251,16 +257,13 @@ a:hover{text-decoration:underline; color:#0047B3;}
 .strong{font-weight: bold;}
 .center{text-align:center;}
 
-#login{
-float:right;
-margin:12px;
-}
 /*
 Toolbar
 ------------------
 */
 
 #toolbar{
+	background:#5D504F;
 margin-bottom:12px;
 -webkit-border-radius: 0 0 4px 4px;
    -moz-border-radius: 0 0 4px 4px;
@@ -269,6 +272,7 @@ margin-bottom:12px;
 
 #toolbar ul{
 float:right;
+margin-top:12px;
 }
 
 #toolbar li, header li{
@@ -277,21 +281,14 @@ margin-left:12px;
 }
 
 #toolbar li a{
-line-height:36px;
-}
-
-#toolbar ul{
-padding:6px 0;
-}
-
-header ul{
-margin:0;
+color:#efefef;
 }
 
 #logo{
 font-weight:bold;
 font-size:24px;
 line-height:48px;
+color:#fff;
 }
 
 /*
@@ -411,6 +408,26 @@ header h2{
 	color:#777;
 }
 
+#yield section h2{
+	font-weight:bold;
+	border-bottom:1px solid #888;
+	font-size:12px;
+	line-height:1;
+	overflow:hidden;
+	text-transform:uppercase;
+	margin:0 0 12px;
+	padding:0 0 6px;
+}
+
+#yield section h2 span{
+	font-weight:normal;
+	color:#333;
+}
+
+p{
+	color:#444;
+}
+
 
 /*
 Yield Header
@@ -442,68 +459,21 @@ font-size:36px;
 transition: all .2s ease-in-out;
 }
 
-/* Index */
-
-#yield header.pitch{
+/* Pitch */
+header.pitch{
 border-bottom:none;
 }
 
-#register ul{
-font-style: italic;
-color:#C33;
-font-size:18px;
-padding-top:36px;
+.pitch h1{
+	font-size:42px;
+	line-height:1;
+	letter-spacing:-2px;
 }
 
-#video {
-width:50%;
+.pitch h2{
+	font-size:22px;
 }
 
-.pitch li{
-float:none;
-margin-bottom:6px;
-}
-
-#register{
-float:right;
-width:50%;
-}
-
-#register p{
-font-size:22px;
-}
-
-#register .button{
-font-size:24px;
-}
-
-.specific{
-float:right;
-margin-left:10px;
-width:60%;
-}
-
-.specific h1{
-font-size:24px;
-}
-
-.specific h2{
-font-size:16px;
-}
-
-.sales{
-width:33%;
-}
-
-.sale h3{
-font-size:14px;
-text-decoration:none;
-}
-.sale span{
-float:left;
-margin-right:6px;
-font-size:24px;
-}
 /*
 Date Picker
 ------------------

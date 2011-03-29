@@ -1,31 +1,35 @@
 %header.pitch
   %h1 Know where your customers came from.
-  %h2.quiet Grid tells you what made your phone ring or your email ding.
-  %hr.space
-%article.pitch
-  #register
-    %ul
-      %li How did this customer find us?
-      %li Is yellow pages really worth that?
-      %li Which marketing is working?
-    = link_to "Request an Invite", "http://eepurl.com/c711c", :class => "button"
-  #video
-    :erb
-      <iframe src="http://player.vimeo.com/video/21572261?title=0&amp;byline=0&amp;portrait=0&amp;color=dd4499" width="480" height="300" frameborder="0"></iframe>
-  %hr.space
+  %h2 Grid tells you what made your phone ring or your email ding.
+%hr.space
 %article
-  %hr
-  %section.specific
-    %h1 Real-time Lead Monitoring
-    %h2 Using online and offline tracking, you can know where every single customer comes from. With Grid you will always know which marketing tactics are working, and how much each specific lead is worth to you.
-  %section.sales
-    .sale
+  #video.span-12
+    :erb
+      <iframe src="http://player.vimeo.com/video/21572261?title=0&amp;byline=0&amp;portrait=0&amp;color=dd4499" width="470" height="300" frameborder="0"></iframe>
+  #register.span-12.last
+    %p Stop wasting money on marketing that simply doesn't work for your business. Answer questions like, How did this customer find us? Is yellow pages really worth that? Which marketing is working?
+    %br
+    %p Spend five minutes to save thousands next quarter.
+    %br
+    = link_to "Request an Invite", "http://eepurl.com/c711c", :class => "button"
+%hr.space
+%article
+  %section.span-16
+    %h2
+      Monitor
+      %span leads in real time
+    %p Using online and offline tracking, you can know where every single customer comes from. With Grid you will always know which marketing tactics are working, and how much each specific lead is worth to you.
+  %section.span-8.last
+    %h2 
+      Benefits
+      %span to using Grid
+    %p 
       %span.iconic.tag
-      %h3 Find which search engine keywords are bringing the most revenue.
-    .sale
+      Find your most profitable key words.
+    %p 
       %span.iconic.image
-      %h3 Track Adwords campaigns value from within Grid.
-    .sale
+      Compare your existing Adwords.
+    %p
       %span.iconic.phone
-      %h3 Get specific phone numbers for each of your marketing campaigns.
-  %hr.space
+      Track and listen to sales calls.
+%hr.space
