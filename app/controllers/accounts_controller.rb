@@ -1,6 +1,6 @@
 class AccountsController < ApplicationController
   inherit_resources
-  load_and_authorize_resource :except   => [:export, :refresh_accounts]
+  load_and_authorize_resource
   before_filter :load_time_zone, :only  => [:show, :report, :report_client]
   before_filter :check_authorization, :load_resource_user
   
@@ -26,13 +26,7 @@ class AccountsController < ApplicationController
   end
   
   def create
-    render :text => params.inspect
-=begin
-    create! do |failure, success|
-      success.html(:notice => "Yay! Account was successfully created!") {redirect_to account_path(@account)}
-      failure.html(:notice => "Ooops, try again, your account was not saved!") {render 'new'}
-    end
-=end
+    #render :text => params[:account].inspect
   end
   
   def destroy

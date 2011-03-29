@@ -60,11 +60,12 @@
             = link_to "Accounts", accounts_url
             =# @current_user.count == 1 ? (link_to "Channels", accounts_url) : (link_to "Account", accounts_url)
 
-        - if can? :read, Activity
-          %li{:class => (request.url.include?("activities")? 'active' : '')}
-            .triangle
-            %a.iconic.star
-            = link_to "Leads", activities_url
+        - if @current_user.group_user?
+          - if can? :read, Activity
+            %li{:class => (request.url.include?("activities")? 'active' : '')}
+              .triangle
+              %a.iconic.star
+              = link_to "Leads", activities_url
     - else
       -#= link_to "Register", register_path
       %li{:class => (request.url.include?("login")? 'active' : '')}
