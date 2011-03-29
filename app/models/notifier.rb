@@ -22,7 +22,7 @@ class Notifier < ActionMailer::Base
     date ||= Date.today.beginning_of_week
     previous ||= 6
     bcc_list ||= ["dev@cityvoice.com", "reporting@cityvoice.com"]
-    from_email = account.account_manager_complete? ? "#{account.account_manager.name} <#{account.account_manager.email}>" : "CityVoice <support@cityvoice.com>"
+    from_email = account.valid_account_manager_information? ? "#{account.account_manager.name} <#{account.account_manager.email}>" : "CityVoice <support@cityvoice.com>"
 
     recipients    email_list
     bcc           bcc_list
