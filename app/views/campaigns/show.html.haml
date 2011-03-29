@@ -1,8 +1,77 @@
+= javascript_include_tag 'jquery.mapkey.js'
+
+:javascript
+  var current = 0;
+  var current_id = 0;
+
+  $(document).ready(function(){
+    $.mapKey("down", nextItem, {direction: "down"});
+    $.mapKey("up", previousItem, {direction: "down"});
+
+    $(".edit_activity").change(function() {
+      this.submit();
+    });
+    $("#activities tr").click(function(event){
+      setItem($(this).context.rowIndex);
+    });
+  });
+
+  function setItem(item) {
+    if(current == item) {
+      return;
+    }
+    if(item < 1){
+      current = 1;
+      return;
+    } else {
+      current = item;
+    }
+    updateItems();
+  }
+
+  function nextItem() {
+    var end = $("#activities tr").length - 1;
+    if(current < end) {
+      current++;
+    } else {
+      current = end;
+      return;
+    }
+
+    updateItems();
+  }
+
+  function previousItem() {
+    if(current > 1) {
+      current--;
+    } else {
+      current = 1;
+      return;
+    }
+
+    updateItems();
+  }
+
+  function updateItems() {
+    // Find the rows with active and remove it
+    $("#activities tr.active").removeClass("active");
+    // add active to the row selected
+    $("#activities tr:eq(" + current + ")").addClass("active");
+    // grab the row selected
+    current_id = $("#activities tr:eq("+current+")").attr('id');
+    // parse the ID
+    current_id = current_id.match(/\d+/);
+    // Scroll to it
+    $("#activities_scroll_pane").scrollTo("#activities tr:eq("+current+")", 500);
+    // load the sidebar content
+    $("#sidebar").load('http://#{APP_CONFIG[:host]}/activities/'+current_id);
+  }
+
 - if @campaign.phone_numbers.empty? && @campaign.contact_forms.empty?
   %article.blank.notice
     %h1.strong Make your campaign go somewhere
     %h2.quiet Campaigns are the glue that connect people to your business. How customers get a hold of you affects how you track leads. Start tracking your campaign by adding a forwarding number or generating a form for a website.
-    %br  
+    %br
     .button
       %a.iconic.phone
       = link_to "Add Phone Number", new_channel_campaign_phone_number_path(@account, @channel, @campaign), :rel => "facebox"
@@ -26,3 +95,26 @@
     = render :partial => 'campaigns/campaign_types/sem'
 
   = render :partial => 'campaigns/campaign_types/common'
+
+%article.span-12.colborder
+  %div{:id => "activities_scroll_pane", :style => "height: 500px; overflow: auto;"}
+    %table#activities.small
+      %thead
+        %tr
+          %th Type
+          %th Campaign
+          %th From
+          %th Time
+      %tbody
+        - for activity in @activities
+          = render activity, :locals => {:activity => activity}
+.span-5.last
+  %h2.subheader Details
+  %div#sidebar
+    .notice
+      %h4.strong Click a lead to see more.
+      %p.quiet Try using the up and down arrows on your keyboard
+.span-17
+  %hr.space
+  .pagination= will_paginate(@activities)
+  %hr.space
