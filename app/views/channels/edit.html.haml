@@ -1,12 +1,7 @@
 :javascript
-  var previousVal = $("#channel_name").val();
   $(document).ready(function(){
-    $('#cancel').click(function(){$.facebox.close()});
+    $('#cancel').click(function(){$.facebox.close(); return false;});
     $("#update").click(function(){
-      if(previousVal == $("#channel_name").val()) {
-        $.facebox.close();
-        return;
-      }
       $('.edit_channel').validate();
       // If it is valid, submit
       if( $('.edit_channel').valid() )
@@ -25,6 +20,6 @@
     = link_to 'Delete this Channel', channel_path(@account, @channel), :class=> "button", :confirm => "This will delete this channel, are you sure?", :method => :delete if @channel.campaigns.count == 0
 %footer
   #submit
-    = link_to "Cancel", "#", :class => "cancel", :id => 'cancel'
+    = link_to "Cancel", "", :class => "cancel", :id => 'cancel'
     %button{:id => 'update', :class => 'button'} Update
   %hr.space

@@ -1,13 +1,7 @@
 :javascript
-  var previousVal = $("#campaign_name").val();
   $(document).ready(function(){
-    $('#cancel').click(function(){$.facebox.close()});
+    $('#cancel').click(function(){$.facebox.close(); return false;});
     $("#update").click(function(){
-      // If nothing was changed, close facebox
-      if(previousVal == $("#campaign_name").val()) {
-        $.facebox.close();
-        return;
-      }
       $('.edit_campaign').validate();
       // If it is valid, submit
       if( $('.edit_campaign').valid() )
@@ -39,7 +33,7 @@
       %input.title{:id => "campaign_budget", :name => "campaign[budget]", :type => "text", :value => @campaign.campaign_style.budget}
       %br
       %br
-    
+
     - elsif @campaign.is_sem?
       %label Google Campaign ID
       %br
@@ -49,16 +43,16 @@
       %br
       %input.title{:id => "campaign_landing_page", :name => "campaign[landing_page]", :type => "text", :value => @campaign.website.domain}
       %br
-      %label Mark up 
+      %label Mark up
       %br
       %input.title{:id => "campaign_rake", :name => "campaign[rake]", :type => "text", :value => @campaign.campaign_style.rake}
       %br
       %br
-    
+
     = link_to 'Pause this Campaign', channel_campaign_path(@account, @channel, @campaign), :class => "button", :confirm => "This will delete this campaign, are you sure?", :method => :delete
-    
+
 %footer
   #submit
-    = link_to "Cancel", "#", :class => "cancel", :id => 'cancel'
+    = link_to "Cancel", "", :class => "cancel", :id => 'cancel'
     %button{:id => 'update', :class => 'button'} Update
   %hr.space

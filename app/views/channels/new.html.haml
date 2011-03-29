@@ -1,7 +1,7 @@
 :javascript
   $(document).ready(function(){
     // if they click cancel, close the facebox
-    $('#cancel').click(function(){$.facebox.close()});
+    $('#cancel').click(function(){$.facebox.close(); return false;});
 
     $("#create").click(function(){
       $('#new_channel').validate();
@@ -27,6 +27,6 @@
         %option{:value => 'basic'} Basic Channel
 %footer
   #submit
-    = link_to "Cancel", "#", :class => "cancel", :id => 'cancel'
+    = link_to "Cancel", "", :class => "cancel", :id => 'cancel'
     %button{:class => 'button', :id => 'create'} Create Channel
   %hr.space
