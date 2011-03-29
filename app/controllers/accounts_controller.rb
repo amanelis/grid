@@ -1,6 +1,7 @@
 class AccountsController < ApplicationController
   inherit_resources
-  load_and_authorize_resource
+  load_resource :except => [:create]
+  authorize_resource
   before_filter :load_time_zone, :only  => [:show, :report, :report_client]
   before_filter :check_authorization, :load_resource_user
   
@@ -26,10 +27,21 @@ class AccountsController < ApplicationController
   end
   
   def create
-    create! do |failure, success|
-      success.html(:notice => "Yay! Account was successfully created!") {redirect_to account_path(@account)}
-      failure.html(:notice => "Ooops, try again, your account was not created!") {redirect_to accounts_path}
+    if params[:account][:name].blank? || params[:account][:main_contact].blank? || params[:account][:industry].blank? || params[:account][:group_account].blank? 
+      flash[:error] = "You forgot to fill in some fields, try creating your account again!"
+    else
+      @account = Account.new
+      @account.name           = params[:account][:name]
+      @account.main_contact   = params[:account][:main_contact]
+      @account.industry       = params[:account][:industry]
+      @account.group_account_id  = params[:account][:group_account].to_i
+      if @account.save
+        flash[:notice] = "Your account was created!"
+      else
+        flash[:error] = "There was an error creating your account, try again please!"
+      end
     end
+    redirect_to accounts_url
   end
   
   def destroy
