@@ -1,7 +1,6 @@
 %header
   - if @current_user.manipulable_group_accounts.present?
     .menu
-      %a{:onclick => "confirm_refresh_accounts();", :title => "Refresh from SalesForce", :class => "tiptip iconic spin"}
       = link_to "", new_account_path, :rel => "facebox", :title => "Add Account", :class => "tiptip iconic plus-alt"
   %h1 Accounts
   %h2.quiet= (Date.yesterday.beginning_of_month).to_s(:long) + ' to ' + Date.yesterday.to_s(:long)
