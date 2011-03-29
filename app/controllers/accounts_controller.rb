@@ -1,7 +1,7 @@
 class AccountsController < ApplicationController
   inherit_resources
-  load_resource :except => [:create]
-  authorize_resource
+  load_resource :except => [:create, :refresh_accounts]
+  authorize_resource :except => [:refresh_accounts]
   before_filter :load_time_zone, :only  => [:show, :report, :report_client]
   before_filter :check_authorization, :load_resource_user
   
@@ -150,6 +150,14 @@ class AccountsController < ApplicationController
     @account.send_weekly_report_now
     flash[:notice] = "You have successfully sent an email!"
     redirect_to account_path(params[:id])
+  end
+  
+  def refresh_accounts
+    GroupAccount.pull_salesforce_accounts
+    Campaign.pull_salesforce_campaigns
+    GroupAccount.cache_results_for_group_accounts
+    flash[:notice] = "Accounts reloaded!"
+    redirect_to :action => "index"
   end
 
 end
