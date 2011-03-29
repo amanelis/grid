@@ -37,7 +37,7 @@
     - elsif @campaign.is_sem?
       %label Google Campaign ID
       %br
-      %input.title{:id => "campaign_adwords_id", :name => "campaign[adwords_id]", :type => "text", :value => @account.adwords_client.reference_id}
+      %input.title{:id => "campaign_adwords_id", :name => "campaign[adwords_id]", :type => "text", :value => @account.adwords_client.try(:reference_id) || ""}
       %br
       %label Landing Page
       %br

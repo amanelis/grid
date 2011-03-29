@@ -24,9 +24,11 @@
           %li{:class => (request.url.include?("accounts")? 'active' : '')}= link_to "<span class=\"iconic book-alt\"></span> Accounts", accounts_url
           -#= @current_user.count == 1 ? (link_to "Channels", accounts_url) : (link_to "Account", accounts_url)
 
-        - if can? :read, Activity
-          -# Activities
-          %li{:class => (request.url.include?("activities")? 'active' : '')}= link_to "<span class=\"iconic star\"></span> Leads", activities_url
+        - if @current_user.group_user?
+          - if can? :read, Activity
+            -# Activities
+            %li{:class => (request.url.include?("activities")? 'active' : '')}= link_to "<span class=\"iconic star\"></span> Leads", activities_url
+
     - else
       -# Register
       -#= link_to "Register", register_path

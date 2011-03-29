@@ -22,17 +22,18 @@
       %h2 Account Manager Information
       %label Name  
       %br
-      %input.title{:id => "manager_name", :name => "manager[name]", :type => "text"}
+      %input.title{:id => "manager_name", :name => "manager[name]", :type => "text", :value => @user.group_users.first.try(:name) || ""}
       %br
       %br
       %label Email  
       %br
-      %input.title{:id => "manager_email", :name => "manager[email]", :type => "text"}
+      %input.title{:id => "manager_email", :name => "manager[email]", :type => "text", :value => @user.group_users.first.try(:email) || ""}
       %br
       %br
       %label Phone Number  
       %br
-      %input.title{:id => "manager_phone", :name => "manager[phone]", :type => "text"}
+      %input.title{:id => "manager_phone", :name => "manager[phone]", :type => "text", :value => @user.group_users.first.try(:phone_number) || ""}
       %br
       %br
+      =# select_tag 'manager_group_account', options_for_select(@user.group_users.collect(&:group_account).collect(&:name))
     = f.submit "Save", :class => 'button'

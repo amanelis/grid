@@ -1,93 +1,20 @@
-%header
-  %h1 Create Account
-%article
-  %h3 Account Information
+- form_for @account, :url => accounts_path do |f|
   %label Company Name
   %br
-  %input{:type => "text", :placeholder => "CityVoice", :name => "name", :id => "name", :class => "title"}
+  %input{:id => "account_name", :name => "account[name]", :type => "text", :placeholder => "CityVoice", :class => "title"}
   %br
   %label Main Contact
   %br
-  %input{:type => "text", :placeholder => "Charlie Sheen", :class => "title"}
-  %br
-  %label Budget
-  %br
-  %input{:type => "text", :placeholder => "One Million Dollars", :name => "name", :id => "name", :class => "title"}
-  %br
-  %label Billing Date
-  %br
-  %input{:type => "text", :placeholder => "Jan 1, 2011", :id => "datepicker", :class => "title"}
+  %input{:id => "account_main_contact", :name => "account[main_contact]", :type => "text", :placeholder => "Charlie Sheen", :class => "title"}
   %br
   %label Industry
   %br
-  %select
-    %option Plumbing
-    %option HVAC
-    %option Other
+  %select{:id => 'account_industry', :name => 'account[industry]', :class => 'required'}
+    %option{:value => 0} - Choose an Industry -
+    %option{:value => "PLUMBING"} Plumbing
+    %option{:value => "HVAC"} HVAC
+    %option{:value => "OTHER"} Other
   %br
-  %label Type
-  %br
-  %select
-    %option SEO
-    %option SEM
-    %option Other
-  %br
-  %label Status
-  %br
-  %select
-    %option Active
-    %option Inactive
-    %option Paused
-  %br
-  %label Assign Account Manager
-  %br
-  %select
-    %option Shelton
-    %option Shaunay
-    %option - None -
   %hr
-  %h3 Contact Info
-  %br
-  %label Website
-  %br
-  %input{:type => "text", :placeholder => "http://cityvoice.com", :class => "title"}
-  %label Street
-  %br
-  %input{:type => "text", :placeholder => "112 DeZevala", :class => "title"}
-  %br
-  %label City
-  %br
-  %input{:type => "text", :placeholder => "San Antonio", :class => "title"}
-  %br
-  %label State
-  %br
-  %input{:type => "text", :placeholder => "TX", :class => "title"}
-  %br
-  %label Zip Code
-  %br
-  %input{:type => "text", :placeholder => "78249", :class => "title"}
-  %br
-  %label Metro Area
-  %br
-  %input{:type => "text", :placeholder => "San Marcos", :class => "title"}
-  %br
-  %label Phone
-  %br
-  %input{:type => "text", :placeholder => "(832) 477 8662", :class => "title"}
-  %br
-  %label Other Phone
-  %br
-  %input{:type => "text", :placeholder => "(832) 477 8662", :class => "title"}
-  %br
-  %label Fax
-  %br
-  %input{:type => "text", :placeholder => "(832) 477 8662", :class => "title"}
-%footer
   #submit
-    = link_to "Cancel", "#", :class => "cancel", :onclick => "$.facebox.close();"
-    = link_to "Create Account", "#", :class => "button"
-  %hr.space
-:javascript 
-  	$(function() {
-  		$( "#datepicker" ).datepicker();
-  	});
+  = submit_tag "Create"
