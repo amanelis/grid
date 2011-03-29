@@ -13,6 +13,8 @@
 -else
   %header
     .menu
+      - if can? :orphaned, @campaign
+        -#= link_to "", orphaned_account_campaign_path, :title => "Assign Orphaned Number",:class => "tiptip iconic phone submit", :name => "submit"
       = link_to "", edit_channel_campaign_path, :rel => "facebox", :title => "Edit Campaign", :class => 'tiptip iconic cog'
     %h1= @campaign.name
     %h2.quiet= @account.name
