@@ -26,7 +26,10 @@ class AccountsController < ApplicationController
   end
   
   def create
-    #render :text => params[:account].inspect
+    create! do |failure, success|
+      success.html(:notice => "Yay! Account was successfully created!") {redirect_to account_path(@account)}
+      failure.html(:notice => "Ooops, try again, your account was not created!") {redirect_to accounts_path}
+    end
   end
   
   def destroy
