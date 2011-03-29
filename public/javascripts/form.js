@@ -1,5 +1,5 @@
 function GridForm() {
-  this.host = 'localhost:3000',
+  this.host = 'grid.cityvoice.com',
   this.height = '100%',
   this.width = '',
   this.auto_resize = false,
@@ -19,7 +19,7 @@ function GridForm() {
     var scroll='no';
     if(this.auto_resize == false)
       scroll = 'auto';
-    var src = 
+    var src =
       '<iframe id="'+ this.frame_id + '" height="' + this.height +
       '" allowTransparency="true" frameborder="0" scrolling="' + scroll +
       '" style="width:' + this.width + ';border:none"' +
