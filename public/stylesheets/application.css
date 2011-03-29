@@ -227,6 +227,8 @@ body{
 	-webkit-font-smoothing: antialiased;
 }
 
+.showgrid {background:url(/images/grid.png);}
+
 #content{
 	background-color:#fff;
 	-webkit-border-radius: 4px;
@@ -509,7 +511,8 @@ header h2{
 
 .specific{
 	float:right;
-	width:66%;
+	margin-left:10px;
+	width:60%;
 }
 
 .specific h1{
