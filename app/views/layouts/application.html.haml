@@ -7,10 +7,11 @@
         %ul
           %li= link_to "My Info", edit_user_path(@current_user)
           %li= link_to 'Logout', logout_path, :method => :delete, :id => "logout"
+    =render :partial => "layouts/flash", :locals => { :flash => flash }
     #navigation.span-4
       =render :partial => "layouts/nav"
     %section#content.span-20.last
       #yield
-        =render :partial => "layouts/flash", :locals => { :flash => flash }
         = yield
+        %hr.space
     %footer.app=render :partial => "layouts/footer"

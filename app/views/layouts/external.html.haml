@@ -6,9 +6,10 @@
       %ul
         -#%li= link_to "Register", register_path
         %li= link_to "Sign In", login_path, :id => "login"
+    =render :partial => "layouts/flash", :locals => { :flash => flash }
     %section#content.showgrid
       #yield
-        =render :partial => "layouts/flash", :locals => { :flash => flash }
         = yield
+        %hr.space
     %footer=render :partial => "layouts/footer"
     
