@@ -2,7 +2,7 @@ class AccountsController < ApplicationController
   inherit_resources
   load_and_authorize_resource :except   => [:export, :refresh_accounts]
   before_filter :load_time_zone, :only  => [:show, :report, :report_client]
-  before_filter :check_authorization
+  before_filter :check_authorization, :load_resource_user
   
   def index
     @accounts           = current_user.acquainted_accounts
@@ -139,28 +139,6 @@ class AccountsController < ApplicationController
     flash[:notice] = "You have successfully sent an email!"
     redirect_to account_path(params[:id])
   end
-
-  def export
-    authorize! :export, Account
-    @accounts           = current_user.acquainted_accounts
-    @accounts_statuses  = Account.account_statuses_for(@accounts)
-    @accounts_types     = Account.account_types_for(@accounts)
-    @passed_status      = params[:account_status] ||= 'Active' 
-    @passed_type        = params[:account_type] ||= ''
-    @accounts           = @accounts.select {|account| account.status == params[:account_status]} if params[:account_status].present?
-    @accounts           = @accounts.select {|account| account.account_type?(params[:account_type])} if params[:account_type].present?
-    @accounts_data      = Rails.cache.fetch("accounts_data") { Account.get_accounts_data }
-    @accounts.sort! {|a,b| a.name.downcase <=> b.name.downcase}
-    @outfile  = "accounts_" + Time.now.strftime("%m-%d-%Y") + ".csv"
-    
-    csv_data = FasterCSV.generate do |csv|
-      csv << ["Name", "Account Type", "Salesforce ID"]
-      @accounts.each do |account|
-        csv << [account.name, account.account_type, account.salesforce_id]
-      end 
-    end
-    send_data csv_data, :type => 'text/csv; charset=iso-8859-1; header=present', :disposition => "attachment; filename=#{@outfile}"
-  end 
 
 end
 

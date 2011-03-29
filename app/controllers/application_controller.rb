@@ -73,6 +73,7 @@ class ApplicationController < ActionController::Base
     
     def load_resource_user
       @user = current_user 
+      @current_user = current_user
     end
   
     def current_user_session

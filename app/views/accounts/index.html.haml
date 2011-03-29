@@ -1,5 +1,5 @@
 %header
-  - if @current_user.admin? || @current_user.group_user?
+  - if @current_user.manipulable_group_accounts.present?
     .menu
       = link_to "", new_account_path, :rel => "facebox", :title => "Add Account", :class => "tiptip iconic plus-alt"
   %h1 Accounts
