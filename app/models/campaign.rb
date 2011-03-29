@@ -27,8 +27,8 @@ class Campaign < ActiveRecord::Base
   before_destroy :remove_from_many_to_many_relationships
   attr_accessor :adopting_phone_number
   
-  ACTIVE = "active"
-  INACTIVE = "inactive"
+  ACTIVE = "Active"
+  INACTIVE = "Inactive"
   STATUS_OPTIONS = [['Active', ACTIVE], ['Inactive', INACTIVE]].to_ordered_hash
   ORPHANAGE_NAME = 'CityVoice SEM Orphaned Campaigns'
   MANAGED_FLAVORS = ['seo', 'sem - all', 'sem - bing', 'sem - google', 'sem - google boost', 'sem - google mobile', 'sem - yahoo', 'local maps', 'retargeter']
