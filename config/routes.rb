@@ -7,6 +7,7 @@ ActionController::Routing::Routes.draw do |map|
   map.login               "/login",                                       :controller => "user_sessions",     :action => :new
   map.logout              "/logout",                                      :controller => "user_sessions",     :action => :destroy
   map.register            "/register",                                    :controller => "users",             :action => :new
+  map.refresh_accounts    "/accounts/refresh_accounts",                   :controller => "accounts",          :action => :refresh_accounts
                                                                           
   # Twilio routing                                                                 
   map.connect_number_api  "/api/v1/calls/:encoded_number/connect",        :controller => "api/v1/calls",       :action => :connect
