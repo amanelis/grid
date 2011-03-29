@@ -92,9 +92,9 @@ class Ability
       
       can :refresh_accounts, Account
       can :report_client, Account
-      can :read, Activity
-      can :edit, Activity
-      can :update, Activity
+      can :read, Activity if user.group_user?
+      can :edit, Activity if user.group_user?
+      can :update, Activity if user.group_user?
     end
     
   end

@@ -15,6 +15,10 @@
     %option{:value => "HVAC"} HVAC
     %option{:value => "OTHER"} Other
   %br
+  %label Parent Account
+  %br
+  = select("account", "group_account", @current_user.manipulable_group_accounts.collect{|p| [ p.name, p.id ] }, {:include_blank => '- Choose a Parent Account -'})
+  %br
   %hr
   #submit
   = submit_tag "Create"
