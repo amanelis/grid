@@ -36,8 +36,8 @@ class Account < ActiveRecord::Base
   validates_uniqueness_of :name, :case_sensitive => false, :scope => "group_account_id"
   validate :valid_account_manager
 
-  ACTIVE = "active"
-  INACTIVE = "inactive"
+  ACTIVE = "Active"
+  INACTIVE = "Inactive"
   
   STATUS_OPTIONS = [['Active', ACTIVE], ['Inactive', INACTIVE]].to_ordered_hash
 
