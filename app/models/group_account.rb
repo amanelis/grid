@@ -198,6 +198,10 @@ class GroupAccount < ActiveRecord::Base
      self.name ||= ""
      self.salesforce_id ||= ""
    end
+   
+   def potential_account_managers
+     self.group_users.select(&:valid_account_manager_information?)
+   end
 
 
    # INSTANCE BEHAVIOR

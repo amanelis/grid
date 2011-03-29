@@ -534,15 +534,15 @@ class Account < ActiveRecord::Base
   end
 
   def account_manager_name
-    self.valid_account_manager? ? self.account_manager.name : "your account manager"
+    self.valid_account_manager_information? ? self.account_manager.name : "your account manager"
   end
   
   def account_manager_phone_number
-    self.valid_account_manager? ? self.account_manager.phone_number : "(210) 691-0100"
+    self.valid_account_manager_information? ? self.account_manager.phone_number : "(210) 691-0100"
   end
   
   def account_manager_email
-    self.valid_account_manager? ? self.account_manager.email : "support@cityvoice.com"
+    self.valid_account_manager_information? ? self.account_manager.email : "support@cityvoice.com"
   end
 
 
@@ -556,8 +556,8 @@ class Account < ActiveRecord::Base
     self.account_type.split(';').include?(type)
   end
 
-  def valid_account_manager?
-    self.account_manager.try(:valid_account_manager?).present?
+  def valid_account_manager_information?
+    self.account_manager.present? && self.account_manager.valid_account_manager?
   end
 
 
