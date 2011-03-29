@@ -1,43 +1,39 @@
-%header
-  %h1 Create Account
-%article
-  %h3 Account Information
+- form_for @account, :url => new_account_path do |f|
   %label Company Name
   %br
-  %input{:type => "text", :placeholder => "CityVoice", :name => "name", :id => "name", :class => "title"}
+  %input{:id => "account_name", :name => "account[name]", :type => "text", :placeholder => "CityVoice", :class => "title"}
   %br
   %label Main Contact
   %br
-  %input{:type => "text", :placeholder => "Charlie Sheen", :class => "title"}
+  %input{:id => "account_contact", :name => "account[contact]", :type => "text", :placeholder => "Charlie Sheen", :class => "title"}
   %br
   %label Budget
   %br
-  %input{:type => "text", :placeholder => "One Million Dollars", :name => "name", :id => "name", :class => "title"}
-  %br
-  %label Billing Date
-  %br
-  %input{:type => "text", :placeholder => "Jan 1, 2011", :id => "datepicker", :class => "title"}
+  %input{:id => "account_budget", :name => "account[budget]", :type => "text", :placeholder => "One Million Dollars", :class => "title"}
   %br
   %label Industry
   %br
-  %select
-    %option Plumbing
-    %option HVAC
-    %option Other
+  %select{:id => 'account_industry', :name => 'account[industry]', :class => 'required'}
+    %option{:value => 0} - Choose an Industry -
+    %option{:value => 1} Plumbing
+    %option{:value => 2} HVAC
+    %option{:value => 3} Other
   %br
   %label Type
   %br
-  %select
-    %option SEO
-    %option SEM
-    %option Other
+  %select{:id => 'account_type', :name => 'account[type]', :class => 'required'}
+    %option{:value => 0} - Choose a Type -
+    %option{:value => 1} SEO
+    %option{:value => 2} SEM
+    %option{:value => 3} Other
   %br
   %label Status
   %br
-  %select
-    %option Active
-    %option Inactive
-    %option Paused
+  %select{:id => 'account_status', :name => 'account[status]', :class => 'required'}
+    %option{:value => 0} - Choose a Type -
+    %option{:value => 1} Active
+    %option{:value => 2} Inactive
+    %option{:value => 3} Paused
   %br
   %label Assign Account Manager
   %br
@@ -50,8 +46,3 @@
   #submit
     = link_to "Cancel", "#", :class => "cancel", :onclick => "$.facebox.close();"
     = link_to "Create Account", "#", :class => "button"
-  %hr.space
-:javascript 
-  	$(function() {
-  		$( "#datepicker" ).datepicker();
-  	});
