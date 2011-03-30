@@ -108,6 +108,10 @@ class Submission < ActiveRecord::Base
     self.timestamp = the_time_of_submission
   end
   
+  def check_for_spam
+    self.review_status = SPAM if self.is_spam?
+  end
+  
   def is_spam?
     return true if self.phone_number =~ /1010101010/
     return true if self.ip_address == "97.77.203.202"
@@ -189,9 +193,4 @@ class Submission < ActiveRecord::Base
     self.contact_form.campaign
   end
   
-  def update_if_spam
-    self.update_attribute(:review_status, SPAM) if self.is_spam?
-  end
-  
-
 end
