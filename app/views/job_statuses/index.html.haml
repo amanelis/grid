@@ -1,18 +1,17 @@
 %header
   %h1 Jobs
 %article
-  %table
+  %table.jobs
     %thead
       %tr
         %th Name
         %th Logged
         %th Duration
         %th Status
-        %th
     %tbody
       - @job_statuses.each do |job|
-        %tr{:class => cycle('odd', 'even')}
-          %td= job.name
+        %tr
+          %td= link_to job.name, job_status_path(job)
           %td= time_ago_in_words(job.created_at) + " ago"
           %td
             -if job.end_time
@@ -28,5 +27,5 @@
               = "-Errors-"
             -else
               = "Unknown"
-          %td= link_to 'Show', job_status_path(job)
+  %hr
   = will_paginate(@activities)

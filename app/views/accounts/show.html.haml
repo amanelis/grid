@@ -36,11 +36,11 @@
       %thead
         %tr
           %th.name
-            = link_to channel.name, channel_path(@account, channel) 
+            -#= link_to channel.name, channel_path(@account, channel) 
+            = channel.name
             - if can? :manipulate_account, @account
-              .edit
-                = link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
-                = link_to "Add Campaign", new_channel_campaign_path(@account, channel), :rel => "facebox"
+              -#= link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
+              = link_to "", new_channel_campaign_path(@account, channel), :title => "Add new campaign to this channel", :class => "tiptip iconic plus-alt", :rel => "facebox"
           %th.leads
             = channel.number_of_total_leads_between(@start_date, @end_date)
             Leads
@@ -56,11 +56,11 @@
       %thead
         %tr
           %th.name
-            = link_to channel.name, channel_path(@account, channel) 
+            -#= link_to channel.name, channel_path(@account, channel) 
+            = channel.name
             - if can? :manipulate_account, @account
-              .edit
-                = link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
-                = link_to "Add Campaign", new_channel_campaign_path(@account, channel), :rel => "facebox"
+              -#= link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
+              = link_to "", new_channel_campaign_path(@account, channel), :title => "Add new campaign to this channel", :class => "tiptip iconic plus-alt", :rel => "facebox"
           %th.leads{:width => "15%"}
             = channel.number_of_total_leads_between(@start_date, @end_date)
             Leads
@@ -76,11 +76,11 @@
       %thead
         %tr
           %th.name
-            = link_to channel.name, channel_path(@account, channel) 
+            -#= link_to channel.name, channel_path(@account, channel) 
+            = channel.name
             - if can? :manipulate_account, @account
-              .edit
-                = link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
-                = link_to "Add Campaign", new_channel_campaign_path(@account, channel), :rel => "facebox"
+              -#= link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
+              = link_to "", new_channel_campaign_path(@account, channel), :title => "Add new campaign to this channel", :class => "tiptip iconic plus-alt", :rel => "facebox"
           %th.leads
             = channel.number_of_total_leads_between(@start_date, @end_date)
             Leads
@@ -89,9 +89,7 @@
             CPL
       - channel.campaigns.active.each do |campaign|
         = render :partial => 'accounts/channel_campaign', :locals => {:campaign => campaign, :channel => channel}
-
-
-
+        
   -# FOOTER ##################################################################################################################
   - if can? :manipulate_account, @account
     = link_to "Create Channel", new_channel_path(@account), :class => "button", :rel => "facebox"

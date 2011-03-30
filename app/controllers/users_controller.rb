@@ -78,14 +78,21 @@ class UsersController < ApplicationController
     redirect_to users_path
   end
   
+
   def update 
     @current_user = current_user
     @user = User.find_by_id(params[:user][:id])
     @user == @current_user ? nil : (authorize! :update, User)
+
+    @user.group_users.each do |group_user| 
+      group_user.update_attribute(:name, params[:manager][:name])
+      group_user.update_attribute(:phone_number, params[:manager][:phone])
+      group_user.update_attribute(:email, params[:manager][:email])
+    end
     
     if @user.update_attributes(params[:user])
       flash[:notice] = "Account updated!"
-      redirect_to users_path
+      redirect_to edit_user_path(@user)
     else
       flash[:error] = "Error on updating account!"
       redirect_to edit_user_path(@user)

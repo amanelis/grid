@@ -5,6 +5,11 @@ class GroupAccount < ActiveRecord::Base
   belongs_to :owner, :class_name => "GroupUser"
 
   validates_uniqueness_of :name, :case_sensitive => false
+
+  ACTIVE = "Active"
+  INACTIVE = "Inactive"
+  
+  STATUS_OPTIONS = [['Active', ACTIVE], ['Inactive', INACTIVE]].to_ordered_hash
   
   
   # TESTING METHODS
@@ -189,8 +194,13 @@ class GroupAccount < ActiveRecord::Base
    # INITIALIZATION
 
    def after_initialize
+     self.status ||= ACTIVE
      self.name ||= ""
      self.salesforce_id ||= ""
+   end
+   
+   def potential_account_managers
+     self.group_users.select(&:valid_account_manager_information?)
    end
 
 

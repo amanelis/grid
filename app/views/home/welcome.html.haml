@@ -1,21 +1,24 @@
 %header
   .right
-    %p Don't show this page anymore
+    -#%small= link_to "Don't show this page anymore", "#"
   %h1 Welcome to Grid
 %article
-  %h2 Thanks for signing up, here are the 4 steps to get you going.
-  %h3 1. Add Channels
-  %p Go to your account view and add your first channel by pressing the big blue "Create Channel" button, Channels are holding places for your campaigns. Group similar campaigns together (ie. all billboard campaigns are in the Billboard channel). Once you've created a channel you can start adding campaigns.
-  %hr
-  %h3 2. Add Campaigns
-  %p Under the channel you created, press the "Create Campaign" button. Campaigns represent single marketing efforts. Examples of campaigns include; yellow pages ads, billboards, and flyers. It's important to isolate each individual marketing effort into a campaign in order to properly track.
-  %hr
-  %h3 3. Connect Campaigns
-  %p Before you can start tracking leads, you need to indicate how leads are collected. Campaigns can be connected two ways; phones and forms. If you are tracking leads by phone calls you can review your calls later. Forms collect data and email you as soon as they come in. Both after collected can be reviewed from the leads panel.
-  %hr
-  %h3 4. Track Leads
-  %p Watch your leads come in after a call is made or a form is submitted. You'll begin to see what marketing efforts really matter to your business in no time.
-  %hr
+  %h1 Thanks for signing up, here are the 4 steps to get you going.
+  %hr.space
+  %section.span-5
+    %h2 1. Add Channels
+    %p Go to your account view and add your first channel by pressing the big blue "Create Channel" button, Channels are holding places for your campaigns. Group similar campaigns together (ie. all billboard campaigns are in the Billboard channel). Once you've created a channel you can start adding campaigns.
+  %section.span-5
+    %h2 2. Add Campaigns
+    %p Under the channel you created, press the "Create Campaign" button. Campaigns represent single marketing efforts. Examples of campaigns include; yellow pages ads, billboards, and flyers. It's important to isolate each individual marketing effort into a campaign in order to properly track.
+  %section.span-5
+    %h2 3. Connect Campaigns
+    %p Before you can start tracking leads, you need to indicate how leads are collected. Campaigns can be connected two ways; phones and forms. If you are tracking leads by phone calls you can review your calls later. Forms collect data and email you as soon as they come in. Both after collected can be reviewed from the leads panel.
+  %section.span-5.last
+    %h2 4. Track Leads
+    %p Watch your leads come in after a call is made or a form is submitted. You'll begin to see what marketing efforts really matter to your business in no time.
+%article
+%hr.space
   %section.center
     %h2 90-second Overview
     :erb

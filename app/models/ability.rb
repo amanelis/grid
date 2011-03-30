@@ -12,6 +12,8 @@ class Ability
         user.acquainted_with_account?(account)
       end
       
+      can :create, Account if user.manipulable_group_accounts.present?
+
       # Campaign Authorization
       can :read, Campaign do |campaign|
         user.acquainted_accounts.collect(&:campaigns).flatten.include?(campaign)
@@ -70,6 +72,8 @@ class Ability
           
           can :create, User
           can :new, User
+          can :edit, User
+          can :update, User
         else
           false
         end
@@ -87,12 +91,12 @@ class Ability
       end
       ########## Manipulator Method #################
       
-      can :export, Account
+      
       can :refresh_accounts, Account
       can :report_client, Account
-      can :read, Activity
-      can :edit, Activity
-      can :update, Activity
+      can :read, Activity if user.group_user?
+      can :edit, Activity if user.group_user?
+      can :update, Activity if user.group_user?
     end
     
   end

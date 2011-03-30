@@ -17,6 +17,13 @@ class GroupUser < ActiveRecord::Base
     self.accounts.present?
   end
   
+  def valid_account_manager_information?
+    return false unless self.name.present?
+    return false unless self.phone_number.present?
+    return false unless self.email.present?
+    true
+  end
+  
   
   # PRIVATE BEHAVIOR
   

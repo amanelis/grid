@@ -1,8 +1,12 @@
 %header
+  -#.right
+    -#- if @current_user.admin? || @current_user.manipulable_users.collect(&:id).include?(user.id)
+      -#%small= link_to "Delete", user, :title => "Delete User", :confirm => "This will delete user: #{user.email}, are you sure?", :method => :delete unless user.id == @current_user.id
   %h1=@user.email
 %article
+  %section
+    %h2 Profile
   - form_for (@user) do |f|
-    %h2 Login Information
     = f.label "Email"
     %br
     = f.text_field :email, :class => 'title'
@@ -22,17 +26,18 @@
       %h2 Account Manager Information
       %label Name  
       %br
-      %input.title{:id => "manager_name", :name => "manager[name]", :type => "text"}
+      %input.title{:id => "manager_name", :name => "manager[name]", :type => "text", :value => @user.group_users.first.try(:name) || ""}
       %br
       %br
       %label Email  
       %br
-      %input.title{:id => "manager_email", :name => "manager[email]", :type => "text"}
+      %input.title{:id => "manager_email", :name => "manager[email]", :type => "text", :value => @user.group_users.first.try(:email) || ""}
       %br
       %br
       %label Phone Number  
       %br
-      %input.title{:id => "manager_phone", :name => "manager[phone]", :type => "text"}
+      %input.title{:id => "manager_phone", :name => "manager[phone]", :type => "text", :value => number_to_phone(@user.group_users.first.try(:phone_number)) || ""}
       %br
       %br
+      =# select_tag 'manager_group_account', options_for_select(@user.group_users.collect(&:group_account).collect(&:name))
     = f.submit "Save", :class => 'button'
