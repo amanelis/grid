@@ -294,6 +294,10 @@ margin-left:12px;
 	font-weight:normal;
 	font-size:12px;
 	line-height:48px;
+	-webkit-transition: all .2s ease;
+	-moz-transition: all .2s ease;
+	-o-transition: all .2s ease;
+	transition: all .2s ease;
 }
 
 #toolbar li a:hover{
@@ -309,6 +313,10 @@ font-weight:bold;
 font-size:24px;
 line-height:48px;
 color:#fff;
+-webkit-transition: all .2s ease;
+-moz-transition: all .2s ease;
+-o-transition: all .2s ease;
+transition: all .2s ease;
 }
 
 #logo:hover{
@@ -327,6 +335,10 @@ padding-left:0;
 
 #navigation li{
 padding:3px 0;
+-webkit-transition: all .2s ease;
+-moz-transition: all .2s ease;
+-o-transition: all .2s ease;
+transition: all .2s ease;
 }
 
 #navigation li:hover{
