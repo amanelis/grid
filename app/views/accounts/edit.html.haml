@@ -22,7 +22,6 @@
     - @data = @account.account_manager.name
   
   %br
-  =# select_tag 'account_manager', options_for_select(@account.group_account.potential_account_managers.collect {|x| [x.name, x.id]}.insert(0, '- Assign Account Manager -'), :selected => @account.account_manager.name)
   = select_tag('account_manager', options_for_select([['- Change Account Manager -', "0"]] + @account.group_account.potential_account_managers.collect {|x| [x.name, x.id]}, @account.account_manager.try(:id)))
   %br
   %br
