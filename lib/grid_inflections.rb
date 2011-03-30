@@ -21,6 +21,7 @@ end
 
 Date.send(:include, GridDateInflections)
 
+
 module GridTwilioInflections
   class Twilio::Dial
     attributes :record
@@ -28,3 +29,12 @@ module GridTwilioInflections
 end
 
 Twilio::Dial.send(:include, GridTwilioInflections)
+
+
+module GridObjectInflections
+	def to_boolean
+		ActiveRecord::ConnectionAdapters::Column.value_to_boolean(self)
+	end
+end
+
+Object.send(:include, GridObjectInflections)
