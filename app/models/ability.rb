@@ -98,8 +98,10 @@ class Ability
       ########## Manipulator Method #################
       
       
-      can :refresh_accounts, Account
-      can :report_client, Account
+      can :refresh_accounts, Account if user.admin?
+      can :report_client, Account do |account|
+        user.acquainted_with_account?(account)
+      end
       can :read, Activity if user.group_user?
       can :edit, Activity if user.group_user?
       can :update, Activity if user.group_user?

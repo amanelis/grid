@@ -47,19 +47,37 @@ class CampaignsController < ApplicationController
       name      = params[:campaign][:name]
       website   = params[:campaign][:url]
       budget    = params[:campaign][:budget]
-      keywords  = params[:campaign][:keyword]
+      keywords  = params[:campaign][:keywords].split("\r\n")
 
       sc = SeoCampaign.new
       sc.account  = @account
       sc.channel  = @channel
       sc.name     = name
       sc.budget   = budget
+      sc.save
+      sc.campaign.save
+      # sc.campaign.create_website(website)
 
-      if sc.save && sc.campaign.save && sc.campaign.create_website(website)
-        flash[:notice] = "Good job, you just created a campaign!"
-      else
-        flash[:error] = "Looks like you might have already named a campaign with a similar name, please try again!"
-      end
+      w = Website.new
+      w.domain = website
+      w.nickname = website
+      w.save
+      w.create_ginza_site
+      
+      sc.website = w
+      sc.save
+
+      keywords.each do |keyword|
+         k = Keyword.new
+         k.seo_campaign = sc
+         k.descriptor = keyword
+         k.google_first_page = 0
+         k.yahoo_first_page = 0
+         k.bing_first_page = 0
+         k.save 
+         sc.add_ginza_keywords(keyword)
+       end
+       flash[:notice] = "Yay you added an SEO campaign!"
     end
     redirect_to account_path(@account)
   end

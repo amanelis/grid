@@ -107,6 +107,7 @@ class AccountsController < ApplicationController
   # /accounts/:id/report/client
   # /accounts/:id/report/client.pdf
   def report_client
+    authorize! :report_client, @account
     @start_date = DateTime.now.beginning_of_month
     @end_date = DateTime.now.end_of_month
     

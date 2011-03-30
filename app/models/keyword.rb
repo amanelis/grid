@@ -104,7 +104,7 @@ class Keyword < ActiveRecord::Base
     (rankings = self.keyword_rankings.between(start_date, end_date)).present? ? ([rankings.first.bing, 100].compact.min) - ([rankings.last.bing, 100].compact.min) : 0
   end
   
-  def most_recent_ranking()
+  def most_recent_ranking
     self.keyword_rankings.last
   end
   

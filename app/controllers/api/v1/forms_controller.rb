@@ -40,7 +40,7 @@ class Api::V1::FormsController < ApplicationController
       end
       @submission.update_if_duplicate
       GroupAccount.send_later(:cache_results_for_group_accounts)
-      redirect_to params[:submission][:retURL]
+      params[:submission][:retURL].blank? ? (render :text => "Thank you for your submission.") : (redirect_to params[:submission][:retURL])
     else
       # Let's not give the (likely) bot too much info on why this failed.
       head 400

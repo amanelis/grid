@@ -21,7 +21,8 @@
     = f.hidden_field :id, :value => @user.id
     %br
     
-    - if @user.group_users.any?{|group_user| group_user.account_manager?}
+    -# if @user.group_users.any?{|group_user| group_user.account_manager?}
+    - if @user.group_user? || @user.admin?
       %br
       %h2 Account Manager Information
       %label Name  

@@ -51,7 +51,7 @@
         -#= link_to "", orphaned_account_campaign_path, :title => "Assign Orphaned Number",:class => "tiptip iconic phone submit", :name => "submit"
       = link_to "", edit_channel_campaign_path, :rel => "facebox", :title => "Edit Campaign", :class => 'tiptip iconic cog'
     %h1= @campaign.name
-    %h2.quiet= @account.name
+    %h2.quiet= link_to @account.name, account_path(@account)
     %datepicker= render :partial => "shared/date_picker"
 
   - if @campaign.is_basic?
