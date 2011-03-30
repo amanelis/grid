@@ -83,7 +83,13 @@ class CampaignsController < ApplicationController
     elsif @campaign.is_seo?
       @campaign.update_attributes(:name => params[:campaign][:name]) && @campaign.website.update_attributes(:domain => params[:campaign][:url]) && @campaign.campaign_style.update_attributes(:budget => params[:campaign][:budget]) ? (flash[:notice] = "Updated!") : (flash[:error] = "Ooops looks like there was an error updating your campaign, try again!")
     end
-    redirect_to account_path(@account)
+    
+    if params[:campaign][:adopting_phone_number].present?
+      @phone_number = PhoneNumber.find(params[:campaign][:adopting_phone_number])
+      @phone_number.update_attribute(:campaign_id, @campaign.id) ? (flash[:notice] = "Phone number assigned!") : (flash[:error] = "There was an error assigning number, please try again!")
+    end
+    
+    redirect_to channel_campaign_path(@account, @channel, @campaign)
   end
   
   # We want to change active status not destroy the actual campaign

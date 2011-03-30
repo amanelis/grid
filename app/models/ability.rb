@@ -72,6 +72,8 @@ class Ability
           
           can :create, User
           can :new, User
+          can :edit, User
+          can :update, User
         else
           false
         end

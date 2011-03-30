@@ -10,5 +10,8 @@
     %em.quiet
       %a.iconic.arrow-right
       = number_to_phone(number.forward_to)
+    -# form_for @campaign, :url => channel_campaign_path(@account, @channel, @campaign) do |f| 
+      =# f.name :adopting_phone_number, :label => 'Add Orphaned Phone Number', :as => :select, :collection => PhoneNumber.selectable_orphaned_phone_numbers, :include_blank => true
+      =# f.submit :update
 - else
   You haven't added any phone numbers yet.
