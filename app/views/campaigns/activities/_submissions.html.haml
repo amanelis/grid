@@ -1,0 +1,29 @@
+%div{:id => "submissions", :style => "height: 500px; overflow: auto;"}
+  %h2.subheader Submissions
+  %table#activities.small
+    %thead
+      %tr
+        %th Type
+        %th From
+        %th Time
+    %tbody
+      - for submission in @submissions
+        %tr{:id => "submission_#{call.id}", "data-time" => "#{submission.created_at.to_i}"}
+          %td
+            %a.iconic.article
+          %td
+            %strong= submission.contact_form.campaign.name
+            %br
+            = submission.contact_form.campaign.account.name
+          %td
+            %strong=submission.from_email
+            %br
+            =submission.name || submission.from_email
+            %br
+            =submission.phone_number
+            %br
+            =submission.home_address
+          %td
+            %strong=submission.created.in_time_zone(activity.time_zone).strftime("%I:%M%p %b %d")
+            %br
+            =time_ago_in_words(submission.time_of_submission) + " ago"

@@ -67,7 +67,9 @@ class CampaignsController < ApplicationController
   def show
     authorize! :read, @campaign
     datepicker channel_campaign_path(@account, @channel, @campaign)
-    @activities = Activity.paginate(:page => (params[:page] || 1), :order => 'timestamp DESC', :per_page => 50)
+
+    @submissions = @campaign.submissions
+    @calls       = @campaign.calls
   end
 
   def edit
@@ -84,12 +86,12 @@ class CampaignsController < ApplicationController
     elsif @campaign.is_seo?
       @campaign.update_attributes(:name => params[:campaign][:name]) && @campaign.website.update_attributes(:domain => params[:campaign][:url]) && @campaign.campaign_style.update_attributes(:budget => params[:campaign][:budget]) ? (flash[:notice] = "Updated!") : (flash[:error] = "Ooops looks like there was an error updating your campaign, try again!")
     end
-    
+
     if params[:campaign][:adopting_phone_number].present?
       @phone_number = PhoneNumber.find(params[:campaign][:adopting_phone_number])
       @phone_number.update_attribute(:campaign_id, @campaign.id) ? (flash[:notice] = "Phone number assigned!") : (flash[:error] = "There was an error assigning number, please try again!")
     end
-    
+
     redirect_to channel_campaign_path(@account, @channel, @campaign)
   end
 

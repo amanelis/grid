@@ -1,17 +1,3 @@
-:javascript
-  $(document).ready(function(){
-    // initially hide all of the edits
-    $('.channels tr .edit').hide();
-
-    // Mouseover chained with a mouseleave
-    $(".channels tr").mouseenter(function(){
-      // when entering show
-      $(this).find(".edit").show();
-    }).mouseleave(function(){
-      // when leaving hide
-      $(this).find('.edit').hide();
-    });
-  });
 
 %header
   - if can? :manipulate_account, @account
@@ -23,8 +9,8 @@
         = link_to "", send_weekly_path(params[:id]), :title => "Send Test Email", :class => "tiptip iconic mail-alt"
   %h1= @account.name
   %datepicker= render :partial => "shared/date_picker"
-  
-  
+
+
 %article
   - unless @current_user.account_user?
     =high_chart("total_daily_leads_graph", @daily_total_leads_graph)
@@ -36,7 +22,7 @@
       %thead
         %tr
           %th.name
-            -#= link_to channel.name, channel_path(@account, channel) 
+            -#= link_to channel.name, channel_path(@account, channel)
             = channel.name
             - if can? :manipulate_account, @account
               -#= link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
@@ -56,7 +42,7 @@
       %thead
         %tr
           %th.name
-            -#= link_to channel.name, channel_path(@account, channel) 
+            -#= link_to channel.name, channel_path(@account, channel)
             = channel.name
             - if can? :manipulate_account, @account
               -#= link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
@@ -76,7 +62,7 @@
       %thead
         %tr
           %th.name
-            -#= link_to channel.name, channel_path(@account, channel) 
+            -#= link_to channel.name, channel_path(@account, channel)
             = channel.name
             - if can? :manipulate_account, @account
               -#= link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
@@ -89,7 +75,7 @@
             CPL
       - channel.campaigns.active.each do |campaign|
         = render :partial => 'accounts/channel_campaign', :locals => {:campaign => campaign, :channel => channel}
-        
+
   -# FOOTER ##################################################################################################################
   - if can? :manipulate_account, @account
     = link_to "Create Channel", new_channel_path(@account), :class => "button", :rel => "facebox"
