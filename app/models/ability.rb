@@ -8,11 +8,17 @@ class Ability
       can :manage, :all
     else
       # Account Authorization
+      can :create, Account if user.manipulable_group_accounts.present?
+      
       can :read, Account do |account|
         user.acquainted_with_account?(account)
       end
-      
-      can :create, Account if user.manipulable_group_accounts.present?
+      can :edit, Account do |account|
+        user.can_manipulate_account?(account)
+      end
+      can :update, Account do |account|
+        user.can_manipulate_account?(account)
+      end
 
       # Campaign Authorization
       can :read, Campaign do |campaign|

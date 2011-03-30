@@ -1,93 +1,32 @@
-%header
-  %h1 Edit "Account Name"
-%article
-  %h3 Account Information
-  %label Company Name
+- form_for @account, :url => account_path do |f|
+  = f.label :name
   %br
-  %input{:type => "text", :placeholder => "CityVoice", :name => "name", :id => "name", :class => "title"}
+  = f.text_field :name
   %br
-  %label Main Contact
   %br
-  %input{:type => "text", :placeholder => "Charlie Sheen", :class => "title"}
+  = f.label :main_contact
   %br
-  %label Budget
+  = f.text_field :main_contact
   %br
-  %input{:type => "text", :placeholder => "One Million Dollars", :name => "name", :id => "name", :class => "title"}
   %br
-  %label Billing Date
+  = f.label :industry
   %br
-  %input{:type => "text", :placeholder => "Jan 1, 2011", :id => "datepicker", :class => "title"}
+  = f.select :industry, Account.find(:all).collect(&:industry).uniq
   %br
-  %label Industry
   %br
-  %select
-    %option Plumbing
-    %option HVAC
-    %option Other
+  
+  %label Account Manager
+  = @account.account_manager.try(:name) || ""
+  - if @account.account_manager.nil?
+    - @data = ['- Select -', 0].to_s
+  - else
+    - @data = @account.account_manager.name
+  
   %br
-  %label Type
+  =# select_tag 'account_manager', options_for_select(@account.group_account.potential_account_managers.collect {|x| [x.name, x.id]}.insert(0, '- Assign Account Manager -'), :selected => @account.account_manager.name)
+  = select_tag('account_manager', options_for_select([['- Change Account Manager -', "0"]] + @account.group_account.potential_account_managers.collect {|x| [x.name, x.id]}, @account.account_manager {|x| [x.name, x.id]}))
   %br
-  %select
-    %option SEO
-    %option SEM
-    %option Other
   %br
-  %label Status
-  %br
-  %select
-    %option Active
-    %option Inactive
-    %option Paused
-  %br
-  %label Assign Account Manager
-  %br
-  %select
-    %option Shelton
-    %option Shaunay
-    %option - None -
-  %hr
-  %h3 Contact Info
-  %br
-  %label Website
-  %br
-  %input{:type => "text", :placeholder => "http://cityvoice.com", :class => "title"}
-  %label Street
-  %br
-  %input{:type => "text", :placeholder => "112 DeZevala", :class => "title"}
-  %br
-  %label City
-  %br
-  %input{:type => "text", :placeholder => "San Antonio", :class => "title"}
-  %br
-  %label State
-  %br
-  %input{:type => "text", :placeholder => "TX", :class => "title"}
-  %br
-  %label Zip Code
-  %br
-  %input{:type => "text", :placeholder => "78249", :class => "title"}
-  %br
-  %label Metro Area
-  %br
-  %input{:type => "text", :placeholder => "San Marcos", :class => "title"}
-  %br
-  %label Phone
-  %br
-  %input{:type => "text", :placeholder => "(832) 477 8662", :class => "title"}
-  %br
-  %label Other Phone
-  %br
-  %input{:type => "text", :placeholder => "(832) 477 8662", :class => "title"}
-  %br
-  %label Fax
-  %br
-  %input{:type => "text", :placeholder => "(832) 477 8662", :class => "title"}
-%footer
-  #submit
-    = link_to "Cancel", "#", :class => "cancel", :onclick => "$.facebox.close();"
-    = link_to "Update", "#", :class => "button"
-  %hr.space
-:javascript 
-  	$(function() {
-  		$( "#datepicker" ).datepicker();
-  	});
+  = f.submit "Update"
+  
+  
