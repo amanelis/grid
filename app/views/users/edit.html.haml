@@ -4,8 +4,9 @@
       -#%small= link_to "Delete", user, :title => "Delete User", :confirm => "This will delete user: #{user.email}, are you sure?", :method => :delete unless user.id == @current_user.id
   %h1=@user.email
 %article
+  %section
+    %h2 Profile
   - form_for (@user) do |f|
-    %h2 Login Information
     = f.label "Email"
     %br
     = f.text_field :email, :class => 'title'
