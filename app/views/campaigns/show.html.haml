@@ -3,9 +3,12 @@
   var calls_active = true;
   var submissions_active = false;
   $(document).ready(function(){
+    // Initially hide submissions
     $("#submissions").hide();
+
+    // Toggle clicks
     $("#toggle_calls").click(function(){
-      if(calls_active) {
+      if( calls_active ) {
         $("#calls").hide('blind', 250);
         $("#toggle_calls").html('Show Calls');
         calls_active = false;
@@ -14,11 +17,12 @@
         $("#toggle_calls").html('Hide Calls');
         calls_active = true;
       }
-      return false;
+      return false; // keep the browser from being jerky
     });
 
+    // Toggle clicks
     $("#toggle_submissions").click(function(){
-      if(submissions_active) {
+      if( submissions_active ) {
         $("#submissions").hide('blind', 250);
         $("#toggle_submissions").html('Show Submissions');
         submissions_active = false;
@@ -27,8 +31,9 @@
         $("#toggle_submissions").html('Hide Submissions');
         submissions_active = true;
       }
-      return false;
+      return false; // keep the browser from being jerky
     });
+
   });
 
 
