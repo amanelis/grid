@@ -1,24 +1,29 @@
 - form_for @account, :url => accounts_path do |f|
-  %label Company Name
-  %br
-  %input{:id => "account_name", :name => "account[name]", :type => "text", :placeholder => "CityVoice", :class => "title"}
-  %br
-  %label Main Contact
-  %br
-  %input{:id => "account_main_contact", :name => "account[main_contact]", :type => "text", :placeholder => "Charlie Sheen", :class => "title"}
-  %br
-  %label Industry
-  %br
-  %select{:id => 'account_industry', :name => 'account[industry]', :class => 'required'}
-    %option{:value => 0} - Choose an Industry -
-    %option{:value => "PLUMBING"} Plumbing
-    %option{:value => "HVAC"} HVAC
-    %option{:value => "OTHER"} Other
-  %br
-  %label Parent Account
-  %br
-  = select("account", "group_account", @current_user.manipulable_group_accounts.collect{|p| [ p.name, p.id ] }, {:include_blank => '- Choose a Parent Account -'})
-  %br
+  %header
+    %h1 New Account
+  %article
+    %label Company Name
+    %br
+    %input{:id => "account_name", :name => "account[name]", :type => "text", :placeholder => "CityVoice", :class => "title"}
   %hr
-  #submit
-  = submit_tag "Create"
+  %article
+    %label Main Contact
+    %br
+    %input{:id => "account_main_contact", :name => "account[main_contact]", :type => "text", :placeholder => "Charlie Sheen", :class => "title"}
+    %br
+    %label Industry
+    %br
+    %select{:id => 'account_industry', :name => 'account[industry]', :class => 'required'}
+      %option{:value => 0} - Choose an Industry -
+      %option{:value => "PLUMBING"} Plumbing
+      %option{:value => "HVAC"} HVAC
+      %option{:value => "OTHER"} Other
+    %br
+    %label Parent Account
+    %br
+    = select("account", "group_account", @current_user.manipulable_group_accounts.collect{|p| [ p.name, p.id ] }, {:include_blank => '- Choose a Parent Account -'})
+  %footer
+    #submit
+      = link_to "Cancel", "", :class => "cancel", :id => 'cancel'
+      = submit_tag "Create", :class => "button"
+    %hr.space
