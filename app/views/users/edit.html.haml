@@ -32,7 +32,7 @@
       %br
       %label Phone Number  
       %br
-      %input.title{:id => "manager_phone", :name => "manager[phone]", :type => "text", :value => @user.group_users.first.try(:phone_number) || ""}
+      %input.title{:id => "manager_phone", :name => "manager[phone]", :type => "text", :value => number_to_phone(@user.group_users.first.try(:phone_number)) || ""}
       %br
       %br
       =# select_tag 'manager_group_account', options_for_select(@user.group_users.collect(&:group_account).collect(&:name))
