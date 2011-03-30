@@ -16,7 +16,6 @@
     %option{:value => "OTHER"} Other
   %br
   %label Parent Account
-    = @account.account_manager.name
   %br
   = select("account", "group_account", @current_user.manipulable_group_accounts.collect{|p| [ p.name, p.id ] }, {:include_blank => '- Choose a Parent Account -'})
   %br
