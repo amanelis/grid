@@ -67,7 +67,6 @@ class Submission < ActiveRecord::Base
   
   def initialize_thyself
     self.review_status = PENDING
-    self.review_status = SPAM if self.is_spam?
   end
 
   
@@ -107,6 +106,10 @@ class Submission < ActiveRecord::Base
   def time_of_submission= the_time_of_submission
     self[:time_of_submission] = the_time_of_submission
     self.timestamp = the_time_of_submission
+  end
+  
+  def check_for_spam
+    self.review_status = SPAM if self.is_spam?
   end
   
   def is_spam?
@@ -189,5 +192,5 @@ class Submission < ActiveRecord::Base
   def campaign
     self.contact_form.campaign
   end
-
+  
 end
