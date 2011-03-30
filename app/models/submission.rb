@@ -188,5 +188,10 @@ class Submission < ActiveRecord::Base
   def campaign
     self.contact_form.campaign
   end
+  
+  def update_if_spam
+    self.update_attribute(:review_status, SPAM) if self.is_spam?
+  end
+  
 
 end

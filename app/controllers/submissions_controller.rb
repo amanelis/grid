@@ -22,7 +22,7 @@ class SubmissionsController < ApplicationController
     @submission.ip_address = request.remote_ip
     @submission.user_agent = request.user_agent
     @submission.time_of_submission = DateTime.now
-    @submission.review_status = SPAM if @submission.is_spam?
+    @submission.update_if_spam
     
     if @submission.empty?
       redirect_to params[:submission][:retURL]
