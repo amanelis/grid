@@ -9,7 +9,7 @@
           %th Time
       %tbody
         - for submission in @submissions
-          %tr{:id => "submission_#{call.id}", "data-time" => "#{submission.created_at.to_i}"}
+          %tr{:id => "submission_#{submission.id}", "data-time" => "#{submission.created_at.to_i}"}
             %td
               %a.iconic.article
             %td
