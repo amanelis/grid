@@ -25,7 +25,6 @@
               %br
               =submission.home_address
             %td
-              %strong=submission.created_at.in_time_zone(activity.time_zone).strftime("%I:%M%p %b %d")
               %br
               =time_ago_in_words(submission.time_of_submission) + " ago"
   %div{:id => 'submissions_paginate'}
