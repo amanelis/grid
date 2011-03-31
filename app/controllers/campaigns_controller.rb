@@ -55,6 +55,7 @@ class CampaignsController < ApplicationController
       seo.channel  = @channel
       seo.name     = name
       seo.budget   = budget
+      
       seo.save
       seo.campaign.save     
 

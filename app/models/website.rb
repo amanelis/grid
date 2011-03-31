@@ -327,7 +327,7 @@ class Website < ActiveRecord::Base
       if response.to_a.first.first == "site"
         self.ginza_global_id = response.to_a.first.second["global_key"]
         self.ginza_meta_descript = response.to_a.first.second["meta_description"]
-        self.save
+        self.save!
         return true
       else
         return response.to_a.first
