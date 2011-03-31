@@ -38,20 +38,24 @@
 
 
 - if @campaign.phone_numbers.empty? && @campaign.contact_forms.empty?
-  %article.blank.notice
-    %h1.strong Make your campaign go somewhere
-    %h2.quiet Campaigns are the glue that connect people to your business. How customers get a hold of you affects how you track leads. Start tracking your campaign by adding a forwarding number or generating a form for a website.
-    %br
-    .button
-      %a.iconic.phone
-      = link_to "Add Phone Number", new_channel_campaign_phone_number_path(@account, @channel, @campaign), :rel => "facebox"
-    or
-    .button
-      %a.iconic.article
-      = link_to "Create Contact Form", new_channel_campaign_contact_form_path(@account, @channel, @campaign), :rel => "facebox"
+  %article.blank
+    .prepend-1.span-4= image_tag("icons/blank_campaign.png")
+    .span-14.append-1.last
+      %h1.strong Make your campaign go somewhere
+      %h2.quiet Campaigns are the glue that connect people to your business. How customers get a hold of you affects how you track leads. Start tracking your campaign by adding a forwarding number or generating a form for a website.
+      %br
+      .button
+        %a.iconic.phone
+        = link_to "Add Phone Number", new_channel_campaign_phone_number_path(@account, @channel, @campaign), :rel => "facebox"
+      or
+      .button
+        %a.iconic.article
+        = link_to "Create Contact Form", new_channel_campaign_contact_form_path(@account, @channel, @campaign), :rel => "facebox"
 -else
   %header
     .menu
+      - if @campaign.is_seo?
+        = link_to "", "#", :rel => "facebox", :title => "Get Tracking Code", :class => 'tiptip iconic tag'
       - if can? :orphaned, @campaign
         -#= link_to "", orphaned_account_campaign_path, :title => "Assign Orphaned Number",:class => "tiptip iconic phone submit", :name => "submit"
       = link_to "", edit_channel_campaign_path, :rel => "facebox", :title => "Edit Campaign", :class => 'tiptip iconic cog'
@@ -68,25 +72,25 @@
 
   = render :partial => 'campaigns/campaign_types/common'
 
-%article.span-12.colborder
-  %a{ :id => "toggle_calls" }
-    Hide Calls
-  |
-  %a{ :id => "toggle_submissions" }
-    Show Submissions
+  %article.span-12.colborder
+    %a{ :id => "toggle_calls" }
+      Hide Calls
+    |
+    %a{ :id => "toggle_submissions" }
+      Show Submissions
 
-  = render :partial => 'campaigns/activities/calls'
-  = render :partial => 'campaigns/activities/submissions'
+    = render :partial => 'campaigns/activities/calls'
+    = render :partial => 'campaigns/activities/submissions'
 
-.span-5.last
-  %h2.subheader Details
-  %div#sidebar
-    .notice
-      %h4.strong Click a lead to see more.
-      %p.quiet Try using the up and down arrows on your keyboard
-  = text_area_tag 'clicky', @campaign.website.try(:get_clicky_code) if @campaign.is_seo?
-.span-17
-  %hr.space
-  .pagination= #will_paginate(@activities)
-  %hr.space
+  .span-5.last
+    %h2.subheader Details
+    %div#sidebar
+      .notice
+        %h4.strong Click a lead to see more.
+        %p.quiet Try using the up and down arrows on your keyboard
+    = text_area_tag 'clicky', @campaign.website.try(:get_clicky_code) if @campaign.is_seo?
+  .span-17
+    %hr.space
+    .pagination= #will_paginate(@activities)
+    %hr.space
   

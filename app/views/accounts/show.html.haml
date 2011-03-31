@@ -26,7 +26,7 @@
             = channel.name
             - if can? :manipulate_account, @account
               -#= link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
-              = link_to "", new_channel_campaign_path(@account, channel), :title => "Add new campaign to this channel", :class => "tiptip iconic plus-alt", :rel => "facebox"
+              = link_to "", new_channel_campaign_path(@account, channel), :title => "Add new campaign to this channel", :class => "tiptip iconic plus", :rel => "facebox"
           %th.leads
             = channel.number_of_total_leads_between(@start_date, @end_date)
             Leads
@@ -46,7 +46,7 @@
             = channel.name
             - if can? :manipulate_account, @account
               -#= link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
-              = link_to "", new_channel_campaign_path(@account, channel), :title => "Add new campaign to this channel", :class => "tiptip iconic plus-alt", :rel => "facebox"
+              = link_to "", new_channel_campaign_path(@account, channel), :title => "Add new campaign to this channel", :class => "tiptip iconic plus", :rel => "facebox"
           %th.leads{:width => "15%"}
             = channel.number_of_total_leads_between(@start_date, @end_date)
             Leads
@@ -66,7 +66,7 @@
             = channel.name
             - if can? :manipulate_account, @account
               -#= link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
-              = link_to "", new_channel_campaign_path(@account, channel), :title => "Add new campaign to this channel", :class => "tiptip iconic plus-alt", :rel => "facebox"
+              = link_to "", new_channel_campaign_path(@account, channel), :title => "Add new campaign to this channel", :class => "tiptip iconic plus", :rel => "facebox"
           %th.leads
             = channel.number_of_total_leads_between(@start_date, @end_date)
             Leads
