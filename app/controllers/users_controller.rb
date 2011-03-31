@@ -6,7 +6,8 @@ class UsersController < ApplicationController
   
   def index
     @current_user = current_user
-    @current_user.admin? ? (@users = User.all) : (@users = @current_user.manipulable_users)
+    # @current_user.admin? ? (@users = User.all) : (@users = @current_user.manipulable_users)
+    @users = @current_user.manipulable_users
   end
   
   def new
