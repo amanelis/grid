@@ -321,6 +321,11 @@ class Website < ActiveRecord::Base
   
   #TESTING GINZA METHODS
   
+  def get_clicky_code
+    return if self.site_id.nil?
+    clicky = "<script src=\"http://stats.cityvoice.com/js\" type=\"text/javascript\"></script><script type=\"text/javascript\">citystats.init(#{self.site_id});</script><noscript><p><img alt=\"CityStats\" width=\"1\" height=\"1\" src=\"http://stats.cityvoice.com/#{self.site_id}ns.gif\" /></p></noscript>"
+  end
+  
   def create_ginza_site
     if self.ginza_global_id.blank?
       response = HTTParty.get("https://app.ginzametrics.com/v1/accounts/#{GINZA_ACCOUNT_ID}/add_site?api_key=#{GINZA_KEY}&format=json&url=#{self.nickname}&market=US")

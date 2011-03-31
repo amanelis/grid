@@ -32,56 +32,64 @@ class CampaignsController < ApplicationController
       landing_page  = params[:campaign][:landing_page]
       rake          = params[:campaign][:rake]
 
-      sc = SemCampaign.new
-      sc.account  = @account
-      sc.channel  = @channel
-      sc.name     = name
-      sc.rake     = rake
+      if name.present? && landing_page.present? && rake.present?
+        sc = SemCampaign.new
+        sc.account  = @account
+        sc.channel  = @channel
+        sc.name     = name
+        sc.rake     = rake
 
-      if sc.save && sc.campaign.save && sc.campaign.create_website(website)
-        flash[:notice] = "Good job, you just created a campaign!"
+        if sc.save && sc.campaign.save && sc.campaign.create_website(website)
+          flash[:notice] = "Good job, you just created a campaign!"
+        else
+          flash[:error] = "Looks like you might have already named a campaign with a similar name, please try again!"
+        end
       else
-        flash[:error] = "Looks like you might have already named a campaign with a similar name, please try again!"
+        flash[:error] = "You left some fields blank!"
       end
+      
     elsif @channel.channel_type == "seo"
       name      = params[:campaign][:name]
       website   = params[:campaign][:url]
       budget    = params[:campaign][:budget]
       keywords  = params[:campaign][:keywords].split("\r\n")
       
-
-      seo = SeoCampaign.new
-      seo.account  = @account
-      seo.channel  = @channel
-      seo.name     = name
-      seo.budget   = budget
+      if name.present? && website.present? && budget.present? && keywords.present?
+        seo = SeoCampaign.new
+        seo.account  = @account
+        seo.channel  = @channel
+        seo.name     = name
+        seo.budget   = budget
       
-      seo.save
-      seo.campaign.save     
+        seo.save
+        seo.campaign.save     
 
-      w = Website.new
-      w.domain = website
-      w.nickname = website
-      w.save
-      w.create_ginza_site
-      w.create_clicky_site
+        w = Website.new
+        w.domain = website
+        w.nickname = website
+        w.save
+        w.create_ginza_site
+        w.create_clicky_site
 
-      seo.campaign.website = w
-      seo.save
+        seo.campaign.website = w
+        seo.save
 
-      keywords.each do |keyword|
-         k = Keyword.new
-         k.seo_campaign = seo
-         k.descriptor = keyword
-         k.google_first_page = 0
-         k.yahoo_first_page = 0
-         k.bing_first_page = 0
-         k.save
-       end
+        keywords.each do |keyword|
+           k = Keyword.new
+           k.seo_campaign = seo
+           k.descriptor = keyword
+           k.google_first_page = 0
+           k.yahoo_first_page = 0
+           k.bing_first_page = 0
+           k.save
+         end
        
-       comma_keywords  = params[:campaign][:keywords].gsub("\r\n",",")
-       seo.add_ginza_keywords(comma_keywords)
-       flash[:notice] = "Yay you added an SEO campaign!"
+         comma_keywords  = params[:campaign][:keywords].gsub("\r\n",",")
+         seo.add_ginza_keywords(comma_keywords)
+         flash[:notice] = "Yay you added an SEO campaign!"
+      else
+        flash[:error] = "You left some fields blank!"
+      end
     end
     redirect_to account_path(@account)
   end
