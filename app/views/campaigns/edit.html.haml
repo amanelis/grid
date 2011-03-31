@@ -20,7 +20,7 @@
     - if @campaign.is_seo?
       %label URL
       %br
-      %input.title{:id => "campaign_url", :name => "campaign[url]", :type => "text", :value => @campaign.website.try(:domain)}
+      %input.title{:id => "campaign_url", :name => "campaign[url]", :type => "text", :value => @campaign.website.try(:domain) || ""}
       %br
       %br
       %label Add More Keywords (1 per line)
@@ -30,7 +30,7 @@
       %br
       %label Budget
       %br
-      %input.title{:id => "campaign_budget", :name => "campaign[budget]", :type => "text", :value => @campaign.campaign_style.try(:budget)}
+      %input.title{:id => "campaign_budget", :name => "campaign[budget]", :type => "text", :value => @campaign.campaign_style.try(:budget) || ""}
       %br
       %br
 
@@ -41,11 +41,11 @@
       %br
       %label Landing Page
       %br
-      %input.title{:id => "campaign_landing_page", :name => "campaign[landing_page]", :type => "text", :value => @campaign.website.try(:domain)}
+      %input.title{:id => "campaign_landing_page", :name => "campaign[landing_page]", :type => "text", :value => @campaign.website.try(:domain) || ""}
       %br
       %label Mark up
       %br
-      %input.title{:id => "campaign_rake", :name => "campaign[rake]", :type => "text", :value => @campaign.campaign_style.try(:rake)}
+      %input.title{:id => "campaign_rake", :name => "campaign[rake]", :type => "text", :value => @campaign.campaign_style.try(:rake) || ""}
       %br
       %br
 
