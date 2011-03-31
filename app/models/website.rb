@@ -314,6 +314,7 @@ class Website < ActiveRecord::Base
        self.sitekey = info[2]
        self.database_server = info[3]
        self.admin_sitekey = info[4]
+       self.save!
        return "Website was created!\nClick Code: <script src=\"http://stats.cityvoice.com/js\" type=\"text/javascript\"></script><script type=\"text/javascript\">citystats.init(#{site_id});</script><noscript><p><img alt=\"CityStats\" width=\"1\" height=\"1\" src=\"http://stats.cityvoice.com/#{site_id}ns.gif\" /></p></noscript>"
      end
    end
