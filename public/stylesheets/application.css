@@ -835,6 +835,15 @@ text-shadow:0 0 3px #66C6EF;
 }
 
 /*
+Clicky
+------------------
+*/
+
+#clicky textarea{
+	width:100px;
+}
+
+/*
 Pagination
 ------------------
 */
