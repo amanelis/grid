@@ -48,35 +48,38 @@ class CampaignsController < ApplicationController
       website   = params[:campaign][:url]
       budget    = params[:campaign][:budget]
       keywords  = params[:campaign][:keywords].split("\r\n")
+      
 
-      sc = SeoCampaign.new
-      sc.account  = @account
-      sc.channel  = @channel
-      sc.name     = name
-      sc.budget   = budget
-      sc.save
-      sc.campaign.save
-      # sc.campaign.create_website(website)
+      seo = SeoCampaign.new
+      seo.account  = @account
+      seo.channel  = @channel
+      seo.name     = name
+      seo.budget   = budget
+      seo.save
+      seo.campaign.save     
 
       w = Website.new
       w.domain = website
       w.nickname = website
       w.save
       w.create_ginza_site
+      w.create_clicky_site
 
-      sc.website = w
-      sc.save
+      seo.campaign.website = w
+      seo.save
 
       keywords.each do |keyword|
          k = Keyword.new
-         k.seo_campaign = sc
+         k.seo_campaign = seo
          k.descriptor = keyword
          k.google_first_page = 0
          k.yahoo_first_page = 0
          k.bing_first_page = 0
          k.save
-         sc.add_ginza_keywords(keyword)
        end
+       
+       comma_keywords  = params[:campaign][:keywords].gsub("\r\n",",")
+       seo.add_ginza_keywords(comma_keywords)
        flash[:notice] = "Yay you added an SEO campaign!"
     end
     redirect_to account_path(@account)

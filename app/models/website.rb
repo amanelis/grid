@@ -280,6 +280,31 @@ class Website < ActiveRecord::Base
     end
   end
   
+  def create_clicky_site
+    url = "https://api.getclicky.com/api/account/sites?username=cityvoicesa&password=C1tyv01c3&output=json"
+    site_id = sitekey = database_server = admin_sitekey = ''
+    successfuly_found_or_added = false
+    
+    HTTParty.get(url).each do |site|
+      site_id = site["site_id"] 
+      sitekey = site["sitekey"]
+      database_server = ''
+      admin_sitekey = site["sitekey_admin"]
+      successfuly_found_or_added = true
+    end
+    
+    if successfuly_found_or_added
+      self.is_active = true
+      self.site_id = site_id
+      self.sitekey = sitekey
+      self.database_server = database_server
+      self.admin_sitekey = admin_sitekey
+      self.save!
+      return "Website was created!\nClick Code: <script src=\"http://stats.cityvoice.com/js\" type=\"text/javascript\"></script><script type=\"text/javascript\">citystats.init(#{site_id});</script><noscript><p><img alt=\"CityStats\" width=\"1\" height=\"1\" src=\"http://stats.cityvoice.com/#{site_id}ns.gif\" /></p></noscript>"
+    end
+    
+  end
+  
   #TESTING GINZA METHODS
   
   def create_ginza_site
