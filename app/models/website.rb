@@ -1,6 +1,10 @@
 class Website < ActiveRecord::Base
   has_many :campaigns
   has_many :website_visits, :dependent => :destroy
+  
+  validates_presence_of :nickname
+  validates_uniqueness_of :nickname, :case_sensitive => false
+  
 
   # CLASS BEHAVIOR
 
