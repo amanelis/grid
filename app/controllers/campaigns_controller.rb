@@ -63,7 +63,7 @@ class CampaignsController < ApplicationController
       w.nickname = website
       w.save
       w.create_ginza_site
-      
+
       sc.website = w
       sc.save
 
@@ -74,7 +74,7 @@ class CampaignsController < ApplicationController
          k.google_first_page = 0
          k.yahoo_first_page = 0
          k.bing_first_page = 0
-         k.save 
+         k.save
          sc.add_ginza_keywords(keyword)
        end
        flash[:notice] = "Yay you added an SEO campaign!"
@@ -86,8 +86,8 @@ class CampaignsController < ApplicationController
     authorize! :read, @campaign
     datepicker channel_campaign_path(@account, @channel, @campaign)
 
-    @submissions = @campaign.submissions
-    @calls       = @campaign.calls
+    @submissions = @campaign.submissions.paginate(:page => (params[:page] || 1), :order => 'created_at DESC', :per_page => 50)
+    @calls       = @campaign.calls.paginate(:page => (params[:page] || 1), :order => 'created_at DESC', :per_page => 50)
   end
 
   def edit

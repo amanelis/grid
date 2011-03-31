@@ -1,22 +1,25 @@
-%div{:id => "calls", :style => "height: 500px; overflow: auto;"}
-  %h2.subheader Calls
-  %table#activities.small
-    %thead
-      %tr
-        %th Type
-        %th From
-        %th Time
-    %tbody
-      - for call in @calls
-        %tr{:id => "call_#{call.id}", "data-time" => "#{call.timestamp.to_i}"}
-          %td
-            %a.iconic.phone
-          %td
-            %strong=number_to_phone(call.caller_number)
-            %br
-            =call.caller_name
-          %td
-            -activity_time_zone = call.phone_number.campaign.account.time_zone
-            %strong=call.created_at.strftime("%I:%M%p %b %d")
-            %br
-            =time_ago_in_words(call.call_start) + " ago"
+%div{:id => "calls"}
+  %div{:style => "height: 500px; overflow: auto;"}
+    %h2.subheader Calls
+    %table#activities.small
+      %thead
+        %tr
+          %th Type
+          %th From
+          %th Time
+      %tbody
+        - for call in @calls
+          %tr{:id => "call_#{call.id}", "data-time" => "#{call.timestamp.to_i}"}
+            %td
+              %a.iconic.phone
+            %td
+              %strong=number_to_phone(call.caller_number)
+              %br
+              =call.caller_name
+            %td
+              -activity_time_zone = call.phone_number.campaign.account.time_zone
+              %strong=call.created_at.strftime("%I:%M%p %b %d")
+              %br
+              =time_ago_in_words(call.call_start) + " ago"
+  %div{:id => "calls_paginate"}
+    = will_paginate(@calls)
