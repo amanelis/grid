@@ -1,7 +1,6 @@
 class CampaignsController < ApplicationController
   inherit_resources
-  #load_resource :except => [:create]
-  load_and_authorize_resource :except => [:create]
+  load_resource :except => [:create]
   load_resource :accounts
   load_resource :channels
   before_filter :load_resource_user
