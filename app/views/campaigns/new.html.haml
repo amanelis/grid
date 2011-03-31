@@ -24,40 +24,40 @@
     - elsif @channel.is_seo?
       %label Name
       %br
-      %input.title{:id => "campaign_name", :name => "campaign[name]", :type => "text required"}
+      %input.title{:id => "campaign_name", :name => "campaign[name]", :class => "text required"}
       %br
       %br
       %label URL
       %br
-      %input.title{:id => "campaign_url", :name => "campaign[url]", :type => "text required"}
+      %input.title{:id => "campaign_url", :name => "campaign[url]", :class => "text required"}
       %br
       %br
       %label Keywords (1 per line)
       %br
-      %textarea.title{:id => "campaign_keywords", :name => "campaign[keywords]", :type => "text required", :rows => 10}
+      %textarea.title{:id => "campaign_keywords", :name => "campaign[keywords]", :class => "text required", :rows => 10}
       %br
       %br
       %label Budget
       %br
-      %input.title{:id => "campaign_budget", :name => "campaign[budget]", :type => "text required"}
+      %input.title{:id => "campaign_budget", :name => "campaign[budget]", :class => "text required"}
 
     - elsif @channel.is_sem?
       %label Name
       %br
-      %input.title{:id => "campaign_name", :name => "campaign[name]", :type => "text required"}
+      %input.title{:id => "campaign_name", :name => "campaign[name]", :class => "text required"}
       %br
       %br
       %label Google Campaign ID
       %br
-      %input.title{:id => "campaign_adwords_id", :name => "campaign[adwords_id]", :type => "text required"}
+      %input.title{:id => "campaign_adwords_id", :name => "campaign[adwords_id]", :class => "text required"}
       %br
       %label Landing Page
       %br
-      %input.title{:id => "campaign_landing_page", :name => "campaign[landing_page]", :type => "text required"}
+      %input.title{:id => "campaign_landing_page", :name => "campaign[landing_page]", :class => "text required"}
       %br
       %label Mark up
       %br
-      %input.title{:id => "campaign_rake", :name => "campaign[rake]", :type => "text required"}
+      %input.title{:id => "campaign_rake", :name => "campaign[rake]", :class => "text required"}
 
 %footer
   #submit
