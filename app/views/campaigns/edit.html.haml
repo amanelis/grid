@@ -17,7 +17,7 @@
     %br
     %input.title{:id => "campaign_name", :name => "campaign[name]", :type => "text", :value => @campaign.name}
     %br
-    - if @campaign.is_seo?
+    - if @campaign.is_seo? && !@current_user.account_user?
       %label URL
       %br
       %input.title{:id => "campaign_url", :name => "campaign[url]", :type => "text", :value => @campaign.website.try(:domain) || ""}
@@ -34,7 +34,7 @@
       %br
       %br
 
-    - elsif @campaign.is_sem?
+    - elsif @campaign.is_sem? && !@current_user.account_user?
       %label Google Campaign ID
       %br
       %input.title{:id => "campaign_adwords_id", :name => "campaign[adwords_id]", :type => "text", :value => @account.adwords_client.try(:reference_id) || ""}

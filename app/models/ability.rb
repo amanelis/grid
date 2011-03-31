@@ -87,7 +87,7 @@ class Ability
       
       can :manipulate_campaign, Campaign do |campaign|
         if user.can_manipulate_campaign?(campaign) 
-          can :edit, Campaign
+          can :edit, Campaign 
           can :update, Campaign
           can :read, Campaign
           can :create, ContactForm
