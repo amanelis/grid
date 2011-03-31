@@ -322,8 +322,8 @@ class Website < ActiveRecord::Base
   #TESTING GINZA METHODS
   
   def get_clicky_code
-    return if self.site_id.nil?
     clicky = "<script src=\"http://stats.cityvoice.com/js\" type=\"text/javascript\"></script><script type=\"text/javascript\">citystats.init(#{self.site_id});</script><noscript><p><img alt=\"CityStats\" width=\"1\" height=\"1\" src=\"http://stats.cityvoice.com/#{self.site_id}ns.gif\" /></p></noscript>"
+    clicky
   end
   
   def create_ginza_site

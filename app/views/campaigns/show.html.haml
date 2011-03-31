@@ -84,7 +84,9 @@
     .notice
       %h4.strong Click a lead to see more.
       %p.quiet Try using the up and down arrows on your keyboard
+  = text_area_tag 'clicky', @campaign.website.get_clicky_code
 .span-17
   %hr.space
   .pagination= #will_paginate(@activities)
   %hr.space
+  
