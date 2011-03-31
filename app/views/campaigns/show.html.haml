@@ -37,7 +37,7 @@
   });
 
 
-- if @campaign.phone_numbers.empty? && @campaign.contact_forms.empty?
+- if @campaign.phone_numbers.empty? && @campaign.contact_forms.empty? && @campaign.campaign_style.keywords.empty?
   %article.blank.notice
     %h1.strong Make your campaign go somewhere
     %h2.quiet Campaigns are the glue that connect people to your business. How customers get a hold of you affects how you track leads. Start tracking your campaign by adding a forwarding number or generating a form for a website.
