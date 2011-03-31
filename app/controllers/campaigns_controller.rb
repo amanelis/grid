@@ -39,7 +39,7 @@ class CampaignsController < ApplicationController
         sc.name     = name
         sc.rake     = rake
 
-        if sc.save && sc.campaign.save && sc.campaign.create_website(website)
+        if sc.save && sc.campaign.save #&& sc.campaign.create_website(website)
           flash[:notice] = "Good job, you just created a campaign!"
         else
           flash[:error] = "Looks like you might have already named a campaign with a similar name, please try again!"
