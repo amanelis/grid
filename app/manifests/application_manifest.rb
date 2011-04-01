@@ -80,15 +80,14 @@ class ApplicationManifest < Moonshine::Manifest::Rails
     # To stop a cron job, add :ensure => :absent
     
     on_stage 'production' do
-      cron 'pull_salesforce_accounts', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} GroupAccount.pull_salesforce_accounts", :user => configuration[:user], :minute => 1, :hour => 22,:ensure => :absent
-      cron 'get_salesforce_numbers', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} PhoneNumber.get_salesforce_numbers", :user => configuration[:user], :minute => 31, :hour => 22, :ensure => :absent
+      cron 'pull_salesforce_accounts', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} GroupAccount.pull_salesforce_accounts", :user => configuration[:user], :minute => 1, :hour => 22
       cron 'get_marchex_numbers', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} PhoneNumber.get_marchex_numbers", :user => configuration[:user], :minute => 31, :hour => 22
-      cron 'pull_salesforce_campaigns', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} Campaign.pull_salesforce_campaigns", :user => configuration[:user], :minute => 45, :hour => 22, :ensure => :absent
+      cron 'pull_salesforce_campaigns', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} Campaign.pull_salesforce_campaigns", :user => configuration[:user], :minute => 45, :hour => 22
       cron 'update_calls', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} Call.update_calls", :user => configuration[:user], :minute => '*/15', :hour => '*'
       cron 'add_websites', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} Website.add_websites", :user => configuration[:user], :minute => 1, :hour => 23
       cron 'data_pull_websites_visits', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} WebsiteVisit.data_pull_websites_visits", :user => configuration[:user], :minute => 45, :hour => '*'
-      cron 'update_keywords_from_salesforce', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} Keyword.update_keywords_from_salesforce", :user => configuration[:user], :minute => 31, :hour => 22, :ensure => :absent
-      cron 'update_map_keywords_from_salesforce', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} MapKeyword.update_keywords_from_salesforce", :user => configuration[:user], :minute => 1, :hour => 4, :ensure => :absent
+      cron 'update_keywords_from_salesforce', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} Keyword.update_keywords_from_salesforce", :user => configuration[:user], :minute => 31, :hour => 22
+      cron 'update_map_keywords_from_salesforce', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} MapKeyword.update_keywords_from_salesforce", :user => configuration[:user], :minute => 1, :hour => 4
       cron 'update_map_rankings', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} MapKeyword.update_map_rankings", :user => configuration[:user], :minute => 1, :hour => 5
       cron 'remove_old_statuses', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} JobStatus.remove_old_statuses", :user => configuration[:user], :minute => 1, :hour => 6
       cron 'update_websites_with_ginza', :command => "/home/deploy/grid/current/script/runner -e #{deploy_stage} SeoCampaign.update_websites_with_ginza", :user => configuration[:user], :minute => 1, :hour => '*/4'
