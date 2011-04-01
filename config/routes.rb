@@ -38,9 +38,8 @@ ActionController::Routing::Routes.draw do |map|
     api.resources :forms
   end
   
-  map.resources :phone_numbers
-  map.resources :user_sessions
-
+  map.resources   :phone_numbers
+  map.resources   :user_sessions
   map.resources   :contact_forms,   :member => {:thank_you => :get, :get_html => :get, :get_iframe => :get}
   map.resources   :website_visits,  :member => {:global_visitor => :get}
   map.resources   :calls,           :member => {:collect => :post}
