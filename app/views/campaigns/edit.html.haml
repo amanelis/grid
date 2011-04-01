@@ -17,35 +17,35 @@
     %br
     %input.title{:id => "campaign_name", :name => "campaign[name]", :type => "text", :value => @campaign.name}
     %br
-    - if @campaign.is_seo?
+    - if @campaign.is_seo? && !@current_user.account_user?
       %label URL
       %br
-      %input.title{:id => "campaign_url", :name => "campaign[url]", :type => "text", :value => @campaign.website.domain}
+      %input.title{:id => "campaign_url", :name => "campaign[url]", :type => "text", :value => @campaign.website.try(:domain) || ""}
       %br
       %br
-      %label Keywords
+      %label Add More Keywords (1 per line)
       %br
       %textarea.title{:id => "campaign_keywords", :name => "campaign[keywords]", :type => "text", :rows => 10}
       %br
       %br
       %label Budget
       %br
-      %input.title{:id => "campaign_budget", :name => "campaign[budget]", :type => "text", :value => @campaign.campaign_style.budget}
+      %input.title{:id => "campaign_budget", :name => "campaign[budget]", :type => "text", :value => @campaign.campaign_style.try(:budget) || ""}
       %br
       %br
 
-    - elsif @campaign.is_sem?
+    - elsif @campaign.is_sem? && !@current_user.account_user?
       %label Google Campaign ID
       %br
       %input.title{:id => "campaign_adwords_id", :name => "campaign[adwords_id]", :type => "text", :value => @account.adwords_client.try(:reference_id) || ""}
       %br
       %label Landing Page
       %br
-      %input.title{:id => "campaign_landing_page", :name => "campaign[landing_page]", :type => "text", :value => @campaign.website.domain}
+      %input.title{:id => "campaign_landing_page", :name => "campaign[landing_page]", :type => "text", :value => @campaign.website.try(:domain) || ""}
       %br
       %label Mark up
       %br
-      %input.title{:id => "campaign_rake", :name => "campaign[rake]", :type => "text", :value => @campaign.campaign_style.rake}
+      %input.title{:id => "campaign_rake", :name => "campaign[rake]", :type => "text", :value => @campaign.campaign_style.try(:rake) || ""}
       %br
       %br
 

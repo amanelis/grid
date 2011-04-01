@@ -3,6 +3,7 @@ class CampaignsController < ApplicationController
   load_resource :except => [:create]
   load_resource :accounts
   load_resource :channels
+  before_filter :load_resource_user
 
   belongs_to :account
   belongs_to :channel
