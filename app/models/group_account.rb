@@ -69,10 +69,10 @@ class GroupAccount < ActiveRecord::Base
   end
   
   def self.pull_all_data_migrations
-    puts "Pulling Salesforce Accounts..."
-    GroupAccount.pull_salesforce_accounts
-    puts "Pulling Salesforce Campaigns..."
-    Campaign.pull_salesforce_campaigns
+    # puts "Pulling Salesforce Accounts..."
+    # GroupAccount.pull_salesforce_accounts
+    # puts "Pulling Salesforce Campaigns..."
+    # Campaign.pull_salesforce_campaigns
     puts "Pulling Marchex Phone Numbers..."
     PhoneNumber.get_marchex_numbers
     puts "Updating Calls..."
@@ -81,8 +81,8 @@ class GroupAccount < ActiveRecord::Base
     Website.add_websites
     puts "Updating Website Visits..."
     WebsiteVisit.data_pull_websites_visits
-    puts "Pulling Salesforce Keywords..."
-    Keyword.update_keywords_from_salesforce
+    # puts "Pulling Salesforce Keywords..."
+    # Keyword.update_keywords_from_salesforce
     puts "Updating SEO/Ginza Websites"
     SeoCampaign.update_websites_with_ginza
     puts "Updating SEO/Ginza Keywords & Rankings"
@@ -93,8 +93,8 @@ class GroupAccount < ActiveRecord::Base
     # SeoCampaign.update_inbound_links
     # puts "Updating Website Analyses"
     # SeoCampaign.update_website_analyses
-    puts "Updating Map Keywords"
-    MapKeyword.update_keywords_from_salesforce
+    # puts "Updating Map Keywords"
+    # MapKeyword.update_keywords_from_salesforce
     puts "Updating Map Keyword Rankings"
     MapKeyword.update_map_rankings
     puts 'Updating Adwords Campaign Level Reports'
