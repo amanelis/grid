@@ -110,17 +110,25 @@ class CampaignsController < ApplicationController
 
   def update
     authorize! :manipulate_campaign, @campaign
-    if @campaign.is_basic?
-      @campaign.update_attributes(:name => params[:campaign][:name]) ? (flash[:notice] = "Updated!") : (flash[:error] = "Ooops looks like there was an error updating your campaign, try again!")
-    elsif @campaign.is_sem?
-      @campaign.update_attributes(:name => params[:campaign][:name]) && @account.adwords_client.update_attributes(:reference_id => params[:campaign][:adwords_id]) && @campaign.campaign_style.update_attributes(:rake => params[:campaign][:rake])  && @campaign.website.update_attributes(:domain => params[:campaign][:landing_page]) ?  (flash[:notice] = "Updated!") : (flash[:error] = "Ooops looks like there was an error updating your campaign, try again!")
-    elsif @campaign.is_seo?
-      @campaign.update_attributes(:name => params[:campaign][:name]) && @campaign.website.update_attributes(:domain => params[:campaign][:url]) && @campaign.campaign_style.update_attributes(:budget => params[:campaign][:budget]) ? (flash[:notice] = "Updated!") : (flash[:error] = "Ooops looks like there was an error updating your campaign, try again!")
-    end
+    if params[:phone_number_id].present? && params[:new_campaign_id].present?
+      @new_campaign = Campaign.find(params[:new_campaign_id])
+      @new_number   = PhoneNumber.find(params[:phone_number_id])
+      @new_number.campaign = @new_campaign
+      @new_number.save ? (flash[:notice] = "You have successfully changed that number to the new campaign selected") : (flash[:error] = "There was an error updating that number, try again!")
+    else
+    
+      if @campaign.is_basic?
+        @campaign.update_attributes(:name => params[:campaign][:name]) ? (flash[:notice] = "Updated!") : (flash[:error] = "Ooops looks like there was an error updating your campaign, try again!")
+      elsif @campaign.is_sem?
+        @campaign.update_attributes(:name => params[:campaign][:name]) && @account.adwords_client.update_attributes(:reference_id => params[:campaign][:adwords_id]) && @campaign.campaign_style.update_attributes(:rake => params[:campaign][:rake])  && @campaign.website.update_attributes(:domain => params[:campaign][:landing_page]) ?  (flash[:notice] = "Updated!") : (flash[:error] = "Ooops looks like there was an error updating your campaign, try again!")
+      elsif @campaign.is_seo?
+        @campaign.update_attributes(:name => params[:campaign][:name]) && @campaign.website.update_attributes(:domain => params[:campaign][:url]) && @campaign.campaign_style.update_attributes(:budget => params[:campaign][:budget]) ? (flash[:notice] = "Updated!") : (flash[:error] = "Ooops looks like there was an error updating your campaign, try again!")
+      end
 
-    if params[:campaign][:adopting_phone_number].present?
-      @phone_number = PhoneNumber.find(params[:campaign][:adopting_phone_number])
-      @phone_number.update_attribute(:campaign_id, @campaign.id) ? (flash[:notice] = "Phone number assigned!") : (flash[:error] = "There was an error assigning number, please try again!")
+      if params[:campaign][:adopting_phone_number].present?
+        @phone_number = PhoneNumber.find(params[:campaign][:adopting_phone_number])
+        @phone_number.update_attribute(:campaign_id, @campaign.id) ? (flash[:notice] = "Phone number assigned!") : (flash[:error] = "There was an error assigning number, please try again!")
+      end
     end
 
     redirect_to channel_campaign_path(@account, @channel, @campaign)

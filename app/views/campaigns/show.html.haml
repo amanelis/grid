@@ -52,11 +52,9 @@
         = link_to "Create Contact Form", new_channel_campaign_contact_form_path(@account, @channel, @campaign), :rel => "facebox"
 -else
   %header
+    -if can? :manipulate_campaign, @campaign
+      %p.right=# link_to 'Assign Number', orphaned_channel_path(@account, @channel), :class => "submit", :name => "submit"
     .menu
-      - if @campaign.is_seo?
-        -#= link_to "", "#", :rel => "facebox", :title => "Get Tracking Code", :class => 'tiptip iconic tag'
-      - if can? :orphaned, @campaign
-        -#= link_to "", orphaned_account_campaign_path, :title => "Assign Orphaned Number",:class => "tiptip iconic phone submit", :name => "submit"
       -unless @current_user.account_user? && (@campaign.is_seo? || @campaign.is_sem?)
         = link_to "", edit_channel_campaign_path, :rel => "facebox", :title => "Edit Campaign", :class => 'tiptip iconic cog'
     %h1= @campaign.name
