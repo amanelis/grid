@@ -53,7 +53,7 @@ class Campaign < ActiveRecord::Base
     @forwarding_number = a_forwarding_number
   end
   
-  def create_twilio_number(phone_number, name, forward_to)
+  def create_twilio_number(phone_number, name, forward_to, rate_center)
     job_status = JobStatus.create(:name => "Campaign.create_twilio_number")
     begin
       
@@ -66,6 +66,7 @@ class Campaign < ActiveRecord::Base
       #CREATE THE NUMBER IN TWILIO (BASIC INFORMATION)
       d = {'PhoneNumber' => "1#{phone_number}"} if phone_number.length == 10
       d = {'AreaCode' => phone_number} if phone_number.length == 3
+      d = {'RateCenter'} => rate_center} if rate_center.present? && rate_center.length == 3
       resp = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.account.twilio_id}/IncomingPhoneNumbers.json", 'POST', d)
       raise unless resp.kind_of? Net::HTTPSuccess
       
