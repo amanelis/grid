@@ -46,7 +46,7 @@ class AccountsController < ApplicationController
   
   def destroy
     authorize! :manipulate_account, @account
-    @account.update_attributes!(:status => "Inactive") ? (flash[:error] = "There was an error pausing that account, try again!") : (flash[:notice] = "Account is now paused")
+    @account.update_attributes!(:status => "Inactive") ? (flash[:notice] = "Account is now paused") : (flash[:error] = "There was an error pausing that account, try again!")
     redirect_to accounts_path
   end
   
