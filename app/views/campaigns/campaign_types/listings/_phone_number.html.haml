@@ -14,6 +14,6 @@
       - form_tag (channel_campaign_path(@account, @channel, @campaign), :name => 'phone_number', :method => "put") do
         = hidden_field_tag :phone_number_id, number.id
         =# select_tag :new_campaign_id, options_for_select(@account.campaigns.collect{|p| [ p.name, p.id ] }), {:onchange => "this.form.submit();"}
-        = select_tag :new_campaign_id, options_for_select(@account.group_account.campaigns.collect{|p| [ p.name, p.id ] }), {:onchange => "this.form.submit();"}
+        = select_tag :new_campaign_id, options_for_select(@account.group_account.campaigns.collect{|p| [ "#{p.account.name} - #{p.name}", p.id ] }), {:onchange => "this.form.submit();"}
 - else
   You haven't added any phone numbers yet.
