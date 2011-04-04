@@ -129,7 +129,7 @@ class Account < ActiveRecord::Base
     self.receive_weekly_report ||= false
     self.twilio_id ||= ""
     self.customer_lobby_id ||= ""
-    self.weekly_report_mtd ||= true
+    self.weekly_report_mtd ||= false
   end
 
 
