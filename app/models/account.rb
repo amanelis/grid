@@ -126,10 +126,10 @@ class Account < ActiveRecord::Base
     self.main_contact ||= ""
     self.salesforce_id ||= ""
     self.reporting_emails ||= ""
-    self.receive_weekly_report ||= false
+    self.receive_weekly_report = false if self.receive_weekly_report.nil?
     self.twilio_id ||= ""
     self.customer_lobby_id ||= ""
-    self.weekly_report_mtd ||= false
+    self.weekly_report_mtd = false if self.weekly_report_mtd.nil?
   end
 
 

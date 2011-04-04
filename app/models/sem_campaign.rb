@@ -11,7 +11,7 @@ class SemCampaign < ActiveRecord::Base
   
   def initialize_thyself
     self.campaign.initialize_thyself
-    self.mobile ||= false
+    self.mobile = false if self.mobile.nil?
     self.monthly_budget ||= 0.0
     self.rake ||= 0.0
     self.developer_token ||= ""
