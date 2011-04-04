@@ -15,6 +15,8 @@ class KeywordsController < ApplicationController
   
   def show
     datepicker channel_campaign_keyword_path(@account, @channel, @campaign, @keyword)
+    #@start_date = Date.today - 1.month
+    #@end_date   = Date.today - 1.month
     
     if @campaign.is_seo?
       @rankings = @keyword.keyword_rankings.sort { |a,b| b.created_at <=> a.created_at }
