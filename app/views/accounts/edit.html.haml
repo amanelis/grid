@@ -25,6 +25,9 @@
   = select_tag('account_manager', options_for_select([['- Change Account Manager -', "0"]] + @account.group_account.potential_account_managers.collect {|x| [x.name, x.id]}, @account.account_manager.try(:id)))
   %br
   %br
+  = link_to 'Pause this Account', account_path(@account), :class => "button", :confirm => "This will pause this account, are you sure?", :method => :delete
+  %br
   = f.submit "Update"
+  
   
   

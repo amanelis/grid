@@ -45,10 +45,9 @@ class AccountsController < ApplicationController
   end
   
   def destroy
-    destroy! do |failure, success|
-      success.html(:notice => "Yay! Account was successfully deleted!") {redirect_to accounts_path}
-      failure.html(:notice => "Ooops, try again, your account was not deleted!") {redirect_to account_path(@account)}
-    end 
+    authorize! :manipulate_account, @account
+    @account.update_attributes!(:status => "Inactive") ? (flash[:error] = "There was an error pausing that account, try again!") : (flash[:notice] = "Account is now paused")
+    redirect_to accounts_path
   end
   
   def edit

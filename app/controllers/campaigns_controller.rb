@@ -137,8 +137,7 @@ class CampaignsController < ApplicationController
   # We want to change active status not destroy the actual campaign
   def destroy
     authorize! :manipulate_campaign, @campaign
-    @campaign.update_attributes!(:status => "Inactive")
-    flash.now[:error] = "Ooops, there was an error deleting that CAMPAIGN, you might want to try again."
+    @campaign.update_attributes!(:status => "Inactive") ? (flash[:error] = "There was an error pausing that campaign, try again!") : (flash[:notice] = "Campaign is now paused")
     redirect_to account_path(@account)
   end
 
