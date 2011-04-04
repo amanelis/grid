@@ -84,7 +84,7 @@ class AccountsController < ApplicationController
     @daily_total_leads_graph = HighChart.new('graph') do |f|
       f.title(:text => false)  
       f.y_axis({:title=> false, :min => 0, :labels=>{:rotation=>0, :align=>'right'} })
-      f.x_axis(:type => 'datetime', :dateTimeLabelFormats =>{:year => "%Y", :month => "%b %y", :week => "%b %e", :day => "%b %e"})
+      f.x_axis(:type => 'datetime', :maxZoom => 14 * 24 * 3600000, :dateTimeLabelFormats =>{:year => "%Y", :month => "%b %y", :week => "%b %e", :day => "%b %e"})
       f.legend(:enabled => false)
       
       f.chart(:defaultSeriesType => 'area', :backgroundColor => false, :zoomType => "x")

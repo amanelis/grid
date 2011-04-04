@@ -24,7 +24,7 @@ class KeywordsController < ApplicationController
       @daily_keyword_ranking_graph = HighChart.new('graph') do |f|
         f.title(:text => false)  
         f.y_axis({:title=> {:text=> 'Search Engine Rank'}, :min => 0, :labels=>{:align=>'right'} })
-        f.x_axis(:type => 'datetime', :dateTimeLabelFormats =>{:year => "%Y", :month => "%b %y", :week => "%b %e", :day => "%b %e"})
+        f.x_axis(:type => 'datetime', :maxZoom => 14 * 24 * 3600000, :dateTimeLabelFormats =>{:year => "%Y", :month => "%b %y", :week => "%b %e", :day => "%b %e"})
         f.legend(:enabled => true)
     
         f.chart(:defaultSeriesType => 'spline', :backgroundColor => false, :zoomType => "x")
