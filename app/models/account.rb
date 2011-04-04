@@ -557,7 +557,7 @@ class Account < ActiveRecord::Base
   end
 
   def valid_account_manager_information?
-    self.account_manager.try(:valid_account_manager?).to_boolean
+    self.account_manager.try(:valid_account_manager_information?).to_boolean
   end
 
 
