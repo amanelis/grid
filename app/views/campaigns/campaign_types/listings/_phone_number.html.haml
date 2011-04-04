@@ -10,7 +10,7 @@
     %em.quiet
       %a.iconic.arrow-right
       = number_to_phone(number.forward_to)
-    - if can? :manipulate_campaign, @campaign
+    - if can? :manipulate_campaign, @campaign && @campaign == Campaign.orphanage
       - form_tag (channel_campaign_path(@account, @channel, @campaign), :name => 'phone_number', :method => "put") do
         = hidden_field_tag :phone_number_id, number.id
         =# select_tag :new_campaign_id, options_for_select(@account.campaigns.collect{|p| [ p.name, p.id ] }), {:onchange => "this.form.submit();"}
