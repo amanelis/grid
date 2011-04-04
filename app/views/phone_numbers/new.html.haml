@@ -9,6 +9,7 @@
   });
 - form_tag(channel_campaign_phone_numbers_path(@account, @channel, @campaign), :method => :post, :id => "new_phone_number") do
   %header
+    %strong.right.iconic.info
     %h1= "#{@campaign.name} - #{@channel.name}"
     %h2= @account.name
   %article
