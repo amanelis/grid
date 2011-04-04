@@ -26,6 +26,7 @@ class KeywordsController < ApplicationController
         f.y_axis({:title=> {:text=> 'Search Engine Rank'}, :min => 0, :labels=>{:align=>'right'} })
         f.x_axis(:type => 'datetime', :maxZoom => 14 * 24 * 3600000, :dateTimeLabelFormats =>{:year => "%Y", :month => "%b %y", :week => "%b %e", :day => "%b %e"})
         f.legend(:enabled => true)
+        f.plot_options({:marker=> {:enabled=> false}})
     
         f.chart(:defaultSeriesType => 'spline', :backgroundColor => false, :zoomType => "x")
         f.series(:name=> 'Google Ranking', :fillOpacity => '.3', :pointInterval => 24 * 3600 * 1000, :pointStart => @start_date.to_time_in_current_zone.at_beginning_of_day.utc.to_i * 1000, :data => @keyword.daily_most_recent_google_ranking_between(@start_date, @end_date))
