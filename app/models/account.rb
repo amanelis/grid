@@ -557,7 +557,7 @@ class Account < ActiveRecord::Base
   end
 
   def valid_account_manager_information?
-    self.account_manager.present? && self.account_manager.valid_account_manager?
+    self.account_manager.present? && self.account_manager.valid_account_manager_information?
   end
 
 
