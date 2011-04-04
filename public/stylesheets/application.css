@@ -379,7 +379,8 @@ margin-left:12px;
 }
 
 ul{
-list-style-type:none;
+list-style-type: circle;
+margin-left:24px;
 }
 
 #navigation.span-4{
