@@ -187,7 +187,7 @@ class Call < ActiveRecord::Base
   # INITIALIZATION
   
   def initialize_thyself
-    self.review_status = PENDING
+    self.review_status ||= PENDING
   end
   
 

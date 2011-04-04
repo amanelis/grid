@@ -66,12 +66,16 @@ class Submission < ActiveRecord::Base
   # INITIALIZATION
   
   def initialize_thyself
-    self.review_status = PENDING
+    self.review_status ||= PENDING
   end
 
   
   # INSTANCE BEHAVIOR
   
+  def update_if_spam
+    self.update_attribute(:review_status, true) if self.is_spam?
+  end
+
   def update_if_duplicate
     self.update_attribute(:duplicate, true) if self.duplicate_submissions_present?
   end

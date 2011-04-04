@@ -22,11 +22,11 @@ class SubmissionsController < ApplicationController
     @submission.ip_address = request.remote_ip
     @submission.user_agent = request.user_agent
     @submission.time_of_submission = DateTime.now
-    @submission.check_for_spam
     
     if @submission.empty?
       redirect_to params[:submission][:retURL]
     elsif @submission.save
+      @submission.update_if_spam
       # HTTP 200 OK
       if @submission.from_email == "alex.baldwin@cityvoice.com"
         Notifier.deliver_form_submission(@submission)
