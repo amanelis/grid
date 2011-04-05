@@ -73,7 +73,7 @@ class Submission < ActiveRecord::Base
   # INSTANCE BEHAVIOR
   
   def update_if_spam
-    self.update_attribute(:review_status, true) if self.is_spam?
+    self.update_attribute(:review_status, SPAM) if self.is_spam?
   end
 
   def update_if_duplicate
