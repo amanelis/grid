@@ -237,7 +237,7 @@ class Account < ActiveRecord::Base
     self == Account.find_by_name("CityVoice")
   end
 
-  def send_test_weekly_report(email_list, date = Date.today, previous = 0)
+  def send_test_weekly_report(email_list, date = Date.today, previous = self.weekly_report_mtd? ? 0 : 6)
     return if email_list.blank?
     Notifier.deliver_weekly_report(self, email_list, date, previous, [])
   end

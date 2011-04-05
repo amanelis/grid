@@ -44,9 +44,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources   :website_visits,  :member => {:global_visitor => :get}
   map.resources   :calls,           :member => {:collect => :post}
   map.resources   :phone_numbers,   :member => {:connect => :post}
-  map.resources   :searches, :activities, :keywords, :job_statuses, :websites
-  map.resources   :users,         :password_resets
-  map.resource    :submission,    :only => [:index, :create, :show]
+  map.resources   :searches,        :activities, :keywords, :job_statuses, :websites
+  map.resources   :users,           :password_resets
   
   map.with_options :controller => 'home' do |home|
     home.dashboard 'dashboard', :action => 'dashboard'
