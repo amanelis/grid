@@ -20,6 +20,7 @@ ActionController::Routing::Routes.draw do |map|
                                                                                               
   map.form_submit_old     "/submission",                                  :controller => "api/v1/forms",       :action => :submission, :conditions => { :method => :post }
   map.form_thank_old      "/contact_forms/:id/thank_you",                 :controller => "api/v1/forms",       :action => :thank_you
+  map.get_numners         "/accounts/:account_id/channels/:channel_id/campaigns/:campaign_id/phone_numbers/new", :controller => "phone_numbers", :action => :new, :conditions => {:method => [:get, :post]}
   # CUSTOM ROUTES
   
   map.resources :accounts do |account|

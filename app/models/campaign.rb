@@ -53,15 +53,18 @@ class Campaign < ActiveRecord::Base
     @forwarding_number = a_forwarding_number
   end
   
-  def new_twilio_number(area_code, forward_to, name)
+  def get_twilio_numbers(area_code, forward_to, name)
     return false if area_code.blank? || forward_to.blank? || name.blank?
     job_status = JobStatus.create(:name => "Campaign.create_twilio_number")
     
     parameters = {'AreaCode' => area_code.to_s}
-    response   = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{c.account.twilio_id}/AvailablePhoneNumbers/US/Local.json", 'GET', parameters)
+    response   = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.account.twilio_id}/AvailablePhoneNumbers/US/Local.json", 'GET', parameters)
+    raise unless response.kind_of? Net::HTTPSuccess
     
-    JSON.parse(response.body)
-    
+    r = JSON.parse(response.body)
+    m = Array.new
+    h = r["available_phone_numbers"].collect {|x| m << ({:rate_center => x["rate_center"], :phone_number => x["phone_number"], :friendly_number => x["friendly_name"], :recommended => (x["phone_number"].gsub("+1", "")[3..5] ==  forward_to[3..5] ? 0 : 1)}) }
+    return m
   end
   
   # Area_code, campaign_name, forward_to
