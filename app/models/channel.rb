@@ -58,11 +58,11 @@ class Channel < ActiveRecord::Base
   # INSTANCE BEHAVIOR
   
   def number_of_total_leads_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    self.campaigns.to_a.sum { |campaign| campaign.number_of_total_leads_between(start_date, end_date) }
+    self.campaigns.active.to_a.sum { |campaign| campaign.number_of_total_leads_between(start_date, end_date) }
   end
   
   def weighted_cost_per_lead_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    Campaign.weighted_cost_per_lead_for(self.campaigns.to_a, start_date, end_date)
+    Campaign.weighted_cost_per_lead_for(self.campaigns.active.to_a, start_date, end_date)
   end
 
   def set_type_seo
