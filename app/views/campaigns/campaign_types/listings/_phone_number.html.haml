@@ -1,6 +1,6 @@
 .button
   %a.iconic.phone
-  = link_to "Add Phone Number", new_channel_campaign_phone_number_path(@account, @channel, @campaign), :rel => "facebox"
+  = link_to "Add Phone Number", new_channel_campaign_phone_number_path(@account, @channel, @campaign)
 %hr.space
 - unless @campaign.phone_numbers.empty?
   - @campaign.phone_numbers.each do |number|
