@@ -5,7 +5,7 @@
   %h1=@user.email
 %article
   %section
-    %h2 Profile
+    %h2 Account
   - form_for (@user) do |f|
     = f.label "Email"
     %br
@@ -20,25 +20,21 @@
     = f.password_field :password_confirmation, :class => 'title'
     = f.hidden_field :id, :value => @user.id
     %br
-    
-    -# if @user.group_users.any?{|group_user| group_user.account_manager?}
-    - if @user.group_user? || @user.admin?
-      %br
-      %h2 Account Manager Information
-      %label Name  
-      %br
-      %input.title{:id => "manager_name", :name => "manager[name]", :type => "text", :value => @user.group_users.first.try(:name) || ""}
-      %br
-      %br
-      %label Email  
-      %br
-      %input.title{:id => "manager_email", :name => "manager[email]", :type => "text", :value => @user.group_users.first.try(:email) || ""}
-      %br
-      %br
-      %label Phone Number  
-      %br
-      %input.title{:id => "manager_phone", :name => "manager[phone]", :type => "text", :value => number_to_phone(@user.group_users.first.try(:phone_number)) || ""}
-      %br
-      %br
-      =# select_tag 'manager_group_account', options_for_select(@user.group_users.collect(&:group_account).collect(&:name))
+      -# if @user.group_users.any?{|group_user| group_user.account_manager?}
+    %section
+      - if @user.group_user? || @user.admin?
+        %h2 Contact Information
+        %label Name  
+        %br
+        %input.title{:id => "manager_name", :name => "manager[name]", :type => "text", :value => @user.group_users.first.try(:name) || ""}
+        %br
+        %label Email  
+        %br
+        %input.title{:id => "manager_email", :name => "manager[email]", :type => "text", :value => @user.group_users.first.try(:email) || ""}
+        %br
+        %label Phone Number  
+        %br
+        %input.title{:id => "manager_phone", :name => "manager[phone]", :type => "text", :value => number_to_phone(@user.group_users.first.try(:phone_number)) || ""}
+        %br
+        =# select_tag 'manager_group_account', options_for_select(@user.group_users.collect(&:group_account).collect(&:name))
     = f.submit "Save", :class => 'button'
