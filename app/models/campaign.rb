@@ -53,7 +53,19 @@ class Campaign < ActiveRecord::Base
     @forwarding_number = a_forwarding_number
   end
   
-  def create_twilio_number(phone_number, name, forward_to, rate_center)
+  def new_twilio_number(area_code, forward_to, name)
+    return false if area_code.blank? || forward_to.blank? || name.blank?
+    job_status = JobStatus.create(:name => "Campaign.create_twilio_number")
+    
+    parameters = {'AreaCode' => area_code.to_s}
+    response   = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{c.account.twilio_id}/AvailablePhoneNumbers/US/Local.json", 'GET', parameters)
+    
+    JSON.parse(response.body)
+    
+  end
+  
+  # Area_code, campaign_name, forward_to
+  def create_twilio_number(phone_number, name, forward_to)
     job_status = JobStatus.create(:name => "Campaign.create_twilio_number")
     begin
       
@@ -66,7 +78,6 @@ class Campaign < ActiveRecord::Base
       #CREATE THE NUMBER IN TWILIO (BASIC INFORMATION)
       d = {'PhoneNumber' => "1#{phone_number}"} if phone_number.length == 10
       d = {'AreaCode' => phone_number} if phone_number.length == 3
-      d = {'RateCenter' => rate_center} if rate_center.present? && rate_center.length == 3
       resp = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.account.twilio_id}/IncomingPhoneNumbers.json", 'POST', d)
       raise unless resp.kind_of? Net::HTTPSuccess
       
@@ -86,13 +97,6 @@ class Campaign < ActiveRecord::Base
       new_phone_number.save!
       
       # CALL URLS ############################################ 
-=begin
-      call_url          = "http://#{APP_CONFIG[:host]}/phone_numbers/connect/"
-      fallback_url      = "http://#{APP_CONFIG[:host]}/phone_numbers/connect/"
-      status_url        = "http://#{APP_CONFIG[:host]}/phone_numbers/collect/"
-      sms_url           = "http://#{APP_CONFIG[:host]}/phone_numbers/sms_collect/"
-      fallback_sms_url  = "http://#{APP_CONFIG[:host]}/phone_numbers/sms_collect/"
-=end
       phone_number_md5  = Base64.encode64(new_phone_number.inboundno)
       url_friendly_num  = CGI.escape(phone_number_md5)
       call_url          = "http://#{APP_CONFIG[:host]}/api/v1/calls/#{url_friendly_num}/connect"
@@ -100,7 +104,6 @@ class Campaign < ActiveRecord::Base
       status_url        = "http://#{APP_CONFIG[:host]}/api/v1/calls/#{url_friendly_num}/complete"
       sms_url           = "http://#{APP_CONFIG[:host]}/api/v1/calls/#{url_friendly_num}/sms_collect"
       fallback_sms_url  = "http://#{APP_CONFIG[:host]}/api/v1/calls/#{url_friendly_num}/sms_collect"
-      
       
       
       #UPDATE THE TWILIO URLS

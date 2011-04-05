@@ -67,27 +67,5 @@
       = render :partial => 'campaigns/campaign_types/seo'
     - elsif @campaign.is_sem?
       = render :partial => 'campaigns/campaign_types/sem'
-
     = render :partial => 'campaigns/campaign_types/common'
 
-    %section.span-12.colborder
-      %a{ :id => "toggle_calls" }
-        Hide Calls
-      |
-      %a{ :id => "toggle_submissions" }
-        Show Submissions
-
-      = render :partial => 'campaigns/activities/calls'
-      = render :partial => 'campaigns/activities/submissions'
-
-    .span-5.last
-      %h2.subheader Details
-      %div#sidebar
-        .notice
-          %h4.strong Click a lead to see more.
-          %p.quiet Try using the up and down arrows on your keyboard
-      #clicky= text_area_tag 'clicky', @campaign.website.try(:get_clicky_code) if @campaign.is_seo?
-    .span-17
-      %hr.space
-      .pagination= #will_paginate(@activities)
-      %hr.space
