@@ -84,11 +84,11 @@ class AccountsController < ApplicationController
     @daily_total_leads_graph = HighChart.new('graph') do |f|
       f.title(:text => false)  
       f.y_axis({:title=> false, :min => 0, :labels=>{:rotation=>0, :align=>'right'} })
-      f.x_axis(:type => 'datetime', :maxZoom => 14 * 24 * 3600000, :dateTimeLabelFormats =>{:year => "%Y", :month => "%b %y", :week => "%b %e", :day => "%b %e"})
+      f.x_axis(:type => 'datetime', :maxZoom => 14 * 24 * 3600000, :dateTimeLabelFormats =>{:year => "%Y", :month => "%b %y", :week => "%b %e", :day => "%b %e"}, :marker => {:enabled => false})
       f.legend(:enabled => false)
       
       f.chart(:defaultSeriesType => 'area', :backgroundColor => false, :zoomType => "x")
-      f.series(:name=> 'Leads', :fillOpacity => '.3', :pointInterval => 24 * 3600 * 1000, :pointStart => @start_date.to_time_in_current_zone.at_beginning_of_day.utc.to_i * 1000, :data => (@start_date..@end_date).inject([]) { |leads, date| leads << @managed_campaigns.sum { |campaign| campaign.number_of_total_leads_between(date, date) } })
+      f.series(:name=> 'Leads', :marker => {:enabled => false, :states => {:hover => {:enabled => true, :symbol => "circle", :radius => "5", :lineWidth => "1"}}}, :fillOpacity => '.3', :pointInterval => 24 * 3600 * 1000, :pointStart => @start_date.to_time_in_current_zone.at_beginning_of_day.utc.to_i * 1000, :data => (@start_date..@end_date).inject([]) { |leads, date| leads << @managed_campaigns.sum { |campaign| campaign.number_of_total_leads_between(date, date) } })
     end
     
     @campaign_summary_graph = HighChart.new('graph') do |f|
