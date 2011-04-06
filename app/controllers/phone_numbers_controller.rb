@@ -11,7 +11,7 @@ class PhoneNumbersController < ApplicationController
   def new
     authorize! :manipulate_campaign, @campaign
     if request.post?
-      @numbers = @campaign.get_twilio_numbers(params[:phone_number][:area_code], params[:phone_number][:forward_to], @campaign.name)
+      @numbers = @campaign.get_twilio_numbers(params[:phone_number][:area_code])
     end
   end
   

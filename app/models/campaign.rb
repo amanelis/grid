@@ -53,19 +53,97 @@ class Campaign < ActiveRecord::Base
     @forwarding_number = a_forwarding_number
   end
   
-  def get_twilio_numbers(area_code, forward_to, name)
-    return false if area_code.blank? || forward_to.blank? || name.blank?
+  def get_twilio_numbers(area_code)
+    return false if area_code.blank?
     job_status = JobStatus.create(:name => "Campaign.create_twilio_number")
     
+    # Pass in the area code needed to pull a list of available phone numbers in that area
     parameters = {'AreaCode' => area_code.to_s}
+    
+    # This method pulls a list of available phone numbers in the area code you specify
     response   = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.account.twilio_id}/AvailablePhoneNumbers/US/Local.json", 'GET', parameters)
+    
+    # This method actually purchases/provisions a number needed
+    # resp = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.account.twilio_id}/IncomingPhoneNumbers.json", 'POST', d)
+    
+    # Raise on errors, should throw back at least a 200 or 201 reponse of success
     raise unless response.kind_of? Net::HTTPSuccess
     
+    # Parse through the body of the response
     r = JSON.parse(response.body)
+    
+    # We are building an array to make the UI parsing easier of the data brought back from Twilio
     m = Array.new
+    
+    # Nifty method of storing each numbers details as a hash entry on an array
     h = r["available_phone_numbers"].collect {|x| m << ({:rate_center => x["rate_center"], :phone_number => x["phone_number"], :friendly_number => x["friendly_name"], :recommended => (x["phone_number"].gsub("+1", "")[3..5] ==  forward_to[3..5] ? 0 : 1)}) }
     return m
   end
+  
+  def set_twilio_number(area_code, forward_to, name, inboundno)
+    return false if area_code.blank? || forward_to.blank? || name.blank? || inboundno.blank?
+    job_status = JobStatus.create(:name => "Campaign.set_twilio_number")
+    
+    begin
+      # CALL URLS ############################################ 
+      phone_number_md5  = Base64.encode64(inboundno)
+      url_friendly_num  = CGI.escape(phone_number_md5)
+      call_url          = "http://#{APP_CONFIG[:host]}/api/v1/calls/#{url_friendly_num}/connect"
+      fallback_url      = "http://#{APP_CONFIG[:host]}/api/v1/calls/#{url_friendly_num}/connect"
+      status_url        = "http://#{APP_CONFIG[:host]}/api/v1/calls/#{url_friendly_num}/complete"
+      sms_url           = "http://#{APP_CONFIG[:host]}/api/v1/calls/#{url_friendly_num}/sms_collect"
+      fallback_sms_url  = "http://#{APP_CONFIG[:host]}/api/v1/calls/#{url_friendly_num}/sms_collect"
+      
+      # Set up the parameters we will be sending into Twilio, we are requesting the provision of inboundno in this case
+      d = { 'Name' => self.name,
+            'PhoneNumber' => inboundno,
+            'VoiceUrl' => "#{call_url}",
+            'VoiceMethod' => 'POST',
+            'VoiceFallbackUrl' => "#{fallback_url}",
+            'VoiceFallbackMethod' => 'POST',
+            'StatusCallback' => "#{status_url}",
+            'StatusCallbackMethod' => 'POST',
+            'SmsUrl' => "#{sms_url}",
+            'SmsMethod' => 'POST',
+            'SmsFallbackUrl' => "#{fallback_sms_url}",
+            'SmsFallbackMethod' => 'POST',
+            'VoiceCallerIdLookup' => true
+      }
+      
+      # Make API call to twilio, requesting the param[:inboundno]
+      resp = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.account.twilio_id}/IncomingPhoneNumbers.json", 'POST', d)
+      
+      # Catch it if it is no 200/201
+      raise unless resp.kind_of? Net::HTTPSuccess
+      
+      # Grab the twilio response and parse it out
+      r = JSON.parse(resp.body)
+      
+      # This is to check if the number you requested was actually provisioned
+      if r['sid'].present? && r['phone_number'].gsub("+", "") == inboundno
+        new_phone_number = self.phone_numbers.build
+        new_phone_number.twilio_id = r['sid']
+        new_phone_number.inboundno = r['phone_number'].gsub("+", "")
+        new_phone_number.forward_to = forward_to
+        new_phone_number.name = self.name
+        new_phone_number.descript = self.name
+        new_phone_number.twilio_version = API_VERSION
+        new_phone_number.id_callers = true
+        new_phone_number.record_calls = true
+        new_phone_number.transcribe_calls = false
+        new_phone_number.text_calls = false
+        new_phone_number.active = true
+        new_phone_number.save!
+        return true
+      else
+        return false
+      end
+    rescue Exception => ex
+      job_status.finish_with_errors(ex)
+      raise
+    end
+  end
+    
   
   # Area_code, campaign_name, forward_to
   def create_twilio_number(phone_number, name, forward_to)
