@@ -27,6 +27,8 @@
       - @numbers.each do |number|    
         - form_tag(channel_campaign_phone_numbers_path(@account, @channel, @campaign), :method => :post, :id => "new_phone_number") do 
           %input{:id => "phone_number_twilio", :name => "phone_number[twilio]", :type => "hidden", :value => number[:phone_number]}
+          %input{:id => "phone_number_forward_to", :name => "phone_number[forward_to]", :type => "hidden", :value => params[:phone_number][:forward_to]}
+          %input{:id => "phone_number_area_code", :name => "phone_number[area_code]", :type => "hidden", :value => params[:phone_number][:area_code]}
           %tr
             %td= "#{number[:friendly_number]}" 
             %td= "#{number[:rate_center]}"
