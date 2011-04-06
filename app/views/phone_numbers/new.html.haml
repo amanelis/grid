@@ -8,58 +8,40 @@
     });
   });
   
-  
-- if request.post? && @numbers.present?
-  %header
-    %strong.right.iconic.info
-    %h1= "#{@campaign.name} - #{@channel.name}"
-    %h2= @account.name
-
-  %table
-    %thead
-      %tr
-        %th Number
-        %th Rate Center
-        %th Recommended
-        %th Choose
-        
+%header
+  %h1= "#{@campaign.name} - #{@channel.name}"
+  %h2= @account.name
+%article
+  - if request.post? && @numbers.present?
+    %section 
+      %h2 Available Phone Numbers
       - @numbers.sort! { |a,b| a[:recommended] <=> b[:recommended] }
       - @numbers.each do |number|    
         - form_tag(channel_campaign_phone_numbers_path(@account, @channel, @campaign), :method => :post, :id => "new_phone_number") do 
           %input{:id => "phone_number_twilio", :name => "phone_number[twilio]", :type => "hidden", :value => number[:phone_number]}
           %input{:id => "phone_number_forward_to", :name => "phone_number[forward_to]", :type => "hidden", :value => params[:phone_number][:forward_to]}
           %input{:id => "phone_number_area_code", :name => "phone_number[area_code]", :type => "hidden", :value => params[:phone_number][:area_code]}
-          %tr
-            %td= "#{number[:friendly_number]}" 
-            %td= "#{number[:rate_center]}"
-            %td= number[:recommended] == 0 ? "Highly Reccommended" : "Yes"
-            %td 
-              %button{:id => 'create', :class => "button"} Select
-
-- else
-  -# form_tag(channel_campaign_phone_numbers_path(@account, @channel, @campaign), :method => :post, :id => "new_phone_number") do
-  -# form_tag(available_numbers_channel_campaign_phone_number_path(@account, @channel, @campaign, Digest::MD5.hexdigest(Time.now.to_s)), :method => :post, :id => "new_phone_number") do
-  - form_tag(new_channel_campaign_phone_number_path(@account, @channel, @campaign), :method => :post, :id => "new_phone_number") do
-    %header
-      %strong.right.iconic.info
-      %h1= "#{@campaign.name} - #{@channel.name}"
-      %h2= @account.name
-    %article
-      %label Forwarding Number
-      %br
-      %label.small.quiet Where you want all your calls to go to
-      %br
-      %input{:id => "phone_number_forward_to", :name => "phone_number[forward_to]", :type => "text", :placeholder => "2108446400", :class => "title required", :maxlength => "10"}
-      %br
-      %label Area Code
-      %br
-      %label.small.quiet Request a specific area code
-      %br
-      %input{:id => "phone_number_area_code", :name => "phone_number[area_code]", :type => "text", :placeholder => "123", :class => "title required", :maxlength => "3"}
-      %br
-      %br
-      %input{:id => "phone_number_test_call", :name => "phone_number[test_call]", :type => "checkbox"} Send me a test call
-      %input{:id => "phone_number_checksum", :name => "phone_number[checksum]", :type => "hidden", :value => Digest::MD5.hexdigest(Time.now.to_s)}
-    %footer
-      %button{:id => 'create', :class => "button"} Generate Phone Number
-    
+          %span{:title => "Location: #{number[:rate_center]}", :class => "tiptip"}= "#{number[:friendly_number]}" 
+          %button{:id => 'create', :class => "button"} Select
+  - else
+    -# form_tag(channel_campaign_phone_numbers_path(@account, @channel, @campaign), :method => :post, :id => "new_phone_number") do
+    -# form_tag(available_numbers_channel_campaign_phone_number_path(@account, @channel, @campaign, Digest::MD5.hexdigest(Time.now.to_s)), :method => :post, :id => "new_phone_number") do
+    - form_tag(new_channel_campaign_phone_number_path(@account, @channel, @campaign), :method => :post, :id => "new_phone_number") do
+      %section
+        %label Forwarding Number
+        %br
+        %label.small.quiet Where you want all your calls to go to
+        %br
+        %input{:id => "phone_number_forward_to", :name => "phone_number[forward_to]", :type => "text", :placeholder => "2108446400", :class => "title required", :maxlength => "10"}
+        %br
+        %label Area Code
+        %br
+        %label.small.quiet Request a specific area code
+        %br
+        %input{:id => "phone_number_area_code", :name => "phone_number[area_code]", :type => "text", :placeholder => "123", :class => "title required", :maxlength => "3"}
+        %br
+        %input{:id => "phone_number_test_call", :name => "phone_number[test_call]", :type => "checkbox"} Send me a test call
+        %input{:id => "phone_number_checksum", :name => "phone_number[checksum]", :type => "hidden", :value => Digest::MD5.hexdigest(Time.now.to_s)}
+        %br
+        %br
+        %button{:id => 'create', :class => "button"} See Available Numbers
