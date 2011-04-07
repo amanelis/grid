@@ -37,8 +37,8 @@ ActionMailer::Base.smtp_settings = {
   :port => 25,
   :domain => 'cityvoice.com',
   :authentication => :plain,
-  :user_name => 'paul.singh@cityvoice.com',
-  :password => 'c1tyvo1ce'
+  :user_name => 'ben@cityvoice.com',
+  :password => 'Gr1dm41l!'
 }
 
 config.after_initialize do
