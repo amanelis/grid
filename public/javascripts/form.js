@@ -5,7 +5,8 @@ function GridForm() {
   this.auto_resize = false,
   this.frame_id = 'gridForm',
   this.form_id = '',
-  this.custom_text = 'Contact Us!'
+  this.address_field = false,
+	this.custom_text = 'Contact Us!'
   this.initialize = function(params) {
     // Set the parameters
     for(key in params){
@@ -13,7 +14,10 @@ function GridForm() {
     }
   },
   this.frame_url = function() {
-		return 'http://' + this.host + '/api/v1/forms/' + this.form_id + '/get_html';
+		var s = 'http://' + this.host + '/api/v1/forms/' + this.form_id + '/get_html';
+		if(address_field)
+			s += '?address_field=1'
+		return s;
   },
   this.build_frame= function(){
     var scroll='no';
