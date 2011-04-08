@@ -53,7 +53,9 @@ class Campaign < ActiveRecord::Base
     @forwarding_number = a_forwarding_number
   end
   
-  def get_twilio_numbers(area_code)
+  # Ask twilio for a number in this area code and pass in the forward_to 
+  # to recommend a proper number
+  def get_twilio_numbers(area_code, forward_to)
     return false if area_code.blank?
     job_status = JobStatus.create(:name => "Campaign.create_twilio_number")
     
@@ -76,10 +78,12 @@ class Campaign < ActiveRecord::Base
     m = Array.new
     
     # Nifty method of storing each numbers details as a hash entry on an array
-    h = r["available_phone_numbers"].collect {|x| m << ({:rate_center => x["rate_center"], :phone_number => x["phone_number"], :friendly_number => x["friendly_name"], :recommended => (x["phone_number"].gsub("+1", "")[3..5] ==  forward_to[3..5] ? 0 : 1)}) }
+    h = r["available_phone_numbers"].collect {|x| m << ({:rate_center => x["rate_center"], :phone_number => x["phone_number"], :friendly_number => x["friendly_name"], :recommended => (x["phone_number"].gsub("+1", "")[3..5] == forward_to[3..5] ? 0 : 1)}) }
     return m
   end
   
+  # Pass in parameters like so:
+  #  campaign.set_twilio_number("512", "8324834112", "Temp", "15124026450")
   def set_twilio_number(area_code, forward_to, name, inboundno)
     return false if area_code.blank? || forward_to.blank? || name.blank? || inboundno.blank?
     job_status = JobStatus.create(:name => "Campaign.set_twilio_number")

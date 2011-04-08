@@ -24,7 +24,10 @@ class ContactForm < ActiveRecord::Base
   end
 
   def get_form_text
+      
       #form_text += "<tr><td><textarea id=\"home_address\" name=\"submission[home_address]\" onFocus=\"javascript:this.value=\'\'\" style=\"width:100%;\" >Address:</textarea></td></tr>" if self.need_address == true
+      
+      
       #form_text += "<tr><td><select id=\"work_category\" name=\"submission[work_category]\"><option value=\"\">Work Request</option><option value=\"Category 1\">Category 1</option><option value=\"Category 2\">Category 2</option><option value=\"Category 3\">Category 3</option></select></td></tr>" if self.work_category == true
       #form_text += "<tr><td><input id=\"date_requested\" name=\"submission[date_requested]\" type=\"text\" value=\"Preferred Appointment Date:\"  style=\"width:100%;\" onFocus=\"javascript:this.value=\'\'\" /></td></tr>" if self.date_requested == true
       #form_text += "<tr><td><select id=\"time_requested\" name=\"submission[time_requested]\"><option value=\"\">Preferred Appointment Time</option><option value=\"Any\">Any</option><option value=\"ASAP\">ASAP</option><option value=\"8 AM\">8 AM</option><option value=\"9 AM\">9 AM</option><option value=\"10 AM\">10 AM</option><option value=\"Other\">Other</option></select></td></tr>" if self.time_requested == true

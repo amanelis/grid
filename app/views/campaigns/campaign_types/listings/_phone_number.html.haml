@@ -6,7 +6,7 @@
   - @campaign.phone_numbers.each do |number|
     .strong
       %a.iconic.phone
-      = number_to_phone(number.inboundno)
+      = number_to_phone(number.inboundno).gsub(/^1/, "")
     %em.quiet
       %a.iconic.arrow-right
       = number_to_phone(number.forward_to)
