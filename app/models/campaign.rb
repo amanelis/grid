@@ -114,6 +114,9 @@ class Campaign < ActiveRecord::Base
             'VoiceCallerIdLookup' => true
       }
       
+      # We want to make sure we have a twilio_id on this account before we call anytype of API request
+      self.account.create_twilio_subaccount if self.account.twilio_id.blank? || Account.get_active_twilio_subaccounts.none?{|account| account['sid'] == self.account.twilio_id}
+      
       # Make API call to twilio, requesting the param[:inboundno]
       resp = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.account.twilio_id}/IncomingPhoneNumbers.json", 'POST', d)
       
