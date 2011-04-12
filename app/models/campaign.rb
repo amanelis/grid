@@ -69,7 +69,7 @@ class Campaign < ActiveRecord::Base
     # resp = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.account.twilio_id}/IncomingPhoneNumbers.json", 'POST', d)
     
     # Raise on errors, should throw back at least a 200 or 201 reponse of success
-    raise unless response.kind_of? Net::HTTPSuccess
+    # raise unless response.kind_of? Net::HTTPSuccess
     
     # Parse through the body of the response
     r = JSON.parse(response.body)
