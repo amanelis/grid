@@ -34,24 +34,48 @@ class SemCampaign < ActiveRecord::Base
     self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.cost_between(start_date, end_date) }
   end
 
+  def cost_from_ads_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.cost_from_ads_between(start_date, end_date) }
+  end
+
   def clicks_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.clicks_between(start_date, end_date) }
+  end
+
+  def clicks_from_ads_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.clicks_from_ads_between(start_date, end_date) }
   end
 
   def impressions_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.impressions_between(start_date, end_date) }
   end
 
+  def impressions_from_ads_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.impressions_from_ads_between(start_date, end_date) }
+  end
+
   def click_through_rate_between(start_date = Date.yesterday, end_date = Date.yesterday)
     (impressions = self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.impressions_between(start_date, end_date) }) > 0 ? (self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.clicks_between(start_date, end_date) })/impressions.to_f : 0.0
+  end
+
+  def click_through_rate_from_ads_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    (impressions = self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.impressions_from_ads_between(start_date, end_date) }) > 0 ? (self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.clicks_from_ads_between(start_date, end_date) })/impressions.to_f : 0.0
   end
 
   def cost_per_click_between(start_date = Date.yesterday, end_date = Date.yesterday)
     (cost = self.cost_between(start_date, end_date)) > 0 ? self.clicks_between(start_date, end_date) / cost : 0.0
   end
 
+  def cost_per_click_from_ads_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    (cost = self.cost_from_ads_between(start_date, end_date)) > 0 ? self.clicks_from_ads_between(start_date, end_date) / cost : 0.0
+  end
+
   def average_position_between(start_date = Date.yesterday, end_date = Date.yesterday)
     (count = self.google_sem_campaigns.count) > 0 ? self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.average_position_between(start_date, end_date) } / count : 0.0
+  end
+
+  def average_position_from_ads_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    (count = self.google_sem_campaigns.count) > 0 ? self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.average_position_from_ads_between(start_date, end_date) } / count : 0.0
   end
 
   def number_of_visits_by_date
