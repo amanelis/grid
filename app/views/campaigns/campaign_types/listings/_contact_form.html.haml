@@ -10,5 +10,13 @@
       %br
       = text_area_tag 'form', form.generate_js_snippet
       %br
+      HTML Form URL:
+      %br
+      = "http://#{APP_CONFIG[:host]}/api/vi/forms/#{form.id}/get_html"
+      
+      %br
+      %br
+      Form POST URL:
+      %br
   - else
     You haven't added any contact forms yet.
