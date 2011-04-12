@@ -62,6 +62,9 @@ class Campaign < ActiveRecord::Base
     # Pass in the area code needed to pull a list of available phone numbers in that area
     parameters = {'AreaCode' => area_code.to_s}
     
+    # We want to make sure we have a twilio_id on this account before we call anytype of API request
+    self.account.create_twilio_subaccount if self.account.twilio_id.blank? || Account.get_active_twilio_subaccounts.none?{|account| account['sid'] == self.account.twilio_id}
+    
     # This method pulls a list of available phone numbers in the area code you specify
     response   = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN).request("/#{API_VERSION}/Accounts/#{self.account.twilio_id}/AvailablePhoneNumbers/US/Local.json", 'GET', parameters)
     
