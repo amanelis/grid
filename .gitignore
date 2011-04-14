@@ -1,3 +1,4 @@
+.rvmrc
 log
 tmp
 Gemfile.lock
