@@ -221,6 +221,7 @@ class Campaign < ActiveRecord::Base
     form = self.contact_forms.build
     form.forwarding_email = forwarding_email
     form.return_url = "http://#{APP_CONFIG[:host]}/api/v1/forms/#{form.id}/thank_you"
+    form.forwarding_bcc_email = "forms@cityvoice.com"
     form.need_name = true
     form.need_phone = true
     form.need_email = true
