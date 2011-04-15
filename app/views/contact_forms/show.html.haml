@@ -1,2 +1,8 @@
 - @campaign.submissions.each do |submission|
-  = @submission.inspect
+  = @submission.id
+  %br
+  = @submission.from_email
+  %br
+  = @submission.name
+  %br
+  = @submission.work_description
