@@ -41,7 +41,7 @@
         %th.tiptip{:title => ""} From
         %th.tiptip{:title => ""} Name
         %th.tiptip{:title => ""} Phone Number
-        %th.tiptip{:title => ""} Date
+        %th.tiptip{:title => ""} Description
 
     - @campaign.submissions.each do |submission|
       %tbody
@@ -50,5 +50,5 @@
           %td= submission.from_email
           %td= submission.name
           %td= submission.phone_number
-          %td= submission.created_at
+          %td= submission.work_description.truncate(12)
     
