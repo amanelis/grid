@@ -34,3 +34,19 @@
   
   
   %h2 Form Submissions
+  %table
+    %thead
+      %tr
+        %th.tiptip{:title => ""} ID
+        %th.tiptip{:title => ""} From
+        %th.tiptip{:title => ""} Name
+        %th.tiptip{:title => ""} Details
+
+    - @campaign.submissions.each do |submission|
+      %tbody
+        %tr
+          %td= submission.id
+          %td= submission.from_email
+          %td= submission.name
+          %td= link_to "Details", channel_campaign_contact_form_path(@account, @channel, @campaign, submission), :rel => "facebox"
+    
