@@ -22,7 +22,7 @@ class ContactFormsController < ApplicationController
   end
   
   def show
-    @form = ContactForm.find(params[:id])
+    no_layout
   end
   
   def get_html
