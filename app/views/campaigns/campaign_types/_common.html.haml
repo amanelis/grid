@@ -50,5 +50,6 @@
           %td= submission.name
           %td= submission.from_email
           %td= submission.phone_number
-          %td= submission.work_description.truncate(12)
+          %td= submission.work_description
+          =# link_to submission.work_description.truncate(12), "#", :onclick => "call_lightwindow(#{submission.work_description});"
     

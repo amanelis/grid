@@ -32,6 +32,10 @@ function export_client_report(id) {
   window.location = url;
 }
 
+function call_lightwindow(text) {
+	$.facebox(text);
+}
+
 function confirm_export_accounts() {
   var message = '<center>This will export account data to a CSV file, continue?</center><br><center><a href="#" onClick="export_accounts();">Yes</a> or <a href="#" onClick="$.facebox.close();">No</a></center>';
   $.facebox(message);
