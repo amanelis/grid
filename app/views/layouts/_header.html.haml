@@ -15,5 +15,11 @@
 
   /[if IE]
     = stylesheet_link_tag 'ie'
-  = stylesheet_link_tag '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/themes/smoothness/jquery-ui.css', '//smooth-meadow-484.heroku.com/iconic_stroke.css', 'screen', 'application'
-  = javascript_include_tag '//ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js', 'modernizr', 'audiojs/audio.js', 'facebox', 'highcharts', "jquery.tipTip.minified", 'application', 'jquery.flash', 'jquery.validate.min', 'jquery.scrollTo.min'
+  = stylesheet_link_tag '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/themes/smoothness/jquery-ui.css', '//smooth-meadow-484.heroku.com/iconic_stroke.css', 'style', 'superfish'
+  = javascript_include_tag '//ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js', 'modernizr', 'audiojs/audio.js', 'facebox', 'highcharts', "jquery.tipTip.minified", 'application', 'jquery.flash', 'jquery.validate.min', 'jquery.scrollTo.min', 'superfish-1.4.8/js/hoverIntent.js', 'superfish-1.4.8/js/superfish.js', 'http://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js', 'all-in-one'
+  :javascript
+    WebFont.load({
+      google: {
+          families: [ 'Droid Serif:regular,italic', 'Droid Sans:regular,bold', 'Arvo:regular,bold' ]
+      }
+    });

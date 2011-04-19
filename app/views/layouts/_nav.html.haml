@@ -1,36 +1,41 @@
-%nav
-  %ul
+#menu
+  %ul#nav.sf-menu
     - if @current_user
       -# Welcome
-      %li{:class => (request.url.include?("welcome")? 'active' : '')}= link_to "<span class=\"iconic home\"></span> Welcome", welcome_url
+      %li= link_to "Welcome", welcome_url
       -# Dashboard  
-      %li{:class => (request.url.include?("dashboard")? 'active' : '')}= link_to "<span class=\"iconic dial\"></span> Dashboard", dashboard_url
+      %li= link_to "Dashboard", dashboard_url
+      %li
+        %li= link_to @current_user.email, "#"
+        %ul
+          %li.first-sub-link= link_to "My Info", "#"
+          %li.last-sub-link= link_to "Log Out", logout_url
       
       - if @current_user.admin?
         -# Accounts
-        %li{:class => (request.url.include?("accounts")? 'active' : '')}= link_to "<span class=\"iconic book-alt\"></span> Accounts", accounts_url
+        %li= link_to "Accounts", accounts_url
         -# Activities
-        %li{:class => (request.url.include?("activities")? 'active' : '')}= link_to "<span class=\"iconic star\"></span> Leads", activities_url
+        %li= link_to "Leads", activities_url
         -# Searches
-        %li{:class => (request.url.include?("searches")? 'active' : '')}= link_to "<span class=\"iconic magnifying-glass\"></span> Search", searches_url
+        %li= link_to "Search", searches_url
         -# Users
-        %li{:class => (request.url.include?("users")? 'active' : '')}= link_to "<span class=\"iconic user\"></span> Users", users_url
+        %li= link_to "Users", users_url
         -# Jobs
-        %li{:class => (request.url.include?("job_statuses")? 'active' : '')}= link_to "<span class=\"iconic new-window\"></span> Jobs", job_statuses_url
+        %li= link_to "Jobs", job_statuses_url
 
       - else
         - if can? :read, Account
           -# Accounts
-          %li{:class => (request.url.include?("accounts")? 'active' : '')}= link_to "<span class=\"iconic book-alt\"></span> Accounts", accounts_url
+          %li= link_to "Accounts", accounts_url
           -#= @current_user.count == 1 ? (link_to "Channels", accounts_url) : (link_to "Account", accounts_url)
 
         - if @current_user.group_user?
           - if can? :read, Activity
             -# Activities
-            %li{:class => (request.url.include?("activities")? 'active' : '')}= link_to "<span class=\"iconic star\"></span> Leads", activities_url
+            %li= link_to "Leads", activities_url
 
     - else
       -# Register
       -#= link_to "Register", register_path
       -# Log in
-      %li{:class => (request.url.include?("login")? 'active' : '')}= link_to "<span class=\"iconic locked\"></span> Log In", login_url
+      %li= link_to "Log In", login_url

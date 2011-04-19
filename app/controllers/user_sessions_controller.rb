@@ -9,17 +9,17 @@ class UserSessionsController < ApplicationController
   def create
     @user_session = UserSession.new(params[:user_session])
     if @user_session.save
-      flash[:notice] = "Login successful!"
+      flash[:notice] = "<span class=\"success-box\">Congrats, you're logged in now.</span>"
       redirect_to dashboard_url
     else
-      flash[:error] = "Username/password was invalid."
+      flash[:error] = "<span class=\"error-box\">Username or password isn't working.</span"
       render :action => :new
     end
   end
   
   def destroy
     current_user_session.destroy
-    flash[:notice] = "Logout successful!"
+    flash[:notice] = "<span class=\"success-box\">You are now officially logged out.</span>"
     redirect_to login_url
   end
 end

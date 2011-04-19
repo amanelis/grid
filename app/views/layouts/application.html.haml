@@ -1,22 +1,15 @@
 =render :partial => "layouts/header"
 %body
-  .container#wrapper
-    %header#toolbar
-      = link_to "CityVoice", dashboard_path, :id => "logo"
-      - if @current_user
-        %ul
-          %li
-            %a{:href => "#", :id => "showinfo"}=@current_user.email
-        %div{:id => "info", :style => "display: none;"}
-          %ul
-            %li= link_to "My Info", edit_user_path(@current_user)
-            %li= link_to 'Logout', logout_path, :method => :delete, :id => "logout"
-
-    =render :partial => "layouts/flash", :locals => { :flash => flash }
-    #navigation.span-4
-      =render :partial => "layouts/nav"
-    %section#content.span-20.last
-      #yield
-        = yield
-        %hr.space
-    %footer.app=render :partial => "layouts/footer"
+  #main
+    .container
+      #header
+        #logo
+          = link_to image_tag('logo.png'), dashboard_path
+          %h1 Grid
+          %small Cityvoice
+        =render :partial => "layouts/nav"
+  #content
+    .container
+      =render :partial => "layouts/flash", :locals => { :flash => flash }
+      = yield
+  =render :partial => "layouts/footer"
