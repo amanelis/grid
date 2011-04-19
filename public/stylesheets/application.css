@@ -278,6 +278,7 @@ margin-bottom:12px;
 -webkit-border-radius: 0 0 4px 4px;
    -moz-border-radius: 0 0 4px 4px;
         border-radius: 0 0 4px 4px;
+  position: relative;
 }
 
 #toolbar ul{
@@ -308,6 +309,26 @@ margin-left:12px;
 	text-decoration:none;
 }
 
+#info {
+  width: 150px;
+  background-color:#5D504F;
+  -webkit-border-radius: 4px 4px 4px 4px;
+   -moz-border-radius: 4px 4px 4px 4px;
+        border-radius: 4px 4px 4px 4px;
+  position: absolute;
+  margin: 0;
+  right: 0;
+  z-index: 100;
+  top: 100%;
+}
+
+#info ul {
+}
+
+#info ul li {
+  display: block;
+}
+
 #logo{
 font-weight:bold;
 font-size:24px;
@@ -320,7 +341,7 @@ transition: all .2s ease;
 }
 
 #logo:hover{
-	opacity:.5;	
+	opacity:.5;
 }
 
 /*

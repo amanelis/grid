@@ -5,8 +5,13 @@
       = link_to "CityVoice", dashboard_path, :id => "logo"
       - if @current_user
         %ul
-          %li= link_to "My Info", edit_user_path(@current_user)
-          %li= link_to 'Logout', logout_path, :method => :delete, :id => "logout"
+          %li
+            %a{:href => "#", :id => "showinfo"}=@current_user.email
+        %div{:id => "info", :style => "display: none;"}
+          %ul
+            %li= link_to "My Info", edit_user_path(@current_user)
+            %li= link_to 'Logout', logout_path, :method => :delete, :id => "logout"
+
     =render :partial => "layouts/flash", :locals => { :flash => flash }
     #navigation.span-4
       =render :partial => "layouts/nav"
