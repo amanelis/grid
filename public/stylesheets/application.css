@@ -323,10 +323,16 @@ margin-left:12px;
 }
 
 #info ul {
+  list-style-type: none;
+  float: none;
 }
 
 #info ul li {
   display: block;
+  float: none;
+  margin-left: 20px;
+  height: 30px;
+  padding-bottom: 14px;
 }
 
 #logo{

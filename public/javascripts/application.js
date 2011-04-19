@@ -6,7 +6,7 @@ $(document).ready(function($) {
   $('.tiptip').tipTip();
   $(".container").tipTip({maxWidth: "auto", edgeOffset: 10 });
   $("#showinfo").click(function(){
-    $("#info").toggle();
+    $("#info").toggle('blind', 500);
     return false;
   })
 })
