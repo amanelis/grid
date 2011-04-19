@@ -34,6 +34,14 @@ class SemCampaign < ActiveRecord::Base
     self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.spend_from_ads_between(start_date, end_date) }
   end
 
+  def total_spend_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.total_spend_between(start_date, end_date) }
+  end
+
+  def total_spend_from_ads_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.total_spend_from_ads_between(start_date, end_date) }
+  end
+
   def cost_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.cost_between(start_date, end_date) }
   end

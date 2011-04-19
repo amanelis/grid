@@ -79,26 +79,32 @@ class Channel < ActiveRecord::Base
 
   # INSTANCE BEHAVIOR
   
+  def current_month
+    Date.today.day < self.cycle_start_day ? Date.today.month - 1 : Date.today.month
+  end
+  
   def current_budget
-    self.budget_for(Date.today.day < self.cycle_start_day ? Date.today.month - 1 : Date.today.month)
+    self.budget_for(self.current_month)
   end
   
   def current_base_budget
-    self.base_budget_for(Date.today.day < self.cycle_start_day ? Date.today.month - 1 : Date.today.month)
+    self.base_budget_for(self.current_month)
   end
   
   def current_infusions
-    self.infusions_for(Date.today.day < self.cycle_start_day ? Date.today.month - 1 : Date.today.month)
+    self.infusions_for(self.current_month)
   end
   
-  def current_rake
-    self.rake_for(Date.today.day < self.cycle_start_day ? Date.today.month - 1 : Date.today.month)
+  def current_rake_percentage
+    self.rake_for
+  end
+  
+  def current_cost
+    self.cost_for(self.current_month)
   end
   
   def budget_for(month = Date.today.month, year = Date.today.year)
-    start_date = Date.civil(year, month, self.cycle_start_day)
-    end_date = start_date + 1.month - 1.day
-    self.budget_settings.upto(end_date).last.amount + self.budget_infusions.between(start_date, end_date).to_a.sum(&:amount)
+    self.base_budget_for(month, year) + self.infusions_for(month, year)
   end
   
   def base_budget_for(month = Date.today.month, year = Date.today.year)
@@ -112,11 +118,22 @@ class Channel < ActiveRecord::Base
     self.budget_infusions.between(start_date, end_date).to_a.sum(&:amount)
   end
   
-  def rake_for(month = Date.today.month, year = Date.today.year)
-    end_date = Date.civil(year, month, self.cycle_start_day) + 1.month - 1.day
-    self.rake_settings.upto(end_date).last.percentage / 100.0
+  def rake_percentage_for(date = Date.today)
+    self.rake_settings.upto(date).last.try(:percentage) || 0
   end
   
+  def cost_for(month = Date.today.month, year = Date.today.year)
+    start_date = Date.civil(year, month, self.cycle_start_day)
+    end_date = start_date + 1.month - 1.day
+    self.campaigns.active.select(&:is_sem?).collect(&:campaign_style).sum { |sem_campaign| sem_campaign.cost_between(start_date, end_date) }
+  end
+
+  def spend_for(month = Date.today.month, year = Date.today.year)
+    start_date = Date.civil(year, month, self.cycle_start_day)
+    end_date = start_date + 1.month - 1.day
+    self.campaigns.active.select(&:is_sem?).collect(&:campaign_style).sum { |sem_campaign| sem_campaign.total_spend_between(start_date, end_date) }
+  end
+
   def number_of_total_leads_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.active.to_a.sum { |campaign| campaign.number_of_total_leads_between(start_date, end_date) }
   end
