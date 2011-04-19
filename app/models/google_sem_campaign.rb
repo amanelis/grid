@@ -660,6 +660,10 @@ class GoogleSemCampaign < ActiveRecord::Base
   def rake
     (rake = self.sem_campaign.rake).present? ? rake : 0.0
   end
+  
+  def rake_percentage_for(date = Date.today)
+    self.sem_campaign.channel.rake_percentage_for(date)
+  end
 
   def spend_between(start_date = Date.yesterday, end_date = Date.yesterday)
     (self.cost_between(start_date, end_date) * 100.0) / (100.0 - self.rake)
@@ -667,6 +671,14 @@ class GoogleSemCampaign < ActiveRecord::Base
 
   def spend_from_ads_between(start_date = Date.yesterday, end_date = Date.yesterday)
     (self.cost_from_ads_between(start_date, end_date) * 100.0) / (100.0 - self.rake)
+  end
+
+  def total_spend_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    (start_date..end_date).sum { |date| (self.cost_between(date, date) * 100.0) / (100.0 - self.rake_percentage_for(date)) }
+  end
+
+  def total_spend_from_ads_between(start_date = Date.yesterday, end_date = Date.yesterday)
+    (start_date..end_date).sum { |date| (self.cost_from_ads_between(date, date) * 100.0) / (100.0 - self.rake_percentage_for(date)) }
   end
 
   def cost_between(start_date = Date.yesterday, end_date = Date.yesterday)

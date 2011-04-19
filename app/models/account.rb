@@ -538,6 +538,18 @@ class Account < ActiveRecord::Base
     self.basic_campaigns.each { |basic_campaign| basic_campaign.channel = basic_channel ; basic_campaign.save! }
     basic_channel
   end
+  
+  def default_seo_channel
+    Channel.default_seo_channel_for(self)
+  end
+
+  def default_sem_channel
+    Channel.default_sem_channel_for(self)
+  end
+
+  def default_basic_channel
+    Channel.default_basic_channel_for(self)
+  end
 
   def account_manager_name
     self.valid_account_manager_information? ? self.account_manager.name : "your account manager"
