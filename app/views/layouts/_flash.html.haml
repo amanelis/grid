@@ -1,6 +1,9 @@
 :javascript
   $(document).ready(function () {
-    $("div#[id*='flash']").show('blind', 800).delay(2000).hide('blind', 800);
+    $("div#[id*='flash']").show('blind', 800);
+    $("div#[id*='flash']").click(function(){
+      $("div#[id*='flash']").hide('blind', 800);
+    })
   });
 - flash.each do |name, msg|
   %article= content_tag :div, msg, :id => "flash_#{name}"
