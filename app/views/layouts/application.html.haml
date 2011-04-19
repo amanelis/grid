@@ -8,6 +8,10 @@
           %h1 Grid
           %small Cityvoice
         =render :partial => "layouts/nav"
+  #crumbs
+    .container
+      %span.crumb-links
+        = yield :crumb
   #content
     .container
       =render :partial => "layouts/flash", :locals => { :flash => flash }

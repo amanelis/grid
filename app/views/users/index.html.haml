@@ -1,36 +1,35 @@
-%header       
-  %h1 Users
-%article
-  %table
-    %thead
+= content_for :crumb do
+  Users
+%table
+  %thead
+    %tr
+      %th User
+      %th Details
+      %th Type
+  %tbody
+    - @users.each do |user|
       %tr
-        %th User
-        %th Details
-        %th Type
-    %tbody
-      - @users.each do |user|
-        %tr
-          %td
-            = link_to user.email, edit_user_path(user)
-            %br
-            %small
-              Last activity
-              = user.last_request_at.nil? ? "Has Not logged in" : time_ago_in_words(user.last_request_at)
-              ago
-          %td
-            Joined
-            = time_ago_in_words(user.created_at)
+        %td
+          = link_to user.email, edit_user_path(user)
+          %br
+          %small
+            Last activity
+            = user.last_request_at.nil? ? "Has Not logged in" : time_ago_in_words(user.last_request_at)
             ago
-          %td
-            - if user.admin?
-              = "Admin"
-            - elsif user.group_user?
-              - if user.group_users.collect(&:manipulator).include?(true)
-                = "GUW"
-              - else
-                = "GUR"
-            - elsif user.account_user?
-              - if user.account_users.collect(&:manipulator).include?(true)
-                = "AUW"
-              - else
-                = "AUR"
+        %td
+          Joined
+          = time_ago_in_words(user.created_at)
+          ago
+        %td
+          - if user.admin?
+            = "Admin"
+          - elsif user.group_user?
+            - if user.group_users.collect(&:manipulator).include?(true)
+              = "GUW"
+            - else
+              = "GUR"
+          - elsif user.account_user?
+            - if user.account_users.collect(&:manipulator).include?(true)
+              = "AUW"
+            - else
+              = "AUR"

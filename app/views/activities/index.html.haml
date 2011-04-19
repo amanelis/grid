@@ -1,3 +1,5 @@
+= content_for :crumb do
+  Leads
 = javascript_include_tag 'jquery.mapkey.js'
 
 :javascript
@@ -67,32 +69,21 @@
     $("#sidebar").load('http://#{APP_CONFIG[:host]}/activities/'+current_id);
   }
 
-%header
-  %h1 Leads
-%article.span-12.colborder
-  -#%p.strong
-    -#Filter by
-    -#= link_to "Calls", "#"
-    -#= link_to "Forms", "#"
-    -#= link_to "Most Recent", "#"
-  -#%hr
-  %div{:id => "activities_scroll_pane", :style => "height: 500px; overflow: auto;"}
-    %table#activities.small
-      %thead
-        %tr
-          %th Type
-          %th Campaign
-          %th From
-          %th Time
-      %tbody
-        - for activity in @activities
-          = render activity, :locals => {:activity => activity}
-.span-5.last
-  %h2.subheader Details
-  %div#sidebar
-    .notice
-      %h4.strong Click a lead to see more.
-      %p.quiet Try using the up and down arrows on your keyboard
-.span-17
-  %hr.space
-  .pagination= will_paginate(@activities)
+%table#activities.small
+  %thead
+    %tr
+      %th Type
+      %th Campaign
+      %th From
+      %th Time
+  %tbody
+    - for activity in @activities
+      = render activity, :locals => {:activity => activity}
+
+%h2.subheader Details
+%div#sidebar
+  .notice
+    %h4.strong Click a lead to see more.
+    %p.quiet Try using the up and down arrows on your keyboard
+.separator
+.pagination= will_paginate(@activities)

@@ -1,3 +1,6 @@
+= content_for :crumb do
+  Dashboard
+  
 - if params[:q] == 'real'
   :javascript
     jQuery.ajaxSetup({
@@ -14,42 +17,19 @@
     }
     
 - if @user
-  - if @user.admin?
-    %header
-      %h1 Dashboard
-    %article
-      .stats
-        %aside
-          %p Total Accounts
-          %h3#active_accounts= @accounts_count
-        %aside
-          %p Total Users
-          %h3#users= @users_count
-        %aside
-          %p Leads Today
-          %h3#leads= @leads_count
-      %hr.space
-      =high_chart("total_daily_leads", @total_daily_leads)
-
-  -elsif @user.group_user? 
-    %header
-      %h1 Dashboard
-    %article 
-      .stats
-        %aside
-          %p Active Accounts
-          %h3#active_accounts= @active_accounts_count
-        %aside
-          %p Total Users
-          %h3#users= @users_count
-        %aside
-          %p Leads Today
-          %h3#leads= @leads_count
-        %hr.space
-        =high_chart("total_daily_leads", @total_daily_leads)     
-        
-  - elsif @user.account_user?
-    %header
-      %h1 Dashboard
-    %article 
-      =high_chart("total_daily_leads", @total_daily_leads)
+  - if @user.account_user?
+    =high_chart("total_daily_leads", @total_daily_leads)
+  
+  - else
+    .center
+      .column-3
+        %h3 Active Accounts
+        %h1= @active_accounts_count
+      .column-3
+        %h3 Total Users
+        %h1= @users_count
+      .column-3-last
+        %h3 Leads Today
+        %h1= @leads_count
+    .separator
+    =high_chart("total_daily_leads", @total_daily_leads)

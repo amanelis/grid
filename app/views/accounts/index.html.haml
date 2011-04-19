@@ -1,31 +1,42 @@
-%header
-  - if @current_user.manipulable_group_accounts.present?
-    .menu
-      %a{:onclick => "confirm_refresh_accounts();", :title => "Refresh from SalesForce", :class => "tiptip iconic spin"}
-      = link_to "", new_account_path, :rel => "facebox", :title => "Add Account", :class => "tiptip iconic plus-alt"
-  %h1 Accounts
-  %h2= (Date.yesterday - 30.day).to_s(:long) + ' to ' + (Date.yesterday).to_s(:long)
-%article
-  %form{:href => '/', :action => "accounts", :id => 'index', :name => 'index', :method => 'GET'}
-    %label Status
+:javascript
+  $(function() {
+          /** This code runs when everything has been loaded on the page */
+          /* Inline sparklines take their values from the contents of the tag */
+          $('.inlinesparkline').sparkline(); 
+      });
+= content_for :crumb do
+  Accounts
+  
+- if @current_user.manipulable_group_accounts.present?
+  %form.right{:href => '/', :action => "accounts", :id => 'index', :name => 'index', :method => 'GET'}
     %select{:id => :account_status, :name => :account_status}
       - for status in @accounts_statuses
         %option{:selected => status == @passed_status}= status
     %input{:type => 'submit', :value => 'Sort'}
-  %table
-    %thead
+  %span.green-btn= link_to "Add Account", new_account_path, :rel => "facebox"
+  %span.silver-btn  
+    %a{:onclick => "confirm_refresh_accounts();", :title => "Refresh from SalesForce"} Refresh
+-#%h2= (Date.yesterday - 30.day).to_s(:long) + ' to ' + (Date.yesterday).to_s(:long)
+%br
+%br
+.separator
+
+%table
+  %thead
+    %tr
+      %th Account
+      %th Leads
+      -#%th Manager
+  %tbody
+    - @accounts.each do |account|
       %tr
-        %th Account
-        %th Leads
-        -#%th Manager
-    %tbody
-      - @accounts.each do |account|
-        %tr
-          %td
-            -account_data = @accounts_data[account.id]
-            -account_type = account.account_type
-            = link_to account.name, account_path(account)
-            - if account_data.present?
-              .right= image_tag(Gchart.sparkline(:data => account_data[:leads_by_day], :size => '80x15', :line_colors => '0077CC', :background => "00000000"))
-          %td= account_data.present? ? account_data[:leads] : 0
-          -#%td= select_tag(:account_manager, account.group_account.group_users.select{|group_user| group_user.email.present?})
+        %td
+          -account_data = @accounts_data[account.id]
+          -account_type = account.account_type
+          = link_to account.name, account_path(account)
+          - if account_data.present?
+            %span.inlinesparkline.right= account_data[:leads_by_day].join(",")
+            -#.right= image_tag(Gchart.sparkline(:data => account_data[:leads_by_day], :size => '80x15', :line_colors => '0077CC', :background => "00000000"))
+        %td= account_data.present? ? account_data[:leads] : 0
+
+        -#%td= select_tag(:account_manager, account.group_account.group_users.select{|group_user| group_user.email.present?})

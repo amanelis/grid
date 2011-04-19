@@ -1,41 +1,43 @@
+= content_for :crumb do
+  = link_to "Accounts", accounts_path
+  >
+  = @account.name
 
-%header
-  - if can? :manipulate_account, @account
-    .menu
-      = link_to "", "#",:title => "Pause Account", :class => 'tiptip iconic clock'
-      = link_to "", "#", :onclick => "confirm_export_report(#{params[:id]});", :title => "Export to PDF", :class => "tiptip iconic document"
-      = link_to "", new_account_user_path(@account), :rel => "facebox", :title => "Add User", :class => 'tiptip iconic user'
-      = link_to "", edit_account_path, :rel => "facebox", :title => "Edit Account", :class => 'tiptip iconic pencil'
-      - if @account.can_send_weekly_report_now?
-        = link_to "", send_weekly_path(params[:id]), :title => "Send Test Email", :class => "tiptip iconic mail-alt"
-  %h1= @account.name
-  %datepicker= render :partial => "shared/date_picker"
+%h1= @account.name
+.datepicker= render :partial => "shared/date_picker"
+- if can? :manipulate_account, @account
+  %span.silver-btn= link_to "Pause Account", "#",:title => "Pause Account"
+  %span.silver-btn= link_to "Export to PDF", "#", :onclick => "confirm_export_report(#{params[:id]});"
+  %span.silver-btn= link_to "Add User", new_account_user_path(@account), :rel => "facebox"
+  %span.silver-btn= link_to "Edit Account", edit_account_path, :rel => "facebox"
+  - if @account.can_send_weekly_report_now?
+    %span.silver-btn= link_to "Send Test Email", send_weekly_path(params[:id])
 
-
-%article
-  - unless @current_user.account_user?
-    =high_chart("total_daily_leads_graph", @daily_total_leads_graph)
-  %hr
-
-  -# SEO #####################################################################################################################
-  - @seo_channels.each do |channel|
-    %table.channels
-      %thead
-        %tr
-          %th.name
-            -#= link_to channel.name, channel_path(@account, channel)
-            = channel.name
-            - if can? :manipulate_account, @account
-              -#= link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
-              = link_to "", new_channel_campaign_path(@account, channel), :title => "Add new campaign to this channel", :class => "tiptip iconic plus", :rel => "facebox"
-          %th.leads
-            = channel.number_of_total_leads_between(@start_date, @end_date)
-            Leads
-          %th.cpl
-            = ActionController::Base.helpers.number_to_currency(channel.weighted_cost_per_lead_between(@start_date, @end_date))
-            CPL
-      - channel.campaigns.active.each do |campaign|
-        = render :partial => 'accounts/channel_campaign', :locals => {:campaign => campaign, :channel => channel}
+- unless @current_user.account_user?
+  %br
+  %br
+  .separator
+  =high_chart("total_daily_leads_graph", @daily_total_leads_graph)
+.separator
+-# SEO #####################################################################################################################
+- @seo_channels.each do |channel|
+  %table.channels
+    %thead
+      %tr
+        %th.name
+          -#= link_to channel.name, channel_path(@account, channel)
+          = channel.name
+          - if can? :manipulate_account, @account
+            -#= link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
+            = link_to "", new_channel_campaign_path(@account, channel), :title => "Add new campaign to this channel", :class => "tiptip iconic plus", :rel => "facebox"
+        %th.leads
+          = channel.number_of_total_leads_between(@start_date, @end_date)
+          Leads
+        %th.cpl
+          = ActionController::Base.helpers.number_to_currency(channel.weighted_cost_per_lead_between(@start_date, @end_date))
+          CPL
+    - channel.campaigns.active.each do |campaign|
+      = render :partial => 'accounts/channel_campaign', :locals => {:campaign => campaign, :channel => channel}
 
   -# SEM #####################################################################################################################
   - @sem_channels.each do |channel|
@@ -79,4 +81,4 @@
 
   -# FOOTER ##################################################################################################################
   - if can? :manipulate_account, @account
-    = link_to "Create Channel", new_channel_path(@account), :class => "button", :rel => "facebox"
+    %span.green-btn= link_to "Create Channel", new_channel_path(@account), :class => "button", :rel => "facebox"

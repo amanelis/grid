@@ -1,31 +1,30 @@
-%header
-  %h1 Jobs
-%article
-  %table.jobs
-    %thead
+= content_for :crumb do
+  Jobs
+%table.jobs
+  %thead
+    %tr
+      %th Name
+      %th Logged
+      %th Duration
+      %th Status
+  %tbody
+    - @job_statuses.each do |job|
       %tr
-        %th Name
-        %th Logged
-        %th Duration
-        %th Status
-    %tbody
-      - @job_statuses.each do |job|
-        %tr
-          %td= link_to job.name, job_status_path(job)
-          %td= time_ago_in_words(job.created_at) + " ago"
-          %td
-            -if job.end_time
-              = "#{(job.end_time - job.start_time).to_i} seconds"
-            -else
-              = "---"
-          %td
-            -if job.status == JobStatus::RUNNING
-              = "Running"
-            -elsif job.status == JobStatus::FINISHED_NO_ERRORS
-              = "Finished"
-            -elsif job.status == JobStatus::FINISHED_WITH_ERRORS
-              = "-Errors-"
-            -else
-              = "Unknown"
-  %hr
-  = will_paginate(@activities)
+        %td= link_to job.name, job_status_path(job)
+        %td= time_ago_in_words(job.created_at) + " ago"
+        %td
+          -if job.end_time
+            = "#{(job.end_time - job.start_time).to_i} seconds"
+          -else
+            = "---"
+        %td
+          -if job.status == JobStatus::RUNNING
+            = "Running"
+          -elsif job.status == JobStatus::FINISHED_NO_ERRORS
+            = "Finished"
+          -elsif job.status == JobStatus::FINISHED_WITH_ERRORS
+            = "-Errors-"
+          -else
+            = "Unknown"
+.separator
+= will_paginate(@activities)
