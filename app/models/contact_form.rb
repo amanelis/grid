@@ -1,6 +1,8 @@
 class ContactForm < ActiveRecord::Base
   belongs_to :campaign
   has_many :submissions, :dependent => :destroy
+  
+  validates_presence_of :forwarding_email
 
 
   # INSTANCE BEHAVIOR

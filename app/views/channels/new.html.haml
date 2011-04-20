@@ -19,12 +19,35 @@
       %label Name
       = f.text_field :name, :class => 'required title'
       %br
+      %label Cycle Start Day
+      %input.title{:id => "channel_cycle_start_day", :name => "channel[cycle_start_day]", :class => "text required"}
+      %br
       %label Type
+      %br
       %select{:id => 'channel_type', :name => 'channel[channel_type]', :class => 'required'}
         %option{:value => ''} - Choose a Type -
         %option{:value => 'seo'} SEO Channel
         %option{:value => 'sem'} SEM Channel
         %option{:value => 'basic'} Basic Channel
+
+      %br
+      %br
+      %label Budget Amount
+      %input.title{:id => "budget_amount", :name => "budget[amount]", :class => "text required"}
+      %br
+      %label Budget Start Date
+      %input.title{:id => "budget_start_date", :name => "budget[start_date]", :class => "text required"}
+      %br
+      
+      %label Rake Percentage
+      %input.title{:id => "rake_percentage", :name => "rake[percentage]", :class => "text required"}
+      %br
+      %label Rake Start Date
+      %input.title{:id => "rake_start_date", :name => "rake[start_date]", :class => "text required"}
+      %br
+      
+      
+      %hr
 %footer
   #submit
     = link_to "Cancel", "", :class => "cancel", :id => 'cancel'
