@@ -7,9 +7,12 @@
       - if @current_user.admin?
         %li= link_to "Accounts", accounts_url
         %li= link_to "Leads", activities_url
-        %li= link_to "Search", searches_url
-        %li= link_to "Users", users_url
-        %li= link_to "Jobs", job_statuses_url
+        %li
+          = link_to "Admin", "#"
+          %ul
+            %li.first-sub-link= link_to "Search", searches_url
+            %li= link_to "Users", users_url
+            %li.last-sub-link= link_to "Jobs", job_statuses_url
 
       - else
         - if can? :read, Account

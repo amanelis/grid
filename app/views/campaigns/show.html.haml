@@ -1,11 +1,8 @@
 - if @campaign.phone_numbers.empty? && @campaign.contact_forms.empty?
-  %article.blank
-    .prepend-1.span-4= image_tag("icons/blank_campaign.png")
-    .span-14.append-1.last
-      %h1.strong Make your campaign go somewhere
-      %h2.quiet Campaigns are the glue that connect people to your business. How customers get a hold of you affects how you track leads. Start tracking your campaign by adding a forwarding number or generating a form for a website.
-      %br
-      = render :partial => 'campaigns/campaign_types/listings/buttons'
+  %h2 Make your campaign go somewhere
+  %h3 Campaigns are the glue that connect people to your business. How customers get a hold of you affects how you track leads. Start tracking your campaign by adding a forwarding number or generating a form for a website.
+  .separator
+  = render :partial => 'campaigns/campaign_types/listings/buttons'
 -else
   %header
     -if can? :manipulate_campaign, @campaign
