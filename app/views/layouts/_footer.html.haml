@@ -1,14 +1,12 @@
 #footer
   .container
     .wrapper
-      .column-2
-        %h5 Column 2
-      .column-4
-        %h5 Column 4
-      .column-4-last
-        %h5 Column 4 Last
+      %h2 Having trouble? Let us know so we can fix it. <3 Grid Team
     #copyright
-      %p &copy; 2011 CityVoice. All Rights Reserved.
+      %p 
+        &copy; 2011 
+        = link_to "CityVoice.", "http://cityvoice.com" 
+        All Rights Reserved.
       #back-top
         %p=mail_to "alex.baldwin@cityvoice.com", "Help", :subject => "Grid Feedback/Support"
 - if RAILS_ENV == "production"

@@ -1,22 +1,29 @@
+= content_for :crumb do
+  = link_to "Accounts", accounts_path
+  >
+  = link_to @account.name, account_path(@account)
+  >
+  = link_to @channel.name, channel_path(@account, @channel)
+  >
+  = @campaign.name
 - if @campaign.phone_numbers.empty? && @campaign.contact_forms.empty?
   %h2 Make your campaign go somewhere
   %h3 Campaigns are the glue that connect people to your business. How customers get a hold of you affects how you track leads. Start tracking your campaign by adding a forwarding number or generating a form for a website.
   .separator
   = render :partial => 'campaigns/campaign_types/listings/buttons'
 -else
-  %header
-    -if can? :manipulate_campaign, @campaign
-      %p.right=# link_to 'Assign Number', orphaned_channel_path(@account, @channel), :class => "submit", :name => "submit"
-    .menu
-      -unless @current_user.account_user? && (@campaign.is_seo? || @campaign.is_sem?)
-        = link_to "", edit_channel_campaign_path, :rel => "facebox", :title => "Edit Campaign", :class => 'tiptip iconic cog'
-    %h1= @campaign.name
-    %h2.quiet= link_to @account.name, account_path(@account)
-    %datepicker= render :partial => "shared/date_picker"
-  %article
-    - if @campaign.is_seo?
-      = render :partial => 'campaigns/campaign_types/seo'
-    - elsif @campaign.is_sem?
-      = render :partial => 'campaigns/campaign_types/sem'
-    = render :partial => 'campaigns/campaign_types/common'
+  -if can? :manipulate_campaign, @campaign
+    -#%p.right= link_to 'Assign Number', orphaned_channel_path(@account, @channel), :class => "submit", :name => "submit"
+  -unless @current_user.account_user? && (@campaign.is_seo? || @campaign.is_sem?)
+    .right
+      %span.silver-btn= link_to "Edit Campaign", edit_channel_campaign_path, :rel => "facebox"
+  %h1= @campaign.name
+  %datepicker= render :partial => "shared/date_picker"
+  .separator
+  = render :partial => 'campaigns/campaign_types/common'
+  .separator
+  - if @campaign.is_seo?
+    = render :partial => 'campaigns/campaign_types/seo'
+  - elsif @campaign.is_sem?
+    = render :partial => 'campaigns/campaign_types/sem'
 

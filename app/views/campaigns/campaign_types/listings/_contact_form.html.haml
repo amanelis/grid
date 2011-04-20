@@ -1,11 +1,6 @@
-.button
-  %a.iconic.article
-  = link_to "Create Contact Form", new_channel_campaign_contact_form_path(@account, @channel, @campaign), :rel => "facebox"
-%hr.space
 .forms
   - unless @campaign.contact_forms.empty?
     - @campaign.contact_forms.each do |form|
-      %a.iconic.article
       = "Form ##{form.id}"
       %br
       = text_area_tag 'form', form.generate_js_snippet
@@ -13,8 +8,11 @@
       HTML Form URL:
       %br
       = "http://#{APP_CONFIG[:host]}/api/v1/forms/#{form.id}/get_html"
-      
       %br
-      
   - else
     You haven't added any contact forms yet.
+%br
+%br  
+%span.green-btn= link_to "Create Contact Form", new_channel_campaign_contact_form_path(@account, @channel, @campaign), :rel => "facebox"
+%br
+%br

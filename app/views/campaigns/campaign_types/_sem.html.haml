@@ -1,27 +1,26 @@
 - adwords_campaigns = @campaign.campaign_style.google_sem_campaigns
-%section
-  = render :partial => 'campaigns/campaign_types/website'
-  %h2 Adwords Campaigns
-  %table
-    %thead
+= render :partial => 'campaigns/campaign_types/website'
+%h2 Adwords Campaigns
+%table
+  %thead
+    %tr
+      %th.tiptip{:title => "What your Adwords campaign is called"} Name
+      %th.tiptip{:title => "The amount of people that clicked on your ad"} Clicks
+      %th.tiptip{:title => "How many people have viewed your ad"} Impressions
+      %th.tiptip{:title => "Click through rate - Percentage of people that view your ad that actually click through"} CTR
+      %th.tiptip{:title => "Average cost per click - per click average cost for this time period"} Avg. CPC
+      %th.tiptip{:title => "Total dollar amount spent in the date range <strong>(Does not include markup if you are using a 3rd party)</strong>"} Adwords Cost
+      %th.tiptip{:title => "Position where your ad is place, scale of 1-9"} Avg. Position
+      -#%th.tiptip{:title => ""} Quality Score
+  %tbody
+    -adwords_campaigns.each do |adwords_campaign|
       %tr
-        %th.tiptip{:title => "What your Adwords campaign is called"} Name
-        %th.tiptip{:title => "The amount of people that clicked on your ad"} Clicks
-        %th.tiptip{:title => "How many people have viewed your ad"} Impressions
-        %th.tiptip{:title => "Click through rate - Percentage of people that view your ad that actually click through"} CTR
-        %th.tiptip{:title => "Average cost per click - per click average cost for this time period"} Avg. CPC
-        %th.tiptip{:title => "Total dollar amount spent in the date range <strong>(Does not include markup if you are using a 3rd party)</strong>"} Adwords Cost
-        %th.tiptip{:title => "Position where your ad is place, scale of 1-9"} Avg. Position
-        -#%th.tiptip{:title => ""} Quality Score
-    %tbody
-      -adwords_campaigns.each do |adwords_campaign|
-        %tr
-          %td= adwords_campaign.name
-          %td= adwords_campaign.clicks_between(@start_date, @end_date)
-          %td= adwords_campaign.impressions_between(@start_date, @end_date)
-          %td= (sprintf("%.3f", (adwords_campaign.click_through_rate_between(@start_date, @end_date) * 100)) + '%')
-          %td= "$#{sprintf("%.2f", adwords_campaign.average_cost_per_click_between(@start_date, @end_date))}"
-          %td= "$#{sprintf("%.2f", adwords_campaign.cost_between(@start_date, @end_date))}"
-          %td= sprintf("%.2f", adwords_campaign.average_position_between(@start_date, @end_date))
-          -#%td= "#{sprintf("%.2f", adwords_campaign.average_quality_score_between(@start_date, @end_date))}/10"
-  %small.right= link_to "Google Advertiser Guide", "http://www.google.com/adwords/thirdpartypartners/"
+        %td= adwords_campaign.name
+        %td= adwords_campaign.clicks_between(@start_date, @end_date)
+        %td= adwords_campaign.impressions_between(@start_date, @end_date)
+        %td= (sprintf("%.3f", (adwords_campaign.click_through_rate_between(@start_date, @end_date) * 100)) + '%')
+        %td= "$#{sprintf("%.2f", adwords_campaign.average_cost_per_click_between(@start_date, @end_date))}"
+        %td= "$#{sprintf("%.2f", adwords_campaign.cost_between(@start_date, @end_date))}"
+        %td= sprintf("%.2f", adwords_campaign.average_position_between(@start_date, @end_date))
+        -#%td= "#{sprintf("%.2f", adwords_campaign.average_quality_score_between(@start_date, @end_date))}/10"
+%span.silver-btn= link_to "Google Advertiser Guide", "http://www.google.com/adwords/thirdpartypartners/"

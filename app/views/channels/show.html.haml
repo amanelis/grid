@@ -1,4 +1,9 @@
-= @channel.name
-
-%br
-= link_to "Create Campaign", new_channel_campaign_path(@account, @channel), :class => "button"
+= content_for :crumb do
+  = link_to "Accounts", accounts_path
+  >
+  = link_to @account.name, account_path(@account)
+  >
+  = @channel.name
+%h1= @channel.name
+.separator
+%span.green-btn= link_to "Create Campaign", new_channel_campaign_path(@account, @channel)

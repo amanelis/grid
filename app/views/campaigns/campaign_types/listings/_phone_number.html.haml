@@ -1,14 +1,8 @@
-.button
-  %a.iconic.phone
-  = link_to "Add Phone Number", new_channel_campaign_phone_number_path(@account, @channel, @campaign)
-%hr.space
 - unless @campaign.phone_numbers.empty?
   - @campaign.phone_numbers.each do |number|
-    .strong
-      %a.iconic.phone
-      = number_to_phone(number.inboundno).gsub(/^1/, "")
-    %em.quiet
-      %a.iconic.arrow-right
+    = number_to_phone(number.inboundno).gsub(/^1/, "")
+    >
+    %em 
       = number_to_phone(number.forward_to)
       - if can? :manipulate_campaign, @campaign
         - if @campaign.id == Campaign.orphanage.id
@@ -18,3 +12,8 @@
             = select_tag :new_campaign_id, options_for_select(@account.group_account.campaigns.collect{|p| [ "#{p.account.name.truncate(12)} - #{p.name}", p.id ] }), {:onchange => "this.form.submit();"}
 - else
   You haven't added any phone numbers yet.
+%br
+%br
+%span.green-btn= link_to "Add Phone Number", new_channel_campaign_phone_number_path(@account, @channel, @campaign)
+%br
+%br

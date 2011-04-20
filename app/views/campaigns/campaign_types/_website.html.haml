@@ -1,6 +1,6 @@
 -if @campaign.website.present?
   %h2 Website
-  %h4.quiet= @campaign.website.nickname
+  %h3= @campaign.website.nickname
   %table
     %thead
       %th.tiptip{:title => "Amount of unique people that looked at your website."} Visitors
@@ -19,3 +19,4 @@
         %td= (sprintf("%.2f", (@campaign.bounce_rate_between(@start_date, @end_date) * 100)) + '%')
         -#%td= (sprintf("%.2f", (@campaign.website.overall_conversion_rate_between(@start_date, @end_date) * 100)) + '%')
         %td= (sprintf("%.2f", (@campaign.website.unique_conversion_rate_between(@start_date, @end_date) * 100)) + '%')
+  .separator
