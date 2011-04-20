@@ -1,5 +1,6 @@
 class Channel < ActiveRecord::Base
   belongs_to :account
+  belongs_to :channel_manager, :class_name => "GroupUser", :foreign_key => "channel_manager_id"
   has_many :campaigns
   has_many :budget_settings
   has_many :rake_settings
@@ -20,6 +21,7 @@ class Channel < ActiveRecord::Base
   DEFAULT_BASIC_CHANNEL_NAME = "Basic"
 
   validates_inclusion_of :channel_type, :in => CHANNEL_TYPES
+  validate :valid_channel_manager
 
 
   # CLASS BEHAVIOR
@@ -168,4 +170,14 @@ class Channel < ActiveRecord::Base
   def is_basic?
     self.channel_type == BASIC
   end
+
+
+  # PRIVATE BEHAVRIOR
+
+  private
+
+  def valid_channel_manager
+    errors.add(:account, "has an invalid channel manager") unless self.channel_manager.blank? || self.channel_manager.group_account == self.account.group_account
+  end
+  
 end

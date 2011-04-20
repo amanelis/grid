@@ -3,6 +3,7 @@ class GroupUser < ActiveRecord::Base
   
   belongs_to :group_account
   has_many :accounts, :foreign_key => "account_manager_id"
+  has_many :channels, :foreign_key => "channel_manager_id"
 
   validate :unique_role?
   
