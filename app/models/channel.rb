@@ -144,6 +144,18 @@ class Channel < ActiveRecord::Base
     Campaign.weighted_cost_per_lead_for(self.campaigns.active.to_a, start_date, end_date)
   end
 
+  def channel_manager_name
+    self.valid_channel_manager_information? ? self.channel_manager.name : "your channel manager"
+  end
+  
+  def channel_manager_phone_number
+    self.valid_channel_manager_information? ? self.channel_manager.phone_number : "(210) 691-0100"
+  end
+  
+  def channel_manager_email
+    self.valid_channel_manager_information? ? self.channel_manager.email : "support@cityvoice.com"
+  end
+
   def set_type_seo
     self.channel_type = SEO
   end
@@ -171,13 +183,17 @@ class Channel < ActiveRecord::Base
     self.channel_type == BASIC
   end
 
+  def valid_channel_manager_information?
+    self.channel_manager.try(:valid_channel_manager_information?).to_boolean
+  end
+
 
   # PRIVATE BEHAVRIOR
 
   private
 
   def valid_channel_manager
-    errors.add(:account, "has an invalid channel manager") unless self.channel_manager.blank? || self.channel_manager.group_account == self.account.group_account
+    errors.add(:channel, "has an invalid channel manager") unless self.channel_manager.blank? || self.channel_manager.group_account == self.account.group_account
   end
   
 end

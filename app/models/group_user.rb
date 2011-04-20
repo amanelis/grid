@@ -19,16 +19,24 @@ class GroupUser < ActiveRecord::Base
   end
   
   def valid_account_manager_information?
-    return false unless self.name.present?
-    return false unless self.phone_number.present?
-    return false unless self.email.present?
-    true
+    valid_manager_information?
+  end
+
+  def valid_channel_manager_information?
+    valid_manager_information?
   end
   
   
   # PRIVATE BEHAVIOR
   
   private
+  
+  def valid_manager_information?
+    return false unless self.name.present?
+    return false unless self.phone_number.present?
+    return false unless self.email.present?
+    true
+  end
   
   def unique_role?
     unless unique?
