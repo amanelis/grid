@@ -21,6 +21,7 @@ class Channel < ActiveRecord::Base
   DEFAULT_BASIC_CHANNEL_NAME = "Basic"
 
   validates_inclusion_of :channel_type, :in => CHANNEL_TYPES
+  validates_numericality_of :cycle_start_day, :only_integer => true, :greater_than_or_equal_to => 1, :less_than_or_equal_to => 28, :message => "must be an integer between 1 and 28"
   validate :valid_channel_manager
 
 
