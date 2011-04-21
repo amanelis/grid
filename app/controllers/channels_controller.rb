@@ -38,32 +38,34 @@ class ChannelsController < ApplicationController
     @channel.set_type_basic
     @channel.cycle_start_day = params[:channel][:cycle_start_day]
 
-    if params[:channel][:channel_type].include?("seo")
-      @channel.set_type_seo
-    elsif params[:channel][:channel_type].include?("sem")
-      @channel.set_type_sem
-      
-      # Adding rake and budget to a SEM channel
-      # @budget_setting = BudgetSetting.new
-      # @rake_setting   = RakeSetting.new
-      
-      @budget_setting = @channel.budget_settings.build
-      @rake_setting   = @channel.rake_settings.build
-      
-      @budget_setting.channel     = @channel
-      @rake_setting.channel       = @channel
-      
-      @budget_setting.amount     = params[:budget][:amount]
-      @rake_setting.percentage    = params[:rake][:percentage]
-      
-      @budget_setting.start_date  = params[:budget][:start_date]
-      @rake_setting.start_date    = params[:rake][:start_date]
-    elsif params[:channel][:channel_type].include?("basic") || params[:channel][:channel_type].blank?
-      @channel.set_type_basic
-    end
-
     if @channel.save
-      flash[:notice] = "Good job, your channel has been created!"
+      if params[:channel][:channel_type].include?("seo")
+        @channel.set_type_seo
+        @channel.save
+      elsif params[:channel][:channel_type].include?("sem")
+        @channel.set_type_sem
+        @channel.save
+
+        # Adding rake and budget to a SEM channel
+        @budget_setting = BudgetSetting.new
+        @rake_setting   = RakeSetting.new
+
+        @budget_setting.channel     = @channel
+        @rake_setting.channel       = @channel
+
+        @budget_setting.amount     = params[:budget][:amount]
+        @rake_setting.percentage    = params[:rake][:percentage]
+
+        @budget_setting.start_date  = params[:budget][:start_date]
+        @rake_setting.start_date    = params[:rake][:start_date]
+
+        @budget_setting.save 
+        @rake_setting.save
+        flash[:notice] = "Good job, your channel has been created!"
+      elsif params[:channel][:channel_type].include?("basic") || params[:channel][:channel_type].blank?
+        @channel.set_type_basic
+        @channel.save
+      end
     else
       flash[:error] = "Looks like there was en error saving your channel, please try again."
     end
