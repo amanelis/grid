@@ -1,13 +1,33 @@
 :javascript
+  var is_sem = false;
   $(document).ready(function(){
     // if they click cancel, close the facebox
     $('#cancel').click(function(){$.facebox.close(); return false;});
+
+    $('#channel_type').change(function(){
+      var t = $('#channel_type').val();
+      if(t=='sem' && !is_sem) {
+        $('#sem_items').show('blind', 250);
+        $("#sem_items input").addClass('required');
+        is_sem = true;
+      } else {
+        if(is_sem) {
+          $('#sem_items').hide('blind', 250);
+          $("#sem_items input").removeClass('required').val('');
+          is_sem = false;
+        }
+      }
+    });
+
+    $("#budget_start_date").datepicker({dateFormat: 'yy-mm-dd'});
+    $("#rake_start_date").datepicker({dateFormat: 'yy-mm-dd'});
 
     $("#create").click(function(){
       $('#new_channel').validate();
       // If it is valid, submit
       if( $('#new_channel').valid() )
         $("#new_channel").submit();
+      return false;
     });
   });
 
@@ -20,7 +40,9 @@
       = f.text_field :name, :class => 'required title'
       %br
       %label Cycle Start Day
-      %input.title{:id => "channel_cycle_start_day", :name => "channel[cycle_start_day]", :class => "text required"}
+      %select{:id => "channel_cycle_start_day", :name => "channel[cycle_start_day]", :class => "required"}
+        - (1..28).each do |i|
+          %option{:value => i}=i
       %br
       %label Type
       %br
@@ -30,26 +52,22 @@
         %option{:value => 'sem'} SEM Channel
         %option{:value => 'basic'} Basic Channel
 
-      %hr
-      %br
-      %label Budget Amount
-      %input.title{:id => "budget_amount", :name => "budget[amount]", :class => "text required"}
-      %br
-      %label Budget Start Date
-      %input.title{:id => "budget_start_date", :name => "budget[start_date]", :class => "text required"}
-      %br
-      
-      %label Rake Percentage
-      %input.title{:id => "rake_percentage", :name => "rake[percentage]", :class => "text required"}
-      %br
-      %label Rake Start Date
-      %input.title{:id => "rake_start_date", :name => "rake[start_date]", :class => "text required"}
-      %br
-      
-      
-      %hr
+      %div{:id => 'sem_items', :style => 'display:none;'}
+        %label Budget Amount
+        %input.title{:id => "budget_amount", :name => "budget[amount]", :class => "text"}
+        %br
+        %label Budget Start Date
+        %input.title{:id => "budget_start_date", :type => 'text', :name => "budget[start_date]", :class => "text"}
+        %br
+        %label Rake Percentage
+        %input.title{:id => "rake_percentage", :name => "rake[percentage]", :class => "text"}
+        %br
+        %label Rake Start Date
+        %input.title{:id => "rake_start_date", :type => 'text', :name => "rake[start_date]", :class => "text"}
+        %br
 %footer
   #submit
-    = link_to "Cancel", "", :class => "cancel", :id => 'cancel'
-    %button{:class => 'button', :id => 'create'} Create Channel
+    = link_to "Cancel", "#", :class => "cancel", :id => 'cancel'
+    %span.green-btn
+      %a{:href => "#", :class => 'button', :id => 'create'} Submit
   %hr.space
