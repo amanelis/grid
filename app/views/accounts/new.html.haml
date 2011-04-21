@@ -1,15 +1,27 @@
+:javascript
+  $(document).ready(function(){
+    $('#cancel').click(function(){$.facebox.close(); return false;});
+    $("#create").click(function(){
+      $('.new_account').validate();
+      // If it is valid, submit
+      if( $('.new_account').valid() )
+        $(".new_account").submit();
+
+    });
+  });
+
 - form_for @account, :url => accounts_path do |f|
   %header
     %h1 New Account
   %article
     %label Company Name
     %br
-    %input{:id => "account_name", :name => "account[name]", :type => "text", :placeholder => "CityVoice", :class => "title"}
+    %input{:id => "account_name", :name => "account[name]", :type => "text", :placeholder => "CityVoice", :class => "required title"}
   %hr
   %article
     %label Main Contact
     %br
-    %input{:id => "account_main_contact", :name => "account[main_contact]", :type => "text", :placeholder => "Charlie Sheen", :class => "title"}
+    %input{:id => "account_main_contact", :name => "account[main_contact]", :type => "text", :placeholder => "Charlie Sheen", :class => "required title"}
     %br
     %label Industry
     %br
@@ -21,9 +33,9 @@
     %br
     %label Parent Account
     %br
-    = select("account", "group_account", @current_user.manipulable_group_accounts.collect{|p| [ p.name, p.id ] }, {:include_blank => '- Choose a Parent Account -'})
-  %footer
-    #submit
-      = link_to "Cancel", "", :class => "cancel", :id => 'cancel'
-      = submit_tag "Create", :class => "button"
-    %hr.space
+    = select("account", "group_account", @current_user.manipulable_group_accounts.collect{|p| [ p.name, p.id ] }, {:include_blank => '- Choose a Parent Account -'}, :class => "required")
+%footer
+  #submit
+    = link_to "Cancel", "", :class => "cancel", :id => 'cancel'
+    = submit_tag "Create", :class => "button", :id => 'create'
+  %hr.space
