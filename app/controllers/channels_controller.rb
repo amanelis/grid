@@ -38,38 +38,35 @@ class ChannelsController < ApplicationController
     @channel.set_type_basic
     @channel.cycle_start_day = params[:channel][:cycle_start_day]
 
-    if @channel.save
-      if params[:channel][:channel_type].include?("seo")
-        @channel.set_type_seo
-        @channel.save
-      elsif params[:channel][:channel_type].include?("sem")
-        @channel.set_type_sem
-        @channel.save
+ 
+    if params[:channel][:channel_type].include?("seo")
+      @channel.set_type_seo
+    elsif params[:channel][:channel_type].include?("sem")
+      @channel.set_type_sem
 
-        # Adding rake and budget to a SEM channel
-        @budget_setting = BudgetSetting.new
-        @rake_setting   = RakeSetting.new
+      # Adding rake and budget to a SEM channel
+      @budget_setting = BudgetSetting.new
+      @rake_setting   = RakeSetting.new
 
-        @budget_setting.channel     = @channel
-        @rake_setting.channel       = @channel
+      @budget_setting.amount      = params[:budget][:amount]
+      @rake_setting.percentage    = params[:rake][:percentage]
 
-        @budget_setting.amount     = params[:budget][:amount]
-        @rake_setting.percentage    = params[:rake][:percentage]
+      @budget_setting.start_date  = params[:budget][:start_date]
+      @rake_setting.start_date    = params[:rake][:start_date]
 
-        @budget_setting.start_date  = params[:budget][:start_date]
-        @rake_setting.start_date    = params[:rake][:start_date]
-
-        @budget_setting.save 
-        @rake_setting.save
+      @channel.budget_settings << @budget_setting
+      @channel.rake_settings << @rake_setting
+      
+      if @channel.save
         flash[:notice] = "Good job, your channel has been created!"
-      elsif params[:channel][:channel_type].include?("basic") || params[:channel][:channel_type].blank?
-        @channel.set_type_basic
-        @channel.save
+      else
+        flash[:error] = "There was an error with your #{@channel.errors.each{|attr,msg| puts "#{attr} - #{msg}" }} in channel creation. Please try again!"
       end
-    else
-      flash[:error] = "Looks like there was en error saving your channel, please try again."
+    elsif params[:channel][:channel_type].include?("basic") || params[:channel][:channel_type].blank?
+      @channel.set_type_basic
+      @channel.save
     end
-    
+
     redirect_to account_path(@account)
   end
   

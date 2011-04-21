@@ -46,64 +46,26 @@
 
   });
 
-- if @activity.is_call?
-  %h3.strong=@activity.activity_type.phone_number.campaign.account.name
-  %h4.quiet=@activity.activity_type.phone_number.campaign.name
-  .notice
-    %h4.strong Review
-    %p
-      %span.strong=@activity.activity_type.caller_name
-      %br
-      =number_to_phone(@activity.activity_type.caller_number)
-      %br
-      -if @activity.activity_type.recorded? && @activity.activity_type.recording?
-        %center
-          %div#player
-    %p
-      -activity_time_zone = @activity.activity_type.phone_number.campaign.account.time_zone
-      =time_ago_in_words(@activity.activity_type.call_start) + " ago"
-      %br
-      %span{:class => @activity.activity_type.call_status.downcase}
-      =(@activity.activity_type.call_end - @activity.activity_type.call_start).to_int
-      seconds
-      - form_for @activity do |f|
-        %p
-          %label Status:
-          %br
-          = f.select(:review_status, (@activity.activity_type.review_status_options))
-        %p
-          %label Notes:
-          %br
-          %textarea{ :name => "activity[description]", :id => "description"}
-            =@activity.description
-      %p
-        %center
-          %button{:id => "save_form", :class => "button"} Save
-          %div{:id => 'activity_message'}
-
-- elsif @activity.is_submission?
-  %h3.strong=@activity.activity_type.contact_form.campaign.account.name
-  %h4.quiet=@activity.activity_type.contact_form.campaign.name
-  .notice
-    %h4.strong Review
-    %p
-      %span.strong=@activity.activity_type.name
-    %p
-      -activity_time_zone = @activity.activity_type.contact_form.campaign.account.time_zone
-      =time_ago_in_words(@activity.timestamp) + " ago"
-      %br
-      - form_for @activity do |f|
-        %p
-          %label Status:
-          %br
-          = f.select(:review_status, (@activity.activity_type.review_status_options))
-        %p
-          %label Notes:
-          %br
-          %textarea{ :name => "activity[description]", :id => "description" }
-            =@activity.description
-      %p
-        %center
-          %button{:id => "save_form", :class => "button"} Save
-          %div{:id => 'activity_message'}
-
+%div.column2
+  - if @activity.is_call?
+    -if @activity.activity_type.recorded? && @activity.activity_type.recording?
+      %center
+        %div#player
+  %div{:id => 'activity_message'}
+%div.column2last
+  %p
+    %span{:class => @activity.activity_type.call_status.downcase} Duration:
+    =(@activity.activity_type.call_end - @activity.activity_type.call_start).to_int
+    seconds
+  - form_for @activity do |f|
+    %label Status:
+    %br
+    = f.select(:review_status, (@activity.activity_type.review_status_options))
+    %br
+    %label Notes:
+    %br
+    %textarea{ :name => "activity[description]", :id => "description", :class => 'short_textarea' }
+      =@activity.description
+  %center
+    %span.green-btn
+      %a{:id => "save_form", :class => "button"} Save
