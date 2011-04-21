@@ -2,9 +2,9 @@ class Channel < ActiveRecord::Base
   belongs_to :account
   belongs_to :channel_manager, :class_name => "GroupUser", :foreign_key => "channel_manager_id"
   has_many :campaigns
-  has_many :budget_settings
-  has_many :rake_settings
-  has_many :budget_infusions
+  has_many :budget_settings, :dependent => :destroy
+  has_many :rake_settings, :dependent => :destroy
+  has_many :budget_infusions, :dependent => :destroy
 
   validates_presence_of :name, :channel_type
   validates_uniqueness_of :name, :case_sensitive => false, :scope => "account_id"
