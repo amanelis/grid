@@ -19,7 +19,6 @@ class AccountsController < ApplicationController
   end
   
   def new
-    render :layout => false
   end
   
   def edit

@@ -25,7 +25,7 @@
       %li
         = link_to @current_user.email, "#", :class => "current"
         %ul
-          %li.first-sub-link= link_to "My Info", "#"
+          %li.first-sub-link= link_to "My Info", edit_user_path(@current_user)
           %li.last-sub-link= link_to "Log Out", logout_url
     - else
       -#= link_to "Register", register_path
