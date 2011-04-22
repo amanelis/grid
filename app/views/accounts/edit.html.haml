@@ -1,4 +1,5 @@
 - form_for @account, :url => account_path do |f|
+  %h2 Account Info
   = f.label :name
   %br
   = f.text_field :name
@@ -20,9 +21,21 @@
     - @data = ['- Select -', 0].to_s
   - else
     - @data = @account.account_manager.name
-
   %br
   = select_tag('account_manager', options_for_select([['- Change Account Manager -', "0"]] + @account.group_account.potential_account_managers.collect {|x| [x.name, x.id]}, @account.account_manager.try(:id)))
+  %br
+  %br
+  %h2 Channel Managers
+  %h3 SEO
+  %select
+    %option Shaunay
+    %option Shelton
+    %option Melissa
+  %h3 SEM
+  %select
+    %option Shaunay
+    %option Shelton
+    %option Melissa
   %br
   %br
   = link_to 'Pause this Account', account_path(@account), :class => "button", :confirm => "This will pause this account, are you sure?", :method => :delete
