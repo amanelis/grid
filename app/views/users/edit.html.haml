@@ -8,6 +8,19 @@
 
 - form_for (@user) do |f|
   .column-2
+  
+    %h2 Name
+    = f.label "Name"
+    %br
+    = f.text_field :name, :class => 'title'
+    %br
+    
+    %h2 Phone Number
+    = f.label "Phone Number"
+    %br
+    = f.text_field :phone_number, :class => 'title'
+    %br
+  
     %h2 Login
     = f.label "Email"
     %br
