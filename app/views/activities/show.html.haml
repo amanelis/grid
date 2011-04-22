@@ -53,10 +53,11 @@
         %div#player
   %div{:id => 'activity_message'}
 %div.column2last
-  %p
-    %span{:class => @activity.activity_type.call_status.downcase} Duration:
-    =(@activity.activity_type.call_end - @activity.activity_type.call_start).to_int
-    seconds
+  -if @activity.is_call?
+    %p
+      %span{:class => @activity.activity_type.call_status.downcase} Duration:
+      =(@activity.activity_type.call_end - @activity.activity_type.call_start).to_int
+      seconds
   - form_for @activity do |f|
     %label Status:
     %br
