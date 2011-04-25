@@ -19,16 +19,20 @@ class ChannelsController < ApplicationController
   end
   
   def update
+    @channel.update_attributes(:name => params[:channel][:name], :cycle_start_day => params[:channel][:cycle_start_day])
+    redirect_to account_path(@channel.account, :cycle_start_day => params[:channel][:cycle_start_day]) 
+=begin
     update! do |success, failure|
       success.html {
-        flash[:notice] = "Awesome! You just created updated your channel!"
+        flash[:notice] = "Awesome! You just updated your channel!"
         redirect_to account_path(@channel.account) 
       }
       failure.html {
         flash[:error] = "Ooops, there was an error updating that Channel, you might want to try again."
-        redirect_to edit_channel_path(@channel.account)
+        redirect_to account_path(@channel.account) 
       }
     end
+=end
   end
   
   def create

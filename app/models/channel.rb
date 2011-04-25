@@ -8,7 +8,7 @@ class Channel < ActiveRecord::Base
 
   validates_presence_of :name, :channel_type
   validates_uniqueness_of :name, :case_sensitive => false, :scope => "account_id"
-
+  
   SEO = "seo"
   SEM = "sem"
   BASIC = "basic"
