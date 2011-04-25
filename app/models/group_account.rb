@@ -201,11 +201,11 @@ class GroupAccount < ActiveRecord::Base
    end
    
    def potential_account_managers
-     self.group_users.select(&:valid_manager_information?)
+     self.group_users.select(&:valid_account_manager_information?)
    end
 
    def potential_channel_managers
-     self.group_users.select(&:valid_manager_information?)
+     self.group_users.select(&:valid_channel_manager_information?)
    end
 
 
