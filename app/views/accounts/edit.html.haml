@@ -25,17 +25,23 @@
   = select_tag('account_manager', options_for_select([['- Change Account Manager -', "0"]] + @account.group_account.potential_account_managers.collect {|x| [x.name, x.id]}, @account.account_manager.try(:id)))
   %br
   %br
-  %h2 Channel Managers
-  %h3 SEO
-  %select
-    %option Shaunay
-    %option Shelton
-    %option Melissa
-  %h3 SEM
-  %select
-    %option Shaunay
-    %option Shelton
-    %option Melissa
+  
+  
+  %h2 SEO Channels
+  %hr
+  - @account.channels.select(&:is_seo?).each do |seo_channel|
+    %h3= seo_channel.name
+    = hidden_field_tag('channel_seo_id', seo_channel.id)
+    = select_tag("channel_seo_manager", options_for_select([['- Change Channel Manager -', "0"]] + @account.group_account.potential_account_managers.collect {|x| [x.name, x.id]}, seo_channel.channel_manager.try(:id)))
+  
+  
+  %h2 SEM Channels
+  %hr
+  - @account.channels.select(&:is_sem?).each do |sem_channel|
+    %h3= sem_channel.name
+    = hidden_field_tag('channel_sem_id', sem_channel.id)
+    = select_tag("channel_sem_manager", options_for_select([['- Change Channel Manager -', "0"]] + @account.group_account.potential_account_managers.collect {|x| [x.name, x.id]}, sem_channel.channel_manager.try(:id)))
+  
   %br
   %br
   = link_to 'Pause this Account', account_path(@account), :class => "button", :confirm => "This will pause this account, are you sure?", :method => :delete

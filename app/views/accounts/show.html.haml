@@ -9,7 +9,7 @@
   %span.silver-btn= link_to "Pause Account", "#",:title => "Pause Account"
   %span.silver-btn= link_to "Export to PDF", "#", :onclick => "confirm_export_report(#{params[:id]});"
   %span.silver-btn= link_to "Add User", new_account_user_path(@account), :rel => "facebox"
-  %span.silver-btn= link_to "Edit Account", edit_account_path
+  %span.silver-btn= link_to "Edit Account", edit_account_path, :rel => "facebox"
   - if @account.can_send_weekly_report_now?
     %span.silver-btn= link_to "Send Test Email", send_weekly_path(params[:id])
 
