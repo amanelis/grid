@@ -53,10 +53,12 @@ class AccountsController < ApplicationController
   end
   
   def update 
+=begin
     gu = GroupUser.find(params[:account_manager].to_i)
     @account.account_manager = gu
     @account.update_attributes(params[:account]) && @account.save ? (flash[:notice] = "Your account was updated!") : (flash[:error] = "Try again, there was an error updating account!")
     redirect_to account_path(@account)
+=end
   end
 
   def show

@@ -1041,7 +1041,8 @@ span.quote-right {
 .error-box,
 .warning-box,
 .success-box,
-.neutral-box {
+.neutral-box,
+.notice-box {
 	font-family:"Droid Serif", Georgia, serif;
 	font-size:14px;
 	font-style:italic;
@@ -1049,8 +1050,8 @@ span.quote-right {
 	display:block;
 	padding-top:20px;
 	padding-bottom:20px;
-	margin-top:10px;
-	margin-bottom:30px;
+	/*margin-top:10px;
+	margin-bottom:30px;*/
 
 	-webkit-border-radius:3px;
 	-moz-border-radius:3px;
@@ -1070,7 +1071,7 @@ span.quote-right {
 	text-shadow:0px 1px 0px #fffdf2;
 }
 
-.success-box {
+.success-box, .notice-box {
 	border:1px solid #b7e6bc;
 	background:#e9ffeb;
 	color:#82a586;

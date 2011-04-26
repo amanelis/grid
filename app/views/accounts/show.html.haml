@@ -9,7 +9,7 @@
   %span.silver-btn= link_to "Pause Account", "#",:title => "Pause Account"
   %span.silver-btn= link_to "Export to PDF", "#", :onclick => "confirm_export_report(#{params[:id]});"
   %span.silver-btn= link_to "Add User", new_account_user_path(@account), :rel => "facebox"
-  %span.silver-btn= link_to "Edit Account", edit_account_path
+  %span.silver-btn= link_to "Edit Account", edit_account_path, :rel => "facebox"
   - if @account.can_send_weekly_report_now?
     %span.silver-btn= link_to "Send Test Email", send_weekly_path(params[:id])
 
@@ -24,16 +24,16 @@
   %table.channels
     %thead
       %tr
-        %th.name
+        %th.name{:width => "75%"}
           -#= link_to channel.name, channel_path(@account, channel)
           = channel.name
           - if can? :manipulate_account, @account
             -#= link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
             = link_to "", new_channel_campaign_path(@account, channel), :title => "Add new campaign to this channel", :class => "tiptip iconic plus", :rel => "facebox"
-        %th.leads
+        %th.leads{:width => "15%"}
           = channel.number_of_total_leads_between(@start_date, @end_date)
           Leads
-        %th.cpl
+        %th.cpl{:width => "10%"}
           = ActionController::Base.helpers.number_to_currency(channel.weighted_cost_per_lead_between(@start_date, @end_date))
           CPL
     - channel.campaigns.active.each do |campaign|
@@ -44,7 +44,7 @@
     %table.channels
       %thead
         %tr
-          %th.name
+          %th.name{:width => "75%"}
             -#= link_to channel.name, channel_path(@account, channel)
             = link_to channel.name, edit_channel_path(@account, channel), :rel => "facebox"
             - if can? :manipulate_account, @account
@@ -53,7 +53,7 @@
           %th.leads{:width => "15%"}
             = channel.number_of_total_leads_between(@start_date, @end_date)
             Leads
-          %th.cpl{:class => "cpl", :width => "10%"}
+          %th.cpl{:width => "10%"}
             = ActionController::Base.helpers.number_to_currency(channel.weighted_cost_per_lead_between(@start_date, @end_date))
             CPL
       - channel.campaigns.active.each do |campaign|
@@ -64,15 +64,15 @@
     %table.channels
       %thead
         %tr
-          %th.name
+          %th.name{:width => "75%"}
             = link_to channel.name, edit_channel_path(@account, channel), :rel => "facebox"
             - if can? :manipulate_account, @account
               -#= link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
               = link_to "", new_channel_campaign_path(@account, channel), :title => "Add new campaign to this channel", :class => "tiptip iconic plus", :rel => "facebox"
-          %th.leads
+          %th.leads{:width => "15%"}
             = channel.number_of_total_leads_between(@start_date, @end_date)
             Leads
-          %th.cpl
+          %th.cpl{:width => "10%"}
             = ActionController::Base.helpers.number_to_currency(channel.weighted_cost_per_lead_between(@start_date, @end_date))
             CPL
       - channel.campaigns.active.each do |campaign|
