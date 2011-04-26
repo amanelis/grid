@@ -662,7 +662,7 @@ class GoogleSemCampaign < ActiveRecord::Base
   end
   
   def rake_percentage_for(date = Date.today)
-    self.sem_campaign.channel.rake_percentage_for(date)
+    self.sem_campaign.channel.rake_percentage_for(date.month, date.year)
   end
 
   def spend_between(start_date = Date.yesterday, end_date = Date.yesterday)
