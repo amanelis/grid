@@ -32,13 +32,13 @@
     -elsif @channel.is_sem?
       %br
       %label Budget Amount
-      %input.title{:id => "budget_amount", :name => "budget[amount]", :class => "text", :value => @channel.budget_settings.last.try(:amount)}
+      %input.title{:id => "budget_amount", :name => "budget[amount]", :class => "text", :value => @channel.try(:current_budget)}
       %br
       %label Budget Start Date
       %input.title{:id => "budget_start_date", :type => 'text', :name => "budget[start_date]", :class => "text", :value => @channel.budget_settings.last.try(:start_date)}
       %br
       %label Rake Percentage
-      %input.title{:id => "rake_percentage", :name => "rake[percentage]", :class => "text", :value => @channel.rake_settings.last.try(:percentage)}
+      %input.title{:id => "rake_percentage", :name => "rake[percentage]", :class => "text", :value => @channel.current_rake_percentage}
       %br
       %label Rake Start Date
       %input.title{:id => "rake_start_date", :type => 'text', :name => "rake[start_date]", :class => "text", :value => @channel.rake_settings.last.try(:start_date)}
