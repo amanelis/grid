@@ -19,8 +19,11 @@ class ChannelsController < ApplicationController
   end
   
   def update
-    @channel.update_attributes(:name => params[:channel][:name], :cycle_start_day => params[:channel][:cycle_start_day])
+    render :text => params.inspect
+=begin
+    @channel.update_attributes(params[:channel])
     redirect_to account_path(@channel.account, :cycle_start_day => params[:channel][:cycle_start_day]) 
+=end
   end
   
   def create
