@@ -21,9 +21,6 @@ class AccountsController < ApplicationController
   def new
   end
   
-  def edit
-  end
-  
   def create
     if params[:account][:name].blank? || params[:account][:main_contact].blank? || params[:account][:industry].blank? || params[:account][:group_account].blank? 
       flash[:error] = "You forgot to fill in some fields, try creating your account again!"
@@ -49,7 +46,6 @@ class AccountsController < ApplicationController
   end
   
   def edit
-    no_layout
   end
   
   def update 
@@ -165,12 +161,3 @@ class AccountsController < ApplicationController
   end
 
 end
-
-
-
-
-
-
-
-
-
