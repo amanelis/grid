@@ -127,7 +127,7 @@ class Channel < ActiveRecord::Base
   end
   
   def percentage_of_money_used_for(month = Date.today.month, year = Date.today.year)
-    100.0 * self.amount_remaining_for(month, year) / self.monthly_spend_for(month, year)
+    100.0 * self.cost_for(month, year) / self.monthly_spend_for(month, year)
   end
   
   def amount_remaining_for(month = Date.today.month, year = Date.today.year)
