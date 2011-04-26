@@ -19,7 +19,13 @@ class ChannelsController < ApplicationController
   end
   
   def update
-    @channel.update_attributes(:name => params[:channel][:name], :cycle_start_day => params[:channel][:cycle_start_day])
+    @channel.update_attributes(params[:channel])
+    
+    if @channel.is_seo?
+    elsif @channel.is_sem?
+    elsif @channel.is_basic?
+    end
+    
     redirect_to account_path(@channel.account, :cycle_start_day => params[:channel][:cycle_start_day]) 
   end
   
