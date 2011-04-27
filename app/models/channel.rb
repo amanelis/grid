@@ -238,7 +238,11 @@ class Channel < ActiveRecord::Base
   def valid_channel_manager_information?
     self.channel_manager.try(:valid_channel_manager_information?).to_boolean
   end
-
+  
+  def is_virgin?
+    self.budget_settings.blank? && self.rake_settings.blank?
+  end
+  
 
   # PRIVATE BEHAVRIOR
 
