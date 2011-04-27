@@ -76,7 +76,7 @@ class Channel < ActiveRecord::Base
   # INITIALIZATION
   
   def after_initialize
-    self.cycle_start_day ||= 1
+    self.cycle_start_day ||= 1 if self.valid?
   end
 
 
