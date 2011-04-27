@@ -102,8 +102,8 @@ class Channel < ActiveRecord::Base
     self.amount_remaining_for(self.current_month)
   end
   
-  def current_monthly_spend
-    self.monthly_spend_for(self.current_month)
+  def current_spend_budget
+    self.spend_budget_for(self.current_month)
   end
   
   def current_budget
@@ -127,14 +127,14 @@ class Channel < ActiveRecord::Base
   end
   
   def percentage_of_money_used_for(month = Date.today.month, year = Date.today.year)
-    100.0 * self.cost_for(month, year) / self.monthly_spend_for(month, year)
+    100.0 * self.cost_for(month, year) / self.spend_budget_for(month, year)
   end
   
   def amount_remaining_for(month = Date.today.month, year = Date.today.year)
-    self.monthly_spend_for(month, year) - self.cost_for(month, year)
+    self.spend_budget_for(month, year) - self.cost_for(month, year)
   end
   
-  def monthly_spend_for(month = Date.today.month, year = Date.today.year)
+  def spend_budget_for(month = Date.today.month, year = Date.today.year)
     self.budget_for(month, year) * ((100 - self.rake_percentage_for(month, year)) / 100.0)
   end
   
@@ -174,6 +174,10 @@ class Channel < ActiveRecord::Base
     self.rake_settings.upto(Date.civil(year, month, self.cycle_start_day).next_month.yesterday).last
   end
   
+  def rake_setting_on(date = Date.today)
+    self.rake_settings.upto(date).last.try(:percentage) || 0
+  end
+  
   def cost_for(month = Date.today.month, year = Date.today.year)
     start_date = Date.civil(year, month, self.cycle_start_day)
     end_date = start_date.next_month.yesterday
@@ -181,9 +185,7 @@ class Channel < ActiveRecord::Base
   end
 
   def spend_for(month = Date.today.month, year = Date.today.year)
-    start_date = Date.civil(year, month, self.cycle_start_day)
-    end_date = start_date.next_month.yesterday
-    self.campaigns.active.select(&:is_sem?).collect(&:campaign_style).sum { |sem_campaign| sem_campaign.total_spend_between(start_date, end_date) }
+    (self.cost_for(month, year) * 100.0) / (100.0 - self.rake_percentage_for(month, year))
   end
 
   def number_of_total_leads_between(start_date = Date.yesterday, end_date = Date.yesterday)
