@@ -23,6 +23,17 @@ class ChannelsController < ApplicationController
     
     if @channel.is_seo?
     elsif @channel.is_sem?
+      @budget_setting = BudgetSetting.new
+      @rake_setting   = RakeSetting.new
+
+      @budget_setting.amount      = params[:budget][:amount]
+      @rake_setting.percentage    = params[:rake][:percentage]
+
+      @budget_setting.start_date  = params[:budget][:start_date]
+      @rake_setting.start_date    = params[:rake][:start_date]
+
+      @channel.budget_settings << @budget_setting
+      @channel.rake_settings << @rake_setting
     elsif @channel.is_basic?
     end
     

@@ -19,7 +19,11 @@
   .separator
   =high_chart("total_daily_leads_graph", @daily_total_leads_graph)
 .separator
+
+
 -# SEO #####################################################################################################################
+%h2 SEO Channels
+%hr
 - @seo_channels.each do |channel|
   %table.channels
     %thead
@@ -39,45 +43,49 @@
     - channel.campaigns.active.each do |campaign|
       = render :partial => 'accounts/channel_campaign', :locals => {:campaign => campaign, :channel => channel}
 
-  -# SEM #####################################################################################################################
-  - @sem_channels.each do |channel|
-    %table.channels
-      %thead
-        %tr
-          %th.name{:width => "75%"}
-            -#= link_to channel.name, channel_path(@account, channel)
-            = link_to channel.name, edit_channel_path(@account, channel), :rel => "facebox"
-            - if can? :manipulate_account, @account
-              -#= link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
-              = link_to "", new_channel_campaign_path(@account, channel), :title => "Add new campaign to this channel", :class => "tiptip iconic plus", :rel => "facebox"
-          %th.leads{:width => "15%"}
-            = channel.number_of_total_leads_between(@start_date, @end_date)
-            Leads
-          %th.cpl{:width => "10%"}
-            = ActionController::Base.helpers.number_to_currency(channel.weighted_cost_per_lead_between(@start_date, @end_date))
-            CPL
-      - channel.campaigns.active.each do |campaign|
-        = render :partial => 'accounts/channel_campaign', :locals => {:campaign => campaign, :channel => channel}
+-# SEM #####################################################################################################################
+%h2 SEM Channels
+%hr
+- @sem_channels.each do |channel|
+  %table.channels
+    %thead
+      %tr
+        %th.name{:width => "75%"}
+          -#= link_to channel.name, channel_path(@account, channel)
+          = link_to channel.name, edit_channel_path(@account, channel), :rel => "facebox"
+          - if can? :manipulate_account, @account
+            -#= link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
+            = link_to "", new_channel_campaign_path(@account, channel), :title => "Add new campaign to this channel", :class => "tiptip iconic plus", :rel => "facebox"
+        %th.leads{:width => "15%"}
+          = channel.number_of_total_leads_between(@start_date, @end_date)
+          Leads
+        %th.cpl{:width => "10%"}
+          = ActionController::Base.helpers.number_to_currency(channel.weighted_cost_per_lead_between(@start_date, @end_date))
+          CPL
+    - channel.campaigns.active.each do |campaign|
+      = render :partial => 'accounts/channel_campaign', :locals => {:campaign => campaign, :channel => channel}
 
-  -# BASIC ###################################################################################################################
-  - @basic_channels.each do |channel|
-    %table.channels
-      %thead
-        %tr
-          %th.name{:width => "75%"}
-            = link_to channel.name, edit_channel_path(@account, channel), :rel => "facebox"
-            - if can? :manipulate_account, @account
-              -#= link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
-              = link_to "", new_channel_campaign_path(@account, channel), :title => "Add new campaign to this channel", :class => "tiptip iconic plus", :rel => "facebox"
-          %th.leads{:width => "15%"}
-            = channel.number_of_total_leads_between(@start_date, @end_date)
-            Leads
-          %th.cpl{:width => "10%"}
-            = ActionController::Base.helpers.number_to_currency(channel.weighted_cost_per_lead_between(@start_date, @end_date))
-            CPL
-      - channel.campaigns.active.each do |campaign|
-        = render :partial => 'accounts/channel_campaign', :locals => {:campaign => campaign, :channel => channel}
+-# BASIC ###################################################################################################################
+%h2 Basic Channels
+%hr
+- @basic_channels.each do |channel|
+  %table.channels
+    %thead
+      %tr
+        %th.name{:width => "75%"}
+          = link_to channel.name, edit_channel_path(@account, channel), :rel => "facebox"
+          - if can? :manipulate_account, @account
+            -#= link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
+            = link_to "", new_channel_campaign_path(@account, channel), :title => "Add new campaign to this channel", :class => "tiptip iconic plus", :rel => "facebox"
+        %th.leads{:width => "15%"}
+          = channel.number_of_total_leads_between(@start_date, @end_date)
+          Leads
+        %th.cpl{:width => "10%"}
+          = ActionController::Base.helpers.number_to_currency(channel.weighted_cost_per_lead_between(@start_date, @end_date))
+          CPL
+    - channel.campaigns.active.each do |campaign|
+      = render :partial => 'accounts/channel_campaign', :locals => {:campaign => campaign, :channel => channel}
 
-  -# FOOTER ##################################################################################################################
-  - if can? :manipulate_account, @account
-    %span.green-btn= link_to "Create Channel", new_channel_path(@account), :class => "button", :rel => "facebox"
+-# FOOTER ##################################################################################################################
+- if can? :manipulate_account, @account
+  %span.green-btn= link_to "Create Channel", new_channel_path(@account), :class => "button", :rel => "facebox"

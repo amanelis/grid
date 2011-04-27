@@ -1,5 +1,9 @@
 :javascript
   $(document).ready(function(){
+    
+    $("#budget_start_date").datepicker({dateFormat: 'yy-mm-dd'});
+    $("#rake_start_date").datepicker({dateFormat: 'yy-mm-dd'});
+    
     $('#cancel').click(function(){$.facebox.close(); return false;});
     $("#update").click(function(){
       $('.edit_channel').validate();
