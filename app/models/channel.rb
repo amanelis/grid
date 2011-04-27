@@ -76,6 +76,7 @@ class Channel < ActiveRecord::Base
   # INITIALIZATION
   
   def after_initialize
+    debugger
     self.cycle_start_day ||= 1
   end
 

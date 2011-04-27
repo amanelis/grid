@@ -31,9 +31,9 @@
         - else
           %option{:value => i}=i
     %br
-  
+      
     -if @channel.is_seo?
-    -elsif @channel.is_sem?
+    -elsif @channel.is_sem? && @channel.is_virgin?    
       %br
       %label Budget Amount
       %input.title{:id => "budget_amount", :name => "budget[amount]", :class => "text", :value => @channel.try(:current_budget)}
