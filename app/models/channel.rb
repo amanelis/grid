@@ -243,6 +243,11 @@ class Channel < ActiveRecord::Base
     self.budget_settings.blank? && self.rake_settings.blank?
   end
   
+  def editable_date?(date)
+    return true if date >= Date.today
+    (date.beginning_of_month == Date.today.beginning_of_month) && (([Date.today.day, date.day].max < self.cycle_start_day) || ([Date.today.day, date.day].min >= self.cycle_start_day))
+  end
+  
 
   # PRIVATE BEHAVRIOR
 
