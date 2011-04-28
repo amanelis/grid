@@ -12,19 +12,19 @@
       %tr
         %td= link_to keyword.descriptor, channel_campaign_keyword_path(@account, @channel, @campaign, keyword)
         %td
-          = ((final_ranking = ((ranking = keyword.most_recent_google_ranking_between(@start_date, @end_date))) > 100 ? '>100' : ranking.to_s) == '0') ? '' : final_ranking
+          = ((final_ranking = ((ranking = keyword.most_recent_google_ranking_between(cookies[:start_date], cookies[:end_date]))) > 100 ? '>100' : ranking.to_s) == '0') ? '' : final_ranking
           (
-          = keyword.google_ranking_change_between(@start_date, @end_date) 
+          = keyword.google_ranking_change_between(cookies[:start_date], cookies[:end_date])
           )
         %td
-          = ((final_ranking = ((ranking = keyword.most_recent_yahoo_ranking_between(@start_date, @end_date))) > 100 ? '>100' : ranking.to_s) == '0') ? '' : final_ranking
+          = ((final_ranking = ((ranking = keyword.most_recent_yahoo_ranking_between(cookies[:start_date], cookies[:end_date]))) > 100 ? '>100' : ranking.to_s) == '0') ? '' : final_ranking
           (
-          = keyword.yahoo_ranking_change_between(@start_date, @end_date)
-          ) 
+          = keyword.yahoo_ranking_change_between(cookies[:start_date], cookies[:end_date])
+          )
         %td
           N/A
-          -#= ((final_ranking = ((ranking = keyword.most_recent_bing_ranking_between(@start_date, @end_date))) > 100 ? '>100' : ranking.to_s) == '0') ? '' : final_ranking
+          -#= ((final_ranking = ((ranking = keyword.most_recent_bing_ranking_between(cookies[:start_date], cookies[:end_date]))) > 100 ? '>100' : ranking.to_s) == '0') ? '' : final_ranking
           -#(
-          -#=keyword.bing_ranking_change_between(@start_date, @end_date)
+          -#=keyword.bing_ranking_change_between(cookies[:start_date], cookies[:end_date])
           -#)
         %td= keyword.most_recent_ranking().created_at.strftime("%b %d") if keyword.most_recent_ranking.present?

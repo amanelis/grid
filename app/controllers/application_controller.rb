@@ -39,16 +39,26 @@ class ApplicationController < ActionController::Base
 
     def datepicker(*args)
       if params[:to].blank? || params[:from].blank?
-        @start_date = Date.today - 1.month
-        @end_date = Date.today
+        # is our cookie blank?
+        if cookies[:start_date].blank?
+          cookies[:start_date] = Date.today - 1.month
+        else
+          cookies[:start_date] = Date.parse(cookies[:start_date])
+        end
+        # is our cookie blank?
+        if cookies[:end_date].blank?
+          cookies[:end_date] = Date.today
+        else
+          cookies[:end_date] = Date.parse(cookies[:end_date])
+        end
       else
         begin
-          @start_date = Date.parse(params[:from])
-          @end_date = Date.parse(params[:to])
+          cookies[:start_date] = Date.parse(params[:from])
+          cookies[:end_date]   = Date.parse(params[:to])
         rescue
-          @start_date = Date.yesterday.beginning_of_month
-          @end_date = Date.yesterday
-          flash[:error] = "The date you entered was incorrect, we set it back to <strong>#{(@start_date).to_s(:medium)} to #{@end_date.to_s(:medium)}</strong> for you."
+          cookies[:start_date] = Date.today - 1.month
+          cookies[:end_date]   = Date.today
+          flash[:error] = "The date you entered was incorrect, we set it back to <strong>#{(cookies[:start_date]).to_s(:medium)} to #{cookies[:end_date].to_s(:medium)}</strong> for you."
           respond("html", args.first)
         end
       end

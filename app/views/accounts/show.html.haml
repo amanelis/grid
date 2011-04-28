@@ -35,10 +35,10 @@
             -#= link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
             = link_to "", new_channel_campaign_path(@account, channel), :title => "Add new campaign to this channel", :class => "tiptip iconic plus", :rel => "facebox"
         %th.leads{:width => "15%"}
-          = channel.number_of_total_leads_between(@start_date, @end_date)
+          = channel.number_of_total_leads_between(cookies[:start_date], cookies[:end_date])
           Leads
         %th.cpl{:width => "10%"}
-          = ActionController::Base.helpers.number_to_currency(channel.weighted_cost_per_lead_between(@start_date, @end_date))
+          = ActionController::Base.helpers.number_to_currency(channel.weighted_cost_per_lead_between(cookies[:start_date], cookies[:end_date]))
           CPL
     - channel.campaigns.active.each do |campaign|
       = render :partial => 'accounts/channel_campaign', :locals => {:campaign => campaign, :channel => channel}
@@ -57,10 +57,10 @@
             -#= link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
             = link_to "", new_channel_campaign_path(@account, channel), :title => "Add new campaign to this channel", :class => "tiptip iconic plus", :rel => "facebox"
         %th.leads{:width => "15%"}
-          = channel.number_of_total_leads_between(@start_date, @end_date)
+          = channel.number_of_total_leads_between(cookies[:start_date], cookies[:end_date])
           Leads
         %th.cpl{:width => "10%"}
-          = ActionController::Base.helpers.number_to_currency(channel.weighted_cost_per_lead_between(@start_date, @end_date))
+          = ActionController::Base.helpers.number_to_currency(channel.weighted_cost_per_lead_between(cookies[:start_date], cookies[:end_date]))
           CPL
     - channel.campaigns.active.each do |campaign|
       = render :partial => 'accounts/channel_campaign', :locals => {:campaign => campaign, :channel => channel}
@@ -78,10 +78,10 @@
             -#= link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
             = link_to "", new_channel_campaign_path(@account, channel), :title => "Add new campaign to this channel", :class => "tiptip iconic plus", :rel => "facebox"
         %th.leads{:width => "15%"}
-          = channel.number_of_total_leads_between(@start_date, @end_date)
+          = channel.number_of_total_leads_between(cookies[:start_date], cookies[:end_date])
           Leads
         %th.cpl{:width => "10%"}
-          = ActionController::Base.helpers.number_to_currency(channel.weighted_cost_per_lead_between(@start_date, @end_date))
+          = ActionController::Base.helpers.number_to_currency(channel.weighted_cost_per_lead_between(cookies[:start_date], cookies[:end_date]))
           CPL
     - channel.campaigns.active.each do |campaign|
       = render :partial => 'accounts/channel_campaign', :locals => {:campaign => campaign, :channel => channel}
