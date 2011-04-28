@@ -22,15 +22,16 @@
     = f.text_field :name, :class => 'required title'
     %br
     
-    %label Cycle Start Day
-    %br
-    %select{:id => "channel_cycle_start_day", :name => "channel[cycle_start_day]", :class => "required"}
-      - (1..28).each do |i|
-        - if i == @channel.cycle_start_day
-          %option{:value => @channel.cycle_start_day, :selected => @channel.cycle_start_day}=i
-        - else
-          %option{:value => i}=i
-    %br
+    -if @channel.is_virgin?
+      %label Cycle Start Day
+      %br
+      %select{:id => "channel_cycle_start_day", :name => "channel[cycle_start_day]", :class => "required"}
+        - (1..28).each do |i|
+          - if i == @channel.cycle_start_day
+            %option{:value => @channel.cycle_start_day, :selected => @channel.cycle_start_day}=i
+          - else
+            %option{:value => i}=i
+      %br
       
     -if @channel.is_seo?
     -elsif @channel.is_sem? && @channel.is_virgin?    
