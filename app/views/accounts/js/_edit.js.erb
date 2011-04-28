@@ -1,7 +1,13 @@
 $(document).ready(function(){
   // save all of the fields
   $("#submit_changes").click(function(){
-    $('form[id*="edit_account"').submit();
+    $.ajax({
+      type: 'POST',
+      url: '<%= account_path(@account) %>',
+      data: $('form[id*="edit_account"]').serialize(),
+      success: success_message(),
+      error: fail_message()
+    });
   });
   $('select[id*="manager"]').change(function(){
     var id                 = $(this).attr('id').split('_');
@@ -16,14 +22,8 @@ $(document).ready(function(){
           data: {
             account_manager: $(this).attr('value'),
           },
-          success: function() {
-            $("#msg").html('<span class="success-box">Save was successful!</span>');
-            $("#msg").removeClass().addClass('success-box').show('blind', 250);
-          },
-          error: function() {
-            $("#msg").html('<span class="error-box">We could not make the save requested</span>');
-            $("#msg").removeClass().addClass('error-box').show('blind', 250);
-          }
+          success: success_message(),
+          error: fail_message()
         });
         break;
       case "seo":
@@ -34,14 +34,8 @@ $(document).ready(function(){
             user_id: $(this).attr('value'),
             channel_id: id[2]
           },
-          success: function() {
-            $("#msg").html('<span class="success-box">Save was successful!</span>');
-            $("#msg").removeClass().addClass('success-box').show('blind', 250);
-          },
-          error: function() {
-            $("#msg").html('<span class="error-box">We could not make the save requested</span>');
-            $("#msg").removeClass().addClass('error-box').show('blind', 250);
-          }
+          success: success_message(),
+          error: fail_message()
         });
         break;
       case "sem":
@@ -52,21 +46,20 @@ $(document).ready(function(){
             user_id: $(this).attr('value'),
             channel_id: id[2]
           },
-          success: function() {
-            $("#msg").html('<span class="success-box">Save was successful!</span>');
-            $("#msg").removeClass().addClass('success-box').show('blind', 250);
-          },
-          error: function() {
-            $("#msg").html('<span class="error-box">We could not make the save requested</span>');
-            $("#msg").removeClass().addClass('error-box').show('blind', 250);
-          }
+          success: success_message(),
+          error: fail_message()
         });
         break;
       default:
         return;
     }
   })
-  function update_channel(channel_id, user_id) {
-
+  function success_message() {
+    $("#msg").html('<span class="success-box">Save was successful!</span>');
+    $("#msg").removeClass().addClass('success-box').show('blind', 250);
+  }
+  function fail_message() {
+    $("#msg").html('<span class="error-box">We could not make the save requested</span>');
+    $("#msg").removeClass().addClass('error-box').show('blind', 250);
   }
 });
