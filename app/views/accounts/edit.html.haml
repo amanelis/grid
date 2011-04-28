@@ -22,6 +22,9 @@
     %br
     = f.text_field :main_contact, :class => "title"
     %br
+    %label Cycle Start Date
+    %br
+    %br
     = f.label :industry
     %br
     = f.select :industry, Account.find(:all).collect(&:industry).uniq
@@ -53,8 +56,33 @@
   %h2 Budget
   .column-3
     %h3 Information
+    %label Monthly Budget
+    %br
+    %br
+    %label Budget Start Date
+    %br
+    %br
+    %label Cycle Start Date
+    %br
+    %br
   .column-3
-    %h3 Edit
+    %h3 Rake
+    %label Rake %
+    %br
+    %br
+    %label Rake Start Date
+    %br
+    %br
+    %label Future Rake
+    %br
+    %br
+    %label Future Rake Start Date
+    %br
+    %br
+    %label Estimated Monthly Spend
+    %br
+    %br
+    
   .column-3-last
     %h3 Stats
   .separator
