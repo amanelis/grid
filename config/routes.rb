@@ -18,8 +18,7 @@ ActionController::Routing::Routes.draw do |map|
   map.thank_you           "/api/v1/forms/:form_id/thank_you",             :controller => "api/v1/forms",       :action => :thank_you
   map.form_submit         "/api/v1/forms/submit",                         :controller => "api/v1/forms",       :action => :submission, :conditions => { :method => :post }
 
-  map.form_submit_old     "/submission",                                  :controller => "api/v1/forms",       :action => :submission, :conditions => { :method => :post }
-  map.form_submit_get     "/submission",                                  :controller => "home",               :action => 'index',     :conditions => { :method => :get }
+  map.form_submit_old     "/submission",                                  :controller => "api/v1/forms",       :action => :submission, :conditions => { :method => [:post, :get] }
   map.form_thank_old      "/contact_forms/:id/thank_you",                 :controller => "api/v1/forms",       :action => :thank_you
   map.get_numners         "/accounts/:account_id/channels/:channel_id/campaigns/:campaign_id/phone_numbers/new", :controller => "phone_numbers", :action => :new, :conditions => {:method => [:get, :post]}
   # CUSTOM ROUTES
