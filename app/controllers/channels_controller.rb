@@ -19,11 +19,31 @@ class ChannelsController < ApplicationController
   end
   
   def update
-    @channel.update_attributes(params[:channel])
-    
-    if @channel.is_seo?
-    elsif @channel.is_sem?
-    elsif @channel.is_basic?
+    @channel.name = params[:channel][:name]
+    @channel.cycle_start_day = params[:channel][:cycle_start_day]
+
+    if @channel.save
+      if @channel.is_seo?
+      elsif @channel.is_sem?
+        if @channel.is_virgin?
+          @budget_setting = BudgetSetting.new
+          @rake_setting   = RakeSetting.new
+
+          @budget_setting.amount      = params[:budget][:amount]
+          @rake_setting.percentage    = params[:rake][:percentage]
+
+          @budget_setting.start_date  = params[:budget][:start_date]
+          @rake_setting.start_date    = params[:rake][:start_date]
+
+          @channel.budget_settings << @budget_setting
+          @channel.rake_settings << @rake_setting
+        end
+        flash[:notice] = "Channel updated!"
+      elsif @channel.is_basic?
+      end
+      
+    else
+      flash[:error] = "Did not update the channel"
     end
     
     redirect_to account_path(@channel.account, :cycle_start_day => params[:channel][:cycle_start_day]) 

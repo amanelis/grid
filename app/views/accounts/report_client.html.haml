@@ -1,20 +1,20 @@
 %header
   .right
     %h2
-      %span= "$#{@account.total_revenue_for_managed_campaigns_between(@start_date, @end_date)} in Revenue"
+      %span= "$#{@account.total_revenue_for_managed_campaigns_between(cookies[:start_date], cookies[:end_date])} in Revenue"
     %h3
-      %span= "#{@account.number_of_total_contacts_for_managed_campaigns_between(@start_date, @end_date)} Contacts"
+      %span= "#{@account.number_of_total_contacts_for_managed_campaigns_between(cookies[:start_date], cookies[:end_date])} Contacts"
     %h3
-      %span= "#{@account.number_of_total_leads_for_managed_campaigns_between(@start_date, @end_date)} Leads"
+      %span= "#{@account.number_of_total_leads_for_managed_campaigns_between(cookies[:start_date], cookies[:end_date])} Leads"
   %h1= @account.name
   %h2 CityVoice Monthly Report
-  %p= @start_date.to_s(:long) + ' to ' + @end_date.to_s(:long)
+  %p= cookies[:start_date].to_s(:long) + ' to ' + cookies[:end_date].to_s(:long)
 %article
   -if @account.campaigns.present?
     .span-24.last
       %h3 Cost Per Lead Summary
       .chart=high_chart("highcharts_cost_per_lead", @cost_per_lead_summary_graph)
-      %h3 Managed Campaigns 
+      %h3 Managed Campaigns
       %table#cpl
         %thead
           %th Campaign Name
@@ -29,23 +29,23 @@
           -@managed_campaigns.each do |campaign|
             %tr
               %td= campaign.name
-              %td= campaign.number_of_lead_calls_between(@start_date, @end_date).to_s
-              %td= campaign.number_of_lead_submissions_between(@start_date, @end_date).to_s
-              %td= campaign.number_of_total_leads_between(@start_date, @end_date).to_s
-              %td= campaign.number_of_total_contacts_between(@start_date, @end_date).to_s
-              %td= ActionController::Base.helpers.number_to_currency(campaign.spend_between(@start_date, @end_date))
-              %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(@start_date, @end_date))
-              %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_contact_between(@start_date, @end_date))
+              %td= campaign.number_of_lead_calls_between(cookies[:start_date], cookies[:end_date]).to_s
+              %td= campaign.number_of_lead_submissions_between(cookies[:start_date], cookies[:end_date]).to_s
+              %td= campaign.number_of_total_leads_between(cookies[:start_date], cookies[:end_date]).to_s
+              %td= campaign.number_of_total_contacts_between(cookies[:start_date], cookies[:end_date]).to_s
+              %td= ActionController::Base.helpers.number_to_currency(campaign.spend_between(cookies[:start_date], cookies[:end_date]))
+              %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(cookies[:start_date], cookies[:end_date]))
+              %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_contact_between(cookies[:start_date], cookies[:end_date]))
         %tfoot
           %th Totals
-          %th= @account.number_of_lead_calls_for_managed_campaigns_between(@start_date, @end_date)
-          %th= @account.number_of_lead_submissions_for_managed_campaigns_between(@start_date, @end_date)
-          %th= @account.number_of_total_leads_for_managed_campaigns_between(@start_date, @end_date)
-          %th= @account.number_of_total_contacts_for_managed_campaigns_between(@start_date, @end_date).to_s
-          %th= ActionController::Base.helpers.number_to_currency(@account.spend_for_managed_campaigns_between(@start_date, @end_date))
-          %th= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_lead_for(@managed_campaigns, @start_date, @end_date))
-          %th= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_contact_for(@managed_campaigns, @start_date, @end_date))
-      %h3 Unmanaged Campaigns    
+          %th= @account.number_of_lead_calls_for_managed_campaigns_between(cookies[:start_date], cookies[:end_date])
+          %th= @account.number_of_lead_submissions_for_managed_campaigns_between(cookies[:start_date], cookies[:end_date])
+          %th= @account.number_of_total_leads_for_managed_campaigns_between(cookies[:start_date], cookies[:end_date])
+          %th= @account.number_of_total_contacts_for_managed_campaigns_between(cookies[:start_date], cookies[:end_date]).to_s
+          %th= ActionController::Base.helpers.number_to_currency(@account.spend_for_managed_campaigns_between(cookies[:start_date], cookies[:end_date]))
+          %th= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_lead_for(@managed_campaigns, cookies[:start_date], cookies[:end_date]))
+          %th= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_contact_for(@managed_campaigns, cookies[:start_date], cookies[:end_date]))
+      %h3 Unmanaged Campaigns
       %table#cpl
         %thead
           %th Campaign Name
@@ -60,25 +60,25 @@
           -@unmanaged_campaigns.each do |campaign|
             %tr
               %td= campaign.name
-              %td= campaign.number_of_lead_calls_between(@start_date, @end_date).to_s
-              %td= campaign.number_of_lead_submissions_between(@start_date, @end_date).to_s
-              %td= campaign.number_of_total_leads_between(@start_date, @end_date).to_s
-              %td= campaign.number_of_total_contacts_between(@start_date, @end_date).to_s
-              %td= ActionController::Base.helpers.number_to_currency(campaign.spend_between(@start_date, @end_date))
-              %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(@start_date, @end_date))
-              %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_contact_between(@start_date, @end_date))
+              %td= campaign.number_of_lead_calls_between(cookies[:start_date], cookies[:end_date]).to_s
+              %td= campaign.number_of_lead_submissions_between(cookies[:start_date], cookies[:end_date]).to_s
+              %td= campaign.number_of_total_leads_between(cookies[:start_date], cookies[:end_date]).to_s
+              %td= campaign.number_of_total_contacts_between(cookies[:start_date], cookies[:end_date]).to_s
+              %td= ActionController::Base.helpers.number_to_currency(campaign.spend_between(cookies[:start_date], cookies[:end_date]))
+              %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_lead_between(cookies[:start_date], cookies[:end_date]))
+              %td= ActionController::Base.helpers.number_to_currency(campaign.cost_per_contact_between(cookies[:start_date], cookies[:end_date]))
         %tfoot
           %th Totals
-          %th= @account.number_of_lead_calls_for_unmanaged_campaigns_between(@start_date, @end_date)
-          %th= @account.number_of_lead_submissions_for_unmanaged_campaigns_between(@start_date, @end_date)
-          %th= @account.number_of_total_leads_for_unmanaged_campaigns_between(@start_date, @end_date)
-          %th= @account.number_of_total_contacts_for_unmanaged_campaigns_between(@start_date, @end_date).to_s
-          %th= ActionController::Base.helpers.number_to_currency(@account.spend_for_unmanaged_campaigns_between(@start_date, @end_date))
-          %th= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_lead_for(@unmanaged_campaigns, @start_date, @end_date))
-          %th= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_contact_for(@unmanaged_campaigns, @start_date, @end_date))
+          %th= @account.number_of_lead_calls_for_unmanaged_campaigns_between(cookies[:start_date], cookies[:end_date])
+          %th= @account.number_of_lead_submissions_for_unmanaged_campaigns_between(cookies[:start_date], cookies[:end_date])
+          %th= @account.number_of_total_leads_for_unmanaged_campaigns_between(cookies[:start_date], cookies[:end_date])
+          %th= @account.number_of_total_contacts_for_unmanaged_campaigns_between(cookies[:start_date], cookies[:end_date]).to_s
+          %th= ActionController::Base.helpers.number_to_currency(@account.spend_for_unmanaged_campaigns_between(cookies[:start_date], cookies[:end_date]))
+          %th= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_lead_for(@unmanaged_campaigns, cookies[:start_date], cookies[:end_date]))
+          %th= ActionController::Base.helpers.number_to_currency(Campaign.weighted_cost_per_contact_for(@unmanaged_campaigns, cookies[:start_date], cookies[:end_date]))
 
 
-  
+
   -if @account.campaigns.sem.present?
     %section#pay_per_click
     %hr
@@ -97,20 +97,20 @@
           -@account.campaigns.sem.each do |campaign|
             %tr
               %td= campaign.name
-              %td= campaign.number_of_total_leads_between(@start_date, @end_date).to_s
-              %td= campaign.campaign_style.clicks_between(@start_date, @end_date).to_s
-              %td= campaign.campaign_style.impressions_between(@start_date, @end_date).to_s
-              %td= (sprintf("%.3f", (campaign.campaign_style.click_through_rate_between(@start_date, @end_date) * 100)) + '%')
-              %td= '%.2f' % campaign.campaign_style.average_position_between(@start_date, @end_date).to_s
-              %td= ActionController::Base.helpers.number_to_currency(campaign.cost_between(@start_date, @end_date))
+              %td= campaign.number_of_total_leads_between(cookies[:start_date], cookies[:end_date]).to_s
+              %td= campaign.campaign_style.clicks_between(cookies[:start_date], cookies[:end_date]).to_s
+              %td= campaign.campaign_style.impressions_between(cookies[:start_date], cookies[:end_date]).to_s
+              %td= (sprintf("%.3f", (campaign.campaign_style.click_through_rate_between(cookies[:start_date], cookies[:end_date]) * 100)) + '%')
+              %td= '%.2f' % campaign.campaign_style.average_position_between(cookies[:start_date], cookies[:end_date]).to_s
+              %td= ActionController::Base.helpers.number_to_currency(campaign.cost_between(cookies[:start_date], cookies[:end_date]))
         %tfoot
           %th Totals
-          %th= @account.sem_number_of_total_leads_between(@start_date, @end_date)
-          %th= @account.sem_clicks_between(@start_date, @end_date)
-          %th= @account.sem_impressions_between(@start_date, @end_date)
-          %th= (sprintf("%.3f", (@account.sem_click_through_rate_between(@start_date, @end_date) * 100)) + '%')
-          %th= '%.2f' % @account.sem_average_position_between(@start_date, @end_date).to_s
-          %th= ActionController::Base.helpers.number_to_currency(@account.sem_cost_between(@start_date, @end_date))
+          %th= @account.sem_number_of_total_leads_between(cookies[:start_date], cookies[:end_date])
+          %th= @account.sem_clicks_between(cookies[:start_date], cookies[:end_date])
+          %th= @account.sem_impressions_between(cookies[:start_date], cookies[:end_date])
+          %th= (sprintf("%.3f", (@account.sem_click_through_rate_between(cookies[:start_date], cookies[:end_date]) * 100)) + '%')
+          %th= '%.2f' % @account.sem_average_position_between(cookies[:start_date], cookies[:end_date]).to_s
+          %th= ActionController::Base.helpers.number_to_currency(@account.sem_cost_between(cookies[:start_date], cookies[:end_date]))
 
   -if @account.campaigns.seo.present?
     %section#organic_campaigns
@@ -131,32 +131,32 @@
           -@account.campaigns.seo.each do |campaign|
             %tr
               %td= campaign.name
-              %td= campaign.number_of_total_leads_between(@start_date, @end_date).to_s
-              %td= campaign.number_of_visits_between(@start_date, @end_date).to_s
-              %td= campaign.number_of_actions_between(@start_date, @end_date).to_s
-              %td= '%.2f' % campaign.number_of_average_actions_between(@start_date, @end_date).to_s
+              %td= campaign.number_of_total_leads_between(cookies[:start_date], cookies[:end_date]).to_s
+              %td= campaign.number_of_visits_between(cookies[:start_date], cookies[:end_date]).to_s
+              %td= campaign.number_of_actions_between(cookies[:start_date], cookies[:end_date]).to_s
+              %td= '%.2f' % campaign.number_of_average_actions_between(cookies[:start_date], cookies[:end_date]).to_s
               %td
-                - @total_time = campaign.total_time_spent_between(@start_date, @end_date)
+                - @total_time = campaign.total_time_spent_between(cookies[:start_date], cookies[:end_date])
                 = [(((@total_time/3600) != 0 ? (@total_time/3600).to_s + 'h' : nil)), (((@total_time/60 % 60) != 0 ? ((@total_time/60 % 60).to_s + 'm').rjust(2,'0') : nil)), (((@total_time % 60) != 0 ? ((@total_time % 60).to_s + 's').rjust(2,'0') : nil))].compact.join(':')
               %td
-                - @avg_time = campaign.average_total_time_spent_between(@start_date, @end_date).to_i
+                - @avg_time = campaign.average_total_time_spent_between(cookies[:start_date], cookies[:end_date]).to_i
                 = [(((@avg_time/3600) != 0 ? (@avg_time/3600).to_s + 'h' : nil)), (((@avg_time/60 % 60) != 0 ? ((@avg_time/60 % 60).to_s + 'm').rjust(2,'0') : nil)), (((@avg_time % 60) != 0 ? ((@avg_time % 60).to_s + 's').rjust(2,'0') : nil))].compact.join(':')
-              %td= (sprintf("%.2f", (campaign.bounce_rate_between(@start_date, @end_date) * 100)) + '%')
-              %td= ActionController::Base.helpers.number_to_currency(campaign.spend_between(@start_date, @end_date))
+              %td= (sprintf("%.2f", (campaign.bounce_rate_between(cookies[:start_date], cookies[:end_date]) * 100)) + '%')
+              %td= ActionController::Base.helpers.number_to_currency(campaign.spend_between(cookies[:start_date], cookies[:end_date]))
         %tfoot
           %th Totals
-          %th= @account.seo_number_of_total_leads_between(@start_date, @end_date)
-          %th= @account.seo_number_of_visits_between(@start_date, @end_date)
-          %th= @account.seo_number_of_actions_between(@start_date, @end_date)
-          %th= '%.2f' % @account.seo_number_of_average_actions_between(@start_date, @end_date)
+          %th= @account.seo_number_of_total_leads_between(cookies[:start_date], cookies[:end_date])
+          %th= @account.seo_number_of_visits_between(cookies[:start_date], cookies[:end_date])
+          %th= @account.seo_number_of_actions_between(cookies[:start_date], cookies[:end_date])
+          %th= '%.2f' % @account.seo_number_of_average_actions_between(cookies[:start_date], cookies[:end_date])
           %th
-            - @total_time = @account.seo_total_time_spent_between(@start_date, @end_date)
+            - @total_time = @account.seo_total_time_spent_between(cookies[:start_date], cookies[:end_date])
             = [(((@total_time/3600) != 0 ? (@total_time/3600).to_s + 'h' : nil)), (((@total_time/60 % 60) != 0 ? ((@total_time/60 % 60).to_s + 'm').rjust(2,'0') : nil)), (((@total_time % 60) != 0 ? ((@total_time % 60).to_s + 's').rjust(2,'0') : nil))].compact.join(':')
           %th
-            - @avg_time = @account.seo_average_total_time_spent_between(@start_date, @end_date).to_i
+            - @avg_time = @account.seo_average_total_time_spent_between(cookies[:start_date], cookies[:end_date]).to_i
             = [(((@avg_time/3600) != 0 ? (@avg_time/3600).to_s + 'h' : nil)), (((@avg_time/60 % 60) != 0 ? ((@avg_time/60 % 60).to_s + 'm').rjust(2,'0') : nil)), (((@avg_time % 60) != 0 ? ((@avg_time % 60).to_s + 's').rjust(2,'0') : nil))].compact.join(':')
-          %th= (sprintf("%.2f", (@account.seo_bounce_rate_between(@start_date, @end_date) * 100)) + '%')
-          %th= ActionController::Base.helpers.number_to_currency(@account.seo_spend_between(@start_date, @end_date))
+          %th= (sprintf("%.2f", (@account.seo_bounce_rate_between(cookies[:start_date], cookies[:end_date]) * 100)) + '%')
+          %th= ActionController::Base.helpers.number_to_currency(@account.seo_spend_between(cookies[:start_date], cookies[:end_date]))
 
   -if @account.campaigns.maps.present?
     %section#maps_campaigns
@@ -170,10 +170,10 @@
           -@account.campaigns.maps.each do |campaign|
             %tr
               %td= campaign.name
-              %td= campaign.number_of_map_visits_between(@start_date, @end_date).to_s
+              %td= campaign.number_of_map_visits_between(cookies[:start_date], cookies[:end_date]).to_s
         %tfoot
           %th Totals
-          %th= @account.maps_number_of_visits_between(@start_date, @end_date)
+          %th= @account.maps_number_of_visits_between(cookies[:start_date], cookies[:end_date])
 
   -if @account.campaigns.seo.present?
     -@account.campaigns.seo.each_index do |index|
@@ -189,16 +189,16 @@
               /  No Data
               /-else
               /  = render inline_annotated_timeline(@seo_campaign_timelines[index], 620, 280, 'div_id_to_create', {:zoomEndTime => @seo_campaign_timelines[index].keys.sort[-1], :zoomStartTime  => @seo_campaign_timelines[index].keys.sort[-30] })
-              -@sources_link = @account.campaigns.seo[index].campaign_style.website_traffic_sources_graph(@start_date, @end_date)
+              -@sources_link = @account.campaigns.seo[index].campaign_style.website_traffic_sources_graph(cookies[:start_date], cookies[:end_date])
               -if @sources_link.present?
                 %br
                 = link_to image_tag(@sources_link, :alt => 'Traffice Sources'), @sources_link
-              -@keyword_link = @account.campaigns.seo[index].campaign_style.seo_keyword_rankings_graph(@start_date, @end_date)
+              -@keyword_link = @account.campaigns.seo[index].campaign_style.seo_keyword_rankings_graph(cookies[:start_date], cookies[:end_date])
               -if @keyword_link.present?
                 %br
                 = link_to image_tag(@keyword_link, :alt => 'Keyword Rankings By Month'), @keyword_link
                 %br
-              -@location_link = @account.campaigns.seo[index].website.try(:visitors_by_location_graph, @start_date, @end_date)
+              -@location_link = @account.campaigns.seo[index].website.try(:visitors_by_location_graph, cookies[:start_date], cookies[:end_date])
               -if @location_link.present?
                 %br
                 .center
@@ -206,7 +206,7 @@
                 %br
                 = link_to image_tag(@location_link, :alt => 'Visitors By Location'), @location_link
                 %br
-              -rankings = @account.campaigns.seo[index].campaign_style.seo_keyword_ranking_table(@start_date, @end_date)
+              -rankings = @account.campaigns.seo[index].campaign_style.seo_keyword_ranking_table(cookies[:start_date], cookies[:end_date])
               -if rankings.present?
                 %table
                   %thead
@@ -230,7 +230,7 @@
 
   /Begin of Calls Section
   -@account.campaigns.each do |campaign|
-    -if campaign.calls.between(@start_date, @end_date).present?
+    -if campaign.calls.between(cookies[:start_date], cookies[:end_date]).present?
       %hr
       %h3= "Calls for " + campaign.name + " " + "(#{@account.time_zone})"
       %article
@@ -247,7 +247,7 @@
               %th Rating
               %th Revenue
           %tbody
-            -campaign.calls.between(@start_date, @end_date).each do |call|
+            -campaign.calls.between(cookies[:start_date], cookies[:end_date]).each do |call|
               %tr
                 %td= call.caller_name
                 %td= call.caller_number

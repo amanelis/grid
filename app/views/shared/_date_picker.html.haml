@@ -55,14 +55,14 @@
   });
 
 %h4.quiet
-  = "#{(@start_date).to_s(:medium)} to #{@end_date.to_s(:medium)}"
+  = "#{(cookies[:start_date]).to_s(:medium)} to #{cookies[:end_date].to_s(:medium)}"
   = link_to "Edit", "#", :id => "show_change_dates"
 
 
 %div{:id => 'change_dates', :style => "display:none;", :class => "expand" }
   %h3 Change your date range.
   -form_for(accounts_path, :html => {:method => "get", :id => "date_form"}) do |f|
-    = f.text_field :from, :name => "from", :id => "from", :autocomplete => "off", :value => "#{(@start_date).to_s(:medium)}", :size => 15
+    = f.text_field :from, :name => "from", :id => "from", :autocomplete => "off", :value => "#{(cookies[:start_date]).to_s(:medium)}", :size => 15
     to
-    = f.text_field :to, :name => "to", :id => "to", :autocomplete => "off", :value => "#{@end_date.to_s(:medium)}", :size => 15
+    = f.text_field :to, :name => "to", :id => "to", :autocomplete => "off", :value => "#{cookies[:end_date].to_s(:medium)}", :size => 15
     = f.submit "Change Dates"

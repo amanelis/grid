@@ -21,7 +21,7 @@
       %th Impression Share
       %th Exact Match Imp Share
   %tbody
-    -(@start_date..(@end_date - 1.day)).reverse_each do |line_date|
+    -(cookies[:start_date]..(cookies[:end_date] - 1.day)).reverse_each do |line_date|
       %tr
         %td= line_date.strftime("%m/%d/%y")
         %td= @google_sem_campaign.clicks_between(line_date, line_date)

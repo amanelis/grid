@@ -1,5 +1,9 @@
 :javascript
   $(document).ready(function(){
+    
+    $("#budget_start_date").datepicker({dateFormat: 'yy-mm-dd'});
+    $("#rake_start_date").datepicker({dateFormat: 'yy-mm-dd'});
+    
     $('#cancel').click(function(){$.facebox.close(); return false;});
     $("#update").click(function(){
       $('.edit_channel').validate();
@@ -18,27 +22,28 @@
     = f.text_field :name, :class => 'required title'
     %br
     
-    %label Cycle Start Day
-    %br
-    %select{:id => "channel_cycle_start_day", :name => "channel[cycle_start_day]", :class => "required"}
-      - (1..28).each do |i|
-        - if i == @channel.cycle_start_day
-          %option{:value => @channel.cycle_start_day, :selected => @channel.cycle_start_day}=i
-        - else
-          %option{:value => i}=i
-    %br
-  
+    -if @channel.is_virgin?
+      %label Cycle Start Day
+      %br
+      %select{:id => "channel_cycle_start_day", :name => "channel[cycle_start_day]", :class => "required"}
+        - (1..28).each do |i|
+          - if i == @channel.cycle_start_day
+            %option{:value => @channel.cycle_start_day, :selected => @channel.cycle_start_day}=i
+          - else
+            %option{:value => i}=i
+      %br
+      
     -if @channel.is_seo?
-    -elsif @channel.is_sem?
+    -elsif @channel.is_sem? && @channel.is_virgin?    
       %br
       %label Budget Amount
-      %input.title{:id => "budget_amount", :name => "budget[amount]", :class => "text", :value => @channel.budget_settings.last.try(:amount)}
+      %input.title{:id => "budget_amount", :name => "budget[amount]", :class => "text", :value => @channel.try(:current_budget)}
       %br
       %label Budget Start Date
       %input.title{:id => "budget_start_date", :type => 'text', :name => "budget[start_date]", :class => "text", :value => @channel.budget_settings.last.try(:start_date)}
       %br
       %label Rake Percentage
-      %input.title{:id => "rake_percentage", :name => "rake[percentage]", :class => "text", :value => @channel.rake_settings.last.try(:percentage)}
+      %input.title{:id => "rake_percentage", :name => "rake[percentage]", :class => "text", :value => @channel.current_rake_percentage}
       %br
       %label Rake Start Date
       %input.title{:id => "rake_start_date", :type => 'text', :name => "rake[start_date]", :class => "text", :value => @channel.rake_settings.last.try(:start_date)}
