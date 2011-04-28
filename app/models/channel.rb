@@ -86,8 +86,24 @@ class Channel < ActiveRecord::Base
     Date.today.day < self.cycle_start_day ? Date.today.prev_month.month : Date.today.month
   end
   
+  def current_cycle_length
+    self.cycle_length_for(self.current_month)
+  end
+  
+  def cycle_length_for(month = Date.today.month, year = Date.today.year)
+    Date.civil(year, month, -1).day
+  end
+  
+  def budget_target_variance
+    self.days_left_in_cycle - self.number_of_days_money_remaining
+  end
+  
   def number_of_days_money_remaining
-    self.current_amount_remaining / (self.current_cost / self.days_into_cycle)
+    (current_cost = self.current_cost) == 0.0 ? self.current_cycle_length : (self.current_amount_remaining / (current_cost / self.days_into_cycle))
+  end
+  
+  def days_left_in_cycle(date = Date.today)
+    self.cycle_length_for((date.day < self.cycle_start_day ? date.prev_month.month : date.month), date.year) - self.days_into_cycle(date)
   end
   
   def days_into_cycle(date = Date.today)
