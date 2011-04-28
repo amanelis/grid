@@ -76,7 +76,7 @@ class Channel < ActiveRecord::Base
   # INITIALIZATION
   
   def after_initialize
-    self.cycle_start_day ||= 1 unless attributes['cycle_start_day'].nil?
+    self.cycle_start_day ||= 1 if attributes.has_key?('cycle_start_day')
   end
 
 
