@@ -1,8 +1,8 @@
 :javascript
   $(document).ready(function () {
-    $("div#[id*='flash']").click(function(){
-      $("div#[id*='flash']").hide('blind', 800);
-    })
+    $("div#[id*='flash'] div#msg").click(function(){
+      $(this).hide('blind', 800);
+    });
   });
 - flash.each do |name, msg|
   %div.error_box{:id => "flash_#{name}"}

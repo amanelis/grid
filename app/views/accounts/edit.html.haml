@@ -1,19 +1,24 @@
+:javascript
+  #{render :partial => "accounts/js/edit.js"}
+
 = content_for :crumb do
   = link_to "Accounts", accounts_path
   >
   = link_to @account.name, account_path
   >
   Edit
-  
+
+
 %h1= "Edit #{@account.name}"
 %span.silver-btn= link_to 'Pause this Account', account_path(@account), :class => "button", :confirm => "This will pause this account, are you sure?", :method => :delete
 %br
 %br
 .separator
-- form_for @account, :url => account_path do |f|
-  %h2 Account
-  .column-2
-    %h3 Information
+
+%h2 Account
+.column-2
+  %h3 Information
+  - form_for @account, :url => account_path do |f|
     = f.label :name
     %br
     = f.text_field :name, :class => "title"
@@ -30,62 +35,70 @@
     = f.select :industry, Account.find(:all).collect(&:industry).uniq
     %br
     %br
-  .column-2-last
-    %h3 Managers
-    %label Account
+.column-2-last
+  %h3 Managers
+  %label Account
+  %br
+  %select{:id => "account_manager"}
+    %option{:value => "0"} - Change Account Manager -
+    - @account.group_account.potential_account_managers.collect do |manager|
+      %option{:value => manager.id}=manager.name
+  %br
+  - @account.channels.select(&:is_seo?).each do |seo_channel|
+    %label= seo_channel.name
     %br
-    - if @account.account_manager.nil?
-      - @data = ['- Select -', 0].to_s
-    - else
-      - @data = @account.account_manager.name
-    = select_tag('account_manager', options_for_select([['- Change Account Manager -', "0"]] + @account.group_account.potential_account_managers.collect {|x| [x.name, x.id]}, @account.account_manager.try(:id)))
+
+    %select{:id => "seo_manager_#{seo_channel.id}"}
+      %option{:value => "0"} - Change Account Manager -
+      - @account.group_account.potential_account_managers.collect.each do |manager|
+        %option{:value => manager.id}=manager.name
+
     %br
-    - @account.channels.select(&:is_seo?).each do |seo_channel|
-      %label= seo_channel.name
-      %br
-      = hidden_field_tag('channel_seo_id', seo_channel.id)
-      = select_tag("channel_seo_manager", options_for_select([['- Change Channel Manager -', "0"]] + @account.group_account.potential_account_managers.collect {|x| [x.name, x.id]}, seo_channel.channel_manager.try(:id)))
-      %br
-    - @account.channels.select(&:is_sem?).each do |sem_channel|
-      %label= sem_channel.name
-      %br
-      = hidden_field_tag('channel_sem_id', sem_channel.id)
-      = select_tag("channel_sem_manager", options_for_select([['- Change Channel Manager -', "0"]] + @account.group_account.potential_account_managers.collect {|x| [x.name, x.id]}, sem_channel.channel_manager.try(:id)))
-      %br
-  .separator
-  %h2 Budget
-  .column-3
-    %h3 Information
-    %label Monthly Budget
+  - @account.channels.select(&:is_sem?).each do |sem_channel|
+    %label= sem_channel.name
     %br
+
+    %select{:id => "sem_manager_#{sem_channel.id}"}
+      %option{:value => "0"} - Change Account Manager -
+      - @account.group_account.potential_account_managers.collect.each do |manager|
+        %option{:value => manager.id}=manager.name
+
     %br
-    %label Budget Start Date
-    %br
-    %br
-    %label Cycle Start Date
-    %br
-    %br
-  .column-3
-    %h3 Rake
-    %label Rake %
-    %br
-    %br
-    %label Rake Start Date
-    %br
-    %br
-    %label Future Rake
-    %br
-    %br
-    %label Future Rake Start Date
-    %br
-    %br
-    %label Estimated Monthly Spend
-    %br
-    %br
-    
-  .column-3-last
-    %h3 Stats
-  .separator
-  %span.green-btn= f.submit "Update"
+.separator
+%h2 Budget
+.column-3
+  %h3 Information
+  %label Monthly Budget
+  %br
+  %br
+  %label Budget Start Date
+  %br
+  %br
+  %label Cycle Start Date
+  %br
+  %br
+.column-3
+  %h3 Rake
+  %label Rake %
+  %br
+  %br
+  %label Rake Start Date
+  %br
+  %br
+  %label Future Rake
+  %br
+  %br
+  %label Future Rake Start Date
+  %br
+  %br
+  %label Estimated Monthly Spend
+  %br
+  %br
+
+.column-3-last
+  %h3 Stats
+.separator
+%span.green-btn
+  %a{:href => "#", :id => "submit_changes" }Submit
 
 

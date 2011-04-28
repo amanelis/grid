@@ -1,0 +1,72 @@
+$(document).ready(function(){
+  // save all of the fields
+  $("#submit_changes").click(function(){
+    $('form[id*="edit_account"').submit();
+  });
+  $('select[id*="manager"]').change(function(){
+    var id                 = $(this).attr('id').split('_');
+    var account_path       = '<%= account_path(@account) %>';
+    if($(this).attr('value') == '0')
+      return;
+    switch(id[0]) {
+      case "account":
+        $.post({
+          type: 'POST',
+          url:  account_path,
+          data: {
+            account_manager: $(this).attr('value'),
+          },
+          success: function() {
+            $("#msg").html('<span class="success-box">Save was successful!</span>');
+            $("#msg").removeClass().addClass('success-box').show('blind', 250);
+          },
+          error: function() {
+            $("#msg").html('<span class="error-box">We could not make the save requested</span>');
+            $("#msg").removeClass().addClass('error-box').show('blind', 250);
+          }
+        });
+        break;
+      case "seo":
+        $.post({
+          type: 'POST',
+          url:  account_path,
+          data: {
+            user_id: $(this).attr('value'),
+            channel_id: id[2]
+          },
+          success: function() {
+            $("#msg").html('<span class="success-box">Save was successful!</span>');
+            $("#msg").removeClass().addClass('success-box').show('blind', 250);
+          },
+          error: function() {
+            $("#msg").html('<span class="error-box">We could not make the save requested</span>');
+            $("#msg").removeClass().addClass('error-box').show('blind', 250);
+          }
+        });
+        break;
+      case "sem":
+        $.post({
+          type: 'POST',
+          url:  account_path,
+          data: {
+            user_id: $(this).attr('value'),
+            channel_id: id[2]
+          },
+          success: function() {
+            $("#msg").html('<span class="success-box">Save was successful!</span>');
+            $("#msg").removeClass().addClass('success-box').show('blind', 250);
+          },
+          error: function() {
+            $("#msg").html('<span class="error-box">We could not make the save requested</span>');
+            $("#msg").removeClass().addClass('error-box').show('blind', 250);
+          }
+        });
+        break;
+      default:
+        return;
+    }
+  })
+  function update_channel(channel_id, user_id) {
+
+  }
+});
