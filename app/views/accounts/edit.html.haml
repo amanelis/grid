@@ -1,51 +1,91 @@
+= content_for :crumb do
+  = link_to "Accounts", accounts_path
+  >
+  = link_to @account.name, account_path
+  >
+  Edit
+  
+%h1= "Edit #{@account.name}"
+%span.silver-btn= link_to 'Pause this Account', account_path(@account), :class => "button", :confirm => "This will pause this account, are you sure?", :method => :delete
+%br
+%br
+.separator
 - form_for @account, :url => account_path do |f|
-  %h2 Account Info
-  = f.label :name
-  %br
-  = f.text_field :name
-  %br
-  %br
-  = f.label :main_contact
-  %br
-  = f.text_field :main_contact
-  %br
-  %br
-  = f.label :industry
-  %br
-  = f.select :industry, Account.find(:all).collect(&:industry).uniq
-  %br
-  %br
-
-  %label Account Manager
-  - if @account.account_manager.nil?
-    - @data = ['- Select -', 0].to_s
-  - else
-    - @data = @account.account_manager.name
-  %br
-  = select_tag('account_manager', options_for_select([['- Change Account Manager -', "0"]] + @account.group_account.potential_account_managers.collect {|x| [x.name, x.id]}, @account.account_manager.try(:id)))
-  %br
-  %br
-  
-  
-  %h2 SEO Channels
-  %hr
-  - @account.channels.select(&:is_seo?).each do |seo_channel|
-    %h3= seo_channel.name
-    = hidden_field_tag('channel_seo_id', seo_channel.id)
-    = select_tag("channel_seo_manager", options_for_select([['- Change Channel Manager -', "0"]] + @account.group_account.potential_account_managers.collect {|x| [x.name, x.id]}, seo_channel.channel_manager.try(:id)))
-  
-  
-  %h2 SEM Channels
-  %hr
-  - @account.channels.select(&:is_sem?).each do |sem_channel|
-    %h3= sem_channel.name
-    = hidden_field_tag('channel_sem_id', sem_channel.id)
-    = select_tag("channel_sem_manager", options_for_select([['- Change Channel Manager -', "0"]] + @account.group_account.potential_account_managers.collect {|x| [x.name, x.id]}, sem_channel.channel_manager.try(:id)))
-  
-  %br
-  %br
-  = link_to 'Pause this Account', account_path(@account), :class => "button", :confirm => "This will pause this account, are you sure?", :method => :delete
-  %br
-  = f.submit "Update"
+  %h2 Account
+  .column-2
+    %h3 Information
+    = f.label :name
+    %br
+    = f.text_field :name, :class => "title"
+    %br
+    = f.label :main_contact
+    %br
+    = f.text_field :main_contact, :class => "title"
+    %br
+    %label Cycle Start Date
+    %br
+    %br
+    = f.label :industry
+    %br
+    = f.select :industry, Account.find(:all).collect(&:industry).uniq
+    %br
+    %br
+  .column-2-last
+    %h3 Managers
+    %label Account
+    %br
+    - if @account.account_manager.nil?
+      - @data = ['- Select -', 0].to_s
+    - else
+      - @data = @account.account_manager.name
+    = select_tag('account_manager', options_for_select([['- Change Account Manager -', "0"]] + @account.group_account.potential_account_managers.collect {|x| [x.name, x.id]}, @account.account_manager.try(:id)))
+    %br
+    - @account.channels.select(&:is_seo?).each do |seo_channel|
+      %label= seo_channel.name
+      %br
+      = hidden_field_tag('channel_seo_id', seo_channel.id)
+      = select_tag("channel_seo_manager", options_for_select([['- Change Channel Manager -', "0"]] + @account.group_account.potential_account_managers.collect {|x| [x.name, x.id]}, seo_channel.channel_manager.try(:id)))
+      %br
+    - @account.channels.select(&:is_sem?).each do |sem_channel|
+      %label= sem_channel.name
+      %br
+      = hidden_field_tag('channel_sem_id', sem_channel.id)
+      = select_tag("channel_sem_manager", options_for_select([['- Change Channel Manager -', "0"]] + @account.group_account.potential_account_managers.collect {|x| [x.name, x.id]}, sem_channel.channel_manager.try(:id)))
+      %br
+  .separator
+  %h2 Budget
+  .column-3
+    %h3 Information
+    %label Monthly Budget
+    %br
+    %br
+    %label Budget Start Date
+    %br
+    %br
+    %label Cycle Start Date
+    %br
+    %br
+  .column-3
+    %h3 Rake
+    %label Rake %
+    %br
+    %br
+    %label Rake Start Date
+    %br
+    %br
+    %label Future Rake
+    %br
+    %br
+    %label Future Rake Start Date
+    %br
+    %br
+    %label Estimated Monthly Spend
+    %br
+    %br
+    
+  .column-3-last
+    %h3 Stats
+  .separator
+  %span.green-btn= f.submit "Update"
 
 
