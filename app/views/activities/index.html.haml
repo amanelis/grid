@@ -3,7 +3,7 @@
 = javascript_include_tag 'jquery.mapkey.js'
 
 :javascript
-  var current = 0;
+  var current = 10000;
   var current_id = 0;
 
   $(document).ready(function(){
@@ -14,7 +14,10 @@
       this.submit();
     });
     $("#activities tr").click(function(event){
-      setItem($(this).context.rowIndex);
+      var i = $(this).context.rowIndex;
+      if(current < i)
+        i--;
+      setItem(i);
     });
   });
 
