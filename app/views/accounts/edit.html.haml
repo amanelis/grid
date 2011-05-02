@@ -47,9 +47,6 @@
     %select{:id => "seo_manager_#{seo_channel.id}"}
       %option{:value => "0"} - Change Account Manager -
       - @account.group_account.potential_account_managers.collect.each do |manager|
-        - if seo_channel.try(:channel_manager_id) == manager.id
-          %option{:value => manager.id, :selected => true}=manager.name
-        - else
           %option{:value => manager.id}=manager.name
     %br
 
@@ -60,9 +57,6 @@
     %select{:id => "sem_manager_#{sem_channel.id}"}
       %option{:value => "0"} - Change Account Manager -
       - @account.group_account.potential_account_managers.collect.each do |manager|
-        - if sem_channel.try(:channel_manager_id) == manager.id
-          %option{:value => manager.id, :selected => true}=manager.name
-        - else
           %option{:value => manager.id}=manager.name
     %br
 
