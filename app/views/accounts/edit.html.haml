@@ -47,7 +47,7 @@
     %select{:id => "seo_manager_#{seo_channel.id}"}
       %option{:value => "0"} - Change Account Manager -
       - @account.group_account.potential_account_managers.collect.each do |manager|
-          %option{:value => manager.id}=manager.name
+        %option{:value => manager.id}=manager.name
     %br
 
   - @account.channels.select(&:is_sem?).each do |sem_channel|
@@ -57,7 +57,7 @@
     %select{:id => "sem_manager_#{sem_channel.id}"}
       %option{:value => "0"} - Change Account Manager -
       - @account.group_account.potential_account_managers.collect.each do |manager|
-          %option{:value => manager.id}=manager.name
+        %option{:value => manager.id}=manager.name
     %br
 
 
