@@ -8,6 +8,7 @@
   >
   Edit
 
+%div.error_box{:style => "display: none", :id => "msg"}
 
 %h1= "Edit #{@account.name}"
 %span.silver-btn= link_to 'Pause this Account', account_path(@account), :class => "button", :confirm => "This will pause this account, are you sure?", :method => :delete

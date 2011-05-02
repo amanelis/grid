@@ -31,8 +31,10 @@ $(document).ready(function(){
           type: 'PUT',
           url:  account_path,
           data: {
-            user_id: $(this).attr('value'),
-            channel_id: id[2]
+            channel: {
+              id:      $(this).attr('value'),
+              manager: id[2]
+            }
           },
           success: success_message(),
           error: fail_message()
@@ -43,8 +45,10 @@ $(document).ready(function(){
           type: 'PUT',
           url:  account_path,
           data: {
-            user_id: $(this).attr('value'),
-            channel_id: id[2]
+            channel: {
+              id: $(this).attr('value'),
+              manager: id[2]
+            }
           },
           success: success_message(),
           error: fail_message()
@@ -53,13 +57,18 @@ $(document).ready(function(){
       default:
         return;
     }
+  });
+  $("#msg").click(function(){
+    $(this).hide('blind', 250);
   })
-  function success_message() {
-    $("#msg").html('<span class="success-box">Save was successful!</span>');
-    $("#msg").removeClass().addClass('success-box').show('blind', 250);
-  }
-  function fail_message() {
-    $("#msg").html('<span class="error-box">We could not make the save requested</span>');
-    $("#msg").removeClass().addClass('error-box').show('blind', 250);
-  }
 });
+function success_message() {
+  $("#msg").empty().hide();
+  $("#msg").html('<span class="success-box">Save was successful!</span>');
+  $("#msg").removeClass().addClass('success_box').show();
+}
+function fail_message() {
+  $("#msg").empty().hide();
+  $("#msg").html('<span class="error-box">We could not make the save requested</span>');
+  $("#msg").removeClass().addClass('error_box').show();
+}
