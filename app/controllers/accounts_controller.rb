@@ -49,6 +49,7 @@ class AccountsController < ApplicationController
   end
 
   def update
+    render :text => params[:account].inspect
 =begin
     gu = GroupUser.find(params[:account_manager].to_i)
     @account.account_manager = gu

@@ -1,6 +1,3 @@
-:javascript
-  #{render :partial => "accounts/js/edit.js"}
-
 = content_for :crumb do
   = link_to "Accounts", accounts_path
   >
@@ -35,70 +32,39 @@
     = f.select :industry, Account.find(:all).collect(&:industry).uniq
     %br
     %br
-.column-2-last
-  %h3 Managers
-  %label Account
-  %br
-  %select{:id => "account_manager"}
-    %option{:value => "0"} - Change Account Manager -
-    - @account.group_account.potential_account_managers.collect do |manager|
-      %option{:value => manager.id}=manager.name
-  %br
-  - @account.channels.select(&:is_seo?).each do |seo_channel|
-    %label= seo_channel.name
-    %br
+    
+    .column-2-last
+      %h3 Channel Managers
+      %br
+      - @account.channels.select(&:is_seo?).each do |seo_channel|
+        %label= seo_channel.name
+        %br
 
-    %select{:id => "seo_manager_#{seo_channel.id}"}
-      %option{:value => "0"} - Change Account Manager -
-      - @account.group_account.potential_account_managers.collect.each do |manager|
-        %option{:value => manager.id}=manager.name
+        %select{:id => "account_channel_#{seo_channel.id}", :name => "account[channel_#{seo_channel.id}]"}
+          %option{:value => "0"} - Change Account Manager -
+          - @account.group_account.potential_account_managers.collect.each do |manager|
+            - if seo_channel.try(:channel_manager_id) == manager.id
+              %option{:value => manager.id, :selected => true}=manager.name
+            - else
+              %option{:value => manager.id}=manager.name
+        %br
+    
+      - @account.channels.select(&:is_sem?).each do |sem_channel|
+        %label= sem_channel.name
+        %br
 
-    %br
-  - @account.channels.select(&:is_sem?).each do |sem_channel|
-    %label= sem_channel.name
-    %br
-
-    %select{:id => "sem_manager_#{sem_channel.id}"}
-      %option{:value => "0"} - Change Account Manager -
-      - @account.group_account.potential_account_managers.collect.each do |manager|
-        %option{:value => manager.id}=manager.name
-
-    %br
-.separator
-%h2 Budget
-.column-3
-  %h3 Information
-  %label Monthly Budget
-  %br
-  %br
-  %label Budget Start Date
-  %br
-  %br
-  %label Cycle Start Date
-  %br
-  %br
-.column-3
-  %h3 Rake
-  %label Rake %
-  %br
-  %br
-  %label Rake Start Date
-  %br
-  %br
-  %label Future Rake
-  %br
-  %br
-  %label Future Rake Start Date
-  %br
-  %br
-  %label Estimated Monthly Spend
-  %br
-  %br
-
-.column-3-last
-  %h3 Stats
-.separator
-%span.green-btn
-  %a{:href => "#", :id => "submit_changes" }Submit
+        %select{:id => "account_channel_#{sem_channel.id}", :name => "account[channel_#{sem_channel.id}]"}
+          %option{:value => "0"} - Change Account Manager -
+          - @account.group_account.potential_account_managers.collect.each do |manager|
+            - if sem_channel.try(:channel_manager_id) == manager.id
+              %option{:value => manager.id, :selected => true}=manager.name
+            - else
+              %option{:value => manager.id}=manager.name
+        %br
+    = f.submit "Save"
+    
+    
+  
+  
 
 
