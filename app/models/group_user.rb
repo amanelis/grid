@@ -18,6 +18,10 @@ class GroupUser < ActiveRecord::Base
     self.accounts.present?
   end
   
+  def channel_manager?
+    self.channels.present?
+  end
+  
   def valid_account_manager_information?
     valid_manager_information?
   end
