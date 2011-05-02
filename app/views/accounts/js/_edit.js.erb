@@ -32,8 +32,8 @@ $(document).ready(function(){
           url:  account_path,
           data: {
             channel: {
-              id:      $(this).attr('value'),
-              manager: id[2]
+              channel_id: $(this).attr('value'),
+              manager_id: id[2]
             }
           },
           success: success_message(),
@@ -46,8 +46,8 @@ $(document).ready(function(){
           url:  account_path,
           data: {
             channel: {
-              id: $(this).attr('value'),
-              manager: id[2]
+              channel_id: $(this).attr('value'),
+              manager_id: id[2]
             }
           },
           success: success_message(),
