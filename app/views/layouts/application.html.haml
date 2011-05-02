@@ -15,5 +15,6 @@
   #content
     .container
       =render :partial => "layouts/flash", :locals => { :flash => flash }
+      %div#msg{:style => "display:none;"}
       = yield
   =render :partial => "layouts/footer"
