@@ -2,7 +2,7 @@ $(document).ready(function(){
   // save all of the fields
   $("#submit_changes").click(function(){
     $.ajax({
-      type: 'POST',
+      type: 'PUT',
       url: '<%= account_path(@account) %>',
       data: $('form[id*="edit_account"]').serialize(),
       success: success_message(),
@@ -16,8 +16,8 @@ $(document).ready(function(){
       return;
     switch(id[0]) {
       case "account":
-        $.post({
-          type: 'POST',
+        $.ajax({
+          type: 'PUT',
           url:  account_path,
           data: {
             account_manager: $(this).attr('value'),
@@ -27,8 +27,8 @@ $(document).ready(function(){
         });
         break;
       case "seo":
-        $.post({
-          type: 'POST',
+        $.ajax({
+          type: 'PUT',
           url:  account_path,
           data: {
             user_id: $(this).attr('value'),
@@ -39,8 +39,8 @@ $(document).ready(function(){
         });
         break;
       case "sem":
-        $.post({
-          type: 'POST',
+        $.ajax({
+          type: 'PUT',
           url:  account_path,
           data: {
             user_id: $(this).attr('value'),

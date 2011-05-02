@@ -1,3 +1,6 @@
+:javascript
+  #{render :partial => 'accounts/js/edit.js'}
+
 = content_for :crumb do
   = link_to "Accounts", accounts_path
   >
@@ -32,39 +35,39 @@
     = f.select :industry, Account.find(:all).collect(&:industry).uniq
     %br
     %br
-    
-    .column-2-last
-      %h3 Channel Managers
-      %br
-      - @account.channels.select(&:is_seo?).each do |seo_channel|
-        %label= seo_channel.name
-        %br
-
-        %select{:id => "account_channel_#{seo_channel.id}", :name => "account[channel_#{seo_channel.id}]"}
-          %option{:value => "0"} - Change Account Manager -
-          - @account.group_account.potential_account_managers.collect.each do |manager|
-            - if seo_channel.try(:channel_manager_id) == manager.id
-              %option{:value => manager.id, :selected => true}=manager.name
-            - else
-              %option{:value => manager.id}=manager.name
-        %br
-    
-      - @account.channels.select(&:is_sem?).each do |sem_channel|
-        %label= sem_channel.name
-        %br
-
-        %select{:id => "account_channel_#{sem_channel.id}", :name => "account[channel_#{sem_channel.id}]"}
-          %option{:value => "0"} - Change Account Manager -
-          - @account.group_account.potential_account_managers.collect.each do |manager|
-            - if sem_channel.try(:channel_manager_id) == manager.id
-              %option{:value => manager.id, :selected => true}=manager.name
-            - else
-              %option{:value => manager.id}=manager.name
-        %br
     = f.submit "Save"
-    
-    
-  
-  
+
+.column-2-last
+  %h3 Channel Managers
+  %br
+  - @account.channels.select(&:is_seo?).each do |seo_channel|
+    %label= seo_channel.name
+    %br
+
+    %select{:id => "seo_manager_#{seo_channel.id}"}
+      %option{:value => "0"} - Change Account Manager -
+      - @account.group_account.potential_account_managers.collect.each do |manager|
+        - if seo_channel.try(:channel_manager_id) == manager.id
+          %option{:value => manager.id, :selected => true}=manager.name
+        - else
+          %option{:value => manager.id}=manager.name
+    %br
+
+  - @account.channels.select(&:is_sem?).each do |sem_channel|
+    %label= sem_channel.name
+    %br
+
+    %select{:id => "sem_manager_#{sem_channel.id}"}
+      %option{:value => "0"} - Change Account Manager -
+      - @account.group_account.potential_account_managers.collect.each do |manager|
+        - if sem_channel.try(:channel_manager_id) == manager.id
+          %option{:value => manager.id, :selected => true}=manager.name
+        - else
+          %option{:value => manager.id}=manager.name
+    %br
+
+
+
+
 
 
