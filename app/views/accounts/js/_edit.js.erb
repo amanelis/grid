@@ -5,8 +5,7 @@ $(document).ready(function(){
       type: 'PUT',
       url: '<%= account_path(@account) %>',
       data: $('form[id*="edit_account"]').serialize(),
-      success: success_message(),
-      error: fail_message()
+      success: success_message()
     });
   });
   $('select[id*="manager"]').change(function(){
@@ -22,8 +21,7 @@ $(document).ready(function(){
           data: {
             account_manager: $(this).attr('value'),
           },
-          success: success_message(),
-          error: fail_message()
+          success: success_message()
         });
         break;
       case "seo":
@@ -37,8 +35,7 @@ $(document).ready(function(){
               manager_id: $(this).attr('value')
             }
           },
-          success: success_message(),
-          error: fail_message()
+          success: success_message()
         });
         break;
       case "sem":
@@ -52,8 +49,7 @@ $(document).ready(function(){
               manager_id: $(this).attr('value')
             }
           },
-          success: success_message(),
-          error: fail_message()
+          success: success_message()
         });
         break;
       default:
@@ -68,9 +64,4 @@ function success_message() {
   $("#msg").empty().hide();
   $("#msg").html('<span class="success-box">Save was successful!</span>');
   $("#msg").removeClass().addClass('success_box').show();
-}
-function fail_message() {
-  $("#msg").empty().hide();
-  $("#msg").html('<span class="error-box">We could not make the save requested</span>');
-  $("#msg").removeClass().addClass('error_box').show();
 }
