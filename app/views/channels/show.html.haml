@@ -6,4 +6,68 @@
   = @channel.name
 %h1= @channel.name
 .separator
+%h2 Budget Table
+%table
+  %thead
+    %tr
+      %th Budget
+      %th Spend
+      %th Amount Spent
+      %th Amount Remaining
+      %th % Remaining
+      %th Days Remaining
+      %th Target
+  %tbody
+    %td Budget
+    %td Spend
+    %td Amount Spent
+    %td Amount Remaining
+    %td % Remaining
+    %td Days Remaining
+    %td Target
+.separator
+%h2 Budget History Drop Down
+%table
+  %thead
+    %tr
+      %th Budget
+      %th Start Date
+      %th Rake Setting
+      %th Start Date
+      %th Additional Spend
+      %th Commit Date
+  %tbody
+    %tr
+      %td Budget
+      %td Start Date
+      %td Rake Setting
+      %td Start Date
+      %td Additional Spend
+      %td Commit Date
+.separator
+%h2 Adwords Information
+%table
+  %thead
+    %tr
+      %th Campaign Name
+      %th Clicks
+      %th Impressions CTR
+      %th CPClick
+      %th Avg Pos
+      %th Leads
+      %th Amount Spent
+      %th Conversion Rate
+      %th Cost per Conversion
+  %tbody
+    %tr
+      %td Campaign Name
+      %td Clicks
+      %td Impressions CTR
+      %td CPClick
+      %td Avg Pos
+      %td Leads
+      %td Amount Spent
+      %td Conversion Rate
+      %td Cost per Conversion
+.separator
 %span.green-btn= link_to "Create Campaign", new_channel_campaign_path(@account, @channel)
