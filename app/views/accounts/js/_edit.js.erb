@@ -33,8 +33,8 @@ $(document).ready(function(){
           data: {
             channel: {
               account_id: <%=@account.id%>,
-              channel_id: $(this).attr('value'),
-              manager_id: id[2]
+              channel_id: id[2],
+              manager_id: $(this).attr('value')
             }
           },
           success: success_message(),
@@ -48,8 +48,8 @@ $(document).ready(function(){
           data: {
             channel: {
               account_id: <%=@account.id%>,
-              channel_id: $(this).attr('value'),
-              manager_id: id[2]
+              channel_id: id[2],
+              manager_id: $(this).attr('value')
             }
           },
           success: success_message(),
