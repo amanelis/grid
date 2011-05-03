@@ -42,23 +42,25 @@
   %h3 Channel Managers
   %br
   - @account.channels.select(&:is_seo?).each do |seo_channel|
-    %label= seo_channel.name
+    %label= "#{seo_channel.name}: #{seo_channel.id}"
     %br
 
     %select{:id => "seo_manager_#{seo_channel.id}"}
       %option{:value => "0"} - Change Account Manager -
       - @account.group_account.potential_account_managers.collect.each do |manager|
         %option{:value => manager.id}=manager.name
+        = "MANAGER ID: #{manager.id}"
     %br
 
   - @account.channels.select(&:is_sem?).each do |sem_channel|
-    %label= sem_channel.name
+    %label= "#{sem_channel.name}: #{sem_channel.id}"
     %br
 
     %select{:id => "sem_manager_#{sem_channel.id}"}
       %option{:value => "0"} - Change Account Manager -
       - @account.group_account.potential_account_managers.collect.each do |manager|
         %option{:value => manager.id}=manager.name
+        = "MANAGER ID: #{manager.id}"
     %br
 
 

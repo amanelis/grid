@@ -52,15 +52,16 @@ class AccountsController < ApplicationController
     render :text => params[:account].inspect
     
     unless params[:channel].nil?
-      # do channel manager assignement
+      @channel = Channel.find(params[:channel][:channel_id])
+      @manager = GroupUser.find(params[:channel][:manager_id])
+      @channel.channel_manager = @manager
+      @channel.save
+    else
+      gu = GroupUser.find(params[:account_manager].to_i)
+      @account.account_manager = gu
+      @account.update_attributes(params[:account]) && @account.save ? (flash[:notice] = "Your account was updated!") : (flash[:error] = "Try again, there was an error updating account!")
+      redirect_to account_path(@account)
     end
-    
-=begin
-    gu = GroupUser.find(params[:account_manager].to_i)
-    @account.account_manager = gu
-    @account.update_attributes(params[:account]) && @account.save ? (flash[:notice] = "Your account was updated!") : (flash[:error] = "Try again, there was an error updating account!")
-    redirect_to account_path(@account)
-=end
   end
 
   def show
