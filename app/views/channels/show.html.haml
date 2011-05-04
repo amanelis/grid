@@ -5,89 +5,90 @@
   >
   = @channel.name
 %h1= @channel.name
--# unless @channel.is_virgin?
-.separator
-%h2 Budget Table
-%table
-  %thead
-    %tr
-      %th Budget
-      %th Spend
-      %th Amount Spent
-      %th Amount Remaining
-      %th % Remaining
-      %th Days Remaining
-      %th Target
-  %tbody
-    %td= "$#{sprintf("%.2f",@channel.current_budget)}"
-    %td= "$#{sprintf("%.2f",@channel.current_spend_budget)}"
-    %td= "$#{sprintf("%.2f",@channel.current_cost)}"
-    %td= "$#{sprintf("%.2f",@channel.current_amount_remaining)}"
-    %td= "#{sprintf("%.2f",(100 - @channel.current_percentage_of_money_used))}%"
-    %td= "#{sprintf("%.2f",@channel.number_of_days_money_remaining)}"
-    %td= "#{sprintf("%.2f",@channel.budget_target_variance)}"
-.separator
-
-%h2 Budget Infusions
-%table
-  %thead
-    %tr
-      %th Amount
-      %th Commitment Date
-  %tbody
-    - @channel.budget_infusions.each do |budget_infusion|
-      %tr
-        %td= "$#{sprintf("%.2f",budget_infusion.amount)}"
-        %td= budget_infusion.commitment_date
-.separator
-
-%h2 Budget History
-%table
-  %thead
-    %tr
-      %th Budget
-      %th Start Date
-  %tbody
-    - @channel.budget_settings.each do |budget_setting|
-      %tr
-        %td= "$#{sprintf("%.2f",budget_setting.amount)}"
-        %td= budget_setting.start_date
-.separator
-%h2 Rake History
-%table
-  %thead
-    %tr
-      %th Rake Setting
-      %th Start Date
-  %tbody
-    - @channel.rake_settings.each do |rake_setting|
-      %tr
-        %td= "#{sprintf("%.2f",rake_setting.percentage)}%"
-        %td= rake_setting.start_date
-.separator
-- if @channel.is_sem?
-  %h2 Adwords Information
+%h4= "#{@current_start_date} - #{@current_end_date}"
+- unless @channel.is_virgin?
+  .separator
+  %h2 Budget Table
   %table
     %thead
       %tr
-        %th Campaign Name
-        %th Clicks
-        %th Impressions CTR
-        %th CPClick
-        %th Avg Pos
-        %th Leads
+        %th Budget
+        %th Spend
         %th Amount Spent
-        %th Cost per Conversion
+        %th Amount Remaining
+        %th % Remaining
+        %th Days Remaining
+        %th Target
     %tbody
-      - @channel.campaigns.each do |campaign|
-        %tr
-          %td= campaign.name
-          %td= campaign.campaign_style.clicks_between(@current_start_date, @current_end_date)
-          %td= campaign.campaign_style.impressions_between(@current_start_date, @current_end_date)
-          %td= "$#{sprintf("%.2f", campaign.campaign_style.cost_per_click_between(@current_start_date, @current_end_date))}"
-          %td= sprintf("%.2f", campaign.campaign_style.average_position_between(@current_start_date, @current_end_date))
-          %td= campaign.number_of_total_leads_between(@current_start_date, @current_end_date)
-          %td= "$#{campaign.cost_between(@current_start_date, @current_end_date)}"
-          %td= "$#{sprintf("%.2f",campaign.cost_per_lead_between(@current_start_date, @current_end_date))}"
+      %td= "$#{sprintf("%.2f",@channel.current_budget)}"
+      %td= "$#{sprintf("%.2f",@channel.current_spend_budget)}"
+      %td= "$#{sprintf("%.2f",@channel.current_cost)}"
+      %td= "$#{sprintf("%.2f",@channel.current_amount_remaining)}"
+      %td= "#{sprintf("%.2f",(100 - @channel.current_percentage_of_money_used))}%"
+      %td= "#{sprintf("%.2f",@channel.number_of_days_money_remaining)}"
+      %td= "#{sprintf("%.2f",@channel.budget_target_variance)}"
   .separator
+
+  %h2 Budget Infusions
+  %table
+    %thead
+      %tr
+        %th Amount
+        %th Commitment Date
+    %tbody
+      - @channel.budget_infusions.each do |budget_infusion|
+        %tr
+          %td= "$#{sprintf("%.2f",budget_infusion.amount)}"
+          %td= budget_infusion.commitment_date
+  .separator
+
+  %h2 Budget History
+  %table
+    %thead
+      %tr
+        %th Budget
+        %th Start Date
+    %tbody
+      - @channel.budget_settings.each do |budget_setting|
+        %tr
+          %td= "$#{sprintf("%.2f",budget_setting.amount)}"
+          %td= budget_setting.start_date
+  .separator
+  %h2 Rake History
+  %table
+    %thead
+      %tr
+        %th Rake Setting
+        %th Start Date
+    %tbody
+      - @channel.rake_settings.each do |rake_setting|
+        %tr
+          %td= "#{sprintf("%.2f",rake_setting.percentage)}%"
+          %td= rake_setting.start_date
+  .separator
+  - if @channel.is_sem?
+    %h2 Adwords Information
+    %table
+      %thead
+        %tr
+          %th Campaign Name
+          %th Clicks
+          %th Impressions CTR
+          %th CPClick
+          %th Avg Pos
+          %th Leads
+          %th Amount Spent
+          %th Cost per Conversion
+      %tbody
+        - @channel.campaigns.each do |campaign|
+          %tr
+            %td= campaign.name
+            %td= campaign.campaign_style.clicks_between(@current_start_date, @current_end_date)
+            %td= campaign.campaign_style.impressions_between(@current_start_date, @current_end_date)
+            %td= "$#{sprintf("%.2f", campaign.campaign_style.cost_per_click_between(@current_start_date, @current_end_date))}"
+            %td= sprintf("%.2f", campaign.campaign_style.average_position_between(@current_start_date, @current_end_date))
+            %td= campaign.number_of_total_leads_between(@current_start_date, @current_end_date)
+            %td= "$#{campaign.cost_between(@current_start_date, @current_end_date)}"
+            %td= "$#{sprintf("%.2f",campaign.cost_per_lead_between(@current_start_date, @current_end_date))}"
+    .separator
 %span.green-btn= link_to "Create Campaign", new_channel_campaign_path(@account, @channel)
