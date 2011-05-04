@@ -2,7 +2,8 @@ class HomeController < ApplicationController
   before_filter :load_resource_user, :only => [:index, :dashboard, :welcome]
   
   def index
-    render :layout => "external"
+    #render :layout => "external"
+    redirect_to login_path
   end
   
   def dashboard  
