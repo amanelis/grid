@@ -75,11 +75,11 @@ class SemCampaign < ActiveRecord::Base
   end
 
   def cost_per_click_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    (clicks = self.clicks_between(start_date, end_date))) > 0 ? self.cost_between(start_date, end_date) / clicks : 0.0
+    (clicks = self.clicks_between(start_date, end_date)) > 0 ? self.cost_between(start_date, end_date) / clicks : 0.0
   end
 
   def cost_per_click_from_ads_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    (clicks = self.clicks_from_ads_between(start_date, end_date))) > 0 ? self.cost_from_ads_between(start_date, end_date) / clicks : 0.0
+    (clicks = self.clicks_from_ads_between(start_date, end_date)) > 0 ? self.cost_from_ads_between(start_date, end_date) / clicks : 0.0
   end
 
   def average_position_between(start_date = Date.yesterday, end_date = Date.yesterday)
