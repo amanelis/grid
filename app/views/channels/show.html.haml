@@ -19,13 +19,13 @@
       %th Days Remaining
       %th Target
   %tbody
-    %td= @channel.current_budget
-    %td= @channel.current_spend_budget
-    %td= @channel.current_cost
-    %td= @channel.current_amount_remaining
-    %td= (100 - @channel.current_percentage_of_money_used)
+    %td= "$#{sprintf("%.2f",@channel.current_budget)}"
+    %td= "$#{sprintf("%.2f",@channel.current_spend_budget)}"
+    %td= "$#{sprintf("%.2f",@channel.current_cost)}"
+    %td= "$#{sprintf("%.2f",@channel.current_amount_remaining)}"
+    %td= "#{sprintf("%.2f",(100 - @channel.current_percentage_of_money_used))}%"
     %td= "$#{sprintf("%.2f",@channel.number_of_days_money_remaining)}"
-    %td= "$#{sprintf("%.2f",@channel.budget_target_variance)}"
+    %td= "#{sprintf("%.2f",@channel.budget_target_variance)}"
 .separator
 
 %h2 Budget Infusions
@@ -35,8 +35,10 @@
       %th Amount
       %th Commitment Date
   %tbody
-    %td= @channel.current_budget
-    %td= @channel.current_spend_budget
+    - @channel.budget_infusions.each do |budget_infusion|
+      %tr
+        %td= "$#{sprintf("%.2f",budget_infusion.amount)}"
+        %td= budget_infusion.commitment_date
 .separator
 
 %h2 Budget History
@@ -48,7 +50,7 @@
   %tbody
     - @channel.budget_settings.each do |budget_setting|
       %tr
-        %td= budget_setting.amount
+        %td= "$#{sprintf("%.2f",budget_setting.amount)}"
         %td= budget_setting.start_date
 .separator
 %h2 Rake History
@@ -60,7 +62,7 @@
   %tbody
     - @channel.rake_settings.each do |rake_setting|
       %tr
-        %td= rake_setting.percentage
+        %td= "#{sprintf("%.2f",rake_setting.percentage)}%"
         %td= rake_setting.start_date
 .separator
 - if @channel.is_sem?
