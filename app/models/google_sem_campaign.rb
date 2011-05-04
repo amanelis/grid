@@ -721,10 +721,6 @@ class GoogleSemCampaign < ActiveRecord::Base
     (count = self.adwords_ad_groups.to_a.sum { |adwords_ad_group| adwords_ad_group.summaries_between(start_date, end_date) }) > 0 ? self.adwords_ad_groups.to_a.sum { |adwords_ad_group| adwords_ad_group.positions_between(start_date, end_date) }.to_f / count : 0.0
   end
   
-  def average_cost_per_click_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    (count = self.adwords_campaign_summaries.between(start_date, end_date).count) > 0 ? self.adwords_campaign_summaries.between(start_date, end_date).sum(:cpc).to_f / count : 0.0
-  end
-  
   def average_cost_per_impression_between(start_date = Date.yesterday, end_date = Date.yesterday)
     (count = self.adwords_campaign_summaries.between(start_date, end_date).count) > 0 ? self.adwords_campaign_summaries.between(start_date, end_date).sum(:cpm).to_f / count : 0.0
   end

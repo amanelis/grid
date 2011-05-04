@@ -389,10 +389,6 @@ class Account < ActiveRecord::Base
     self.campaigns.active.unmanaged.to_a.sum { |campaign| campaign.number_of_lead_submissions_between(start_date, end_date) }
   end
 
-  def sem_cost_per_click_between(start_date = Date.yesterday, end_date = Date.yesterday)
-    (spend = self.sem_spend_between(start_date, end_date)) > 0 ? self.sem_clicks_between(start_date, end_date) / spend : 0.0
-  end
-
   def total_revenue_between(start_date = Date.yesterday, end_date = Date.yesterday)
     self.campaigns.active.to_a.sum { |campaign| campaign.total_revenue_between(start_date, end_date) }
   end
