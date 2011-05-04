@@ -24,7 +24,7 @@
     %td= "$#{sprintf("%.2f",@channel.current_cost)}"
     %td= "$#{sprintf("%.2f",@channel.current_amount_remaining)}"
     %td= "#{sprintf("%.2f",(100 - @channel.current_percentage_of_money_used))}%"
-    %td= "$#{sprintf("%.2f",@channel.number_of_days_money_remaining)}"
+    %td= "#{sprintf("%.2f",@channel.number_of_days_money_remaining)}"
     %td= "#{sprintf("%.2f",@channel.budget_target_variance)}"
 .separator
 
@@ -87,7 +87,7 @@
           %td= "$#{sprintf("%.2f", campaign.campaign_style.cost_per_click_between(@current_start_date, @current_end_date))}"
           %td= sprintf("%.2f", campaign.campaign_style.average_position_between(@current_start_date, @current_end_date))
           %td= campaign.number_of_total_leads_between(@current_start_date, @current_end_date)
-          %td= campaign.cost_between(@current_start_date, @current_end_date)
+          %td= "$#{campaign.cost_between(@current_start_date, @current_end_date)}"
           %td= "$#{sprintf("%.2f",campaign.cost_per_lead_between(@current_start_date, @current_end_date))}"
   .separator
 %span.green-btn= link_to "Create Campaign", new_channel_campaign_path(@account, @channel)

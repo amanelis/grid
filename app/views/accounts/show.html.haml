@@ -31,7 +31,8 @@
         %th.name{:width => "75%"}
           = link_to channel.name, channel_path(@account, channel)
           - if can? :manipulate_account, @account
-            -#= link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
+            = "-"
+            = link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
             = link_to "", new_channel_campaign_path(@account, channel), :title => "Add new campaign to this channel", :class => "tiptip iconic plus", :rel => "facebox"
         %th.leads{:width => "15%"}
           = channel.number_of_total_leads_between(cookies[:start_date], cookies[:end_date])
@@ -52,7 +53,8 @@
         %th.name{:width => "75%"}
           = link_to channel.name, channel_path(@account, channel)
           - if can? :manipulate_account, @account
-            -#= link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
+            = "-"
+            = link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
             = link_to "", new_channel_campaign_path(@account, channel), :title => "Add new campaign to this channel", :class => "tiptip iconic plus", :rel => "facebox"
         %th.leads{:width => "15%"}
           = channel.number_of_total_leads_between(cookies[:start_date], cookies[:end_date])
@@ -73,7 +75,8 @@
         %th.name{:width => "75%"}
           = link_to channel.name, edit_channel_path(@account, channel), :rel => "facebox"
           - if can? :manipulate_account, @account
-            -#= link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
+            = "-"
+            = link_to 'Edit', edit_channel_path(@account, channel), :rel => "facebox"
             = link_to "", new_channel_campaign_path(@account, channel), :title => "Add new campaign to this channel", :class => "tiptip iconic plus", :rel => "facebox"
         %th.leads{:width => "15%"}
           = channel.number_of_total_leads_between(cookies[:start_date], cookies[:end_date])
