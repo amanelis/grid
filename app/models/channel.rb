@@ -86,6 +86,14 @@ class Channel < ActiveRecord::Base
     Date.today.day < self.cycle_start_day ? Date.today.prev_month.month : Date.today.month
   end
   
+  def current_start_date
+    Date.civil(Date.today.year, self.current_month, self.cycle_start_day)
+  end
+  
+  def current_end_date
+    self.current_start_date.next_month.yesterday
+  end
+  
   def current_cycle_length
     self.cycle_length_for(self.current_month)
   end

@@ -6,4 +6,11 @@ class RakeSetting < ActiveRecord::Base
   validates_numericality_of :percentage, :only_integer => true, :greater_than_or_equal_to => 0, :message => "must be an integer zero or greater"
   validates_presence_of :start_date
   
+  
+  # PREDICATES
+
+  def is_editable?
+    self.channel.editable_date?(self.start_date)
+  end
+  
 end
