@@ -11,6 +11,9 @@ class ChannelsController < ApplicationController
   
   def show
     authorize! :read, @channel
+    
+    @current_start_date = @channel.current_start_date
+    @current_end_date   = @channel.current_end_date
   end
   
   def edit

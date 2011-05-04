@@ -76,12 +76,12 @@
         - @channel.campaigns.each do |campaign|
           %tr
             %td= campaign.name
-            %td= campaign.campaign_style.clicks_between(cookies[:start_date].to_date, cookies[:end_date].to_date)
-            %td= campaign.campaign_style.impressions_between(cookies[:start_date].to_date, cookies[:end_date].to_date)
-            %td= "$#{sprintf("%.2f", campaign.campaign_style.cost_per_click_between(cookies[:start_date].to_date, cookies[:end_date].to_date))}"
-            %td= sprintf("%.2f", campaign.campaign_style.average_position_between(cookies[:start_date].to_date, cookies[:end_date].to_date))
-            %td= campaign.number_of_total_leads_between(cookies[:start_date].to_date, cookies[:end_date].to_date)
-            %td= campaign.cost_between(cookies[:start_date].to_date, cookies[:end_date].to_date)
-            %td= "$#{sprintf("%.2f",campaign.cost_per_lead_between(cookies[:start_date].to_date, cookies[:end_date].to_date))}"
+            %td= campaign.campaign_style.clicks_between(@current_start_date, @current_end_date)
+            %td= campaign.campaign_style.impressions_between(@current_start_date, @current_end_date)
+            %td= "$#{sprintf("%.2f", campaign.campaign_style.cost_per_click_between(@current_start_date, @current_end_date))}"
+            %td= sprintf("%.2f", campaign.campaign_style.average_position_between(@current_start_date, @current_end_date))
+            %td= campaign.number_of_total_leads_between(@current_start_date, @current_end_date)
+            %td= campaign.cost_between(@current_start_date, @current_end_date)
+            %td= "$#{sprintf("%.2f",campaign.cost_per_lead_between(@current_start_date, @current_end_date))}"
     .separator
 %span.green-btn= link_to "Create Campaign", new_channel_campaign_path(@account, @channel)
