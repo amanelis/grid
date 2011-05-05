@@ -5,6 +5,7 @@ class BudgetInfusion < ActiveRecord::Base
   
   validates_numericality_of :amount, :greater_than_or_equal_to => 0.01, :message => "must be an amount $0.01 or greater"
   validates_presence_of :commitment_date
+  validate :valid_date
 
   
   # PREDICATES
@@ -12,5 +13,12 @@ class BudgetInfusion < ActiveRecord::Base
   def is_editable?
     self.channel.editable_date?(self.commitment_date)
   end
-    
+  
+  
+  # PRIVATE
+  
+  def valid_date
+    errors.add(:commitment_date, "is too far in the past") if self.changed? && !self.is_editable?
+  end
+  
 end
