@@ -1,0 +1,14 @@
+- form_for(@budget_setting, :url => channel_budget_settings_path(@account, @channel)) do |f|
+  = f.label "Amount"
+  %br
+  = f.text_field :amount
+  %br
+  %br
+  
+  = f.label "Start Date"
+  %br
+  = f.text_field :start_date
+  %br
+  %br
+  
+  =f.submit "Add Budget"

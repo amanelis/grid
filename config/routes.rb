@@ -9,23 +9,39 @@ ActionController::Routing::Routes.draw do |map|
   map.register            "/register",                                    :controller => "users",             :action => :new
   map.refresh_accounts    "/accounts/refresh_accounts",                   :controller => "accounts",          :action => :refresh_accounts
 
-  # Twilio routing
+  
+  ##########################################################################################################################################################################
+  # EXTEMELY IMPORTANT ROUTES - DO NOT REMOVE/EDIT BELOW ###################################################################################################################
+  # Twilio routing, and new API ROUTES, do not remove
   map.connect_number_api  "/api/v1/calls/:encoded_number/connect",        :controller => "api/v1/calls",       :action => :connect
   map.collect_number_api  "/api/v1/calls/:encoded_number/complete",       :controller => "api/v1/calls",       :action => :complete
 
   map.get_html            "/api/v1/forms/:form_id/get_html",              :controller => "api/v1/forms",       :action => :get_html
   map.get_iframe          "/api/v1/forms/:form_id/get_iframe",            :controller => "api/v1/forms",       :action => :get_iframe
   map.thank_you           "/api/v1/forms/:form_id/thank_you",             :controller => "api/v1/forms",       :action => :thank_you
+  # EXTEMELY IMPORTANT ROUTES - DO NOT REMOVE/EDIT ABOVE ###################################################################################################################
+  ##########################################################################################################################################################################
+  
+  
+  ##########################################################################################################################################################################
+  # EXTEMELY IMPORTANT ROUTES - DO NOT REMOVE/EDIT BELOW ###################################################################################################################
+  # This is the new form submission endpoint
   map.form_submit         "/api/v1/forms/submit",                         :controller => "api/v1/forms",       :action => :submission, :conditions => { :method => :post }
-
+  # Extremely important route that maps the old forms to new api
   map.form_submit_old     "/submission",                                  :controller => "api/v1/forms",       :action => :submission, :conditions => { :method => [:post, :get] }
   map.form_thank_old      "/contact_forms/:id/thank_you",                 :controller => "api/v1/forms",       :action => :thank_you
+  # EXTEMELY IMPORTANT ROUTES - DO NOT REMOVE/EDIT ABOVE ###################################################################################################################
+  ##########################################################################################################################################################################
+
+  # This route allows me to properly do the phone number provision form
   map.get_numners         "/accounts/:account_id/channels/:channel_id/campaigns/:campaign_id/phone_numbers/new", :controller => "phone_numbers", :action => :new, :conditions => {:method => [:get, :post]}
   # CUSTOM ROUTES
 
   map.resources :accounts do |account|
     account.resources :users
     account.resources :channels, :name_prefix => "" do |channel|
+      channel.resources :budget_settings
+      channel.resources :rake_settings
       channel.resources :campaigns do |campaign|
         campaign.resources :phone_numbers
         campaign.resources :contact_forms

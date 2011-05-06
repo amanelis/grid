@@ -1,0 +1,2 @@
+class RakesController < ApplicationController
+end
