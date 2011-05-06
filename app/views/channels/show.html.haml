@@ -49,11 +49,16 @@
     %tr
       %th Budget
       %th Start Date
+      %th Edit
   %tbody
     - @channel.budget_settings.each do |budget_setting|
       %tr
         %td= "$#{sprintf("%.2f",budget_setting.amount)}"
         %td= budget_setting.start_date
+        - if budget_setting.is_editable?
+          %td= link_to "Edit", edit_channel_budget_setting_path(@account, @channel, budget_setting), :rel => "facebox"
+        - else
+          = "No"
 .separator
 %h2 Rake History
 %table

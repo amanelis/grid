@@ -26,4 +26,12 @@ class BudgetSettingsController < ApplicationController
     
     redirect_to channel_path(@account, @channel)
   end
+  
+  def edit
+    no_layout
+  end
+  
+  def update
+  
+  end
 end

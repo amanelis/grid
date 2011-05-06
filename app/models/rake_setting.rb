@@ -16,9 +16,10 @@ class RakeSetting < ActiveRecord::Base
 
 
   # PRIVATE
+  private
   
-  def valid_date
-    errors.add(:start_date, "is too far in the past") if self.changed? && !self.is_editable?
-  end
+    def valid_date
+      errors.add(:start_date, "is too far in the past") if self.changed? && !self.is_editable?
+    end
   
 end
