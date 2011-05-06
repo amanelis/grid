@@ -15,7 +15,12 @@ class BudgetInfusion < ActiveRecord::Base
   end
   
   
+<<<<<<< HEAD
   # PRIVATE
+=======
+  # PRIVATE BEHAVIOR
+  
+>>>>>>> a628124b4126b00bf88ed0d443a7a073b33bcf0d
   private
   
     def valid_date
