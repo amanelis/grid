@@ -15,7 +15,9 @@ class BudgetInfusion < ActiveRecord::Base
   end
   
   
-  # PRIVATE
+  # PRIVATE BEHAVIOR
+  
+  private
   
   def valid_date
     errors.add(:commitment_date, "is too far in the past") if self.changed? && !self.is_editable?
