@@ -32,6 +32,8 @@ class BudgetSettingsController < ApplicationController
   end
   
   def update
-  
+    @budget_setting.update_attributes(params[:budget_setting])
+    flash[:notice] = "Successfully update the budget!"
+    redirect_to channel_path(@account, @channel)
   end
 end

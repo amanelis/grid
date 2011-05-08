@@ -1,0 +1,15 @@
+%h2 New Rake
+- form_for(@rake_setting, :url => channel_rake_settings_path(@account, @channel)) do |f|
+  = f.label "Percentage"
+  %br
+  = f.text_field :percentage
+  %br
+  %br
+  
+  = f.label "Start Date"
+  %br
+  = f.text_field :start_date
+  %br
+  %br
+  
+  =f.submit "Add Rake"

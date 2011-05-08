@@ -6,6 +6,8 @@
   = @channel.name
 %h1= @channel.name
 %h4= "#{@current_start_date} - #{@current_end_date}"
+= link_to "New Budget", new_channel_budget_setting_path(@account, @channel), :rel => "facebox"
+= link_to "New Rake", new_channel_rake_setting_path(@account, @channel), :rel => "facebox"
 -# unless @channel.is_virgin?
 .separator
 %h2 Budget Table
@@ -27,7 +29,6 @@
     %td= "#{sprintf("%.2f",(100 - @channel.current_percentage_of_money_used))}%"
     %td= "#{sprintf("%.2f",@channel.number_of_days_money_remaining)}"
     %td= "#{sprintf("%.2f",@channel.budget_target_variance)}"
-= link_to "New Budget", new_channel_budget_setting_path(@account, @channel), :rel => "facebox"
 .separator
 
 %h2 Budget Infusions
@@ -43,7 +44,7 @@
         %td= budget_infusion.commitment_date
 .separator
 
-%h2 Budget History
+%h2 Budget Settings
 %table
   %thead
     %tr
@@ -60,17 +61,22 @@
         - else
           %td= "No"
 .separator
-%h2 Rake History
+%h2 Rake Settings
 %table
   %thead
     %tr
       %th Rake Setting
       %th Start Date
+      %th
   %tbody
     - @channel.rake_settings.each do |rake_setting|
       %tr
         %td= "#{sprintf("%.2f",rake_setting.percentage)}%"
         %td= rake_setting.start_date
+        - if rake_setting.is_editable?
+          %td= link_to "Edit", edit_channel_rake_setting_path(@account, @channel, rake_setting), :rel => "facebox"
+        - else
+          %td= "No"
 .separator
 - if @channel.is_sem?
   %h2 Adwords Information
