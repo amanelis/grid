@@ -273,7 +273,7 @@ class Channel < ActiveRecord::Base
   end
   
   def cost_per_click_for(month = Date.today.month, year = Date.today.year)
-    (clicks = self.clicks_for(month, year)) > 0 ? self.cost_for(month, year) / clicks : 0.0
+    (clicks = self.clicks_for(month, year)) > 0 ? self.cost_for(month, year) / clicks.to_f : 0.0
   end
   
   def average_position_for(month = Date.today.month, year = Date.today.year)
@@ -288,7 +288,7 @@ class Channel < ActiveRecord::Base
   end
   
   def conversion_rate_for(month = Date.today.month, year = Date.today.year)
-    (clicks = self.clicks_for(month, year)) > 0 ? self.total_leads_for(month, year) / clicks : 0.0
+    (clicks = self.clicks_for(month, year)) > 0 ? self.total_leads_for(month, year) / clicks.to_f : 0.0
   end
   
   def weighted_cost_per_lead_for(month = Date.today.month, year = Date.today.year)
