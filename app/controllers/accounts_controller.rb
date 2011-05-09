@@ -180,5 +180,53 @@ class AccountsController < ApplicationController
     flash[:notice] = "Accounts reloaded!"
     redirect_to :action => "index"
   end
+=begin  
+  def bi_weekly_report
+    @accounts = Account.active
+    @outfile  = "bi_weekly_" + Time.now.strftime("%m-%d-%Y") + ".csv"
+
+    csv_data = FasterCSV.generate do |csv|
+      csv << ["Client", 
+              "Campaign Manager", 
+              "Date Range", 
+              "Clicks", 
+              "Impressions", 
+              "CTR", 
+              "CPClicks", 
+              "Avg Pos", 
+              "Total Leads", 
+              "Monthly Budget", 
+              "Monthly Spend", 
+              "Amount Spent", 
+              "Amount Remaining", 
+              "% Used", 
+              "Days Remaining", 
+              "Conversion Rate", 
+              "Cost Per Lead", 
+              "Previous Conversion Rate", 
+              "Previous CPI"]
+      @accounts.each do |account|
+        channel = account.channels.select(&:is_sem?).first
+        next if channel.nil?
+        current_start_date = channel.current_start_date
+        current_end_date   = channel.current_end_date
+        csv << [account.name, 
+                channel.channel_manager,
+                "#{current_start_date} - #{current_end_date}",
+                channel.campaigns.sum {|campaign| campaign.campaign_style.clicks_between(current_start_date, current_end_date)},
+                channel.campaisng.sum {|campaign| campaign.campaign_style.impressions_between(current_start_date, current_end_date)},
+                
+                ]
+
+      end
+    end
+    send_data csv_data, :type => 'text/csv; charset=iso-8859-1; header=present', :disposition => "attachment; filename=#{@outfile}"
+  end
+=end  
+  
+  
+  
+  
+  
 
 end
