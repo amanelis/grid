@@ -754,7 +754,9 @@ class Campaign < ActiveRecord::Base
     unless self.campaign_style.valid_channel?
       errors.add(:channel, "is of the incorrect channel type")
     end
-    errors.add(:channel, "belongs to a different account than the campaign") unless self.channel.blank? || self.channel.account == self.account
+    unless self.channel.blank? || self.channel.account == self.account
+      errors.add(:channel, "belongs to a different account than the campaign")
+    end
   end
 
 end
