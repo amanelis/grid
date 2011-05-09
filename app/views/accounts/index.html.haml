@@ -16,6 +16,8 @@
   %span.green-btn= link_to "Add Account", new_account_path, :rel => "facebox"
   %span.silver-btn  
     %a{:onclick => "confirm_refresh_accounts();", :title => "Refresh from SalesForce"} Refresh
+  %span.silver-btn    
+    %a{:href => "/accounts/client_report"} Acount Report
 -#%h2= (Date.yesterday - 30.day).to_s(:long) + ' to ' + (Date.yesterday).to_s(:long)
 %br
 %br

@@ -8,6 +8,7 @@ ActionController::Routing::Routes.draw do |map|
   map.logout              "/logout",                                      :controller => "user_sessions",     :action => :destroy
   map.register            "/register",                                    :controller => "users",             :action => :new
   map.refresh_accounts    "/accounts/refresh_accounts",                   :controller => "accounts",          :action => :refresh_accounts
+  map.client_report       "/accounts/client_report",                      :controller => "accounts",          :action => :bi_weekly_report
 
   
   ##########################################################################################################################################################################

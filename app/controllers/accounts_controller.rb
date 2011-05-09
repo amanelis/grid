@@ -1,7 +1,7 @@
 class AccountsController < ApplicationController
   inherit_resources
-  load_resource :except => [:create, :refresh_accounts]
-  authorize_resource :except => [:refresh_accounts]
+  load_resource :except => [:create, :refresh_accounts, :bi_weekly_report]
+  authorize_resource :except => [:refresh_accounts, :bi_weekly_report]
   before_filter :load_time_zone, :only  => [:show, :report, :report_client]
   before_filter :check_authorization, :load_resource_user
 
@@ -181,7 +181,6 @@ class AccountsController < ApplicationController
     redirect_to :action => "index"
   end
 
-=begin
   def bi_weekly_report
     @accounts = Account.active
     @outfile  = "bi_weekly_" + Time.now.strftime("%m-%d-%Y") + ".csv"
@@ -214,15 +213,25 @@ class AccountsController < ApplicationController
         csv << [account.name, 
                 channel.channel_manager,
                 "#{current_start_date} - #{current_end_date}",
-                channel.campaigns.sum {|campaign| campaign.campaign_style.clicks_between(current_start_date, current_end_date)},
-                channel.campaisng.sum {|campaign| campaign.campaign_style.impressions_between(current_start_date, current_end_date)},
-                
-                ]
-
+                channel.current_clicks,
+                channel.current_impressions,
+                channel.current_click_through_rate,
+                channel.current_cost_per_click,
+                channel.current_average_position,
+                channel.current_total_leads,
+                channel.current_budget,
+                channel.current_spend_budget,
+                channel.current_cost,
+                channel.current_amount_remaining,
+                channel.current_percentage_of_money_used,
+                channel.number_of_days_money_remaining,
+                channel.current_conversion_rate,
+                channel.current_weighted_cost_per_lead,
+                channel.previous_conversion_rate,
+                channel.previous_weighted_cost_per_lead]
       end
     end
     send_data csv_data, :type => 'text/csv; charset=iso-8859-1; header=present', :disposition => "attachment; filename=#{@outfile}"
   end
-=end 
 
 end
