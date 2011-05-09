@@ -8,6 +8,7 @@
 %h4= "#{@current_start_date} - #{@current_end_date}"
 = link_to "New Budget", new_channel_budget_setting_path(@account, @channel), :rel => "facebox"
 = link_to "New Rake", new_channel_rake_setting_path(@account, @channel), :rel => "facebox"
+= link_to "New Infusion", new_channel_budget_infusion_path(@account, @channel), :rel => "facebox"
 -# unless @channel.is_virgin?
 .separator
 %h2 Budget Table
@@ -37,11 +38,16 @@
     %tr
       %th Amount
       %th Commitment Date
+      %th Edit
   %tbody
     - @channel.budget_infusions.each do |budget_infusion|
       %tr
         %td= "$#{sprintf("%.2f",budget_infusion.amount)}"
         %td= budget_infusion.commitment_date
+        - if budget_infusion.is_editable?
+          %td= link_to "Edit", edit_channel_budget_infusion_path(@account, @channel, budget_infusion), :rel => "facebox"
+        - else
+          %td= "No"
 .separator
 
 %h2 Budget Settings
@@ -67,7 +73,7 @@
     %tr
       %th Rake Setting
       %th Start Date
-      %th
+      %th Edit
   %tbody
     - @channel.rake_settings.each do |rake_setting|
       %tr

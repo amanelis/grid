@@ -42,6 +42,7 @@ ActionController::Routing::Routes.draw do |map|
     account.resources :channels, :name_prefix => "" do |channel|
       channel.resources :budget_settings
       channel.resources :rake_settings
+      channel.resources :budget_infusions
       channel.resources :campaigns do |campaign|
         campaign.resources :phone_numbers
         campaign.resources :contact_forms

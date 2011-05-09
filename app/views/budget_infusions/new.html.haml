@@ -1,0 +1,15 @@
+%h2 New Budget Infusion
+- form_for(@budget_infusion, :url => channel_budget_infusions_path(@account, @channel)) do |f|
+  = f.label "Amount"
+  %br
+  = f.text_field :amount
+  %br
+  %br
+  
+  = f.label "Commitment Date"
+  %br
+  = f.text_field :commitment_date
+  %br
+  %br
+  
+  =f.submit "Add Budget"
