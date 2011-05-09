@@ -86,6 +86,10 @@ class Channel < ActiveRecord::Base
     Date.today.day < self.cycle_start_day ? Date.today.prev_month.month : Date.today.month
   end
   
+  def previous_month
+    Date.today.day < self.cycle_start_day ? Date.today.prev_month.prev_month.month : Date.today.prev_month.month
+  end
+  
   def current_start_date
     Date.civil(Date.today.year, self.current_month, self.cycle_start_day)
   end
@@ -150,6 +154,46 @@ class Channel < ActiveRecord::Base
     self.cost_for(self.current_month)
   end
   
+  def current_clicks
+    self.clicks_for(self.current_month)
+  end
+  
+  def current_impressions
+    self.impressions_for(self.current_month)
+  end
+  
+  def current_click_through_rate
+    self.click_through_rate_for(self.current_month)
+  end
+  
+  def current_cost_per_click
+    self.cost_per_click_for(self.current_month)
+  end
+  
+  def current_average_position
+    self.average_position_for(self.current_month)
+  end
+  
+  def current_total_leads
+    self.total_leads_for(self.current_month)
+  end
+  
+  def current_conversion_rate
+    self.conversion_rate_for(self.current_month)
+  end
+  
+  def current_weighted_cost_per_lead
+    self.weighted_cost_per_lead_for(self.current_month)
+  end
+  
+  def previous_conversion_rate
+    self.conversion_rate_for(self.previous_month)
+  end
+  
+  def previous_weighted_cost_per_lead
+    self.weighted_cost_per_lead_for(self.previous_month)
+  end
+  
   def percentage_of_money_used_for(month = Date.today.month, year = Date.today.year)    
     (spend_budget = self.spend_budget_for(month, year)) == 0.0 ? 0 : 100.0 * self.cost_for(month, year) / spend_budget
   end
@@ -210,6 +254,45 @@ class Channel < ActiveRecord::Base
 
   def spend_for(month = Date.today.month, year = Date.today.year)
     (self.cost_for(month, year) * 100.0) / (100.0 - self.rake_percentage_for(month, year))
+  end
+
+  def clicks_for(month = Date.today.month, year = Date.today.year)
+    start_date = Date.civil(year, month, self.cycle_start_day)
+    end_date = start_date.next_month.yesterday
+    self.campaigns.active.select(&:is_sem?).collect(&:campaign_style).sum { |sem_campaign| sem_campaign.clicks_between(start_date, end_date) }
+  end
+
+  def impressions_for(month = Date.today.month, year = Date.today.year)
+    start_date = Date.civil(year, month, self.cycle_start_day)
+    end_date = start_date.next_month.yesterday
+    self.campaigns.active.select(&:is_sem?).collect(&:campaign_style).sum { |sem_campaign| sem_campaign.impressions_between(start_date, end_date) }
+  end
+  
+  def click_through_rate_for(month = Date.today.month, year = Date.today.year)
+    (impressions = self.impressions_for(month, year)) > 0 ? self.clicks_for(month, year) / impressions.to_f : 0.0
+  end
+  
+  def cost_per_click_for(month = Date.today.month, year = Date.today.year)
+    (clicks = self.clicks_for(month, year)) > 0 ? self.cost_for(month, year) / clicks : 0.0
+  end
+  
+  def average_position_for(month = Date.today.month, year = Date.today.year)
+    start_date = Date.civil(year, month, self.cycle_start_day)
+    end_date = start_date.next_month.yesterday
+    sem_campaigns = self.campaigns.active.select(&:is_sem?).collect(&:campaign_style)
+    (count = sem_campaigns.sum { |sem_campaign| sem_campaign.google_sem_campaigns.count }) > 0 ? sem_campaigns.sum { |sem_campaign| sem_campaign.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.average_position_between(start_date, end_date) } } / count : 0.0
+  end
+  
+  def total_leads_for(month = Date.today.month, year = Date.today.year)
+    self.number_of_total_leads_between(start_date = Date.civil(year, month, self.cycle_start_day), start_date.next_month.yesterday)
+  end
+  
+  def conversion_rate_for(month = Date.today.month, year = Date.today.year)
+    (clicks = self.clicks_for(month, year)) > 0 ? self.total_leads_for(month, year) / clicks : 0.0
+  end
+  
+  def weighted_cost_per_lead_for(month = Date.today.month, year = Date.today.year)
+    self.weighted_cost_per_lead_between(start_date = Date.civil(year, month, self.cycle_start_day), start_date.next_month.yesterday)
   end
 
   def number_of_total_leads_between(start_date = Date.yesterday, end_date = Date.yesterday)
