@@ -180,7 +180,8 @@ class AccountsController < ApplicationController
     flash[:notice] = "Accounts reloaded!"
     redirect_to :action => "index"
   end
-=begin  
+
+=begin
   def bi_weekly_report
     @accounts = Account.active
     @outfile  = "bi_weekly_" + Time.now.strftime("%m-%d-%Y") + ".csv"
@@ -222,11 +223,6 @@ class AccountsController < ApplicationController
     end
     send_data csv_data, :type => 'text/csv; charset=iso-8859-1; header=present', :disposition => "attachment; filename=#{@outfile}"
   end
-=end  
-  
-  
-  
-  
-  
+=end 
 
 end
