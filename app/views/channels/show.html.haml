@@ -22,13 +22,13 @@
       %th Days Remaining
       %th Target
   %tbody
-    %td= "$#{sprintf("%.2f",@channel.current_budget)}"
-    %td= "$#{sprintf("%.2f",@channel.current_spend_budget)}"
-    %td= "$#{sprintf("%.2f",@channel.current_cost)}"
-    %td= "$#{sprintf("%.2f",@channel.current_amount_remaining)}"
-    %td= "#{sprintf("%.2f",(100 - @channel.current_percentage_of_money_used))}%"
-    %td= "#{sprintf("%.2f",@channel.number_of_days_money_remaining)}"
-    %td= "#{sprintf("%.2f",@channel.budget_target_variance)}"
+    %td= "$#{sprintf("%.2f", @channel.current_budget)}"
+    %td= "$#{sprintf("%.2f", @channel.current_spend_budget)}"
+    %td= "$#{sprintf("%.2f", @channel.current_cost)}"
+    %td= "$#{sprintf("%.2f", @channel.current_amount_remaining)}"
+    %td= "#{sprintf("%.2f", (100 - @channel.current_percentage_of_money_used))}%"
+    %td= "#{sprintf("%.2f", @channel.number_of_days_money_remaining)}"
+    %td= "#{sprintf("%.2f", @channel.budget_target_variance)}"
 .separator
 
 %h2 Budget Infusions
@@ -54,7 +54,7 @@
   %tbody
     - @channel.budget_settings.each do |budget_setting|
       %tr
-        %td= "$#{sprintf("%.2f",budget_setting.amount)}"
+        %td= "$#{sprintf("%.2f", budget_setting.amount)}"
         %td= budget_setting.start_date
         - if budget_setting.is_editable?
           %td= link_to "Edit", edit_channel_budget_setting_path(@account, @channel, budget_setting), :rel => "facebox"
@@ -71,7 +71,7 @@
   %tbody
     - @channel.rake_settings.each do |rake_setting|
       %tr
-        %td= "#{sprintf("%.2f",rake_setting.percentage)}%"
+        %td= "#{sprintf("%.2f", rake_setting.percentage)}%"
         %td= rake_setting.start_date
         - if rake_setting.is_editable?
           %td= link_to "Edit", edit_channel_rake_setting_path(@account, @channel, rake_setting), :rel => "facebox"
