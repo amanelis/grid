@@ -1,10 +1,8 @@
 class Account < ActiveRecord::Base
   belongs_to :group_account
-  belongs_to :reseller, :class_name => "Account", :foreign_key => "reseller_id"
   has_many :channels, :dependent => :destroy
   has_many :campaigns, :dependent => :destroy
   has_many :websites, :through => :campaigns
-  has_many :clients, :class_name => "Account", :foreign_key => "reseller_id"
   has_one :adwords_client, :dependent => :destroy
 
   has_many :seo_campaigns, :through => :campaigns, :source => :campaign_style, :source_type => 'SeoCampaign'
@@ -28,7 +26,6 @@ class Account < ActiveRecord::Base
 
   named_scope :active, :conditions => ['LCASE(status) = ?', "active"], :order => "name ASC"
   named_scope :inactive, :conditions => ['LCASE(status) = ?', "inactive"], :order => "name ASC"
-  named_scope :reseller, :conditions => ['LCASE(account_type) LIKE ?', "%reseller%"]
 
   attr_accessor :account_status
 
