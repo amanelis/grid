@@ -208,6 +208,7 @@ class AccountsController < ApplicationController
       @accounts.each do |account|
         channel = account.channels.select(&:is_sem?).first
         next if channel.nil?
+        next unless channel.campaigns.present?
         current_start_date = channel.current_start_date
         current_end_date   = channel.current_end_date
         csv << [account.name, 
