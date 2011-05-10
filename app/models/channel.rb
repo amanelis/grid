@@ -249,7 +249,7 @@ class Channel < ActiveRecord::Base
   def cost_for(month = Date.today.month, year = Date.today.year)
     start_date = Date.civil(year, month, self.cycle_start_day)
     end_date = start_date.next_month.yesterday
-    self.campaigns.active.select(&:is_sem?).collect(&:campaign_style).sum { |sem_campaign| sem_campaign.cost_between(start_date, end_date) }
+    self.campaigns.active.sem.collect(&:campaign_style).sum { |sem_campaign| sem_campaign.cost_between(start_date, end_date) }
   end
 
   def spend_for(month = Date.today.month, year = Date.today.year)
@@ -259,13 +259,13 @@ class Channel < ActiveRecord::Base
   def clicks_for(month = Date.today.month, year = Date.today.year)
     start_date = Date.civil(year, month, self.cycle_start_day)
     end_date = start_date.next_month.yesterday
-    self.campaigns.active.select(&:is_sem?).collect(&:campaign_style).sum { |sem_campaign| sem_campaign.clicks_between(start_date, end_date) }
+    self.campaigns.active.sem.collect(&:campaign_style).sum { |sem_campaign| sem_campaign.clicks_between(start_date, end_date) }
   end
 
   def impressions_for(month = Date.today.month, year = Date.today.year)
     start_date = Date.civil(year, month, self.cycle_start_day)
     end_date = start_date.next_month.yesterday
-    self.campaigns.active.select(&:is_sem?).collect(&:campaign_style).sum { |sem_campaign| sem_campaign.impressions_between(start_date, end_date) }
+    self.campaigns.active.sem.collect(&:campaign_style).sum { |sem_campaign| sem_campaign.impressions_between(start_date, end_date) }
   end
   
   def click_through_rate_for(month = Date.today.month, year = Date.today.year)
@@ -279,7 +279,7 @@ class Channel < ActiveRecord::Base
   def average_position_for(month = Date.today.month, year = Date.today.year)
     start_date = Date.civil(year, month, self.cycle_start_day)
     end_date = start_date.next_month.yesterday
-    sem_campaigns = self.campaigns.active.select(&:is_sem?).collect(&:campaign_style)
+    sem_campaigns = self.campaigns.active.sem.collect(&:campaign_style)
     (count = sem_campaigns.sum { |sem_campaign| sem_campaign.google_sem_campaigns.count }) > 0 ? sem_campaigns.sum { |sem_campaign| sem_campaign.google_sem_campaigns.to_a.sum { |google_sem_campaign| google_sem_campaign.average_position_between(start_date, end_date) } } / count : 0.0
   end
   
