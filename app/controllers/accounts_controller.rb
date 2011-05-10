@@ -212,7 +212,7 @@ class AccountsController < ApplicationController
         current_start_date = channel.current_start_date
         current_end_date   = channel.current_end_date
         csv << [account.name, 
-                channel.channel_manager,
+                channel.channel_manager.name,
                 "#{current_start_date} - #{current_end_date}",
                 channel.current_clicks,
                 channel.current_impressions,
